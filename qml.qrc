@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/qml/main.qml</file>
+        <file>src/qml/MenuWidget.qml</file>
+        <file alias="closeButton">src/img/menu_closeButton.png</file>
+        <file alias="hideButton">src/img/menu_hideButton.png</file>
+        <file alias="fullButton">src/img/menu_fullButton.png</file>
+        <file alias="menuLogo">src/img/menu_logo.png</file>
+    </qresource>
+</RCC>
