@@ -384,6 +384,34 @@ ApplicationWindow
         }
     }
 
+    UtilityWindow
+    {
+        id: testWindow
+        caption: "Preferences"
+        x: 100
+        y: 100
+
+        Connections
+        {
+            target: applicationWindow
+            function onWidthChanged()
+            {
+                testWindow.setMoveArea(applicationWindow.x, applicationWindow.width, applicationWindow.y + mainMenu.height, applicationWindow.height)
+            }
+        }
+
+        Connections
+        {
+            target: applicationWindow
+            function onHeightChanged()
+            {
+                testWindow.setMoveArea(applicationWindow.x, applicationWindow.width, applicationWindow.y + mainMenu.height, applicationWindow.height)
+            }
+        }
+
+        Component.onCompleted: testWindow.setMoveArea(applicationWindow.x, applicationWindow.width, applicationWindow.y + mainMenu.height, applicationWindow.height)
+    }
+
     Connections
     {
         target: slider
