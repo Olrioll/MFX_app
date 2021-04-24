@@ -10,14 +10,6 @@ Item
 
     property string caption
 
-    function setMoveArea(x, width, y, height)
-    {
-        mouseArea.drag.minimumX = x
-        mouseArea.drag.minimumY = y
-        mouseArea.drag.maximumX = width - utilityWindow.width
-        mouseArea.drag.maximumY = height - utilityWindow.height
-    }
-
     Rectangle
     {
         id: rectangle
@@ -35,10 +27,11 @@ Item
 
             drag.target: utilityWindow
             drag.axis: Drag.XandYAxis
-//            drag.minimumX: 0
-//            drag.maximumX: appWindowMoveArea.width - utilityWindow.width
-//            drag.minimumY: 0
-//            drag.maximumY: appWindowMoveArea.height - utilityWindow.height
+
+            drag.minimumX: applicationWindow.childWidgetsArea().x
+            drag.maximumX: applicationWindow.childWidgetsArea().width - utilityWindow.width
+            drag.minimumY: applicationWindow.childWidgetsArea().y
+            drag.maximumY: applicationWindow.childWidgetsArea().height - utilityWindow.height
         }
 
         Text
@@ -76,7 +69,8 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-            onClicked: utilityWindow.visible = false
+//            onClicked: utilityWindow.visible = false
+            onClicked: utilityWindow.destroy()
         }
     }
 }

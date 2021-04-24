@@ -18,6 +18,11 @@ ApplicationWindow
     property int previousX
     property int previousY
 
+    function childWidgetsArea()
+    {
+        return {x:0, width:width, y:mainMenu.height, height:height}
+    }
+
     Item
     {
         id: mainMenu
@@ -238,6 +243,8 @@ ApplicationWindow
                     source: "qrc:/hideButton"
                 }
 
+                onClicked: applicationWindow.showMinimized()
+
             }
 
             Button
@@ -256,6 +263,8 @@ ApplicationWindow
                 {
                     source: "qrc:/fullButton"
                 }
+
+                onClicked: applicationWindow.showMaximized()
             }
 
             Button
@@ -274,6 +283,8 @@ ApplicationWindow
                 {
                     source: "qrc:/closeButton"
                 }
+
+                onClicked: Qt.quit()
             }
         }
     }
@@ -384,32 +395,17 @@ ApplicationWindow
         }
     }
 
-    UtilityWindow
+    Button
     {
-        id: testWindow
-        caption: "Preferences"
-        x: 100
-        y: 100
-
-        Connections
+        text: "Create window"
+        anchors.top: mainMenu.bottom
+        onClicked:
         {
-            target: applicationWindow
-            function onWidthChanged()
-            {
-                testWindow.setMoveArea(applicationWindow.x, applicationWindow.width, applicationWindow.y + mainMenu.height, applicationWindow.height)
-            }
+            var test = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
+            test.x = 100
+            test.y = 100
+            test.caption = "Preferences"
         }
-
-        Connections
-        {
-            target: applicationWindow
-            function onHeightChanged()
-            {
-                testWindow.setMoveArea(applicationWindow.x, applicationWindow.width, applicationWindow.y + mainMenu.height, applicationWindow.height)
-            }
-        }
-
-        Component.onCompleted: testWindow.setMoveArea(applicationWindow.x, applicationWindow.width, applicationWindow.y + mainMenu.height, applicationWindow.height)
     }
 
     Connections
@@ -418,33 +414,6 @@ ApplicationWindow
         function onMoved()
         {
             waveformWidget.moveVisibleRange(slider.position);
-        }
-    }
-
-    Connections
-    {
-        target: hideButton
-        function onClicked()
-        {
-            showMinimized();
-        }
-    }
-
-    Connections
-    {
-        target: fullButton
-        function onClicked()
-        {
-            showMaximized();
-        }
-    }
-
-    Connections
-    {
-        target: closeButton
-        function onClicked()
-        {
-            Qt.quit();
         }
     }
 }
