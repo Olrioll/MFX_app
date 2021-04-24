@@ -7,5 +7,7 @@
         <file alias="menuLogo">src/img/menu_logo.png</file>
         <file>src/qml/UtilityWindow.qml</file>
         <file alias="utilityCloseButton">src/img/utilityWindow_closeButton.png</file>
+        <file alias="itemArrow">src/img/menu_itemArrow.png</file>
+        <file alias="itemArrow_hovered">src/img/menu_itemArrow_hovered.png</file>
     </qresource>
 </RCC>
