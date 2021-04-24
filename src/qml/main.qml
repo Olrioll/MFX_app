@@ -10,6 +10,8 @@ ApplicationWindow
     id: applicationWindow
     width: 1280
     height: 960
+    x: 300
+    y: 70
     visible: true
     color: "#000000"
     title: qsTr("MFX")
@@ -101,7 +103,7 @@ ApplicationWindow
             Button
             {
                 id: fileMenuButton
-                text: "File"
+                text: qsTr("File")
                 width: 40
                 height: 28
                 x: logoImage.x + logoImage.width + 10
@@ -133,7 +135,7 @@ ApplicationWindow
             Button
             {
                 id: patchMenuButton
-                text: "Patch"
+                text: qsTr("Patch")
                 width: 40
                 height: 28
                 anchors.left: fileMenuButton.right
@@ -165,7 +167,7 @@ ApplicationWindow
             Button
             {
                 id: mainMenuButton
-                text: "Main"
+                text: qsTr("Main")
                 width: 40
                 height: 28
                 anchors.left: patchMenuButton.right
@@ -197,7 +199,7 @@ ApplicationWindow
             Button
             {
                 id: outputMenuButton
-                text: "Output"
+                text: qsTr("Output")
                 width: 48
                 height: 28
                 anchors.left: mainMenuButton.right
@@ -224,6 +226,102 @@ ApplicationWindow
                 }
 
                 ButtonGroup.group: mainMenuButtons
+            }
+
+            Button
+            {
+                id: keyButton
+                text: qsTr("Key")
+                width: 60
+                height: 24
+                x: outputMenuButton.x + outputMenuButton.width + 30
+                y: mainMenu.y + 2
+                layer.enabled: false
+                font.pointSize: 12
+                checkable: true
+
+                bottomPadding: 2
+                topPadding: 2
+                rightPadding: 2
+                leftPadding: 2
+
+                background: Rectangle {
+                    color: parent.checked ? "#5F27CD" : "#222222"
+                    radius: 2
+                }
+
+                contentItem: Text {
+                    color: parent.checked ? "#ffffff" : "#777777"
+                    text: parent.text
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    font.family: "Roboto"
+                }
+            }
+
+            Button
+            {
+                id: midiButton
+                text: "MIDI"
+                width: 60
+                height: 24
+                x: keyButton.x + keyButton.width + 10
+                y: mainMenu.y + 2
+                layer.enabled: false
+                font.pointSize: 12
+                checkable: true
+
+                bottomPadding: 2
+                topPadding: 2
+                rightPadding: 2
+                leftPadding: 2
+
+                background: Rectangle {
+                    color: parent.checked ? "#6BAAFF" : "#222222"
+                    radius: 2
+                }
+
+                contentItem: Text {
+                    color: parent.checked ? "#ffffff" : "#777777"
+                    text: parent.text
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    font.family: "Roboto"
+                }
+            }
+
+            Button
+            {
+                id: dmxButton
+                text: qsTr("DMX out")
+                width: 60
+                height: 24
+                x: midiButton.x + midiButton.width + 10
+                y: mainMenu.y + 2
+                layer.enabled: false
+                font.pointSize: 12
+                checkable: true
+
+                bottomPadding: 2
+                topPadding: 2
+                rightPadding: 2
+                leftPadding: 2
+
+                background: Rectangle {
+                    color: parent.checked ? "#EB5757" : "#222222"
+                    radius: 2
+                }
+
+                contentItem: Text {
+                    color: parent.checked ? "#ffffff" : "#777777"
+                    text: parent.text
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    font.family: "Roboto"
+                }
             }
 
             Button
