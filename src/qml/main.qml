@@ -595,18 +595,8 @@ ApplicationWindow
                     anchors.fill: parent
                     hoverEnabled: true
 
-                    onHoveredChanged:
-                    {
-                        if(saveActionMouseArea.containsMouse)
-                        {
-                            saveItemsList.visible = true
-                        }
-
-                        else if (!(projectActionMouseArea.containsMouse || workspaceActionMouseArea.containsMouse || patchActionMouseArea.containsMouse))
-                        {
-                            saveItemsList.visible = false
-                        }
-                    }
+                    onEntered: saveItemsList.visible = true
+                    onExited: saveItemsList.visible = false
                 }
             }
 
@@ -733,11 +723,14 @@ ApplicationWindow
                     anchors.fill: parent
                     hoverEnabled: true
 
-//                    onHoveredChanged:
-//                    {
-//                        if( !(projectActionMouseArea.containsMouse || workspaceActionMouseArea.containsMouse || patchActionMouseArea.containsMouse) )
-//                            saveItemsList.visible = false
-//                    }
+                    onEntered: saveItemsList.visible = true
+                    onExited: saveItemsList.visible = false
+
+                    onClicked:
+                    {
+                        saveItemsList.visible = false
+                        fileMenuButton.checked = false
+                    }
                 }
             }
 
@@ -768,11 +761,14 @@ ApplicationWindow
                     anchors.fill: parent
                     hoverEnabled: true
 
-//                    onHoveredChanged:
-//                    {
-//                        if( !(projectActionMouseArea.containsMouse || workspaceActionMouseArea.containsMouse || patchActionMouseArea.containsMouse) )
-//                            saveItemsList.visible = false
-//                    }
+                    onEntered: saveItemsList.visible = true
+                    onExited: saveItemsList.visible = false
+
+                    onClicked:
+                    {
+                        saveItemsList.visible = false
+                        fileMenuButton.checked = false
+                    }
                 }
             }
 
@@ -803,11 +799,14 @@ ApplicationWindow
                     anchors.fill: parent
                     hoverEnabled: true
 
-//                    onHoveredChanged:
-//                    {
-//                        if( !(projectActionMouseArea.containsMouse || workspaceActionMouseArea.containsMouse || patchActionMouseArea.containsMouse) )
-//                            saveItemsList.visible = false
-//                    }
+                    onEntered: saveItemsList.visible = true
+                    onExited: saveItemsList.visible = false
+
+                    onClicked:
+                    {
+                        saveItemsList.visible = false
+                        fileMenuButton.checked = false
+                    }
                 }
             }
         }
