@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     SettingsManager settings;
 
     QTranslator translator;
-    translator.load("translations/russian.qm");
+    translator.load(settings.value("workDirectory").toString() + "/translations/russian.qm");
     qApp->installTranslator(&translator);
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");

@@ -9,5 +9,6 @@
         <file alias="utilityCloseButton">src/img/utilityWindow_closeButton.png</file>
         <file alias="itemArrow">src/img/menu_itemArrow.png</file>
         <file alias="itemArrow_hovered">src/img/menu_itemArrow_hovered.png</file>
+        <file alias="prevSizeButton">src/img/menu_prevSizeButton.png</file>
     </qresource>
 </RCC>

@@ -4,7 +4,7 @@ SettingsManager::SettingsManager(QObject *parent) :
     QObject(parent),
     _settings(_workDirectory + "/settings.ini", QSettings::IniFormat)
 {
-
+    _settings.setValue("workDirectory", _workDirectory);
 }
 
 SettingsManager::~SettingsManager()

@@ -20,6 +20,11 @@ ApplicationWindow
     property int previousX
     property int previousY
 
+    property int previousGeometryX: x
+    property int previousGeometryY: y
+    property int previousGeometryWidth: 1280
+    property int previousGeometryHeight: 960
+
     function childWidgetsArea()
     {
         return {x:0, width:width, y:mainMenu.height, height:height}
@@ -404,7 +409,7 @@ ApplicationWindow
                 text: qsTr("DMX out")
                 width: 60
                 height: 24
-                x: midiButton.x + midiButton.width + 10
+                x: midiButton.x + midiButton.width + 64
                 y: mainMenu.y + 2
                 layer.enabled: false
                 font.pointSize: 12
@@ -447,7 +452,10 @@ ApplicationWindow
                     source: "qrc:/hideButton"
                 }
 
-                onClicked: applicationWindow.showMinimized()
+                onClicked:
+                {
+                    applicationWindow.showMinimized()
+                }
 
             }
 
@@ -463,12 +471,30 @@ ApplicationWindow
                 rightPadding: 0
                 leftPadding: 0
 
+                property bool maximized: false
+
                 Image
                 {
+                    id: fullButtonImage
                     source: "qrc:/fullButton"
                 }
 
-                onClicked: applicationWindow.showMaximized()
+                onClicked:
+                {
+                    if(fullButton.maximized)
+                    {
+                        fullButtonImage.source = "qrc:/fullButton"
+                        fullButton.maximized = false
+                        applicationWindow.showNormal()
+                    }
+
+                    else
+                    {
+                        fullButtonImage.source = "qrc:/prevSizeButton"
+                        fullButton.maximized = true
+                        applicationWindow.showMaximized()
+                    }
+                }
             }
 
             Button

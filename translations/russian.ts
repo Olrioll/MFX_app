@@ -27,7 +27,7 @@
     <message>
         <location filename="../src/qml/main.qml" line="308"/>
         <source>Output</source>
-        <translation type="unfinished">Выход</translation>
+        <translation type="unfinished">Вывод</translation>
     </message>
     <message>
         <location filename="../src/qml/main.qml" line="340"/>
