@@ -10,5 +10,9 @@
         <file alias="itemArrow">src/img/menu_itemArrow.png</file>
         <file alias="itemArrow_hovered">src/img/menu_itemArrow_hovered.png</file>
         <file alias="prevSizeButton">src/img/menu_prevSizeButton.png</file>
+        <file>src/qml/PatchScreen.qml</file>
+        <file>src/qml/SideDockedWindow.qml</file>
+        <file alias="expandButton">src/img/dockedWindow_expandButton.png</file>
+        <file alias="collapseButton">src/img/dockedWindow_collapseButton.png</file>
     </qresource>
 </RCC>

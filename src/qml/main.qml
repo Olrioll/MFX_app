@@ -114,26 +114,34 @@ ApplicationWindow
             left: leftResizeArea.right
         }
 
-        WaveformWidget
+        PatchScreen
         {
-            id: waveformWidget
+            id: patchScreen
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            MouseArea
-            {
-                anchors.fill: parent
-                onWheel: (wheel.angleDelta.y > 0) ? waveformWidget.zoomOut()
-                                                  : waveformWidget.zoomIn()
-            }
-
-            Slider
-            {
-                id: slider
-                anchors.bottom: parent.bottom
-            }
         }
+
+//        WaveformWidget
+//        {
+//            id: waveformWidget
+//            Layout.fillHeight: true
+//            Layout.fillWidth: true
+//            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+//            MouseArea
+//            {
+//                anchors.fill: parent
+//                onWheel: (wheel.angleDelta.y > 0) ? waveformWidget.zoomOut()
+//                                                  : waveformWidget.zoomIn()
+//            }
+
+//            Slider
+//            {
+//                id: slider
+//                anchors.bottom: parent.bottom
+//            }
+//        }
     }
 
     Item
@@ -239,8 +247,6 @@ ApplicationWindow
                     elide: Text.ElideRight
                     font.family: "Roboto"
                 }
-
-//                ButtonGroup.group: mainMenuButtons
             }
 
             Button
@@ -369,6 +375,12 @@ ApplicationWindow
                     elide: Text.ElideRight
                     font.family: "Roboto"
                 }
+
+                onCheckedChanged:
+                {
+                    if(checked)
+                        midiButton.checked = false
+                }
             }
 
             Button
@@ -400,6 +412,12 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                }
+
+                onCheckedChanged:
+                {
+                    if(checked)
+                        keyButton.checked = false
                 }
             }
 
