@@ -527,6 +527,9 @@ ApplicationWindow
                     hoverEnabled: true
 
                     onClicked: fileMenuButton.checked = false
+
+//                    onEntered: fileMenuButton.checked = true
+//                    onExited: fileMenuButton.checked = false
                 }
             }
 
@@ -558,6 +561,9 @@ ApplicationWindow
                     hoverEnabled: true
 
                     onClicked: fileMenuButton.checked = false
+
+//                    onEntered: fileMenuButton.checked = true
+//                    onExited: fileMenuButton.checked = false
                 }
             }
 
@@ -595,8 +601,14 @@ ApplicationWindow
                     anchors.fill: parent
                     hoverEnabled: true
 
-                    onEntered: saveItemsList.visible = true
-                    onExited: saveItemsList.visible = false
+                    onEntered:
+                    {
+                        saveItemsList.visible = true
+                    }
+                    onExited:
+                    {
+                        saveItemsList.visible = false
+                    }
                 }
             }
 
@@ -628,6 +640,9 @@ ApplicationWindow
                     hoverEnabled: true
 
                     onClicked: fileMenuButton.checked = false
+
+//                    onEntered: fileMenuButton.checked = true
+//                    onExited: fileMenuButton.checked = false
                 }
             }
 
@@ -685,6 +700,9 @@ ApplicationWindow
                         test.y = 100
                         test.caption = "Preferences"
                     }
+
+//                    onEntered: fileMenuButton.checked = true
+//                    onExited: fileMenuButton.checked = false
                 }
             }
         }
