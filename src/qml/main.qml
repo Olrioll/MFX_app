@@ -698,7 +698,7 @@ ApplicationWindow
                         var test = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
                         test.x = 100
                         test.y = 100
-                        test.caption = "Preferences"
+                        test.caption = qsTr("Preferences")
                     }
 
 //                    onEntered: fileMenuButton.checked = true
