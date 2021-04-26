@@ -9,6 +9,12 @@ Item
     id: sideDockedWindow
     width: collapsedRect.width
 
+    property int collapsedWidth: 22
+    property int expandedWidth: 120
+    property string caption: "Caption"
+
+    property int previousX
+
     StackLayout
     {
         id: layout
@@ -17,7 +23,7 @@ Item
         Rectangle
         {
             id: collapsedRect
-            width: 22
+            width: sideDockedWindow.collapsedWidth
             radius: 2
             color: "#444444"
             Layout.fillHeight: true
@@ -45,14 +51,38 @@ Item
                     source: "qrc:/expandButton"
                 }
 
-    //            onClicked: utilityWindow.visible = false
+                onClicked:
+                {
+                    sideDockedWindow.width = sideDockedWindow.expandedWidth
+                    layout.currentIndex = 1
+                }
+            }
+
+            Rectangle
+            {
+                id: rotatedTextRect
+                x: parent.x
+                y: parent.y + 22
+                width: parent.width
+                height: collapsedCaptionText.width
+                visible: false
+            }
+
+            Text
+            {
+                id: collapsedCaptionText
+                color: "#ffffff"
+                text: sideDockedWindow.caption
+                elide: Text.ElideMiddle
+                anchors.centerIn: rotatedTextRect
+                rotation: 90
             }
         }
 
         Rectangle
         {
             id: expandedRect
-            width: 120
+            width: sideDockedWindow.expandedWidth
             radius: 2
             color: "#444444"
             Layout.fillHeight: true
@@ -81,8 +111,62 @@ Item
                     source: "qrc:/collapseButton"
                 }
 
-    //            onClicked: utilityWindow.visible = false
+                onClicked:
+                {
+                    sideDockedWindow.width = sideDockedWindow.collapsedWidth
+                    layout.currentIndex = 0
+                }
             }
+
+            Text
+            {
+                color: "#ffffff"
+                text: sideDockedWindow.caption
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideMiddle
+                anchors.left: parent.left
+                font.family: "Roboto"
+                topPadding: 2
+                leftPadding: 10
+            }
+
+            Rectangle
+            {
+                anchors.topMargin: 22
+                anchors.bottomMargin: 2
+                anchors.leftMargin: 2
+                anchors.rightMargin: 2
+                anchors.fill: parent
+
+                color: "#000000"
+            }
+        }
+    }
+
+    MouseArea
+    {
+        id: resizeArea
+        width: 4
+        visible: layout.currentIndex
+
+        anchors
+        {
+            top: sideDockedWindow.top
+            bottom: sideDockedWindow.bottom
+            left: sideDockedWindow.left
+        }
+        cursorShape: Qt.SizeHorCursor
+
+        onPressed:
+        {
+            sideDockedWindow.previousX = mouseX
+        }
+
+        onMouseXChanged:
+        {
+            var dx = mouseX - sideDockedWindow.previousX
+            sideDockedWindow.width = sideDockedWindow.width - dx
         }
     }
 }

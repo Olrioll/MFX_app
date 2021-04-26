@@ -23,10 +23,38 @@ Item
         anchors.right: patchScreen.right
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
+
+        caption: qsTr("Devices library")
+        expandedWidth: 184
     }
 
-    Component.onCompleted:
+    SideDockedWindow
     {
-        console.log(patchScreen.width)
+        id: deviceList
+        anchors.rightMargin: 2
+        anchors.right: deviceLib.left
+        anchors.top: patchScreen.top
+        anchors.bottom: patchScreen.bottom
+
+        caption: qsTr("Devices list")
+        expandedWidth: 348
+    }
+
+    Item
+    {
+        id: sceneWidget
+
+        anchors.margins: 2
+        anchors.left: patchScreen.left
+        anchors.right: deviceList.left
+        anchors.top: patchScreen.top
+        anchors.bottom: patchScreen.bottom
+
+        Rectangle
+        {
+            anchors.fill: parent
+            color: "#000000"
+        }
+
     }
 }

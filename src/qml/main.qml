@@ -13,7 +13,7 @@ ApplicationWindow
     x: 300
     y: 70
     visible: true
-    color: "#000000"
+    color: "#222222"
     title: qsTr("MFX")
     flags: Qt.Window | Qt.FramelessWindowHint
 
@@ -33,7 +33,7 @@ ApplicationWindow
     MouseArea
     {
         id: bottomResizeArea
-        height: 5
+        height: 4
         anchors
         {
             bottom: parent.bottom
@@ -57,7 +57,7 @@ ApplicationWindow
     MouseArea
     {
         id: leftResizeArea
-        width: 5
+        width: 4
         anchors
         {
             top: mainMenu.bottom
@@ -82,7 +82,7 @@ ApplicationWindow
     MouseArea
     {
         id: rightResizeArea
-        width: 5
+        width: 4
         anchors
         {
             top: mainMenu.bottom
@@ -108,6 +108,7 @@ ApplicationWindow
         id: screensLayout
         anchors
         {
+            topMargin: 2
             top: mainMenu.bottom
             bottom: bottomResizeArea.top
             right: rightResizeArea.left
