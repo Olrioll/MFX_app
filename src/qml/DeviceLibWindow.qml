@@ -11,6 +11,7 @@ Item
 
     property int collapsedWidth: 22
     property int expandedWidth: 120
+    property int minWidth: expandedWidth
     property string caption: "Caption"
 
     property int previousX
@@ -144,12 +145,17 @@ Item
                 ListView
                 {
                     id: deviceListView
-                    height: contentItem.height
+//                    height: contentItem.height
+                    height: workArea.height
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.top: parent.top
+                    anchors.top: workArea.top
                     anchors.topMargin: 2
                     spacing: 2
+//                    ScrollBar.vertical: ScrollBar
+//                    {
+//                        active: true
+//                    }
 
                     delegate: DevicePlate
                     {
@@ -199,7 +205,11 @@ Item
         onMouseXChanged:
         {
             var dx = mouseX - deviceLibWindow.previousX
-            deviceLibWindow.width = deviceLibWindow.width - dx
+
+            if((deviceLibWindow.width - dx) < minWidth)
+                deviceLibWindow.width = minWidth
+            else
+                deviceLibWindow.width = deviceLibWindow.width - dx
         }
     }
 }
