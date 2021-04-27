@@ -17,7 +17,7 @@ Item
 //        color: "#444444"
 //    }
 
-    SideDockedWindow
+    DeviceLibWindow
     {
         id: deviceLib
         anchors.right: patchScreen.right
@@ -54,6 +54,13 @@ Item
         {
             anchors.fill: parent
             color: "#000000"
+
+            Image
+            {
+                id: backgroundImage
+                source: "file:///d:/Upwork/MFX/scene.png"
+                anchors.fill: parent
+            }
         }
 
     }

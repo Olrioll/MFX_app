@@ -875,12 +875,12 @@ ApplicationWindow
         }
     }
 
-    Connections
-    {
-        target: slider
-        function onMoved()
-        {
-            waveformWidget.moveVisibleRange(slider.position);
-        }
-    }
+//    Connections
+//    {
+//        target: slider
+//        function onMoved()
+//        {
+//            waveformWidget.moveVisibleRange(slider.position);
+//        }
+//    }
 }
