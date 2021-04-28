@@ -7,13 +7,15 @@ Item
     id: patchPlate
     height: 40
 
+    property int no
     property string name
     property string imageFile
+    property bool checked
 
     Rectangle
     {
         anchors.fill: parent
-        color: "#4f4f4f"
+        color: patchPlate.checked ? "#27AE60" : "#4f4f4f"
         radius: 2
 
         Image
@@ -26,26 +28,60 @@ Item
             anchors.verticalCenter: parent.verticalCenter
         }
 
-//        Rectangle {
-//            id: separator
-//            x: 44
-//            y: 2
-//            width: 2
-//            anchors.leftMargin: 4
-//            anchors.topMargin: 2
-//            anchors.bottomMargin: 2
-//            anchors.left: deviceImage.right
-//            anchors.top: parent.top
-//            anchors.bottom: parent.bottom
-//            color: "#ffffff"
-//            opacity: 0.1
-//        }
+        Rectangle
+        {
+            id: rect1
+            width: 14
+            height: 14
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            color: "#828282"
+            radius: 4
+
+            Text
+            {
+                id: no
+                anchors.centerIn: parent
+                color: "#ffffff"
+                text:  patchPlate.no
+                font.family: "Roboto"
+                font.pixelSize: 10
+            }
+        }
+
+        Rectangle
+        {
+            width: 4
+            height: 4
+            anchors.left: rect1.left
+            anchors.top: rect1.top
+            color: "#828282"
+        }
+
+        Rectangle
+        {
+            width: 4
+            height: 4
+            anchors.right: rect1.right
+            anchors.bottom: rect1.bottom
+            color: "#828282"
+        }
+
+        Rectangle
+        {
+            width: 4
+            height: 4
+            anchors.left: rect1.left
+            anchors.bottom: rect1.bottom
+            color: "#828282"
+            radius: 2
+        }
 
         ListView
         {
             id: cellListView
             width: parent.width
-            anchors.leftMargin: 2
+            anchors.leftMargin: 6
             anchors.topMargin: 2
             anchors.bottomMargin: 2
             anchors.left: deviceImage.right
@@ -76,6 +112,15 @@ Item
             }
         }
 
+        MouseArea
+        {
+            anchors.fill: parent
+
+            onClicked:
+            {
+                patchPlate.checked = !patchPlate.checked
+            }
+        }
     }
 }
 

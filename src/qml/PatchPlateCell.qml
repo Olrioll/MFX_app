@@ -41,6 +41,6 @@ Item
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         color: "#ffffff"
-        opacity: 0.1
+        opacity: 0.2
     }
 }

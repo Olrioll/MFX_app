@@ -19,6 +19,7 @@ ListView
         anchors.left: parent.left
         anchors.right: parent.right
         imageFile: img
+        no: counter
     }
 
     model: ListModel
@@ -28,9 +29,9 @@ ListView
 
     Component.onCompleted:
     {
-        deviceListModel.append({img: "qrc:/device_sequences"})
-        deviceListModel.append({img: "qrc:/device_dimmer"})
-        deviceListModel.append({img: "qrc:/device_shot"})
-        deviceListModel.append({img: "qrc:/device_pyro"})
+        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_sequences"})
+        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_dimmer"})
+        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_shot"})
+        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_pyro"})
     }
 }
