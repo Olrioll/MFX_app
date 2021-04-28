@@ -11,12 +11,15 @@ Item
     property string name
     property string imageFile
     property bool checked
+    property bool held: false
 
     Rectangle
     {
         anchors.fill: parent
         color: patchPlate.checked ? "#27AE60" : "#4f4f4f"
         radius: 2
+        border.width: 2
+        border.color: patchPlate.held ? "lightblue" : "#4f4f4f"
 
         Image
         {
@@ -112,14 +115,33 @@ Item
             }
         }
 
+        states: State {
+                            when: held
+
+                            ParentChange { target: patchPlate; parent: patchScreen }
+                            AnchorChanges {
+                                target: patchPlate
+                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+                            }
+                        }
+
         MouseArea
         {
+            id: mouseArea
             anchors.fill: parent
+
+            drag.target: patchPlate.held ? patchPlate : undefined
+            drag.axis: Drag.YAxis
 
             onClicked:
             {
                 patchPlate.checked = !patchPlate.checked
             }
+
+            onPressAndHold: patchPlate.held = true
+            onReleased: patchPlate.held = false
+
+
         }
     }
 }
