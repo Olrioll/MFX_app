@@ -148,7 +148,7 @@ ApplicationWindow
     Item
     {
         id: mainMenu
-        height: 28
+        height: 36
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -224,8 +224,8 @@ ApplicationWindow
             {
                 id: fileMenuButton
                 text: qsTr("File")
-                width: 40
-                height: 28
+                width: 50
+                height: 36
                 x: logoImage.x + logoImage.width + 10
                 layer.enabled: false
                 font.pointSize: 12
@@ -247,6 +247,7 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
             }
 
@@ -254,8 +255,8 @@ ApplicationWindow
             {
                 id: patchMenuButton
                 text: qsTr("Patch")
-                width: 40
-                height: 28
+                width: 50
+                height: 36
                 anchors.left: fileMenuButton.right
                 layer.enabled: false
                 font.pointSize: 12
@@ -277,6 +278,7 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
 
                 ButtonGroup.group: mainMenuButtons
@@ -286,8 +288,8 @@ ApplicationWindow
             {
                 id: mainMenuButton
                 text: qsTr("Main")
-                width: 40
-                height: 28
+                width: 50
+                height: 36
                 anchors.left: patchMenuButton.right
                 layer.enabled: false
                 font.pointSize: 12
@@ -309,6 +311,7 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
 
                 ButtonGroup.group: mainMenuButtons
@@ -318,11 +321,10 @@ ApplicationWindow
             {
                 id: outputMenuButton
                 text: qsTr("Output")
-                width: 48
-                height: 28
+                width: 60
+                height: 36
                 anchors.left: mainMenuButton.right
                 layer.enabled: false
-                font.pointSize: 12
                 checkable: true
 
                 bottomPadding: 2
@@ -341,6 +343,7 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
 
                 ButtonGroup.group: mainMenuButtons
@@ -350,8 +353,8 @@ ApplicationWindow
             {
                 id: keyButton
                 text: qsTr("Key")
-                width: 60
-                height: 24
+                width: 75
+                height: 32
                 x: outputMenuButton.x + outputMenuButton.width + 30
                 y: mainMenu.y + 2
                 layer.enabled: false
@@ -375,6 +378,7 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
 
                 onCheckedChanged:
@@ -388,8 +392,8 @@ ApplicationWindow
             {
                 id: midiButton
                 text: "MIDI"
-                width: 60
-                height: 24
+                width: 75
+                height: 32
                 x: keyButton.x + keyButton.width + 10
                 y: mainMenu.y + 2
                 layer.enabled: false
@@ -413,6 +417,7 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
 
                 onCheckedChanged:
@@ -426,8 +431,8 @@ ApplicationWindow
             {
                 id: dmxButton
                 text: qsTr("DMX out")
-                width: 60
-                height: 24
+                width: 75
+                height: 32
                 x: midiButton.x + midiButton.width + 64
                 y: mainMenu.y + 2
                 layer.enabled: false
@@ -451,15 +456,16 @@ ApplicationWindow
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
                     font.family: "Roboto"
+                    font.pixelSize: 14
                 }
             }
 
             Button
             {
                 id: hideButton
-                x: fullButton.x - width - 1
-                width: 28
-                height: 28
+                x: fullButton.x - width
+                width: 36
+                height: 36
 
                 bottomPadding: 0
                 topPadding: 0
@@ -481,9 +487,9 @@ ApplicationWindow
             Button
             {
                 id: fullButton
-                x: closeButton.x - width - 1
-                width: 28
-                height: 28
+                x: closeButton.x - width
+                width: 36
+                height: 36
 
                 bottomPadding: 0
                 topPadding: 0
@@ -519,8 +525,8 @@ ApplicationWindow
             Button
             {
                 id: closeButton
-                width: 28
-                height: 28
+                width: 36
+                height: 36
                 anchors.right: parent.right
 
                 bottomPadding: 0
@@ -549,8 +555,8 @@ ApplicationWindow
                 id: newActionRect
                 x: fileMenuButton.x
                 y: mainMenu.height
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: newActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -561,7 +567,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
@@ -583,8 +590,8 @@ ApplicationWindow
                 id: openActionRect
                 x: fileMenuButton.x
                 y: newActionRect.y + newActionRect.height
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: openActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -595,7 +602,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
@@ -617,8 +625,8 @@ ApplicationWindow
                 id: saveActionRect
                 x: fileMenuButton.x
                 y: openActionRect.y + openActionRect.height
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: saveActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -629,15 +637,16 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
                 Image
                 {
                     source: saveActionMouseArea.containsMouse ? "qrc:/itemArrow_hovered" : "qrc:/itemArrow"
-                    x: 90
-                    y: 10
+                    x: 112
+                    y: 14
                 }
 
                 MouseArea
@@ -662,8 +671,8 @@ ApplicationWindow
                 id: exportActionRect
                 x: fileMenuButton.x
                 y: saveActionRect.y + saveActionRect.height
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: exportActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -674,7 +683,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
@@ -696,8 +706,8 @@ ApplicationWindow
                 id: preferencesActionRect
                 x: fileMenuButton.x
                 y: exportActionRect.y + exportActionRect.height - 2
-                width: 100
-                height: 30
+                width: 125
+                height: 36
                 radius: 2
                 color: preferencesActionMouseArea.containsMouse ? "#333333" : "#222222"
 
@@ -727,7 +737,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
@@ -764,8 +775,8 @@ ApplicationWindow
                 id: projectActionRect
                 x: openActionRect.x + openActionRect.width
                 y: openActionRect.y
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: projectActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -776,7 +787,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
@@ -802,8 +814,8 @@ ApplicationWindow
                 id: workspaceActionRect
                 x: projectActionRect.x
                 y: projectActionRect.y + projectActionRect.height
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: workspaceActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -814,7 +826,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 
@@ -840,8 +853,8 @@ ApplicationWindow
                 id: patchActionRect
                 x: workspaceActionRect.x
                 y: workspaceActionRect.y + workspaceActionRect.height
-                width: 100
-                height: 28
+                width: 125
+                height: 36
                 color: patchActionMouseArea.containsMouse ? "#333333" : "#222222"
 
                 Text
@@ -852,7 +865,8 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    font.pixelSize: 14
+                    topPadding: 9
                     leftPadding: 10
                 }
 

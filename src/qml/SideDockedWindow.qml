@@ -9,7 +9,7 @@ Item
     id: sideDockedWindow
     width: collapsedRect.width
 
-    property int collapsedWidth: 22
+    property int collapsedWidth: 28
     property int expandedWidth: 120
     property int minWidth: expandedWidth
     property string caption: "Caption"
@@ -37,10 +37,10 @@ Item
             Button
             {
                 id: expandButton
-                width: 20
                 height: 20
-                anchors.right: parent.right
-
+                width: 20
+                x: 4
+                y: 4
                 bottomPadding: 0
                 topPadding: 0
                 rightPadding: 0
@@ -68,7 +68,7 @@ Item
             {
                 id: rotatedTextRect
                 x: parent.x
-                y: parent.y + 22
+                y: parent.y + 30
                 width: parent.width
                 height: collapsedCaptionText.width
                 visible: false
@@ -81,6 +81,8 @@ Item
                 text: sideDockedWindow.caption
                 elide: Text.ElideMiddle
                 anchors.centerIn: rotatedTextRect
+                font.family: "Roboto"
+                font.pixelSize: 12
                 rotation: 90
             }
         }
@@ -98,6 +100,8 @@ Item
                 id: collapseButton
                 width: 20
                 height: 20
+                anchors.topMargin: 4
+                anchors.rightMargin: 4
                 anchors.right: parent.right
                 anchors.top: parent.top
 
@@ -133,14 +137,14 @@ Item
                 elide: Text.ElideMiddle
                 anchors.left: parent.left
                 font.family: "Roboto"
-                topPadding: 2
+                topPadding: 4
                 leftPadding: 10
             }
 
             Rectangle
             {
                 id: workArea
-                anchors.topMargin: 22
+                anchors.topMargin: 28
                 anchors.bottomMargin: 2
                 anchors.leftMargin: 2
                 anchors.rightMargin: 2

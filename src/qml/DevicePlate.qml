@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.15
 Item
 {
     id: devicePlate
-    height: 32
+    height: 40
 
     property string name
     property string imageFile
@@ -20,39 +20,39 @@ Item
         {
             x: 2
             y: 2
-            height: 28
-            width: 28
+            height: 36
+            width: 36
             source: devicePlate.imageFile
         }
 
         Rectangle {
             id: rectangle
-            x: 33
+            x: 44
             y: 2
             width: 2
-            height: 28
+            height: 36
             color: "#ffffff"
             opacity: 0.1
         }
 
         Text {
             id: titleText
-            x: 39
+            x: 52
             y: 2
             color: "#ffffff"
             text: qsTr("Name")
             font.family: "Roboto"
-            font.pixelSize: 8
+            font.pixelSize: 10
         }
 
         Text {
             id: nameText
-            x: 39
-            y: 14
+            x: 52
+            y: 20
             color: "#ffffff"
             text: devicePlate.name
             font.family: "Roboto"
-            font.pixelSize: 10
+            font.pixelSize: 12
         }
 
     }
