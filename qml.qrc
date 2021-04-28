@@ -20,5 +20,8 @@
         <file alias="device_pyro">src/img/device_pyro.png</file>
         <file alias="device_sequences">src/img/device_sequences.png</file>
         <file alias="device_shot">src/img/device_shot.png</file>
+        <file>src/qml/PatchPlate.qml</file>
+        <file>src/qml/DeviceListWidget.qml</file>
+        <file>src/qml/PatchPlateCell.qml</file>
     </qresource>
 </RCC>

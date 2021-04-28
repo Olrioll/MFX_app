@@ -44,7 +44,12 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: qsTr("Devices list")
-        expandedWidth: 348
+        expandedWidth: 370
+
+        Component.onCompleted:
+        {
+            addContentItem("DeviceListWidget.qml")
+        }
     }
 
     Item

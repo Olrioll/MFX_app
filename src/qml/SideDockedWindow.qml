@@ -136,6 +136,7 @@ Item
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
                 anchors.left: parent.left
+                anchors.leftMargin: 10
                 font.family: "Roboto"
                 topPadding: 4
                 leftPadding: 10

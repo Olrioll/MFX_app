@@ -228,7 +228,6 @@ ApplicationWindow
                 height: 28
                 x: logoImage.x + logoImage.width + 10
                 layer.enabled: false
-                font.pointSize: 12
                 checkable: true
 
                 bottomPadding: 2
@@ -258,7 +257,6 @@ ApplicationWindow
                 height: 28
                 anchors.left: fileMenuButton.right
                 layer.enabled: false
-                font.pointSize: 12
                 checkable: true
 
                 bottomPadding: 2
@@ -290,7 +288,6 @@ ApplicationWindow
                 height: 28
                 anchors.left: patchMenuButton.right
                 layer.enabled: false
-                font.pointSize: 12
                 checkable: true
 
                 bottomPadding: 2
@@ -322,7 +319,6 @@ ApplicationWindow
                 height: 28
                 anchors.left: mainMenuButton.right
                 layer.enabled: false
-                font.pointSize: 12
                 checkable: true
 
                 bottomPadding: 2
@@ -561,7 +557,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -595,7 +591,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -629,7 +625,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -674,7 +670,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -727,7 +723,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -776,7 +772,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -814,7 +810,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
@@ -852,7 +848,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
-                    topPadding: 5
+                    anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 10
                 }
 
