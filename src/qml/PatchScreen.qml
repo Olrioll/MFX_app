@@ -8,16 +8,18 @@ Item
 {
     id: patchScreen
 
-//    Rectangle
+//    DeviceLibWindow
 //    {
-//        width: 22
+//        id: deviceLib
 //        anchors.right: patchScreen.right
 //        anchors.top: patchScreen.top
 //        anchors.bottom: patchScreen.bottom
-//        color: "#444444"
+
+//        caption: qsTr("Devices library")
+//        expandedWidth: 184
 //    }
 
-    DeviceLibWindow
+    SideDockedWindow
     {
         id: deviceLib
         anchors.right: patchScreen.right
@@ -26,6 +28,11 @@ Item
 
         caption: qsTr("Devices library")
         expandedWidth: 184
+
+        Component.onCompleted:
+        {
+            addContentItem("DeviceLibWidget.qml")
+        }
     }
 
     SideDockedWindow

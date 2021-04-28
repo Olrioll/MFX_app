@@ -15,7 +15,7 @@
         <file alias="expandButton">src/img/dockedWindow_expandButton.png</file>
         <file alias="collapseButton">src/img/dockedWindow_collapseButton.png</file>
         <file>src/qml/DevicePlate.qml</file>
-        <file>src/qml/DeviceLibWindow.qml</file>
+        <file>src/qml/DeviceLibWidget.qml</file>
         <file alias="device_dimmer">src/img/device_dimmer.png</file>
         <file alias="device_pyro">src/img/device_pyro.png</file>
         <file alias="device_sequences">src/img/device_sequences.png</file>

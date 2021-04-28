@@ -11,9 +11,15 @@ Item
 
     property int collapsedWidth: 22
     property int expandedWidth: 120
+    property int minWidth: expandedWidth
     property string caption: "Caption"
 
     property int previousX
+
+    function addContentItem(itemFilename)
+    {
+        Qt.createComponent(itemFilename).createObject(workArea)
+    }
 
     StackLayout
     {
@@ -133,6 +139,7 @@ Item
 
             Rectangle
             {
+                id: workArea
                 anchors.topMargin: 22
                 anchors.bottomMargin: 2
                 anchors.leftMargin: 2
@@ -166,7 +173,11 @@ Item
         onMouseXChanged:
         {
             var dx = mouseX - sideDockedWindow.previousX
-            sideDockedWindow.width = sideDockedWindow.width - dx
+
+            if((sideDockedWindow.width - dx) < minWidth)
+                sideDockedWindow.width = minWidth
+            else
+                sideDockedWindow.width = sideDockedWindow.width - dx
         }
     }
 }

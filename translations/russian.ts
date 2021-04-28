@@ -2,6 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU" sourcelanguage="en">
 <context>
+    <name>DevicePlate</name>
+    <message>
+        <location filename="../src/qml/DevicePlate.qml" line="43"/>
+        <source>Name</source>
+        <translation type="unfinished">Имя</translation>
+    </message>
+</context>
+<context>
     <name>PatchScreen</name>
     <message>
         <location filename="../src/qml/PatchScreen.qml" line="27"/>
