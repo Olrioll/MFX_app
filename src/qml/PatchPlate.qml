@@ -7,11 +7,12 @@ Item
     id: patchPlate
     height: 40
 
-    property int no
-    property string name
-    property string imageFile
-    property bool checked
+    property int no: 0
+    property string name: "Patch Plate"
+    property string imageFile: ""
+    property bool checked: false
     property bool held: false
+    property var cells
 
     Rectangle
     {
@@ -95,8 +96,8 @@ Item
 
             delegate: PatchPlateCell
             {
-                propertyName: name
-                propertyValue: value
+                propertyName: propName
+                propertyValue: propValue
             }
 
             model: ListModel
@@ -106,12 +107,8 @@ Item
 
             Component.onCompleted:
             {
-                cellListModel.append({name: "DMX", value: "0"})
-                cellListModel.append({name: "min ang", value: "+105"})
-                cellListModel.append({name: "max ang", value: "-105"})
-                cellListModel.append({name: "RF pos", value: "3"})
-                cellListModel.append({name: "RF ch", value: "1"})
-                cellListModel.append({name: "height", value: "1"})
+                for(let i = 0; i < cells.count; i++)
+                    cellListModel.append(cells.get(i))
             }
         }
 
@@ -140,8 +137,6 @@ Item
 
             onPressAndHold: patchPlate.held = true
             onReleased: patchPlate.held = false
-
-
         }
     }
 }
