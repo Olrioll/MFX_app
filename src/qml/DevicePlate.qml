@@ -9,12 +9,15 @@ Item
 
     property string name
     property string imageFile
+    property bool held: false
 
     Rectangle
     {
         anchors.fill: parent
         color: "#4f4f4f"
         radius: 2
+        border.width: 2
+        border.color: devicePlate.held ? "lightblue" : "#4f4f4f"
 
         Image
         {
@@ -53,6 +56,30 @@ Item
             text: devicePlate.name
             font.family: "Roboto"
             font.pixelSize: 12
+        }
+
+        states: State {
+                            when: devicePlate.held
+
+                            ParentChange { target: devicePlate; parent: patchScreen }
+                            AnchorChanges {
+                                target: devicePlate
+                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+                            }
+                        }
+
+        MouseArea
+        {
+            id: mouseArea
+            anchors.fill: parent
+
+            drag.target: devicePlate.held ? devicePlate : undefined
+            drag.axis: Drag.XAndYAxis
+
+            onPressed: devicePlate.held = true
+            onReleased: devicePlate.held = false
+
+
         }
 
     }

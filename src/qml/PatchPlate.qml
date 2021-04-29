@@ -116,7 +116,7 @@ Item
         }
 
         states: State {
-                            when: held
+                            when: patchPlate.held
 
                             ParentChange { target: patchPlate; parent: patchScreen }
                             AnchorChanges {
