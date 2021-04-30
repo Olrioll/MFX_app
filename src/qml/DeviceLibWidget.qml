@@ -6,7 +6,7 @@ import "qrc:/"
 
 ListView
 {
-    id: deviceListView
+    id: deviceLibView
     anchors.margins: 2
     anchors.fill: parent
     clip: true
@@ -35,23 +35,23 @@ ListView
         deviceListModel.append({id: "Pyro", img: "qrc:/device_pyro"})
     }
 
-    DropArea
-    {
-        anchors.fill: parent
+//    DropArea
+//    {
+//        anchors.fill: parent
 
-        onEntered:
-        {
-            console.log(drag.x, drag.y)
-        }
+//        onEntered:
+//        {
+//            console.log(drag.x, drag.y)
+//        }
 
-        onExited:
-        {
-            console.log(drag.x, drag.y)
-        }
+//        onExited:
+//        {
+//            console.log(drag.x, drag.y)
+//        }
 
-        onDropped:
-        {
-            console.log(drag.x, drag.y)
-        }
-    }
+//        onDropped:
+//        {
+//            console.log(drag.x, drag.y)
+//        }
+//    }
 }

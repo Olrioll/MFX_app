@@ -9,7 +9,7 @@ ApplicationWindow
 {
     id: applicationWindow
     width: 1280
-    height: 960
+    height: 660
     x: 300
     y: 70
     visible: true

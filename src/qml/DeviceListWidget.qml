@@ -15,6 +15,7 @@ ListView
     ScrollBar.vertical: ScrollBar {}
 
     property int draggedElementIndex: -1
+    property bool containsDrag: deviceListWidgetDropArea.containsDrag
 
     function addSequencesPlate()
     {
@@ -88,27 +89,28 @@ ListView
 
     DropArea
     {
+        id: deviceListWidgetDropArea
         anchors.fill: parent
         onEntered:
         {
-            deviceListView.draggedElementIndex = deviceListView.indexAt(drag.x, drag.y)
-//            console.log(deviceListView.draggedElementIndex)
+            if(drag.source.name === "Patch Plate")
+                deviceListView.draggedElementIndex = deviceListView.indexAt(drag.x, drag.y)
         }
 
         onExited:
         {
-            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-//            console.log(dropToIndex)
-
-            if(deviceListView.draggedElementIndex !== -1 && dropToIndex !== -1)
-                deviceListModel.move(deviceListView.draggedElementIndex, dropToIndex, 1)
-
-            for(let i = 0; i < deviceListModel.count; i++)
+            if(drag.source.name === "Patch Plate")
             {
-                deviceListModel.get(i).counter = i + 1
-            }
+                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
 
-            deviceListView.height = parent.height
+                if(deviceListView.draggedElementIndex !== -1 && dropToIndex !== -1)
+                    deviceListModel.move(deviceListView.draggedElementIndex, dropToIndex, 1)
+
+                for(let i = 0; i < deviceListModel.count; i++)
+                {
+                    deviceListModel.get(i).counter = i + 1
+                }
+            }
         }
 
         onDropped:

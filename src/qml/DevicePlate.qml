@@ -7,12 +7,12 @@ Item
     id: devicePlate
     height: 40
 
-    property string name
+    property string name: "devPlate"
     property string imageFile
     property bool held: false
 
     Drag.active: held
-    Drag.source: mouseArea
+    Drag.source: this
     Drag.hotSpot.x: width / 2
     Drag.hotSpot.y: height / 2
 
@@ -82,7 +82,10 @@ Item
             drag.axis: Drag.XAndYAxis
 
             onPressed: devicePlate.held = true
-            onReleased: devicePlate.held = false
+            onReleased:
+            {
+                devicePlate.held = false
+            }
 
 
         }

@@ -15,7 +15,7 @@ Item
     property var cells
 
     Drag.active: held
-    Drag.source: mouseArea
+    Drag.source: this
     Drag.hotSpot.x: width / 2
     Drag.hotSpot.y: height / 2
 
@@ -133,6 +133,7 @@ Item
         {
             id: mouseArea
             anchors.fill: parent
+            property string type: "patchPlate"
 
             drag.target: patchPlate.held ? patchPlate : undefined
             drag.axis: Drag.YAxis

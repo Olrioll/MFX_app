@@ -18,7 +18,7 @@ Item
 
     function addContentItem(itemFilename)
     {
-        Qt.createComponent(itemFilename).createObject(workArea)
+        var contentItem = Qt.createComponent(itemFilename).createObject(workArea)
     }
 
     StackLayout
