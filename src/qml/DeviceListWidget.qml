@@ -14,6 +14,8 @@ ListView
 //    interactive: false
     ScrollBar.vertical: ScrollBar {}
 
+    property int draggedElementIndex: -1
+
     function addSequencesPlate()
     {
         deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_sequences",
@@ -84,15 +86,29 @@ ListView
         addPyroPlate()
     }
 
-//    MouseArea
-//    {
-//        anchors.fill: parent
-//        DropArea
-//        {
-//            anchors.fill: parent
-//            onDropped: console.log("Dropped")
-//        }
-//    }
+    DropArea
+    {
+        anchors.fill: parent
+        onEntered:
+        {
+            deviceListView.draggedElementIndex = deviceListView.indexAt(drag.x, drag.y)
+            console.log(deviceListView.draggedElementIndex)
+        }
+
+        onExited:
+        {
+            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
+            console.log(dropToIndex)
+
+            if(deviceListView.draggedElementIndex !== -1 && dropToIndex !== -1)
+                deviceListModel.move(deviceListView.draggedElementIndex, dropToIndex, 1)
+        }
+
+        onDropped:
+        {
+            console.log(drag)
+        }
+    }
 
 //    Button
 //    {

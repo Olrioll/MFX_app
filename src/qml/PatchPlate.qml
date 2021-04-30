@@ -14,6 +14,11 @@ Item
     property bool held: false
     property var cells
 
+    Drag.active: held
+    Drag.source: mouseArea
+    Drag.hotSpot.x: width / 2
+    Drag.hotSpot.y: height / 2
+
     Rectangle
     {
         anchors.fill: parent
@@ -121,6 +126,8 @@ Item
                                 anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
                             }
                         }
+
+
 
         MouseArea
         {
