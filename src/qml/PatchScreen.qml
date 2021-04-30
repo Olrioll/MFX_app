@@ -8,17 +8,6 @@ Item
 {
     id: patchScreen
 
-//    DeviceLibWindow
-//    {
-//        id: deviceLib
-//        anchors.right: patchScreen.right
-//        anchors.top: patchScreen.top
-//        anchors.bottom: patchScreen.bottom
-
-//        caption: qsTr("Devices library")
-//        expandedWidth: 184
-//    }
-
     SideDockedWindow
     {
         id: deviceLib
@@ -74,6 +63,5 @@ Item
                 anchors.fill: parent
             }
         }
-
     }
 }

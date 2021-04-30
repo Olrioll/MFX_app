@@ -84,6 +84,7 @@ Item
             onPressed: devicePlate.held = true
             onReleased:
             {
+                drag.target.Drag.drop()
                 devicePlate.held = false
             }
 

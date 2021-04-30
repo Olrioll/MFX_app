@@ -144,7 +144,11 @@ Item
             }
 
             onPressAndHold: patchPlate.held = true
-            onReleased: patchPlate.held = false
+            onReleased:
+            {
+                drag.target.Drag.drop()
+                patchPlate.held = false
+            }
         }
     }
 }

@@ -14,9 +14,6 @@ ListView
 //    interactive: false
     ScrollBar.vertical: ScrollBar {}
 
-    property int draggedElementIndex: -1
-    property bool containsDrag: deviceListWidgetDropArea.containsDrag
-
     function addSequencesPlate()
     {
         deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_sequences",
@@ -91,31 +88,23 @@ ListView
     {
         id: deviceListWidgetDropArea
         anchors.fill: parent
-        onEntered:
-        {
-            if(drag.source.name === "Patch Plate")
-                deviceListView.draggedElementIndex = deviceListView.indexAt(drag.x, drag.y)
-        }
 
-        onExited:
+        onDropped:
         {
             if(drag.source.name === "Patch Plate")
             {
                 var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-
-                if(deviceListView.draggedElementIndex !== -1 && dropToIndex !== -1)
-                    deviceListModel.move(deviceListView.draggedElementIndex, dropToIndex, 1)
+                if(dropToIndex !== -1)
+                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
 
                 for(let i = 0; i < deviceListModel.count; i++)
                 {
                     deviceListModel.get(i).counter = i + 1
                 }
             }
-        }
 
-        onDropped:
-        {
-            console.log(drag)
+            else if (drag.source.name === "Dimmer")
+                addDimmerPlate()
         }
     }
 
