@@ -92,16 +92,23 @@ ListView
         onEntered:
         {
             deviceListView.draggedElementIndex = deviceListView.indexAt(drag.x, drag.y)
-            console.log(deviceListView.draggedElementIndex)
+//            console.log(deviceListView.draggedElementIndex)
         }
 
         onExited:
         {
             var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-            console.log(dropToIndex)
+//            console.log(dropToIndex)
 
             if(deviceListView.draggedElementIndex !== -1 && dropToIndex !== -1)
                 deviceListModel.move(deviceListView.draggedElementIndex, dropToIndex, 1)
+
+            for(let i = 0; i < deviceListModel.count; i++)
+            {
+                deviceListModel.get(i).counter = i + 1
+            }
+
+            deviceListView.height = parent.height
         }
 
         onDropped:

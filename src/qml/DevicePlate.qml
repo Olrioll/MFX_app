@@ -11,6 +11,11 @@ Item
     property string imageFile
     property bool held: false
 
+    Drag.active: held
+    Drag.source: mouseArea
+    Drag.hotSpot.x: width / 2
+    Drag.hotSpot.y: height / 2
+
     Rectangle
     {
         anchors.fill: parent
@@ -81,7 +86,6 @@ Item
 
 
         }
-
     }
 }
 

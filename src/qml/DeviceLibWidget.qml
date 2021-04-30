@@ -34,4 +34,24 @@ ListView
         deviceListModel.append({id: "Shot", img: "qrc:/device_shot"})
         deviceListModel.append({id: "Pyro", img: "qrc:/device_pyro"})
     }
+
+    DropArea
+    {
+        anchors.fill: parent
+
+        onEntered:
+        {
+            console.log(drag.x, drag.y)
+        }
+
+        onExited:
+        {
+            console.log(drag.x, drag.y)
+        }
+
+        onDropped:
+        {
+            console.log(drag.x, drag.y)
+        }
+    }
 }
