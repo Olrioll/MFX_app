@@ -14,9 +14,12 @@ ListView
 //    interactive: false
     ScrollBar.vertical: ScrollBar {}
 
-    function addSequencesPlate()
+    function addSequencesPlate(index)
     {
-        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_sequences",
+        if(index === -1)
+            index = 0
+
+        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_sequences",
                                currentCells: [  {propName: "DMX", propValue: "0"},
                                                 {propName: "min ang", propValue: "-105"},
                                                 {propName: "max ang", propValue: "+105"},
@@ -26,9 +29,12 @@ ListView
                                                 ]})
     }
 
-    function addDimmerPlate()
+    function addDimmerPlate(index)
     {
-        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_dimmer",
+        if(index === -1)
+            index = 0
+
+        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_dimmer",
                                currentCells: [  {propName: "DMX", propValue: "0"},
                                                 {propName: "min ang", propValue: "-105"},
                                                 {propName: "max ang", propValue: "+105"},
@@ -38,9 +44,12 @@ ListView
                                                 ]})
     }
 
-    function addShotPlate()
+    function addShotPlate(index)
     {
-        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_shot",
+        if(index === -1)
+            index = 0
+
+        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_shot",
                                currentCells: [  {propName: "DMX", propValue: "0"},
                                                 {propName: "min ang", propValue: "-105"},
                                                 {propName: "max ang", propValue: "+105"},
@@ -50,9 +59,12 @@ ListView
                                                 ]})
     }
 
-    function addPyroPlate()
+    function addPyroPlate(index)
     {
-        deviceListModel.append({counter: deviceListView.count + 1, img: "qrc:/device_pyro",
+        if(index === -1)
+            index = 0
+
+        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_pyro",
                                currentCells: [  {propName: "DMX", propValue: "0"},
                                                 {propName: "min ang", propValue: "-105"},
                                                 {propName: "max ang", propValue: "+105"},
@@ -60,6 +72,14 @@ ListView
                                                 {propName: "RF ch", propValue: "21"},
                                                 {propName: "height", propValue: "1"}
                                                 ]})
+    }
+
+    function refreshPlatesNo()
+    {
+        for(let i = 0; i < deviceListModel.count; i++)
+        {
+            deviceListModel.get(i).counter = i + 1
+        }
     }
 
     delegate: PatchPlate
@@ -78,10 +98,10 @@ ListView
 
     Component.onCompleted:
     {
-        addSequencesPlate()
-        addDimmerPlate()
-        addShotPlate()
-        addPyroPlate()
+        addSequencesPlate(deviceListModel.count - 1)
+        addDimmerPlate(deviceListModel.count - 1)
+        addShotPlate(deviceListModel.count - 1)
+        addPyroPlate(deviceListModel.count - 1)
     }
 
     DropArea
@@ -91,20 +111,40 @@ ListView
 
         onDropped:
         {
+            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
+
             if(drag.source.name === "Patch Plate")
             {
-                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
                 if(dropToIndex !== -1)
-                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-
-                for(let i = 0; i < deviceListModel.count; i++)
                 {
-                    deviceListModel.get(i).counter = i + 1
+                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
+                    refreshPlatesNo()
                 }
             }
 
+            else if (drag.source.name === "Sequences")
+            {
+                addSequencesPlate(dropToIndex)
+                refreshPlatesNo()
+            }
+
             else if (drag.source.name === "Dimmer")
-                addDimmerPlate()
+            {
+                addDimmerPlate(dropToIndex)
+                refreshPlatesNo()
+            }
+
+            else if (drag.source.name === "Shot")
+            {
+                addShotPlate(dropToIndex)
+                refreshPlatesNo()
+            }
+
+            else if (drag.source.name === "Pyro")
+            {
+                addPyroPlate(dropToIndex)
+                refreshPlatesNo()
+            }
         }
     }
 
