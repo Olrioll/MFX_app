@@ -15,8 +15,8 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Devices library")
-        expandedWidth: 184
+        caption: qsTr("Library")
+        expandedWidth: 140
 
         Component.onCompleted:
         {
@@ -41,13 +41,30 @@ Item
         }
     }
 
+    SideDockedWindow
+    {
+        id: groupList
+        anchors.rightMargin: 2
+        anchors.right: deviceList.left
+        anchors.top: patchScreen.top
+        anchors.bottom: patchScreen.bottom
+
+        caption: qsTr("Device groups")
+        expandedWidth: 370
+
+        Component.onCompleted:
+        {
+            addContentItem("DeviceGroupWidget.qml")
+        }
+    }
+
     Item
     {
         id: sceneWidget
 
         anchors.margins: 2
         anchors.left: patchScreen.left
-        anchors.right: deviceList.left
+        anchors.right: groupList.left
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 

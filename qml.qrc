@@ -23,5 +23,7 @@
         <file>src/qml/PatchPlate.qml</file>
         <file>src/qml/DeviceListWidget.qml</file>
         <file>src/qml/PatchPlateCell.qml</file>
+        <file>src/qml/DeviceGroupWidget.qml</file>
+        <file>src/qml/DeviceGroup.qml</file>
     </qresource>
 </RCC>
