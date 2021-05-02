@@ -133,7 +133,6 @@ Item
         {
             id: mouseArea
             anchors.fill: parent
-            property string type: "patchPlate"
 
             drag.target: patchPlate.held ? patchPlate : undefined
             drag.axis: Drag.YAxis
@@ -143,10 +142,15 @@ Item
                 patchPlate.checked = !patchPlate.checked
             }
 
-            onPressAndHold: patchPlate.held = true
+            onPressAndHold:
+            {
+                patchPlate.held = true
+            }
+
             onReleased:
             {
-                drag.target.Drag.drop()
+                if(drag.target)
+                    drag.target.Drag.drop()
                 patchPlate.held = false
             }
         }

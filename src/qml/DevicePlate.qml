@@ -9,12 +9,7 @@ Item
 
     property string name: "devPlate"
     property string imageFile
-    property bool held: false
-
-    Drag.active: held
-    Drag.source: this
-    Drag.hotSpot.x: width / 2
-    Drag.hotSpot.y: height / 2
+    property bool withBorder: false
 
     Rectangle
     {
@@ -22,7 +17,7 @@ Item
         color: "#4f4f4f"
         radius: 2
         border.width: 2
-        border.color: devicePlate.held ? "lightblue" : "#4f4f4f"
+        border.color: withBorder ? "lightblue" : "#4f4f4f"
 
         Image
         {
@@ -63,33 +58,16 @@ Item
             font.pixelSize: 12
         }
 
-        states: State {
-                            when: devicePlate.held
+//        states: State {
+//                            when: devicePlate.held
 
-                            ParentChange { target: devicePlate; parent: patchScreen }
-                            AnchorChanges {
-                                target: devicePlate
-                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
-                            }
-                        }
+//                            ParentChange { target: devicePlate; parent: patchScreen }
+//                            AnchorChanges {
+//                                target: devicePlate
+//                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+//                            }
+//                        }
 
-        MouseArea
-        {
-            id: mouseArea
-            anchors.fill: parent
-
-            drag.target: devicePlate.held ? devicePlate : undefined
-            drag.axis: Drag.XAndYAxis
-
-            onPressed: devicePlate.held = true
-            onReleased:
-            {
-                drag.target.Drag.drop()
-                devicePlate.held = false
-            }
-
-
-        }
     }
 }
 

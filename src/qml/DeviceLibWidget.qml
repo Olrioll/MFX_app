@@ -14,6 +14,8 @@ ListView
 //    interactive: false
     ScrollBar.vertical: ScrollBar {}
 
+    property bool held: false
+
     delegate: DevicePlate
     {
         anchors.left: parent.left
@@ -35,23 +37,61 @@ ListView
         deviceListModel.append({id: "Pyro", img: "qrc:/device_pyro"})
     }
 
-//    DropArea
-//    {
-//        anchors.fill: parent
+    DevicePlate
+    {
+        id: draggedPlate
+        visible: deviceLibView.held
+        withBorder: true
 
-//        onEntered:
-//        {
-//            console.log(drag.x, drag.y)
-//        }
+        Drag.active: deviceLibView.held
+        Drag.source: this
+        Drag.hotSpot.x: this.width / 2
+        Drag.hotSpot.y: this.height / 2
 
-//        onExited:
-//        {
-//            console.log(drag.x, drag.y)
-//        }
+        states: State
+        {
+            when: deviceLibView.held
 
-//        onDropped:
-//        {
-//            console.log(drag.x, drag.y)
-//        }
-//    }
+            ParentChange { target: draggedPlate; parent: patchScreen }
+            AnchorChanges {
+                target: draggedPlate
+                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+            }
+        }
+    }
+
+    MouseArea
+    {
+        id: mouseArea
+        anchors.fill: parent
+
+        drag.target: deviceLibView.held ? draggedPlate : undefined
+        drag.axis: Drag.XAndYAxis
+
+        onPressed:
+        {
+            var pressedItem = deviceLibView.itemAt(mouseX, mouseY)
+            if(pressedItem)
+            {
+                deviceLibView.held = true
+                draggedPlate.x = pressedItem.mapToItem(patchScreen, 0, 0).x
+                draggedPlate.y = pressedItem.mapToItem(patchScreen, 0, 0).y
+                draggedPlate.width = pressedItem.width
+                draggedPlate.height = pressedItem.height
+                draggedPlate.name = pressedItem.name
+                draggedPlate.imageFile = pressedItem.imageFile
+            }
+        }
+
+        onReleased:
+        {
+            if(drag.target)
+            {
+                drag.target.Drag.drop()
+                deviceLibView.held = false
+            }
+        }
+
+
+    }
 }
