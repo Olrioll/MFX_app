@@ -10,7 +10,7 @@ ListView
     anchors.margins: 2
     anchors.fill: parent
     clip: true
-    spacing: 2
+    spacing: 10
     ScrollBar.vertical: ScrollBar {}
 
     delegate: DeviceGroup
@@ -36,13 +36,13 @@ ListView
         addGroup("Group3", 2)
     }
 
-    DropArea
-    {
-        id: groupListWidgetDropArea
-        anchors.fill: parent
+//    DropArea
+//    {
+//        id: groupListWidgetDropArea
+//        anchors.fill: parent
 
-        onDropped:
-        {
+//        onDropped:
+//        {
 //            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
 
 //            if(drag.source.name === "Patch Plate")
@@ -77,13 +77,6 @@ ListView
 //                addPyroPlate(dropToIndex)
 //                refreshPlatesNo()
 //            }
-        }
-    }
-
-//    Button
-//    {
-//        id: button
-//        anchors.top: deviceListView.contentItem.bottom
-//        onClicked: deviceListView.addSequencesPlate()
+//        }
 //    }
 }

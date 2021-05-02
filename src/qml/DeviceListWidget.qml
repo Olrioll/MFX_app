@@ -102,6 +102,8 @@ ListView
         addDimmerPlate(deviceListModel.count - 1)
         addShotPlate(deviceListModel.count - 1)
         addPyroPlate(deviceListModel.count - 1)
+        addShotPlate(deviceListModel.count - 1)
+        addPyroPlate(deviceListModel.count - 1)
     }
 
     DropArea

@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 
 Item
 {
+    height: collapseButton.checked ? collapseButton.height + deviceList.contentItem.height + 20 : collapseButton.height
     property string name
 
     Button
@@ -51,18 +52,10 @@ Item
     {
         id: listArea
         visible: collapseButton.checked
-//        anchors.topMargin: 10
-//        anchors.top: collapseButton.bottom
-//        anchors.leftMargin: 10
-//        anchors.left: parent.left
-//        anchors.bottomMargin: 2
-//        anchors.bottom: parent.bottom
-//        anchors.rightMargin: 2
-//        anchors.right: parent.right
         x: 18
         y: 30
         width: 360
-        height: 300
+        height: deviceList.contentItem.height + 10
 
         DeviceListWidget
         {
