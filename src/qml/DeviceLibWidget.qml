@@ -41,6 +41,7 @@ ListView
     {
         id: draggedPlate
         visible: deviceLibView.held
+        opacity: 0.8
         withBorder: true
 
         Drag.active: deviceLibView.held

@@ -4,6 +4,7 @@
 #include <QTranslator>
 
 #include "SettingsManager.h"
+#include "ProjectManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
 
@@ -12,6 +13,7 @@ int main(int argc, char** argv)
     QApplication app(argc, argv);
 
     SettingsManager settings;
+    ProjectManager project;
 
     QTranslator translator;
     translator.load(settings.value("workDirectory").toString() + "/translations/russian.qm");
