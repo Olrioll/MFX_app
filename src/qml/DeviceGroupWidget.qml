@@ -4,79 +4,189 @@ import QtQuick.Layouts 1.15
 
 import "qrc:/"
 
-ListView
+Item
 {
-    id: groupListView
     anchors.margins: 2
     anchors.fill: parent
-    clip: true
-    spacing: 10
-    ScrollBar.vertical: ScrollBar {}
-
-    delegate: DeviceGroup
+    ListView
     {
+        id: groupListView
+        anchors.top: parent.top
         anchors.left: parent.left
-        name: groupName
+        anchors.right: parent.right
+        anchors.bottomMargin: 10
+        anchors.bottom: addGroupButton.top
+        clip: true
+        spacing: 10
+        ScrollBar.vertical: ScrollBar {}
+
+        delegate: DeviceGroup
+        {
+            anchors.left: parent.left
+            name: groupName
+        }
+
+        function addGroup(name, index)
+        {
+            groupListModel.insert(index, {groupName: name})
+        }
+
+        model: ListModel
+        {
+            id: groupListModel
+        }
+
+        Component.onCompleted:
+        {
+            addGroup("Group1", 0)
+            addGroup("Group2", 1)
+            addGroup("Group3", 2)
+        }
+
+        //    DropArea
+        //    {
+        //        id: groupListWidgetDropArea
+        //        anchors.fill: parent
+
+        //        onDropped:
+        //        {
+        //            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
+
+        //            if(drag.source.name === "Patch Plate")
+        //            {
+        //                if(dropToIndex !== -1)
+        //                {
+        //                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
+        //                    refreshPlatesNo()
+        //                }
+        //            }
+
+        //            else if (drag.source.name === "Sequences")
+        //            {
+        //                addSequencesPlate(dropToIndex)
+        //                refreshPlatesNo()
+        //            }
+
+        //            else if (drag.source.name === "Dimmer")
+        //            {
+        //                addDimmerPlate(dropToIndex)
+        //                refreshPlatesNo()
+        //            }
+
+        //            else if (drag.source.name === "Shot")
+        //            {
+        //                addShotPlate(dropToIndex)
+        //                refreshPlatesNo()
+        //            }
+
+        //            else if (drag.source.name === "Pyro")
+        //            {
+        //                addPyroPlate(dropToIndex)
+        //                refreshPlatesNo()
+        //            }
+        //        }
+        //    }
     }
 
-    function addGroup(name, index)
+    Button
     {
-        groupListModel.insert(index, {groupName: name})
+        id: addGroupButton
+        text: qsTr("Add Group")
+        height: 24
+        width: (parent.width - anchors.margins * 4) / 3
+
+        anchors.margins: 2
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+
+
+        bottomPadding: 2
+        topPadding: 2
+        rightPadding: 2
+        leftPadding: 2
+
+        background: Rectangle
+        {
+            color: parent.pressed ? "#222222" : "#27AE60"
+            radius: 2
+        }
+
+        contentItem: Text
+        {
+            color: "#ffffff"
+            text: parent.text
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            font.family: "Roboto"
+        }
     }
 
-    model: ListModel
+    Button
     {
-        id: groupListModel
+        id: editButton
+        text: qsTr("Edit")
+        height: 24
+        width: (parent.width - anchors.margins * 4) / 3
+
+        anchors.margins: 2
+        anchors.left: addGroupButton.right
+        anchors.bottom: parent.bottom
+
+
+        bottomPadding: 2
+        topPadding: 2
+        rightPadding: 2
+        leftPadding: 2
+
+        background: Rectangle
+        {
+            color: parent.pressed ? "#222222" : "#2F80ED"
+            radius: 2
+        }
+
+        contentItem: Text
+        {
+            color: "#ffffff"
+            text: parent.text
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            font.family: "Roboto"
+        }
     }
 
-    Component.onCompleted:
+    Button
     {
-        addGroup("Group1", 0)
-        addGroup("Group2", 1)
-        addGroup("Group3", 2)
+        id: deleteButton
+        text: qsTr("Delete selected")
+        height: 24
+        width: (parent.width - anchors.margins * 4) / 3
+
+        anchors.margins: 2
+        anchors.left: editButton.right
+        anchors.bottom: parent.bottom
+
+
+        bottomPadding: 2
+        topPadding: 2
+        rightPadding: 2
+        leftPadding: 2
+
+        background: Rectangle
+        {
+            color: parent.pressed ? "#222222" : "#EB5757"
+            radius: 2
+        }
+
+        contentItem: Text
+        {
+            color: "#ffffff"
+            text: parent.text
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            font.family: "Roboto"
+        }
     }
-
-//    DropArea
-//    {
-//        id: groupListWidgetDropArea
-//        anchors.fill: parent
-
-//        onDropped:
-//        {
-//            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-
-//            if(drag.source.name === "Patch Plate")
-//            {
-//                if(dropToIndex !== -1)
-//                {
-//                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-//                    refreshPlatesNo()
-//                }
-//            }
-
-//            else if (drag.source.name === "Sequences")
-//            {
-//                addSequencesPlate(dropToIndex)
-//                refreshPlatesNo()
-//            }
-
-//            else if (drag.source.name === "Dimmer")
-//            {
-//                addDimmerPlate(dropToIndex)
-//                refreshPlatesNo()
-//            }
-
-//            else if (drag.source.name === "Shot")
-//            {
-//                addShotPlate(dropToIndex)
-//                refreshPlatesNo()
-//            }
-
-//            else if (drag.source.name === "Pyro")
-//            {
-//                addPyroPlate(dropToIndex)
-//                refreshPlatesNo()
-//            }
-//        }
-//    }
 }

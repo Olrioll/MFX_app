@@ -23,6 +23,7 @@ int main(int argc, char** argv)
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("settings", &settings);
+    engine.rootContext()->setContextProperty("project", &project);
     engine.load(QUrl(QStringLiteral("qrc:/src/qml/main.qml")));
     return app.exec();
 }

@@ -50,7 +50,7 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: qsTr("Device groups")
-        expandedWidth: 370
+        expandedWidth: 390
 
         Component.onCompleted:
         {

@@ -1,30 +1,31 @@
 #include "ProjectManager.h"
 
+#include <QDebug>
 #include <QFile>
 
 ProjectManager::ProjectManager(QObject *parent) : QObject(parent)
 {
-    _project.insert("name", "Test project");
+//    loadProject("test.mfx");
 }
 
 ProjectManager::~ProjectManager()
 {
-    saveProject();
+//    saveProject();
 }
 
 void ProjectManager::loadProject(QString fileName)
 {
-//    QFile file(fileName);
-//        if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-//        {
-//            scriptEngine->globalObject().setProperty(objectName, scriptEngine->toScriptValue((QJsonDocument::fromJson(file.readAll())).toVariant()));
-//        }
+    QFile file(fileName);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        _project = QJsonDocument::fromJson(file.readAll()).object();
+    }
 }
 
 void ProjectManager::saveProject()
 {
     QFile file("test.mfx");
-        if (file.open(QIODevice::WriteOnly))
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
             QJsonDocument doc;
             doc.setObject(_project);
