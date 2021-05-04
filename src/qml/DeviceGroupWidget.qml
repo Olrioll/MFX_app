@@ -33,7 +33,10 @@ Item
 
         function loadGroups()
         {
-            project.groupNames().forEach(function(item, i, arr){groupListModel.append({groupName: item})})
+            project.groupNames().forEach(function(item, i, arr)
+            {
+                groupListModel.append({groupName: item})
+            })
         }
 
         model: ListModel
@@ -198,6 +201,17 @@ Item
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             font.family: "Roboto"
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onCurrentGroupIndexChanged(index)
+        {
+            groupListView.itemAtIndex(groupListView.currentIndex).checked = false
+            groupListView.currentIndex = index
+            groupListView.itemAtIndex(groupListView.currentIndex).checked = true
         }
     }
 }

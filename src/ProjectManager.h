@@ -50,6 +50,9 @@ public:
     explicit ProjectManager(QObject *parent = nullptr);
     ~ProjectManager();
 
+    Q_PROPERTY(int currentGroupIndex READ currentGroupIndex WRITE setCurrentGroupIndex NOTIFY currentGroupIndexChanged)
+
+
 public slots:
 
     void loadProject(QString fileName);
@@ -58,12 +61,20 @@ public slots:
     bool addGroup(QString name);
     QStringList groupNames() const;
 
+    int currentGroupIndex() const;
+    void setCurrentGroupIndex(int currentGroupIndex);
+    void setCurrentGroup(QString name);
+
 signals:
+
+    void currentGroupIndexChanged(int currentGroupIndex);
 
 private:
 
     QJsonObject _project;
     QList<Group> _groups;
+
+    int m_currentGroupIndex;
 };
 
 #endif // PROJECTMANAGER_H

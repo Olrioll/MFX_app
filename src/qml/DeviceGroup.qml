@@ -4,8 +4,11 @@ import QtQuick.Layouts 1.15
 
 Item
 {
+    id: deviceGroup
     height: collapseButton.checked ? collapseButton.height + deviceList.contentItem.height + 20 : collapseButton.height
     property string name
+    property bool checked
+    signal groupNameClicked
 
     Button
     {
@@ -35,18 +38,57 @@ Item
         }
     }
 
-    Text
+    Rectangle
     {
-        color: "#ffffff"
-        text: parent.name
+        color: parent.checked ? "#444444" : "#000000"
+        radius: 2
         anchors.leftMargin: 10
         anchors.left: collapseButton.right
-        horizontalAlignment: Text.AlignHLeft
-        verticalAlignment: Text.AlignVCenter
-        elide: Text.ElideRight
-        font.family: "Roboto"
-        font.pixelSize: 12
+        height: collapseButton.height
+        width: groupNameText.width + 4
+
+        Text
+        {
+            id: groupNameText
+            color: "#ffffff"
+            text: deviceGroup.name
+            anchors.leftMargin: 2
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHLeft
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            font.family: "Roboto"
+            font.pixelSize: 12
+
+
+        }
+
+        MouseArea
+        {
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            onClicked:
+            {
+                if (mouse.button === Qt.LeftButton)
+                {
+                    project.setCurrentGroup(deviceGroup.name)
+                }
+
+                else if (mouse.button === Qt.RightButton)
+                    contextMenu.popup()
+            }
+
+            Menu
+            {
+                id: contextMenu
+                MenuItem { text: "Cut" }
+                MenuItem { text: "Copy" }
+                MenuItem { text: "Paste" }
+            }
+        }
     }
+
+
 
     Item
     {
@@ -62,6 +104,5 @@ Item
             id: deviceList
             anchors.fill: parent
         }
-    }
-
+    }    
 }

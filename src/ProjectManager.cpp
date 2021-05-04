@@ -19,6 +19,11 @@ ProjectManager::~ProjectManager()
     saveProject();
 }
 
+int ProjectManager::currentGroupIndex() const
+{
+    return m_currentGroupIndex;
+}
+
 void ProjectManager::loadProject(QString fileName)
 {
     QFile file(fileName);
@@ -81,4 +86,28 @@ QStringList ProjectManager::groupNames() const
         names.push_back(group.name);
     return names;
 
+}
+
+void ProjectManager::setCurrentGroupIndex(int currentGroupIndex)
+{
+    if (m_currentGroupIndex == currentGroupIndex)
+        return;
+
+    m_currentGroupIndex = currentGroupIndex;
+    emit currentGroupIndexChanged(m_currentGroupIndex);
+}
+
+void ProjectManager::setCurrentGroup(QString name)
+{
+    int index = 0;
+    foreach(auto group, _groups)
+    {
+        if(group.name == name)
+        {
+            setCurrentGroupIndex(index);
+            return;
+        }
+
+        index++;
+    }
 }
