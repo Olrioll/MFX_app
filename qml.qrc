@@ -25,5 +25,6 @@
         <file>src/qml/PatchPlateCell.qml</file>
         <file>src/qml/DeviceGroupWidget.qml</file>
         <file>src/qml/DeviceGroup.qml</file>
+        <file>src/qml/AddGroupWindow.qml</file>
     </qresource>
 </RCC>

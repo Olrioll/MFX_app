@@ -59,6 +59,7 @@ public slots:
     void saveProject();
 
     bool addGroup(QString name);
+    void removeGroup(QString name);
     QStringList groupNames() const;
 
     int currentGroupIndex() const;
@@ -68,6 +69,7 @@ public slots:
 signals:
 
     void currentGroupIndexChanged(int currentGroupIndex);
+    void groupChanged(int index);
 
 private:
 

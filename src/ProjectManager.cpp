@@ -79,6 +79,25 @@ bool ProjectManager::addGroup(QString name)
     return true;
 }
 
+void ProjectManager::removeGroup(QString name)
+{
+    int index = -1;
+    for(int i = 0; i < _groups.size(); i++)
+    {
+       if(_groups[i].name == name)
+       {
+           index = i;
+           break;
+       }
+    }
+
+    if(index != -1)
+    {
+        _groups.removeAt(index);
+        emit groupChanged(index);
+    }
+}
+
 QStringList ProjectManager::groupNames() const
 {
     QStringList names;

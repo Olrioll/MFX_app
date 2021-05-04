@@ -72,5 +72,17 @@ Item
 //            onClicked: utilityWindow.visible = false
             onClicked: utilityWindow.destroy()
         }
+
+        Rectangle
+        {
+            id: workArea
+            anchors.topMargin: 28
+            anchors.bottomMargin: 2
+            anchors.leftMargin: 2
+            anchors.rightMargin: 2
+            anchors.fill: parent
+
+            color: "#000000"
+        }
     }
 }

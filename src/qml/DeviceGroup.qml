@@ -13,8 +13,8 @@ Item
     Button
     {
         id: collapseButton
-        width: 15
-        height: 15
+        width: 16
+        height: 16
         checkable: true
 
         bottomPadding: 0
@@ -54,6 +54,7 @@ Item
             text: deviceGroup.name
             anchors.leftMargin: 2
             anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignHLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
@@ -75,15 +76,54 @@ Item
                 }
 
                 else if (mouse.button === Qt.RightButton)
+                {
+                    project.setCurrentGroup(deviceGroup.name)
                     contextMenu.popup()
+                }
             }
 
             Menu
             {
                 id: contextMenu
-                MenuItem { text: "Cut" }
-                MenuItem { text: "Copy" }
-                MenuItem { text: "Paste" }
+                Action
+                {
+                    text: qsTr("Rename group")
+
+                }
+                Action
+                {
+                    text: qsTr("Delete group")
+                    onTriggered: project.removeGroup(deviceGroup.name)
+                }
+
+                delegate: MenuItem
+                {
+                    id: menuItem
+                    width: 150
+                    height: 30
+
+                    contentItem: Text {
+                                 text: menuItem.text
+                                 font: menuItem.font
+                                 color: "#ffffff"
+                                 horizontalAlignment: Text.AlignLeft
+                                 verticalAlignment: Text.AlignVCenter
+                                 elide: Text.ElideRight
+                             }
+
+                    background: Rectangle {
+                                 implicitWidth: 150
+                                 implicitHeight: 30
+                                 color: menuItem.highlighted ? "#333333" : "transparent"
+                             }
+                }
+
+                background: Rectangle {
+                             implicitWidth: 150
+                             implicitHeight: 30
+                             radius: 2
+                             color: "#222222"
+                         }
             }
         }
     }

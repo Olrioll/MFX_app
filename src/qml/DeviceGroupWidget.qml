@@ -33,6 +33,7 @@ Item
 
         function loadGroups()
         {
+            groupListModel.clear()
             project.groupNames().forEach(function(item, i, arr)
             {
                 groupListModel.append({groupName: item})
@@ -133,7 +134,13 @@ Item
             font.family: "Roboto"
         }
 
-        onClicked: groupListView.addGroup("Group5")
+        onClicked:
+        {
+            var addGroupWindow = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
+            addGroupWindow.x = applicationWindow.width / 2 - addGroupWindow.width / 2
+            addGroupWindow.y = applicationWindow.height / 2 - addGroupWindow.height / 2
+            addGroupWindow.caption = qsTr("New group")
+        }
     }
 
     Button
@@ -212,6 +219,15 @@ Item
             groupListView.itemAtIndex(groupListView.currentIndex).checked = false
             groupListView.currentIndex = index
             groupListView.itemAtIndex(groupListView.currentIndex).checked = true
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onGroupChanged(index)
+        {
+            groupListView.loadGroups();
         }
     }
 }
