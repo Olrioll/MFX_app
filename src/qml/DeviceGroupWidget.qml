@@ -22,13 +22,18 @@ Item
 
         delegate: DeviceGroup
         {
-            anchors.left: parent.left
             name: groupName
         }
 
-        function addGroup(name, index)
+        function addGroup(name)
         {
-            groupListModel.insert(index, {groupName: name})
+            if(project.addGroup(name))
+                groupListModel.append({groupName: name})
+        }
+
+        function loadGroups()
+        {
+            project.groupNames().forEach(function(item, i, arr){groupListModel.append({groupName: item})})
         }
 
         model: ListModel
@@ -38,9 +43,7 @@ Item
 
         Component.onCompleted:
         {
-            addGroup("Group1", 0)
-            addGroup("Group2", 1)
-            addGroup("Group3", 2)
+            loadGroups();
         }
 
         //    DropArea
@@ -126,6 +129,8 @@ Item
             elide: Text.ElideRight
             font.family: "Roboto"
         }
+
+        onClicked: groupListView.addGroup("Group5")
     }
 
     Button
