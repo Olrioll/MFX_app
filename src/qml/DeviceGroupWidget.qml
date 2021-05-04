@@ -107,13 +107,19 @@ Item
 
         background: Rectangle
         {
-            color: parent.pressed ? "#222222" : "#27AE60"
+            color:
+            {
+                if(parent.enabled)
+                    parent.pressed ? "#222222" : "#27AE60"
+                else
+                    "#444444"
+            }
             radius: 2
         }
 
         contentItem: Text
         {
-            color: "#ffffff"
+            color: parent.enabled ? "#ffffff" : "#777777"
             text: parent.text
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
