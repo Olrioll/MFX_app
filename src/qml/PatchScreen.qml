@@ -20,7 +20,7 @@ Item
 
         Component.onCompleted:
         {
-            addContentItem("DeviceLibWidget.qml")
+            addContentItem("DeviceLibWidget.qml", {})
         }
     }
 
@@ -37,7 +37,7 @@ Item
 
         Component.onCompleted:
         {
-            addContentItem("DeviceListWidget.qml")
+            addContentItem("DeviceListWidget.qml", {isGeneralList: true})
         }
     }
 
@@ -54,7 +54,7 @@ Item
 
         Component.onCompleted:
         {
-            addContentItem("DeviceGroupWidget.qml")
+            addContentItem("DeviceGroupWidget.qml", {})
         }
     }
 

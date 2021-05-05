@@ -16,9 +16,9 @@ Item
 
     property int previousX
 
-    function addContentItem(itemFilename)
+    function addContentItem(itemFilename, properties)
     {
-        var contentItem = Qt.createComponent(itemFilename).createObject(workArea)
+        var contentItem = Qt.createComponent(itemFilename).createObject(workArea, properties)
     }
 
     StackLayout

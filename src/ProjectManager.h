@@ -50,6 +50,7 @@ public:
     struct Patch
     {
         int id;
+        QString type;
         QMap<QString, int> properties;
 
         Patch() {}
@@ -57,6 +58,7 @@ public:
         Patch(const QJsonObject& patchObject)
         {
             id = patchObject["id"].toInt();
+            type = patchObject["type"].toString();
             foreach(auto property, patchObject["properties"].toArray())
             {
                 auto propObject = property.toObject();
@@ -70,15 +72,17 @@ public:
         {
             QJsonObject patchObject;
             patchObject.insert("id", id);
+            patchObject.insert("type", type);
 
             QJsonArray propertiesArray;
-            foreach(auto prop, properties)
+            foreach(auto key, properties.keys())
             {
                 QJsonObject propObject;
-                propObject.insert(properties.key(prop), prop);
+                propObject.insert(key, properties[key]);
                 propertiesArray.append(propObject);
             }
 
+            qDebug() << propertiesArray;
             patchObject.insert("properties", propertiesArray);
             return patchObject;
         }
@@ -103,8 +107,10 @@ public slots:
 
     void addPatch(QVariantList properties);
     int patchCount() const;
-    QStringList patchPropertiesNames(int index);
-    QList<int> patchPropertiesValues(int index);
+
+    QString patchType(int index) const;
+    QStringList patchPropertiesNames(int index) const;
+    QList<int> patchPropertiesValues(int index) const;
 
     int currentGroupIndex() const;
     QString currentGroup() const;

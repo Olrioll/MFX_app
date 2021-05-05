@@ -157,12 +157,17 @@ int ProjectManager::patchCount() const
     return _patches.size();
 }
 
-QStringList ProjectManager::patchPropertiesNames(int index)
+QString ProjectManager::patchType(int index) const
+{
+    return _patches[index].type;
+}
+
+QStringList ProjectManager::patchPropertiesNames(int index) const
 {
     return _patches[index].properties.keys();
 }
 
-QList<int> ProjectManager::patchPropertiesValues(int index)
+QList<int> ProjectManager::patchPropertiesValues(int index) const
 {
     return _patches[index].properties.values();
 }
