@@ -51,7 +51,7 @@ public:
     {
         int id;
         QString type;
-        QMap<QString, int> properties;
+        QList<QPair<QString, int>> properties;
 
         Patch() {}
 
@@ -63,7 +63,7 @@ public:
             {
                 auto propObject = property.toObject();
                 auto key = propObject.keys().first();
-                properties.insert(key, propObject.value(key).toInt());
+                properties.push_back({key, propObject.value(key).toInt()});
             }
 
         }
@@ -75,14 +75,13 @@ public:
             patchObject.insert("type", type);
 
             QJsonArray propertiesArray;
-            foreach(auto key, properties.keys())
+            foreach(auto prop, properties)
             {
                 QJsonObject propObject;
-                propObject.insert(key, properties[key]);
+                propObject.insert(prop.first, prop.second);
                 propertiesArray.append(propObject);
             }
 
-            qDebug() << propertiesArray;
             patchObject.insert("properties", propertiesArray);
             return patchObject;
         }

@@ -141,7 +141,7 @@ void ProjectManager::addPatch(QVariantList properties)
 
     foreach(auto prop, properties)
     {
-        patch.properties.insert(prop.toMap().first().toString(), prop.toMap().last().toInt());
+        patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toInt()});
     }
 
     _patches.push_back(patch);
@@ -164,12 +164,18 @@ QString ProjectManager::patchType(int index) const
 
 QStringList ProjectManager::patchPropertiesNames(int index) const
 {
-    return _patches[index].properties.keys();
+    QStringList list;
+    foreach(auto prop, _patches[index].properties)
+        list.push_back(prop.first);
+    return list;
 }
 
 QList<int> ProjectManager::patchPropertiesValues(int index) const
 {
-    return _patches[index].properties.values();
+    QList<int> list;
+    foreach(auto prop, _patches[index].properties)
+        list.push_back(prop.second);
+    return list;
 }
 
 QStringList ProjectManager::groupNames() const

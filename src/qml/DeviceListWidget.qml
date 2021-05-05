@@ -25,7 +25,6 @@ ListView
             var propNamesList = project.patchPropertiesNames(i)
             var propValuesList = project.patchPropertiesValues(i)
             var cells = []
-//            console.log(propNamesList.length)
             for(let j = 0; j < propNamesList.length; j++)
             {
                 cells.push({propName: propNamesList[j], propValue: propValuesList[j]})
@@ -41,7 +40,6 @@ ListView
                 imageFile = "qrc:/device_shot"
             else if (deviceType === "Dimmer")
                 imageFile = "qrc:/device_dimmer"
-
 
             deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, img: imageFile, currentCells: cells})
         }
