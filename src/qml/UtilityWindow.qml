@@ -9,11 +9,12 @@ Item
     height: 300
 
     property string caption
+    property var contentItem
 
     function addContentItem(itemFilename)
     {
-        var contentItem = Qt.createComponent(itemFilename).createObject(workArea)
-        contentItem.parentItem = utilityWindow
+        contentItem = Qt.createComponent(itemFilename).createObject(workArea)
+        contentItem.onCanBeDestroyed.connect(function(){utilityWindow.destroy()})
     }
 
     Rectangle
@@ -75,7 +76,6 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-//            onClicked: utilityWindow.visible = false
             onClicked: utilityWindow.destroy()
         }
 

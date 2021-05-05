@@ -7,14 +7,14 @@ Item
     id: addGroupItem
     anchors.fill: parent
 
-    property var parentItem
+    signal canBeDestroyed
 
     function attemptToAdd()
     {
         if(groupNameField.text !== "")
         {
             project.addGroup(groupNameField.text);
-            parentItem.destroy()
+            addGroupItem.canBeDestroyed()
         }
     }
 

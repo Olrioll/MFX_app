@@ -7,14 +7,14 @@ Item
     id: renameGroupItem
     anchors.fill: parent
 
-    property var parentItem
+    signal canBeDestroyed
 
     function attemptToRename()
     {
         if(groupNameField.text !== "")
         {
             project.renameGroup(groupNameField.text);
-            parentItem.destroy()
+            renameGroupItem.canBeDestroyed()
         }
     }
 
