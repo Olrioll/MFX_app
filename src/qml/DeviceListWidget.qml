@@ -106,12 +106,12 @@ ListView
 
     Component.onCompleted:
     {
-        addSequencesPlate(deviceListModel.count - 1)
-        addDimmerPlate(deviceListModel.count - 1)
-        addShotPlate(deviceListModel.count - 1)
-        addPyroPlate(deviceListModel.count - 1)
-        addShotPlate(deviceListModel.count - 1)
-        addPyroPlate(deviceListModel.count - 1)
+//        addSequencesPlate(deviceListModel.count - 1)
+//        addDimmerPlate(deviceListModel.count - 1)
+//        addShotPlate(deviceListModel.count - 1)
+//        addPyroPlate(deviceListModel.count - 1)
+//        addShotPlate(deviceListModel.count - 1)
+//        addPyroPlate(deviceListModel.count - 1)
     }
 
     DropArea

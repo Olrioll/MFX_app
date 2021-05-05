@@ -6,7 +6,7 @@
 
 ProjectManager::ProjectManager(QObject *parent) : QObject(parent)
 {
-    loadProject("test.mfx");
+    loadProject("test.json");
 //    foreach(auto group, _groups)
 //    {
 //        qDebug() << group.name;
@@ -43,6 +43,14 @@ void ProjectManager::loadProject(QString fileName)
         {
             _groups.push_back(Group(group.toObject()));
         }
+
+        // Загружаем список патчей
+
+        auto patchesArray = _project["patches"].toArray();
+        foreach(auto patch, patchesArray)
+        {
+            _patches.push_back(Patch(patch.toObject()));
+        }
     }
 }
 
@@ -60,9 +68,19 @@ void ProjectManager::saveProject()
 
     _project.insert("groups", groupsArray);
 
+    // Сохраняем список патчей
+
+    QJsonArray patchesArray;
+    foreach(auto patch, _patches)
+    {
+        patchesArray.append(patch.toJsonObject());
+    }
+
+    _project.insert("patches", patchesArray);
+
     //----
 
-    QFile file("test.mfx");
+    QFile file("test.json");
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
             QJsonDocument doc;
@@ -127,6 +145,26 @@ void ProjectManager::addPatch(QVariantList properties)
     }
 
     _patches.push_back(patch);
+
+    if(_patches.size() == 1)
+        _patches.last().id = 0;
+    else
+        _patches.last().id = _patches.at(_patches.size() - 2).id + 1;
+}
+
+int ProjectManager::patchCount() const
+{
+    return _patches.size();
+}
+
+QStringList ProjectManager::patchPropertiesNames(int index)
+{
+    return _patches[index].properties.keys();
+}
+
+QList<int> ProjectManager::patchPropertiesValues(int index)
+{
+    return _patches[index].properties.values();
 }
 
 QStringList ProjectManager::groupNames() const
