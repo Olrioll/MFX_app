@@ -75,7 +75,7 @@ bool ProjectManager::addGroup(QString name)
     }
 
     _groups.push_back(Group(name));
-
+    emit groupChanged(_groups.size() - 1);
     return true;
 }
 

@@ -10,6 +10,12 @@ Item
 
     property string caption
 
+    function addContentItem(itemFilename)
+    {
+        var contentItem = Qt.createComponent(itemFilename).createObject(workArea)
+        contentItem.parentItem = utilityWindow
+    }
+
     Rectangle
     {
         id: rectangle
@@ -82,7 +88,7 @@ Item
             anchors.rightMargin: 2
             anchors.fill: parent
 
-            color: "#000000"
+            color: "#222222"
         }
     }
 }

@@ -137,6 +137,7 @@ Item
         onClicked:
         {
             var addGroupWindow = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
+            addGroupWindow.addContentItem("AddGroupWindow.qml");
             addGroupWindow.x = applicationWindow.width / 2 - addGroupWindow.width / 2
             addGroupWindow.y = applicationWindow.height / 2 - addGroupWindow.height / 2
             addGroupWindow.caption = qsTr("New group")
