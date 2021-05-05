@@ -88,6 +88,14 @@ Item
                 Action
                 {
                     text: qsTr("Rename group")
+                    onTriggered:
+                    {
+                        var renameGroupWindow = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
+                        renameGroupWindow.addContentItem("RenameGroupWindow.qml");
+                        renameGroupWindow.x = applicationWindow.width / 2 - renameGroupWindow.width / 2
+                        renameGroupWindow.y = applicationWindow.height / 2 - renameGroupWindow.height / 2
+                        renameGroupWindow.caption = qsTr("Rename group")
+                    }
 
                 }
                 Action

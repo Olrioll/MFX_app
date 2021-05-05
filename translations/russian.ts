@@ -2,6 +2,56 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU" sourcelanguage="en">
 <context>
+    <name>AddGroupWindow</name>
+    <message>
+        <location filename="../src/qml/AddGroupWindow.qml" line="28"/>
+        <source>Group name</source>
+        <translation type="unfinished">Имя группы</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/AddGroupWindow.qml" line="59"/>
+        <source>Add</source>
+        <translation type="unfinished">Добавить</translation>
+    </message>
+</context>
+<context>
+    <name>DeviceGroup</name>
+    <message>
+        <location filename="../src/qml/DeviceGroup.qml" line="90"/>
+        <location filename="../src/qml/DeviceGroup.qml" line="97"/>
+        <source>Rename group</source>
+        <translation type="unfinished">Переименовать</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DeviceGroup.qml" line="103"/>
+        <source>Delete group</source>
+        <translation type="unfinished">Удалить</translation>
+    </message>
+</context>
+<context>
+    <name>DeviceGroupWidget</name>
+    <message>
+        <location filename="../src/qml/DeviceGroupWidget.qml" line="101"/>
+        <source>Add Group</source>
+        <translation type="unfinished">Добавить группу</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DeviceGroupWidget.qml" line="143"/>
+        <source>New group</source>
+        <translation type="unfinished">Новая группа</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DeviceGroupWidget.qml" line="150"/>
+        <source>Edit</source>
+        <translation type="unfinished">Изменить</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/DeviceGroupWidget.qml" line="184"/>
+        <source>Delete selected</source>
+        <translation type="unfinished">Удалить выбранные</translation>
+    </message>
+</context>
+<context>
     <name>DevicePlate</name>
     <message>
         <location filename="../src/qml/DevicePlate.qml" line="46"/>
@@ -29,6 +79,19 @@
         <location filename="../src/qml/PatchScreen.qml" line="52"/>
         <source>Device groups</source>
         <translation type="unfinished">Группы устройств</translation>
+    </message>
+</context>
+<context>
+    <name>RenameGroupWindow</name>
+    <message>
+        <location filename="../src/qml/RenameGroupWindow.qml" line="28"/>
+        <source>Group name</source>
+        <translation type="unfinished">Имя группы</translation>
+    </message>
+    <message>
+        <location filename="../src/qml/RenameGroupWindow.qml" line="59"/>
+        <source>Rename</source>
+        <translation type="unfinished">Переименовать</translation>
     </message>
 </context>
 <context>

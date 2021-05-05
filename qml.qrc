@@ -26,5 +26,6 @@
         <file>src/qml/DeviceGroupWidget.qml</file>
         <file>src/qml/DeviceGroup.qml</file>
         <file>src/qml/AddGroupWindow.qml</file>
+        <file>src/qml/RenameGroupWindow.qml</file>
     </qresource>
 </RCC>

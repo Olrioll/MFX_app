@@ -58,11 +58,14 @@ public slots:
     void loadProject(QString fileName);
     void saveProject();
 
-    bool addGroup(QString name);
-    void removeGroup(QString name);
     QStringList groupNames() const;
 
+    bool addGroup(QString name);
+    void removeGroup(QString name);
+    bool renameGroup(QString newName);
+
     int currentGroupIndex() const;
+    QString currentGroup() const;
     void setCurrentGroupIndex(int currentGroupIndex);
     void setCurrentGroup(QString name);
 

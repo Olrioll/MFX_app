@@ -24,6 +24,11 @@ int ProjectManager::currentGroupIndex() const
     return m_currentGroupIndex;
 }
 
+QString ProjectManager::currentGroup() const
+{
+    return _groups[currentGroupIndex()].name;
+}
+
 void ProjectManager::loadProject(QString fileName)
 {
     QFile file(fileName);
@@ -96,6 +101,20 @@ void ProjectManager::removeGroup(QString name)
         _groups.removeAt(index);
         emit groupChanged(index);
     }
+}
+
+bool ProjectManager::renameGroup(QString newName)
+{
+    foreach(auto group, _groups)
+    {
+       if(group.name == newName)
+           return false;
+    }
+
+   _groups[currentGroupIndex()].name = newName;
+
+    emit groupChanged(currentGroupIndex());
+    return true;
 }
 
 QStringList ProjectManager::groupNames() const
