@@ -27,6 +27,14 @@ ListView
                                                 {propName: "RF ch", propValue: "21"},
                                                 {propName: "height", propValue: "1"}
                                                 ]})
+
+        project.addPatch([  {propName: "DMX", propValue: 0},
+                          {propName: "min ang", propValue: -105},
+                          {propName: "max ang", propValue: 105},
+                          {propName: "RF pos", propValue: 3},
+                          {propName: "RF ch", propValue: 21},
+                          {propName: "height", propValue: 1}
+                          ])
     }
 
     function addDimmerPlate(index)

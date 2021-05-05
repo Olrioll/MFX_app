@@ -47,6 +47,12 @@ public:
         }
     };
 
+    struct Patch
+    {
+        int id;
+        QMap<QString, int> properties;
+    };
+
     explicit ProjectManager(QObject *parent = nullptr);
     ~ProjectManager();
 
@@ -64,6 +70,8 @@ public slots:
     void removeGroup(QString name);
     bool renameGroup(QString newName);
 
+    void addPatch(QVariantList properties);
+
     int currentGroupIndex() const;
     QString currentGroup() const;
     void setCurrentGroupIndex(int currentGroupIndex);
@@ -78,6 +86,7 @@ private:
 
     QJsonObject _project;
     QList<Group> _groups;
+    QList<Patch> _patches;
 
     int m_currentGroupIndex;
 };

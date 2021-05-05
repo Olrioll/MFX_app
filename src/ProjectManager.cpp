@@ -114,7 +114,19 @@ bool ProjectManager::renameGroup(QString newName)
    _groups[currentGroupIndex()].name = newName;
 
     emit groupChanged(currentGroupIndex());
-    return true;
+   return true;
+}
+
+void ProjectManager::addPatch(QVariantList properties)
+{
+    Patch patch;
+
+    foreach(auto prop, properties)
+    {
+        patch.properties.insert(prop.toMap().first().toString(), prop.toMap().last().toInt());
+    }
+
+    _patches.push_back(patch);
 }
 
 QStringList ProjectManager::groupNames() const
