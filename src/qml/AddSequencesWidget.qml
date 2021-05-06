@@ -160,15 +160,31 @@ Item
             y: 82
             width: 36
             height: 18
+            text: "1"
             color: "#ffffff"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
+            leftPadding: -2
             font.pointSize: 8
 
             property bool isActiveInput: false
 
-            validator: RegExpValidator { regExp: /[0-9]+/ }
-            maximumLength: 3
+            function checkValue()
+            {
+                if(text === "")
+                    return false
+
+                let operatorIndex = text.indexOf('+')
+
+                if(operatorIndex === -1)
+                    operatorIndex = text.indexOf('-')
+
+                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                return (Number(checkedText) >= 1 && Number(checkedText) < 509)
+            }
+
+//            validator: RegExpValidator { regExp: /[0-9]+/ }
+//            maximumLength: 3
 
             background: Rectangle
             {
@@ -195,11 +211,27 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
+            text: "1"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
+            leftPadding: -2
             font.pointSize: 8
 
             property bool isActiveInput: false
+
+            function checkValue()
+            {
+                if(text === "")
+                    return false
+
+                let operatorIndex = text.indexOf('+')
+
+                if(operatorIndex === -1)
+                    operatorIndex = text.indexOf('-')
+
+                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
+            }
 
             background: Rectangle
             {
@@ -226,11 +258,27 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
+            text: "1"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
+            leftPadding: -2
             font.pointSize: 8
 
             property bool isActiveInput: false
+
+            function checkValue()
+            {
+                if(text === "")
+                    return false
+
+                let operatorIndex = text.indexOf('+')
+
+                if(operatorIndex === -1)
+                    operatorIndex = text.indexOf('-')
+
+                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+            }
 
             background: Rectangle
             {
@@ -257,14 +305,24 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
+            text: "10"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
+            leftPadding: -2
             font.pointSize: 8
 
             property bool isActiveInput: false
 
+            function checkValue()
+            {
+                if(text === "")
+                    return false
+
+                return (Number(text) >= 0 && Number(text) < 200)
+            }
+
             validator: RegExpValidator { regExp: /[0-9]+/ }
-            maximumLength: 2
+            maximumLength: 3
 
             background: Rectangle
             {
@@ -364,6 +422,16 @@ Item
             width: 124
             height: 24
             text: qsTr("Set")
+            enabled:
+            {
+                dmxField.checkValue() &&
+                        rfPosField.checkValue() &&
+                        rfChField.checkValue() &&
+                        heightField.checkValue() &&
+                        minAngField.checkValue() &&
+                        maxAngField.checkValue()
+
+            }
 
             background: Rectangle
             {
@@ -372,7 +440,7 @@ Item
                     if(parent.enabled)
                         parent.pressed ? "#888888" : "#2F80ED"
                     else
-                        "#444444"
+                        "#222222"
                 }
                 radius: 2
             }
@@ -517,11 +585,21 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
+            text: "-115"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
+            leftPadding: -2
             font.pointSize: 8
 
             property bool isActiveInput: false
+
+            function checkValue()
+            {
+                if(text === "")
+                    return false
+
+                return (Number(text) >= -115 && Number(text) < 116)
+            }
 
             maximumLength: 4
 
@@ -550,11 +628,21 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
+            text: "115"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
+            leftPadding: -2
             font.pointSize: 8
 
             property bool isActiveInput: false
+
+            function checkValue()
+            {
+                if(text === "")
+                    return false
+
+                return (Number(text) >= -115 && Number(text) < 116)
+            }
 
             maximumLength: 4
 
