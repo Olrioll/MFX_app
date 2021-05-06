@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
+import QtQuick.Shapes 1.15
 
 Item
 {
@@ -31,6 +32,7 @@ Item
         anchors.topMargin: 0
         radius: 2
         color: "#444444"
+        clip: true
 
         MouseArea
         {
@@ -281,71 +283,7 @@ Item
             }
         }
 
-        TextField
-        {
-            id: minAngField
-            x: 46
-            y: 217
-            width: 36
-            height: 18
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            font.pointSize: 8
 
-            property bool isActiveInput: false
-
-            maximumLength: 4
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
-                }
-            }
-        }
-
-        TextField
-        {
-            id: maxAngField
-            x: 90
-            y: 217
-            width: 36
-            height: 18
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-
-            maximumLength: 4
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
-                }
-            }
-        }
 
         Text {
             y: 64
@@ -465,6 +403,63 @@ Item
             }
         }
 
+        //--- Визуальный индикатор
+
+        Rectangle
+        {
+            id: circle
+            x: 16
+            y: 116
+            width: 140
+            height: width
+            radius: width / 2
+            color: "black"
+            clip: true
+        }
+
+        Rectangle
+        {
+            x: 16
+            y: 200
+            width: 140
+            height: 80
+            color: "#444444"
+        }
+
+        Shape {
+
+            x: -4
+            y: 90
+            width: 160
+            height: 160
+
+            layer.enabled: true
+            layer.samples: 4
+
+            ShapePath
+            {
+                fillColor: "#444444"
+                strokeColor: "#444444"
+                strokeWidth: 0
+                capStyle: ShapePath.FlatCap
+
+                startX: 20; startY: 110
+
+                PathLine
+                {
+                    x: 90
+                    y: 96
+                }
+
+                PathLine
+                {
+                    x: 160
+                    y: 110
+                }
+
+            }
+        }
+
         Text {
             y: 201
             height: 17
@@ -496,7 +491,177 @@ Item
             minimumPixelSize: 10
             font.family: "Roboto"
         }
+
+        TextField
+        {
+            id: minAngField
+            x: 46
+            y: 217
+            width: 36
+            height: 18
+            color: "#ffffff"
+            horizontalAlignment: Text.AlignHCenter
+            padding: 0
+            font.pointSize: 8
+
+            property bool isActiveInput: false
+
+            maximumLength: 4
+
+            background: Rectangle
+            {
+                color: "#000000"
+                radius: 2
+            }
+
+            onFocusChanged:
+            {
+                if(focus)
+                {
+                    markAllInputsInactive();
+                    isActiveInput = true
+                    addSequWindow.currentInput = this
+                }
+            }
+        }
+
+        TextField
+        {
+            id: maxAngField
+            x: 90
+            y: 217
+            width: 36
+            height: 18
+            color: "#ffffff"
+            horizontalAlignment: Text.AlignHCenter
+            padding: 0
+            font.pointSize: 8
+
+            property bool isActiveInput: false
+
+            maximumLength: 4
+
+            background: Rectangle
+            {
+                color: "#000000"
+                radius: 2
+            }
+
+            onFocusChanged:
+            {
+                if(focus)
+                {
+                    markAllInputsInactive();
+                    isActiveInput = true
+                    addSequWindow.currentInput = this
+                }
+            }
+        }
+
+        Text {
+            y: 101
+            height: 17
+            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            text: qsTr("0")
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 79
+            anchors.rightMargin: 207
+            minimumPixelSize: 10
+            font.family: "Roboto"
+        }
+
+        Text {
+            y: 98
+            height: 17
+            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            text: qsTr("o")
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 86
+            anchors.rightMargin: 200
+            minimumPixelSize: 10
+            font.family: "Roboto"
+        }
+
+        Text {
+            y: 201
+            height: 17
+            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            text: qsTr("-115")
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 4
+            anchors.rightMargin: 278
+            minimumPixelSize: 10
+            font.family: "Roboto"
+        }
+
+        Text {
+            y: 201
+            height: 17
+            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            text: qsTr("+115")
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 144
+            anchors.rightMargin: 136
+            minimumPixelSize: 10
+            font.family: "Roboto"
+        }
+
+        Text {
+            y: 195
+            height: 17
+            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            text: qsTr("o")
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 19
+            anchors.rightMargin: 267
+            minimumPixelSize: 10
+            font.family: "Roboto"
+        }
+
+        Text {
+            y: 195
+            height: 17
+            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            text: qsTr("o")
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.pixelSize: 8
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.leftMargin: 161
+            anchors.rightMargin: 125
+            minimumPixelSize: 10
+            font.family: "Roboto"
+        }
     }
+
+
 
     Connections
     {
@@ -507,6 +672,6 @@ Item
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:3}D{i:26}D{i:27}D{i:34}D{i:35}
+    D{i:0;formeditorZoom:3}D{i:24}D{i:25}D{i:36}D{i:42}D{i:43}D{i:44}D{i:45}D{i:46}D{i:47}
 }
 ##^##*/
