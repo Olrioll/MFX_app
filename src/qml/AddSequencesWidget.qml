@@ -561,7 +561,7 @@ Item
         Text {
             y: 101
             height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            color: "#ffffff"
             text: qsTr("0")
             elide: Text.ElideMiddle
             anchors.left: parent.left
@@ -578,7 +578,7 @@ Item
         Text {
             y: 98
             height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            color: "#ffffff"
             text: qsTr("o")
             elide: Text.ElideMiddle
             anchors.left: parent.left
@@ -595,7 +595,7 @@ Item
         Text {
             y: 201
             height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            color: "#ffffff"
             text: qsTr("-115")
             elide: Text.ElideMiddle
             anchors.left: parent.left
@@ -612,7 +612,7 @@ Item
         Text {
             y: 201
             height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            color: "#ffffff"
             text: qsTr("+115")
             elide: Text.ElideMiddle
             anchors.left: parent.left
@@ -629,7 +629,7 @@ Item
         Text {
             y: 195
             height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            color: "#ffffff"
             text: qsTr("o")
             elide: Text.ElideMiddle
             anchors.left: parent.left
@@ -646,7 +646,7 @@ Item
         Text {
             y: 195
             height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+            color: "#ffffff"
             text: qsTr("o")
             elide: Text.ElideMiddle
             anchors.left: parent.left
@@ -658,6 +658,17 @@ Item
             anchors.rightMargin: 125
             minimumPixelSize: 10
             font.family: "Roboto"
+        }
+
+        Rectangle
+        {
+            id: centerCircle
+            anchors.centerIn: circle
+            width: 10
+            height: width
+            radius: width / 2
+            color: "white"
+            clip: true
         }
     }
 
