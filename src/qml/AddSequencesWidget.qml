@@ -680,12 +680,71 @@ Item
         Rectangle
         {
             id: minPointer
-            width: circle.width / 2
-            height: 1
+            width: 1
+            height: circle.height / 2
             x: circle.x + circle. width / 2
-            y: circle.y + circle. height / 2
-            transform: Rotation { origin.x: 0; origin.y: 0; angle: 90}
+            y: circle.y + circle. height / 2 - height
             color: "#2F80ED"
+
+            transform: Rotation
+            {
+                origin.x: 0
+                origin.y: minPointer.height
+                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : 0
+            }
+        }
+
+        Rectangle
+        {
+            id: minPointerHandler
+            x: circle.x + circle. width / 2 - width / 2
+            y: circle.y - height / 2
+            width: 10
+            height: width
+            radius: width / 2
+            color: "#2F80ED"
+
+            transform: Rotation
+            {
+                origin.x: minPointerHandler.width / 2
+                origin.y: minPointerHandler.height / 2 + circle.height / 2
+                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : 0
+            }
+        }
+
+        Rectangle
+        {
+            id: maxPointer
+            width: 1
+            height: circle.height / 2
+            x: circle.x + circle. width / 2
+            y: circle.y + circle. height / 2 - height
+            color: "#2F80ED"
+
+            transform: Rotation
+            {
+                origin.x: 0
+                origin.y: maxPointer.height
+                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 0
+            }
+        }
+
+        Rectangle
+        {
+            id: maxPointerHandler
+            x: circle.x + circle. width / 2 - width / 2
+            y: circle.y - height / 2
+            width: 10
+            height: width
+            radius: width / 2
+            color: "#2F80ED"
+
+            transform: Rotation
+            {
+                origin.x: maxPointerHandler.width / 2
+                origin.y: maxPointerHandler.height / 2 + circle.height / 2
+                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 0
+            }
         }
 
         Rectangle
