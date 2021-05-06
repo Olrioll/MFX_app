@@ -29,5 +29,6 @@
         <file>src/qml/RenameGroupWindow.qml</file>
         <file>src/qml/CalcWidget.qml</file>
         <file>src/qml/AddSequencesWidget.qml</file>
+        <file>src/qml/GeneralDeviceListWidget.qml</file>
     </qresource>
 </RCC>

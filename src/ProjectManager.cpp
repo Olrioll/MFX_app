@@ -155,6 +155,21 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     emit patchListChanged();
 }
 
+void ProjectManager::removePatches(QList<int> indexes)
+{
+    QList<Patch> newList;
+    for(int i = 0; i < _patches.size(); i++)
+    {
+        if(!indexes.contains(i))
+        {
+            newList.push_back(_patches.at(i));
+        }
+    }
+
+    _patches = newList;
+    emit patchListChanged();
+}
+
 int ProjectManager::patchCount() const
 {
     return _patches.size();

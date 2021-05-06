@@ -105,6 +105,7 @@ public slots:
     bool renameGroup(QString newName);
 
     void addPatch(QString type, QVariantList properties);
+    void removePatches(QList<int> indexes);
     int patchCount() const;
 
     QString patchType(int index) const;

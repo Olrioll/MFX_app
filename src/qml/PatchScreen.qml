@@ -37,7 +37,8 @@ Item
 
         Component.onCompleted:
         {
-            addContentItem("DeviceListWidget.qml", {isGeneralList: true})
+//            addContentItem("DeviceListWidget.qml", {isGeneralList: true})
+            addContentItem("GeneralDeviceListWidget.qml", {})
         }
     }
 
