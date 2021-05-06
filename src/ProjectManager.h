@@ -104,7 +104,7 @@ public slots:
     void removeGroup(QString name);
     bool renameGroup(QString newName);
 
-    void addPatch(QVariantList properties);
+    void addPatch(QString type, QVariantList properties);
     int patchCount() const;
 
     QString patchType(int index) const;
@@ -120,6 +120,7 @@ signals:
 
     void currentGroupIndexChanged(int currentGroupIndex);
     void groupChanged(int index);
+    void patchListChanged();
 
 private:
 

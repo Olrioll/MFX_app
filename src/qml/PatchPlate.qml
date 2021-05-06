@@ -6,6 +6,7 @@ Item
 {
     id: patchPlate
     height: 40
+    width: 362
 
     property int no: 0
     property string name: "Patch Plate"

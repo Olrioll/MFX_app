@@ -115,8 +115,8 @@ ListView
 
     delegate: PatchPlate
     {
-        anchors.left: parent.left
-        anchors.right: parent.right
+//        anchors.left: parent.left
+//        anchors.right: parent.right
         imageFile: img
         no: counter
         cells: currentCells
@@ -155,15 +155,20 @@ ListView
 
             else if (drag.source.name === "Sequences")
             {
-                addSequencesPlate(dropToIndex)
-                refreshPlatesNo()
-                project.addPatch([  {propName: "DMX", propValue: 0},
-                                  {propName: "min ang", propValue: -105},
-                                  {propName: "max ang", propValue: 105},
-                                  {propName: "RF pos", propValue: 3},
-                                  {propName: "RF ch", propValue: 21},
-                                  {propName: "height", propValue: 1}
-                                  ])
+//                addSequencesPlate(dropToIndex)
+//                refreshPlatesNo()
+
+                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
+                addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+                addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+
+//                project.addPatch([  {propName: "DMX", propValue: 0},
+//                                  {propName: "min ang", propValue: -105},
+//                                  {propName: "max ang", propValue: 105},
+//                                  {propName: "RF pos", propValue: 3},
+//                                  {propName: "RF ch", propValue: 21},
+//                                  {propName: "height", propValue: 1}
+//                                  ])
             }
 
             else if (drag.source.name === "Dimmer")
@@ -186,10 +191,9 @@ ListView
         }
     }
 
-//    Button
-//    {
-//        id: button
-//        anchors.top: deviceListView.contentItem.bottom
-//        onClicked: deviceListView.addSequencesPlate()
-//    }
+    Connections
+    {
+        target: project
+        function onPatchListChanged() {loadGeneralDeviceList()}
+    }
 }

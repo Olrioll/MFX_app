@@ -135,9 +135,10 @@ bool ProjectManager::renameGroup(QString newName)
    return true;
 }
 
-void ProjectManager::addPatch(QVariantList properties)
+void ProjectManager::addPatch(QString type, QVariantList properties)
 {
     Patch patch;
+    patch.type = type;
 
     foreach(auto prop, properties)
     {
@@ -150,6 +151,8 @@ void ProjectManager::addPatch(QVariantList properties)
         _patches.last().id = 0;
     else
         _patches.last().id = _patches.at(_patches.size() - 2).id + 1;
+
+    emit patchListChanged();
 }
 
 int ProjectManager::patchCount() const
