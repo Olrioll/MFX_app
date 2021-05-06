@@ -7,7 +7,7 @@ Item
 {
     id: addSequWindow
     width: 300
-    height: 240
+    height: 250
 
     property var currentInput: quantityField
 
@@ -360,7 +360,7 @@ Item
         {
             id: setButton
             x: 172
-            y: 211
+            y: 221
             width: 124
             height: 24
             text: qsTr("Set")
@@ -409,7 +409,7 @@ Item
         {
             id: circle
             x: 16
-            y: 116
+            y: 126
             width: 140
             height: width
             radius: width / 2
@@ -420,7 +420,7 @@ Item
         Rectangle
         {
             x: 16
-            y: 200
+            y: 210
             width: 140
             height: 80
             color: "#444444"
@@ -429,7 +429,7 @@ Item
         Shape {
 
             x: -4
-            y: 90
+            y: 100
             width: 160
             height: 160
 
@@ -458,10 +458,27 @@ Item
                 }
 
             }
+
+            ShapePath
+            {
+                fillColor: "#888888"
+                strokeColor: "#888888"
+                strokeWidth: 0
+                strokeStyle: ShapePath.DashLine
+                capStyle: ShapePath.FlatCap
+
+                startX: 90; startY: 96
+
+                PathLine
+                {
+                    x: 90
+                    y: 25
+                }
+            }
         }
 
         Text {
-            y: 201
+            y: 211
             height: 17
             color: minAngField.isActiveInput ? "#27AE60" : "#ffffff"
             text: qsTr("min ang")
@@ -477,7 +494,7 @@ Item
         }
 
         Text {
-            y: 201
+            y: 211
             height: 17
             color: maxAngField.isActiveInput ? "#27AE60" : "#ffffff"
             text: qsTr("max ang")
@@ -496,7 +513,7 @@ Item
         {
             id: minAngField
             x: 46
-            y: 217
+            y: 227
             width: 36
             height: 18
             color: "#ffffff"
@@ -529,7 +546,7 @@ Item
         {
             id: maxAngField
             x: 90
-            y: 217
+            y: 227
             width: 36
             height: 18
             color: "#ffffff"
@@ -559,7 +576,7 @@ Item
         }
 
         Text {
-            y: 101
+            y: 107
             height: 17
             color: "#ffffff"
             text: qsTr("0")
@@ -576,7 +593,7 @@ Item
         }
 
         Text {
-            y: 98
+            y: 105
             height: 17
             color: "#ffffff"
             text: qsTr("o")
@@ -593,7 +610,7 @@ Item
         }
 
         Text {
-            y: 201
+            y: 207
             height: 17
             color: "#ffffff"
             text: qsTr("-115")
@@ -610,7 +627,7 @@ Item
         }
 
         Text {
-            y: 201
+            y: 207
             height: 17
             color: "#ffffff"
             text: qsTr("+115")
@@ -627,7 +644,7 @@ Item
         }
 
         Text {
-            y: 195
+            y: 201
             height: 17
             color: "#ffffff"
             text: qsTr("o")
@@ -644,7 +661,7 @@ Item
         }
 
         Text {
-            y: 195
+            y: 201
             height: 17
             color: "#ffffff"
             text: qsTr("o")
@@ -658,6 +675,17 @@ Item
             anchors.rightMargin: 125
             minimumPixelSize: 10
             font.family: "Roboto"
+        }
+
+        Rectangle
+        {
+            id: minPointer
+            width: circle.width / 2
+            height: 1
+            x: circle.x + circle. width / 2
+            y: circle.y + circle. height / 2
+            transform: Rotation { origin.x: 0; origin.y: 0; angle: 90}
+            color: "#2F80ED"
         }
 
         Rectangle
