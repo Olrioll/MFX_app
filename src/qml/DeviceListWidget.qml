@@ -8,10 +8,13 @@ ListView
 {
     id: deviceListView
     anchors.margins: 2
-    anchors.fill: parent
+    anchors.top: parent.top
+    anchors.left: parent.left
+//    anchors.right: parent.right
+    width: 392
+    height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
     clip: true
     spacing: 2
-//    interactive: false
     ScrollBar.vertical: ScrollBar {}
 
     property bool isGeneralList: false

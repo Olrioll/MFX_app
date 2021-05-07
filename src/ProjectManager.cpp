@@ -147,11 +147,6 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
 
     _patches.push_back(patch);
 
-    if(_patches.size() == 1)
-        _patches.last().id = 0;
-    else
-        _patches.last().id = _patches.at(_patches.size() - 2).id + 1;
-
     emit patchListChanged();
 }
 

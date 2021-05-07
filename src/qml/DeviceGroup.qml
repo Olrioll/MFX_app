@@ -150,7 +150,7 @@ Item
         DeviceListWidget
         {
             id: deviceList
-            anchors.fill: parent
+//            anchors.fill: parent
         }
     }    
 }

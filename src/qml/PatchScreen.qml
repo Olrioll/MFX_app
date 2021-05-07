@@ -33,7 +33,7 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: qsTr("Devices list")
-        expandedWidth: 370
+        expandedWidth: 400
 
         Component.onCompleted:
         {
@@ -51,7 +51,7 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: qsTr("Device groups")
-        expandedWidth: 390
+        expandedWidth: 430
 
         Component.onCompleted:
         {

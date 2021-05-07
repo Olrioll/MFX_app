@@ -49,50 +49,6 @@ Item
         {
             loadGroups();
         }
-
-        //    DropArea
-        //    {
-        //        id: groupListWidgetDropArea
-        //        anchors.fill: parent
-
-        //        onDropped:
-        //        {
-        //            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-
-        //            if(drag.source.name === "Patch Plate")
-        //            {
-        //                if(dropToIndex !== -1)
-        //                {
-        //                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-        //                    refreshPlatesNo()
-        //                }
-        //            }
-
-        //            else if (drag.source.name === "Sequences")
-        //            {
-        //                addSequencesPlate(dropToIndex)
-        //                refreshPlatesNo()
-        //            }
-
-        //            else if (drag.source.name === "Dimmer")
-        //            {
-        //                addDimmerPlate(dropToIndex)
-        //                refreshPlatesNo()
-        //            }
-
-        //            else if (drag.source.name === "Shot")
-        //            {
-        //                addShotPlate(dropToIndex)
-        //                refreshPlatesNo()
-        //            }
-
-        //            else if (drag.source.name === "Pyro")
-        //            {
-        //                addPyroPlate(dropToIndex)
-        //                refreshPlatesNo()
-        //            }
-        //        }
-        //    }
     }
 
     Button

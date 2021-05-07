@@ -548,7 +548,9 @@ Item
                 for(let i = 0; i < Number(quantityField.text); i++)
                 {
                     project.addPatch( "Sequences",
-                                     [{propName: "DMX", propValue: currentDmxValue},
+                                     [
+                                      {propName: "ID", propValue: 1},
+                                      {propName: "DMX", propValue: currentDmxValue},
                                       {propName: "min ang", propValue: Number(minAngField.text)},
                                       {propName: "max ang", propValue: Number(maxAngField.text)},
                                       {propName: "RF pos", propValue: currentRfPosValue},

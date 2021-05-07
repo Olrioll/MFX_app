@@ -49,7 +49,6 @@ public:
 
     struct Patch
     {
-        int id;
         QString type;
         QList<QPair<QString, int>> properties;
 
@@ -57,7 +56,6 @@ public:
 
         Patch(const QJsonObject& patchObject)
         {
-            id = patchObject["id"].toInt();
             type = patchObject["type"].toString();
             foreach(auto property, patchObject["properties"].toArray())
             {
@@ -71,7 +69,6 @@ public:
         QJsonObject toJsonObject() const
         {
             QJsonObject patchObject;
-            patchObject.insert("id", id);
             patchObject.insert("type", type);
 
             QJsonArray propertiesArray;

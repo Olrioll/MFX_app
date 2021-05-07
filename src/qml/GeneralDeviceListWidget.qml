@@ -50,66 +50,6 @@ Item
             }
         }
 
-        function addSequencesPlate(index)
-        {
-            if(index === -1)
-                index = 0
-
-            deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_sequences",
-                                   currentCells: [  {propName: "DMX", propValue: "0"},
-                                                    {propName: "min ang", propValue: "-105"},
-                                                    {propName: "max ang", propValue: "+105"},
-                                                    {propName: "RF pos", propValue: "3"},
-                                                    {propName: "RF ch", propValue: "21"},
-                                                    {propName: "height", propValue: "1"}
-                                                    ]})
-        }
-
-        function addDimmerPlate(index)
-        {
-            if(index === -1)
-                index = 0
-
-            deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_dimmer",
-                                   currentCells: [  {propName: "DMX", propValue: "0"},
-                                                    {propName: "min ang", propValue: "-105"},
-                                                    {propName: "max ang", propValue: "+105"},
-                                                    {propName: "RF pos", propValue: "3"},
-                                                    {propName: "RF ch", propValue: "21"},
-                                                    {propName: "height", propValue: "1"}
-                                                    ]})
-        }
-
-        function addShotPlate(index)
-        {
-            if(index === -1)
-                index = 0
-
-            deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_shot",
-                                   currentCells: [  {propName: "DMX", propValue: "0"},
-                                                    {propName: "min ang", propValue: "-105"},
-                                                    {propName: "max ang", propValue: "+105"},
-                                                    {propName: "RF pos", propValue: "3"},
-                                                    {propName: "RF ch", propValue: "21"},
-                                                    {propName: "height", propValue: "1"}
-                                                    ]})
-        }
-
-        function addPyroPlate(index)
-        {
-            if(index === -1)
-                index = 0
-
-            deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_pyro",
-                                   currentCells: [  {propName: "DMX", propValue: "0"},
-                                                    {propName: "min ang", propValue: "-105"},
-                                                    {propName: "max ang", propValue: "+105"},
-                                                    {propName: "RF pos", propValue: "3"},
-                                                    {propName: "RF ch", propValue: "21"},
-                                                    {propName: "height", propValue: "1"}
-                                                    ]})
-        }
-
         function refreshPlatesNo()
         {
             for(let i = 0; i < deviceListModel.count; i++)
@@ -155,20 +95,9 @@ Item
 
                 else if (drag.source.name === "Sequences")
                 {
-    //                addSequencesPlate(dropToIndex)
-    //                refreshPlatesNo()
-
                     var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
                     addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
                     addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
-
-    //                project.addPatch([  {propName: "DMX", propValue: 0},
-    //                                  {propName: "min ang", propValue: -105},
-    //                                  {propName: "max ang", propValue: 105},
-    //                                  {propName: "RF pos", propValue: 3},
-    //                                  {propName: "RF ch", propValue: 21},
-    //                                  {propName: "height", propValue: 1}
-    //                                  ])
                 }
 
                 else if (drag.source.name === "Dimmer")
