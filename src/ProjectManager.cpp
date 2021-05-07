@@ -184,6 +184,15 @@ void ProjectManager::removePatches(QList<int> indexes)
         {
             newList.push_back(_patches.at(i));
         }
+
+        else
+        {
+            int removedId = _patches.at(i).property("ID");
+            for(auto & group : _groups)
+            {
+                group.patches.removeOne(removedId);
+            }
+        }
     }
 
     _patches = newList;
