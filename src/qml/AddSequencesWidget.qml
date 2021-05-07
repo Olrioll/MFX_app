@@ -132,6 +132,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: true
+            property string lastSelectedText
 
             validator: RegExpValidator { regExp: /[0-9]+/ }
             maximumLength: 2
@@ -147,8 +148,10 @@ Item
                 if(focus)
                 {
                     markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
+                    isActiveInput = true;
+                    addSequWindow.currentInput = this;
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -168,6 +171,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: false
+            property string lastSelectedText
 
             function checkValue()
             {
@@ -199,6 +203,8 @@ Item
                     markAllInputsInactive();
                     isActiveInput = true
                     addSequWindow.currentInput = this
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -218,6 +224,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: false
+            property string lastSelectedText
 
             function checkValue()
             {
@@ -246,6 +253,8 @@ Item
                     markAllInputsInactive();
                     isActiveInput = true
                     addSequWindow.currentInput = this
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -265,6 +274,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: false
+            property string lastSelectedText
 
             function checkValue()
             {
@@ -293,6 +303,8 @@ Item
                     markAllInputsInactive();
                     isActiveInput = true
                     addSequWindow.currentInput = this
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -312,6 +324,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: false
+            property string lastSelectedText
 
             function checkValue()
             {
@@ -337,6 +350,8 @@ Item
                     markAllInputsInactive();
                     isActiveInput = true
                     addSequWindow.currentInput = this
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -458,14 +473,93 @@ Item
 
             onClicked:
             {
-                project.addPatch( "Sequences",
-                                 [{propName: "DMX", propValue: Number(dmxField.text)},
-                                  {propName: "min ang", propValue: Number(minAngField.text)},
-                                  {propName: "max ang", propValue: Number(maxAngField.text)},
-                                  {propName: "RF pos", propValue: Number(rfPosField.text)},
-                                  {propName: "RF ch", propValue: Number(rfChField.text)},
-                                  {propName: "height", propValue: Number(heightField.text)}
-                                 ])
+                //--- Определяем инкремент канала DMX
+
+                let isNegative = false
+                let operatorIndex = dmxField.text.indexOf('+')
+
+                if(operatorIndex === -1)
+                {
+                    operatorIndex = dmxField.text.indexOf('-')
+                    if(operatorIndex !== -1)
+                        isNegative = true
+                }
+
+
+
+                let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+
+                let dmxIncrement = 0
+                if(operatorIndex !== -1)
+                {
+                    dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+                    if(isNegative)
+                        dmxIncrement = -dmxIncrement
+                }
+
+                //--- Определяем инкремент RF pos
+
+                isNegative = false
+                operatorIndex = rfPosField.text.indexOf('+')
+
+                if(operatorIndex === -1)
+                {
+                    operatorIndex = rfPosField.text.indexOf('-')
+                    if(operatorIndex !== -1)
+                        isNegative = true
+                }
+
+
+
+                let currentRfPosValue = (operatorIndex === -1) ? Number(rfPosField.text) : Number(rfPosField.text.slice(0, operatorIndex))
+
+                let rfPosIncrement = 0
+                if(operatorIndex !== -1)
+                {
+                    rfPosIncrement = Number(rfPosField.text.slice(operatorIndex + 1))
+                    if(isNegative)
+                        rfPosIncrement = -rfPosIncrement
+                }
+
+                //--- Определяем инкремент RF pos
+
+                isNegative = false
+                operatorIndex = rfChField.text.indexOf('+')
+
+                if(operatorIndex === -1)
+                {
+                    operatorIndex = rfChField.text.indexOf('-')
+                    if(operatorIndex !== -1)
+                        isNegative = true
+                }
+
+
+
+                let currentRfChValue = (operatorIndex === -1) ? Number(rfChField.text) : Number(rfChField.text.slice(0, operatorIndex))
+
+                let rfChIncrement = 0
+                if(operatorIndex !== -1)
+                {
+                    rfChIncrement = Number(rfChField.text.slice(operatorIndex + 1))
+                    if(isNegative)
+                        rfChIncrement = -rfChIncrement
+                }
+
+                for(let i = 0; i < Number(quantityField.text); i++)
+                {
+                    project.addPatch( "Sequences",
+                                     [{propName: "DMX", propValue: currentDmxValue},
+                                      {propName: "min ang", propValue: Number(minAngField.text)},
+                                      {propName: "max ang", propValue: Number(maxAngField.text)},
+                                      {propName: "RF pos", propValue: currentRfPosValue},
+                                      {propName: "RF ch", propValue: currentRfChValue},
+                                      {propName: "height", propValue: Number(heightField.text)}
+                                     ])
+
+                    currentDmxValue += dmxIncrement
+                    currentRfPosValue += rfPosIncrement
+                    currentRfChValue += rfChIncrement
+                }
 
                 addSequWindow.destroy();
             }
@@ -592,6 +686,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: false
+            property string lastSelectedText
 
             function checkValue()
             {
@@ -616,6 +711,8 @@ Item
                     markAllInputsInactive();
                     isActiveInput = true
                     addSequWindow.currentInput = this
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -635,6 +732,7 @@ Item
             font.pointSize: 8
 
             property bool isActiveInput: false
+            property string lastSelectedText
 
             function checkValue()
             {
@@ -659,6 +757,8 @@ Item
                     markAllInputsInactive();
                     isActiveInput = true
                     addSequWindow.currentInput = this
+                    selectAll();
+                    lastSelectedText = selectedText
                 }
             }
         }
@@ -852,7 +952,17 @@ Item
     Connections
     {
         target: calcWidget
-        function onDigitClicked(digit) {currentInput.text = currentInput.text + digit}
+        function onDigitClicked(digit)
+        {
+            if(currentInput.lastSelectedText === currentInput.text)
+            {
+                currentInput.lastSelectedText = ""
+                currentInput.text = ""
+            }
+
+
+            currentInput.text = currentInput.text + digit
+        }
     }
 }
 
