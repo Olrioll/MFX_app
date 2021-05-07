@@ -166,6 +166,11 @@ Item
             elide: Text.ElideRight
             font.family: "Roboto"
         }
+
+        onClicked:
+        {
+            groupListView.itemAtIndex(groupListView.currentIndex).deviceList.deleteSelected()
+        }
     }
 
     Connections

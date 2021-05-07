@@ -135,6 +135,7 @@ Item
         width: (parent.width - anchors.margins * 4) / 3
 
         anchors.margins: 2
+        anchors.bottomMargin: 4
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
@@ -183,6 +184,7 @@ Item
         width: (parent.width - anchors.margins * 4) / 3
 
         anchors.margins: 2
+        anchors.bottomMargin: 4
         anchors.left: addGroupButton.right
         anchors.bottom: parent.bottom
 
@@ -217,6 +219,7 @@ Item
         width: (parent.width - anchors.margins * 4) / 3
 
         anchors.margins: 2
+        anchors.bottomMargin: 4
         anchors.left: editButton.right
         anchors.bottom: parent.bottom
 

@@ -8,6 +8,8 @@ Item
     height: collapseButton.checked ? collapseButton.height + deviceList.contentItem.height + 20 : collapseButton.height
     property string name
     property bool checked
+    property alias deviceList: deviceList
+
     signal groupNameClicked
 
     Button
@@ -36,6 +38,8 @@ Item
             font.family: "Roboto"
             font.pixelSize: 14
         }
+
+        onClicked: project.setCurrentGroup(deviceGroup.name)
     }
 
     Rectangle

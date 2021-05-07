@@ -8,6 +8,7 @@ Item
     height: 40
     width: 392
 
+    property var parentList: null
     property int no: 0
     property string name: "Patch Plate"
     property string imageFile: ""
@@ -141,6 +142,10 @@ Item
             onClicked:
             {
                 patchPlate.checked = !patchPlate.checked
+                if(parentList)
+                {
+                    project.setCurrentGroup(parentList.groupName)
+                }
             }
 
             onPressAndHold:

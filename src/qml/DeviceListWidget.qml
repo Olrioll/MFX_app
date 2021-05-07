@@ -58,13 +58,26 @@ ListView
         }
     }
 
+    function deleteSelected()
+    {
+        var removedIndexes = []
+        for(let i = 0; i < deviceListView.count; i++)
+        {
+            if(deviceListView.itemAtIndex(i).checked)
+            {
+                removedIndexes.push(i)
+            }
+        }
+
+        project.removePatchesFromGroup(groupName, removedIndexes)
+    }
+
     delegate: PatchPlate
     {
-//        anchors.left: parent.left
-//        anchors.right: parent.right
         imageFile: img
         no: counter
         cells: currentCells
+        parentList: deviceListView
     }
 
     model: ListModel
@@ -79,6 +92,8 @@ ListView
 
         onDropped:
         {
+            project.setCurrentGroup(deviceListView.groupName)
+
             var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
 
             if(drag.source.name === "Patch Plate")
@@ -92,20 +107,9 @@ ListView
 
             else if (drag.source.name === "Sequences")
             {
-//                addSequencesPlate(dropToIndex)
-//                refreshPlatesNo()
-
                 var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
                 addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
                 addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
-
-//                project.addPatch([  {propName: "DMX", propValue: 0},
-//                                  {propName: "min ang", propValue: -105},
-//                                  {propName: "max ang", propValue: 105},
-//                                  {propName: "RF pos", propValue: 3},
-//                                  {propName: "RF ch", propValue: 21},
-//                                  {propName: "height", propValue: 1}
-//                                  ])
             }
 
             else if (drag.source.name === "Dimmer")

@@ -148,6 +148,32 @@ void ProjectManager::addPatchToGroup(QString groupName, int patchId)
     }
 }
 
+void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> indexes)
+{
+    QList<int> newList;
+    int groupIndex = -1;
+
+    for(int j = 0; j < _groups.size(); j++)
+    {
+        if(_groups[j].name == groupName)
+        {
+            for(int i = 0; i < _groups[j].patches.size(); i++)
+            {
+                if(!indexes.contains(i))
+                {
+                    newList.push_back(_groups[j].patches.at(i));
+                }
+            }
+            groupIndex = j;
+            break;
+        }
+    }
+
+
+    _groups[groupIndex].patches = newList;
+    emit patchListChanged();
+}
+
 int ProjectManager::lastPatchId() const
 {
     int id = 0;
