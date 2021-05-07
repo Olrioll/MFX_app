@@ -9,6 +9,7 @@ Item
     width: 300
     height: 250
 
+    property string groupName: ""
     property var currentInput: quantityField
 
     function markAllInputsInactive()
@@ -545,11 +546,18 @@ Item
                         rfChIncrement = -rfChIncrement
                 }
 
+                let currentId = project.lastPatchId() + 1;
+
                 for(let i = 0; i < Number(quantityField.text); i++)
                 {
+                    if(groupName)
+                    {
+                        project.addPatchToGroup(groupName, currentId)
+                    }
+
                     project.addPatch( "Sequences",
                                      [
-                                      {propName: "ID", propValue: 1},
+                                      {propName: "ID", propValue: currentId},
                                       {propName: "DMX", propValue: currentDmxValue},
                                       {propName: "min ang", propValue: Number(minAngField.text)},
                                       {propName: "max ang", propValue: Number(maxAngField.text)},
@@ -561,6 +569,7 @@ Item
                     currentDmxValue += dmxIncrement
                     currentRfPosValue += rfPosIncrement
                     currentRfChValue += rfChIncrement
+                    currentId++
                 }
 
                 addSequWindow.destroy();

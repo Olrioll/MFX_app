@@ -10,23 +10,23 @@ ListView
     anchors.margins: 2
     anchors.top: parent.top
     anchors.left: parent.left
-//    anchors.right: parent.right
     width: 392
     height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
     clip: true
     spacing: 2
     ScrollBar.vertical: ScrollBar {}
 
-    property bool isGeneralList: false
+    property string groupName: ""
 
-    function loadGeneralDeviceList()
+    function loadDeviceList()
     {
         deviceListModel.clear()
-        var listSize = project.patchCount()
-        for(let i = 0; i < listSize; i++)
+        var patchesList = project.patchesIdList(groupName)
+        for(let i = 0; i < patchesList.length; i++)
         {
-            var propNamesList = project.patchPropertiesNames(i)
-            var propValuesList = project.patchPropertiesValues(i)
+            let index = project.patchIndexForId(patchesList[i])
+            var propNamesList = project.patchPropertiesNames(index)
+            var propValuesList = project.patchPropertiesValues(index)
             var cells = []
             for(let j = 0; j < propNamesList.length; j++)
             {
@@ -44,69 +44,11 @@ ListView
             else if (deviceType === "Dimmer")
                 imageFile = "qrc:/device_dimmer"
 
-            deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, img: imageFile, currentCells: cells})
+            deviceListModel.insert(i, {counter: i + 1, img: imageFile, currentCells: cells})
         }
     }
 
-    function addSequencesPlate(index)
-    {
-        if(index === -1)
-            index = 0
 
-        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_sequences",
-                               currentCells: [  {propName: "DMX", propValue: "0"},
-                                                {propName: "min ang", propValue: "-105"},
-                                                {propName: "max ang", propValue: "+105"},
-                                                {propName: "RF pos", propValue: "3"},
-                                                {propName: "RF ch", propValue: "21"},
-                                                {propName: "height", propValue: "1"}
-                                                ]})
-    }
-
-    function addDimmerPlate(index)
-    {
-        if(index === -1)
-            index = 0
-
-        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_dimmer",
-                               currentCells: [  {propName: "DMX", propValue: "0"},
-                                                {propName: "min ang", propValue: "-105"},
-                                                {propName: "max ang", propValue: "+105"},
-                                                {propName: "RF pos", propValue: "3"},
-                                                {propName: "RF ch", propValue: "21"},
-                                                {propName: "height", propValue: "1"}
-                                                ]})
-    }
-
-    function addShotPlate(index)
-    {
-        if(index === -1)
-            index = 0
-
-        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_shot",
-                               currentCells: [  {propName: "DMX", propValue: "0"},
-                                                {propName: "min ang", propValue: "-105"},
-                                                {propName: "max ang", propValue: "+105"},
-                                                {propName: "RF pos", propValue: "3"},
-                                                {propName: "RF ch", propValue: "21"},
-                                                {propName: "height", propValue: "1"}
-                                                ]})
-    }
-
-    function addPyroPlate(index)
-    {
-        if(index === -1)
-            index = 0
-
-        deviceListModel.insert(index, {counter: deviceListView.count + 1, img: "qrc:/device_pyro",
-                               currentCells: [  {propName: "DMX", propValue: "0"},
-                                                {propName: "min ang", propValue: "-105"},
-                                                {propName: "max ang", propValue: "+105"},
-                                                {propName: "RF pos", propValue: "3"},
-                                                {propName: "RF ch", propValue: "21"},
-                                                {propName: "height", propValue: "1"}
-                                                ]})
-    }
 
     function refreshPlatesNo()
     {
@@ -128,14 +70,6 @@ ListView
     model: ListModel
     {
         id: deviceListModel
-    }
-
-    Component.onCompleted:
-    {
-        if(isGeneralList)
-        {
-            loadGeneralDeviceList()
-        }
     }
 
     DropArea
@@ -161,7 +95,7 @@ ListView
 //                addSequencesPlate(dropToIndex)
 //                refreshPlatesNo()
 
-                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
+                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
                 addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
                 addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
 
@@ -197,6 +131,15 @@ ListView
     Connections
     {
         target: project
-        function onPatchListChanged() {loadGeneralDeviceList()}
+        function onPatchListChanged()
+        {
+            loadDeviceList()
+        }
+    }
+
+
+    Component.onCompleted:
+    {
+        loadDeviceList();
     }
 }

@@ -135,6 +135,31 @@ bool ProjectManager::renameGroup(QString newName)
    return true;
 }
 
+void ProjectManager::addPatchToGroup(QString groupName, int patchId)
+{
+    for(auto & group : _groups)
+    {
+        if(group.name == groupName)
+        {
+            if(!group.patches.contains(patchId))
+                group.patches.push_back(patchId);
+            break;
+        }
+    }
+}
+
+int ProjectManager::lastPatchId() const
+{
+    int id = 0;
+    foreach(auto patch, _patches)
+    {
+        if(patch.property("ID") > id)
+            id = patch.property("ID");
+    }
+
+    return id;
+}
+
 void ProjectManager::addPatch(QString type, QVariantList properties)
 {
     Patch patch;
@@ -168,6 +193,30 @@ void ProjectManager::removePatches(QList<int> indexes)
 int ProjectManager::patchCount() const
 {
     return _patches.size();
+}
+
+int ProjectManager::patchIndexForId(int id) const
+{
+    for(int i = 0; i < _patches.size(); i++)
+    {
+        if(_patches[i].property("ID") == id)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+QList<int> ProjectManager::patchesIdList(QString groupName) const
+{
+    foreach(auto group, _groups)
+    {
+        if(group.name == groupName)
+            return group.patches;
+    }
+
+    return QList<int> {};
 }
 
 QString ProjectManager::patchType(int index) const

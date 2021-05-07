@@ -42,7 +42,7 @@ public:
                 patchesArray.append(patchID);
             }
 
-            groupObject.insert("properties", patchesArray);
+            groupObject.insert("patches", patchesArray);
             return groupObject;
         }
     };
@@ -82,6 +82,17 @@ public:
             patchObject.insert("properties", propertiesArray);
             return patchObject;
         }
+
+        int property(QString name) const
+        {
+            foreach(auto prop, properties)
+            {
+                if(prop.first == name)
+                    return prop.second;
+            }
+
+            return -1;
+        }
     };
 
     explicit ProjectManager(QObject *parent = nullptr);
@@ -100,10 +111,14 @@ public slots:
     bool addGroup(QString name);
     void removeGroup(QString name);
     bool renameGroup(QString newName);
+    void addPatchToGroup(QString groupName, int patchId);
 
+    int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
     void removePatches(QList<int> indexes);
     int patchCount() const;
+    int patchIndexForId(int id) const;
+    QList<int> patchesIdList(QString groupName) const;
 
     QString patchType(int index) const;
     QStringList patchPropertiesNames(int index) const;

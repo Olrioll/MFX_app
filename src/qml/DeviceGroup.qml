@@ -150,6 +150,7 @@ Item
         DeviceListWidget
         {
             id: deviceList
+            groupName: deviceGroup.name
 //            anchors.fill: parent
         }
     }    
