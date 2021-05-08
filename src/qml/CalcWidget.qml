@@ -8,6 +8,8 @@ Item
     width: 124
     height: 164
 
+    property string minusButtonText: "-"
+
     signal digitClicked(string digit)
 
     Rectangle
@@ -342,7 +344,7 @@ Item
             y: 124
             width: 36
             height: 36
-            text: qsTr("-")
+            text: calcWidget.minusButtonText
 
             background: Rectangle
             {
@@ -367,7 +369,7 @@ Item
                 font.pixelSize: 12
             }
 
-            onClicked: digitClicked("-")
+            onClicked: digitClicked(button_minus.text)
         }
 
         Button

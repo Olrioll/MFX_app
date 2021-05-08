@@ -429,6 +429,8 @@ Item
             id: calcWidget
             x: 172
             y: 34
+
+            minusButtonText: heightField.isActiveInput ? "." : "-"
         }
 
         Button
