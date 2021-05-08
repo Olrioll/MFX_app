@@ -603,15 +603,27 @@ Item
 
             onPressed:
             {
-                cursorShape = Qt.BlankCursor
+                let minHandlerX = minPointerHandler.mapToItem(handlersMovingArea, 5, 5).x
+                let minHandlerY = minPointerHandler.mapToItem(handlersMovingArea, 5, 5).y
+                let distanceToMinHamdler = Math.sqrt((minHandlerX - mouseX) * (minHandlerX - mouseX) + (minHandlerY - mouseY) * (minHandlerY - mouseY))
+
+                let maxHandlerX = maxPointerHandler.mapToItem(handlersMovingArea, 5, 5).x
+                let maxHandlerY = maxPointerHandler.mapToItem(handlersMovingArea, 5, 5).y
+                let distanceToMaxHamdler = Math.sqrt((maxHandlerX - mouseX) * (maxHandlerX - mouseX) + (maxHandlerY - mouseY) * (maxHandlerY - mouseY))
+
+                let distance = distanceToMaxHamdler <= distanceToMinHamdler ? distanceToMaxHamdler : distanceToMinHamdler
+
+                if(distance < 20)
+                {
+                    cursorShape = Qt.BlankCursor
+                    currentHandler = distance === distanceToMaxHamdler ? "max" : "min"
+                }
             }
 
             onReleased:
             {
                 cursorShape = Qt.ArrowCursor
                 currentHandler = ""
-                minHandlerArea.visible = true
-                maxHandlerArea.visible = true
             }
 
             onMouseXChanged:
@@ -945,22 +957,6 @@ Item
                 origin.y: minPointerHandler.height / 2 + circle.height / 2
                 angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : 0
             }
-
-            MouseArea
-            {
-                id: minHandlerArea
-                width: 30
-                height: 30
-                x:  -10
-                y:  -10
-                propagateComposedEvents : true
-
-                onPressed:
-                {
-                    handlersMovingArea.currentHandler = "min"
-                    visible = false
-                }
-            }
         }
 
         Rectangle
@@ -995,22 +991,6 @@ Item
                 origin.x: maxPointerHandler.width / 2
                 origin.y: maxPointerHandler.height / 2 + circle.height / 2
                 angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 0
-            }
-
-            MouseArea
-            {
-                id: maxHandlerArea
-                width: 30
-                height: 30
-                x:  -10
-                y:  -10
-                propagateComposedEvents : true
-
-                onPressed:
-                {
-                    handlersMovingArea.currentHandler = "max"
-                    visible = false
-                }
             }
         }
 
