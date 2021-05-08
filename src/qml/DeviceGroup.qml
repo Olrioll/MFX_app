@@ -65,7 +65,41 @@ Item
             font.family: "Roboto"
             font.pixelSize: 12
 
+            DropArea
+            {
+                anchors.fill: parent
 
+                onDropped:
+                {
+                    project.setCurrentGroup(deviceGroup.name)
+                    collapseButton.checked = true
+
+                    if (drag.source.name === "Sequences")
+                    {
+                        var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                        addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+                        addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+                    }
+
+                    else if (drag.source.name === "Dimmer")
+                    {
+                        addDimmerPlate(dropToIndex)
+                        refreshPlatesNo()
+                    }
+
+                    else if (drag.source.name === "Shot")
+                    {
+                        addShotPlate(dropToIndex)
+                        refreshPlatesNo()
+                    }
+
+                    else if (drag.source.name === "Pyro")
+                    {
+                        addPyroPlate(dropToIndex)
+                        refreshPlatesNo()
+                    }
+                }
+            }
         }
 
         MouseArea
@@ -155,7 +189,6 @@ Item
         {
             id: deviceList
             groupName: deviceGroup.name
-//            anchors.fill: parent
         }
     }    
 }
