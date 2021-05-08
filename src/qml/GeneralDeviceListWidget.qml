@@ -127,65 +127,65 @@ Item
         }
     }
 
-    Button
-    {
-        id: addGroupButton
-        text: qsTr("Reverse Selection")
-        height: 24
-        width: (parent.width - anchors.margins * 4) / 3
+//    Button
+//    {
+//        id: addGroupButton
+//        text: qsTr("Reverse Selection")
+//        height: 24
+//        width: (parent.width - anchors.margins * 4) / 3
 
-        anchors.margins: 2
-        anchors.bottomMargin: 4
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
+//        anchors.margins: 2
+//        anchors.bottomMargin: 4
+//        anchors.left: parent.left
+//        anchors.bottom: parent.bottom
 
 
-        bottomPadding: 2
-        topPadding: 2
-        rightPadding: 2
-        leftPadding: 2
+//        bottomPadding: 2
+//        topPadding: 2
+//        rightPadding: 2
+//        leftPadding: 2
 
-        background: Rectangle
-        {
-            color:
-            {
-                if(parent.enabled)
-                    parent.pressed ? "#222222" : "#27AE60"
-                else
-                    "#444444"
-            }
-            radius: 2
-        }
+//        background: Rectangle
+//        {
+//            color:
+//            {
+//                if(parent.enabled)
+//                    parent.pressed ? "#222222" : "#27AE60"
+//                else
+//                    "#444444"
+//            }
+//            radius: 2
+//        }
 
-        contentItem: Text
-        {
-            color: parent.enabled ? "#ffffff" : "#777777"
-            text: parent.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            font.family: "Roboto"
-        }
+//        contentItem: Text
+//        {
+//            color: parent.enabled ? "#ffffff" : "#777777"
+//            text: parent.text
+//            horizontalAlignment: Text.AlignHCenter
+//            verticalAlignment: Text.AlignVCenter
+//            elide: Text.ElideRight
+//            font.family: "Roboto"
+//        }
 
-        onClicked:
-        {
-            for(let i = 0; i < deviceListView.count; i++)
-            {
-                deviceListView.itemAtIndex(i).checked = !deviceListView.itemAtIndex(i).checked;
-            }
-        }
-    }
+//        onClicked:
+//        {
+//            for(let i = 0; i < deviceListView.count; i++)
+//            {
+//                deviceListView.itemAtIndex(i).checked = !deviceListView.itemAtIndex(i).checked;
+//            }
+//        }
+//    }
 
     Button
     {
         id: editButton
         text: qsTr("Edit")
         height: 24
-        width: (parent.width - anchors.margins * 4) / 3
+        width: (parent.width - anchors.margins * 3) / 2
 
         anchors.margins: 2
         anchors.bottomMargin: 4
-        anchors.left: addGroupButton.right
+        anchors.left: parent.left
         anchors.bottom: parent.bottom
 
 
@@ -216,7 +216,7 @@ Item
         id: deleteButton
         text: qsTr("Delete selected")
         height: 24
-        width: (parent.width - anchors.margins * 4) / 3
+        width: (parent.width - anchors.margins * 3) / 2
 
         anchors.margins: 2
         anchors.bottomMargin: 4

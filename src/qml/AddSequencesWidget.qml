@@ -62,6 +62,7 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
             font.family: "Roboto"
+            font.pixelSize: 12
             topPadding: 4
         }
 
