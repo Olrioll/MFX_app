@@ -590,6 +590,41 @@ Item
             clip: true
         }
 
+        MouseArea
+        {
+            id: handlersMovingArea
+            width: 160
+            height: 100
+            x: circle.x - 10
+            y: circle.y - 10
+
+            property string currentHandler: ""
+
+            onPressed:
+            {
+                cursorShape = Qt.BlankCursor
+            }
+
+            onReleased:
+            {
+                cursorShape = Qt.ArrowCursor
+                currentHandler = ""
+                minHandlerArea.visible = true
+                maxHandlerArea.visible = true
+            }
+
+            onMouseXChanged:
+            {
+                if(containsPress)
+                {
+                    if(currentHandler === "min")
+                        minAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                    else if(currentHandler === "max")
+                        maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                }
+            }
+        }
+
         Rectangle
         {
             x: 16
@@ -909,6 +944,22 @@ Item
                 origin.y: minPointerHandler.height / 2 + circle.height / 2
                 angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : 0
             }
+
+            MouseArea
+            {
+                id: minHandlerArea
+                width: 30
+                height: 30
+                x:  -10
+                y:  -10
+                propagateComposedEvents : true
+
+                onPressed:
+                {
+                    handlersMovingArea.currentHandler = "min"
+                    visible = false
+                }
+            }
         }
 
         Rectangle
@@ -943,6 +994,22 @@ Item
                 origin.x: maxPointerHandler.width / 2
                 origin.y: maxPointerHandler.height / 2 + circle.height / 2
                 angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 0
+            }
+
+            MouseArea
+            {
+                id: maxHandlerArea
+                width: 30
+                height: 30
+                x:  -10
+                y:  -10
+                propagateComposedEvents : true
+
+                onPressed:
+                {
+                    handlersMovingArea.currentHandler = "max"
+                    visible = false
+                }
             }
         }
 
