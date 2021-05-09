@@ -97,8 +97,9 @@ Item
 
                     else if (drag.source.name === "Pyro")
                     {
-                        addPyroPlate(dropToIndex)
-                        refreshPlatesNo()
+                        var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                        addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+                        addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
                     }
                 }
             }

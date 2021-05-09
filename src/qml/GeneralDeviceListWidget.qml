@@ -100,6 +100,13 @@ Item
                     addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
                     addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
                 }
+
+                else if(prevType === "Pyro")
+                {
+                    var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
+                    addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+                    addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
+                }
             }
         }
 
@@ -162,8 +169,9 @@ Item
 
                 else if (drag.source.name === "Pyro")
                 {
-                    addPyroPlate(dropToIndex)
-                    refreshPlatesNo()
+                    var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow);
+                    addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+                    addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
                 }
             }
         }

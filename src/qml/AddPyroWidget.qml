@@ -4,9 +4,9 @@ import QtQuick.Layouts 1.15
 
 Item
 {
-    id: addDimmerWidget
-    width: 138
-    height: 342
+    id: addPyroWidget
+    width: 148
+    height: 338
 
     property bool isEditMode: false
     property var changedIdList: []
@@ -16,7 +16,6 @@ Item
     function markAllInputsInactive()
     {
         quantityField.isActiveInput = false
-        dmxField.isActiveInput = false
         rfPosField.isActiveInput = false
         rfChField.isActiveInput = false
         channelField.isActiveInput = false
@@ -24,34 +23,10 @@ Item
 
     function add()
     {
-        //--- Определяем инкремент канала DMX
-
-        let isNegative = false
-        let operatorIndex = dmxField.text.indexOf('+')
-
-        if(operatorIndex === -1)
-        {
-            operatorIndex = dmxField.text.indexOf('-')
-            if(operatorIndex !== -1)
-                isNegative = true
-        }
-
-
-
-        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-        let dmxIncrement = 0
-        if(operatorIndex !== -1)
-        {
-            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-            if(isNegative)
-                dmxIncrement = -dmxIncrement
-        }
-
         //--- Определяем инкремент RF pos
 
-        isNegative = false
-        operatorIndex = rfPosField.text.indexOf('+')
+        let isNegative = false
+        let operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
         {
@@ -72,7 +47,7 @@ Item
                 rfPosIncrement = -rfPosIncrement
         }
 
-        //--- Определяем инкремент RF pos
+        //--- Определяем инкремент RF ch
 
         isNegative = false
         operatorIndex = rfChField.text.indexOf('+')
@@ -105,16 +80,14 @@ Item
                 project.addPatchToGroup(groupName, currentId)
             }
 
-            project.addPatch( "Dimmer",
+            project.addPatch( "Pyro",
                              [
                               {propName: "ID", propValue: currentId},
-                              {propName: "DMX", propValue: currentDmxValue},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "channel", propValue: Number(channelField.text)}
                              ])
 
-            currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
             currentId++
@@ -123,34 +96,10 @@ Item
 
     function edit()
     {
-        //--- Определяем инкремент канала DMX
-
-        let isNegative = false
-        let operatorIndex = dmxField.text.indexOf('+')
-
-        if(operatorIndex === -1)
-        {
-            operatorIndex = dmxField.text.indexOf('-')
-            if(operatorIndex !== -1)
-                isNegative = true
-        }
-
-
-
-        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-        let dmxIncrement = 0
-        if(operatorIndex !== -1)
-        {
-            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-            if(isNegative)
-                dmxIncrement = -dmxIncrement
-        }
-
         //--- Определяем инкремент RF pos
 
-        isNegative = false
-        operatorIndex = rfPosField.text.indexOf('+')
+        let isNegative = false
+        let operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
         {
@@ -171,7 +120,7 @@ Item
                 rfPosIncrement = -rfPosIncrement
         }
 
-        //--- Определяем инкремент RF pos
+        //--- Определяем инкремент RF ch
 
         isNegative = false
         operatorIndex = rfChField.text.indexOf('+')
@@ -200,13 +149,11 @@ Item
             project.editPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
-                              {propName: "DMX", propValue: currentDmxValue},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "channel", propValue: Number(channelField.text)}
                              ])
 
-            currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
         }
@@ -217,9 +164,9 @@ Item
         id: rectangle
         anchors.fill: parent
         anchors.rightMargin: 0
-        anchors.bottomMargin: -16
+        anchors.bottomMargin: 28
         anchors.leftMargin: 0
-        anchors.topMargin: 0
+        anchors.topMargin: -16
         radius: 2
         color: "#444444"
         clip: true
@@ -232,20 +179,20 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
 
-            drag.target: addDimmerWidget
+            drag.target: addPyroWidget
             drag.axis: Drag.XandYAxis
 
             drag.minimumX: applicationWindow.childWidgetsArea().x
-            drag.maximumX: applicationWindow.childWidgetsArea().width - addDimmerWidget.width
+            drag.maximumX: applicationWindow.childWidgetsArea().width - addPyroWidget.width
             drag.minimumY: applicationWindow.childWidgetsArea().y
-            drag.maximumY: applicationWindow.childWidgetsArea().height - addDimmerWidget.height
+            drag.maximumY: applicationWindow.childWidgetsArea().height - addPyroWidget.height
         }
 
         Text
         {
             id: windowTitle
             color: "#ffffff"
-            text: qsTr("Add Dimmer")
+            text: qsTr("Add Pyro")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
@@ -278,7 +225,7 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-            onClicked: addDimmerWidget.destroy()
+            onClicked: addPyroWidget.destroy()
         }
 
         //--- Рабочая область
@@ -287,8 +234,8 @@ Item
         {
             x: 7
             y: 34
-            width: 124
-            height: 117
+            width: 133
+            height: 78
             color: "#222222"
             radius: 2
         }
@@ -296,7 +243,7 @@ Item
         Text
         {
             id: quantityText
-            x: 16
+            x: 37
             y: 40
             height: 17
             color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
@@ -312,7 +259,7 @@ Item
         TextField
         {
             id: quantityField
-            x: 90
+            x: 98
             y: 40
             width: 36
             height: 18
@@ -342,60 +289,7 @@ Item
                 {
                     markAllInputsInactive();
                     isActiveInput = true;
-                    addDimmerWidget.currentInput = this;
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-        TextField
-        {
-            id: dmxField
-            x: 13
-            y: 80
-            width: 36
-            height: 18
-            text: "1"
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 509)
-            }
-
-//            validator: RegExpValidator { regExp: /[0-9]+/ }
-//            maximumLength: 3
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addDimmerWidget.currentInput = this
+                    addPyroWidget.currentInput = this;
                     selectAll();
                     lastSelectedText = selectedText
                 }
@@ -405,8 +299,8 @@ Item
         TextField
         {
             id: rfPosField
-            x: 15
-            y: 126
+            x: 11
+            y: 82
             width: 36
             height: 18
             color: "#ffffff"
@@ -445,7 +339,7 @@ Item
                 {
                     markAllInputsInactive();
                     isActiveInput = true
-                    addDimmerWidget.currentInput = this
+                    addPyroWidget.currentInput = this
                     selectAll();
                     lastSelectedText = selectedText
                 }
@@ -455,8 +349,8 @@ Item
         TextField
         {
             id: rfChField
-            x: 90
-            y: 126
+            x: 56
+            y: 82
             width: 36
             height: 18
             color: "#ffffff"
@@ -495,7 +389,7 @@ Item
                 {
                     markAllInputsInactive();
                     isActiveInput = true
-                    addDimmerWidget.currentInput = this
+                    addPyroWidget.currentInput = this
                     selectAll();
                     lastSelectedText = selectedText
                 }
@@ -505,8 +399,8 @@ Item
         TextField
         {
             id: channelField
-            x: 90
-            y: 80
+            x: 101
+            y: 82
             width: 36
             height: 18
             color: "#ffffff"
@@ -542,31 +436,16 @@ Item
                 {
                     markAllInputsInactive();
                     isActiveInput = true
-                    addDimmerWidget.currentInput = this
+                    addPyroWidget.currentInput = this
                     selectAll();
                     lastSelectedText = selectedText
                 }
             }
         }
 
-
-
         Text {
-            x: 19
+            x: 13
             y: 63
-            height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("DMX")
-            elide: Text.ElideMiddle
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            minimumPixelSize: 10
-            font.family: "Roboto"
-        }
-
-        Text {
-            x: 15
-            y: 107
             height: 17
             color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
             text: qsTr("RF pos")
@@ -578,8 +457,8 @@ Item
         }
 
         Text {
-            x: 92
-            y: 107
+            x: 58
+            y: 63
             height: 17
             color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
             text: qsTr("RF ch")
@@ -591,7 +470,7 @@ Item
         }
 
         Text {
-            x: 81
+            x: 93
             y: 63
             width: 44
             height: 17
@@ -607,8 +486,8 @@ Item
         CalcWidget
         {
             id: calcWidget
-            x: 7
-            y: 157
+            x: 11
+            y: 125
 
             minusButtonText: channelField.isActiveInput ? "." : "-"
         }
@@ -616,14 +495,13 @@ Item
         Button
         {
             id: setButton
-            x: 7
-            y: 327
+            x: 11
+            y: 295
             width: 124
             height: 24
             text: qsTr("Set")
             enabled:
             {
-                dmxField.checkValue() &&
                         rfPosField.checkValue() &&
                         rfChField.checkValue() &&
                         channelField.checkValue()
@@ -654,17 +532,17 @@ Item
 
             onClicked:
             {
-                if(addDimmerWidget.isEditMode)
+                if(addPyroWidget.isEditMode)
                 {
-                    addDimmerWidget.edit()
+                    addPyroWidget.edit()
                 }
 
                 else
                 {
-                    addDimmerWidget.add()
+                    addPyroWidget.add()
                 }
 
-                addDimmerWidget.destroy();
+                addPyroWidget.destroy();
             }
         }
     }
@@ -673,8 +551,8 @@ Item
         State
         {
             name: "editMode"
-            when: addDimmerWidget.isEditMode
-            PropertyChanges {target: windowTitle; text: qsTr("Edit Dimmer")}
+            when: addPyroWidget.isEditMode
+            PropertyChanges {target: windowTitle; text: qsTr("Edit Pyro")}
             PropertyChanges {target: setButton; text: qsTr("Apply")}
             PropertyChanges {target: quantityText; text: qsTr("Patch ID")}
             PropertyChanges {target: quantityField; maximumLength: 3}
@@ -705,7 +583,6 @@ Item
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
             quantityField.text = propValuesList[propNamesList.indexOf("ID")];
-            dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
             channelField.text = propValuesList[propNamesList.indexOf("channel")];
@@ -718,4 +595,3 @@ Designer {
     D{i:0;formeditorZoom:3}
 }
 ##^##*/
-

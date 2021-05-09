@@ -33,5 +33,6 @@
         <file alias="checked">src/img/checked.png</file>
         <file>src/qml/AddShotWidget.qml</file>
         <file>src/qml/AddDimmerWidget.qml</file>
+        <file>src/qml/AddPyroWidget.qml</file>
     </qresource>
 </RCC>
