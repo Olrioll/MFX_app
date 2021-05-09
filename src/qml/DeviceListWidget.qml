@@ -44,7 +44,7 @@ ListView
             else if (deviceType === "Dimmer")
                 imageFile = "qrc:/device_dimmer"
 
-            deviceListModel.insert(i, {counter: i + 1, img: imageFile, currentCells: cells})
+            deviceListModel.insert(i, {counter: i + 1, devType: deviceType, img: imageFile, currentCells: cells})
         }
     }
 
@@ -72,8 +72,40 @@ ListView
         project.removePatchesFromGroup(groupName, removedIndexes)
     }
 
+    function openEditWindow()
+    {
+        let editedList = []
+
+        let prevType = ""
+        for(let i = 0; i < deviceListView.count; i++)
+        {
+            if(deviceListView.itemAtIndex(i).checked)
+            {
+                if(prevType === "" || deviceListView.itemAtIndex(i).type === prevType)
+                {
+                    editedList.push(deviceListView.itemAtIndex(i).getId())
+                    prevType = deviceListView.itemAtIndex(i).type
+                }
+
+                else
+                    return;
+            }
+        }
+
+        if(editedList.length)
+        {
+            if(prevType === "Sequences")
+            {
+                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
+                addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+                addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+            }
+        }
+    }
+
     delegate: PatchPlate
     {
+        type: devType
         imageFile: img
         no: counter
         cells: currentCells

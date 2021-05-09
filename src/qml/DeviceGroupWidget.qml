@@ -132,6 +132,18 @@ Item
             elide: Text.ElideRight
             font.family: "Roboto"
         }
+
+        onClicked:
+        {
+            for(let i = 0; i < groupListView.count; i++)
+            {
+                if(groupListView.itemAtIndex(i).name === project.currentGroup())
+                {
+                    groupListView.itemAtIndex(i).deviceList.openEditWindow()
+                    break;
+                }
+            }
+        }
     }
 
     Button
