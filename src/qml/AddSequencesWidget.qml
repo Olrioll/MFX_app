@@ -9,6 +9,8 @@ Item
     width: 300
     height: 250
 
+    property bool isEditMode: false
+    property var changedIdList: []
     property string groupName: ""
     property var currentInput: quantityField
 
@@ -21,6 +23,200 @@ Item
         heightField.isActiveInput = false
         minAngField.isActiveInput = false
         maxAngField.isActiveInput = false
+    }
+
+    function add()
+    {
+        //--- Определяем инкремент канала DMX
+
+        let isNegative = false
+        let operatorIndex = dmxField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = dmxField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+
+
+        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+
+        let dmxIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                dmxIncrement = -dmxIncrement
+        }
+
+        //--- Определяем инкремент RF pos
+
+        isNegative = false
+        operatorIndex = rfPosField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = rfPosField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+
+
+        let currentRfPosValue = (operatorIndex === -1) ? Number(rfPosField.text) : Number(rfPosField.text.slice(0, operatorIndex))
+
+        let rfPosIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            rfPosIncrement = Number(rfPosField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                rfPosIncrement = -rfPosIncrement
+        }
+
+        //--- Определяем инкремент RF pos
+
+        isNegative = false
+        operatorIndex = rfChField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = rfChField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+
+
+        let currentRfChValue = (operatorIndex === -1) ? Number(rfChField.text) : Number(rfChField.text.slice(0, operatorIndex))
+
+        let rfChIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            rfChIncrement = Number(rfChField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                rfChIncrement = -rfChIncrement
+        }
+
+        let currentId = project.lastPatchId() + 1;
+
+        for(let i = 0; i < Number(quantityField.text); i++)
+        {
+            if(groupName)
+            {
+                project.addPatchToGroup(groupName, currentId)
+            }
+
+            project.addPatch( "Sequences",
+                             [
+                              {propName: "ID", propValue: currentId},
+                              {propName: "DMX", propValue: currentDmxValue},
+                              {propName: "min ang", propValue: Number(minAngField.text)},
+                              {propName: "max ang", propValue: Number(maxAngField.text)},
+                              {propName: "RF pos", propValue: currentRfPosValue},
+                              {propName: "RF ch", propValue: currentRfChValue},
+                              {propName: "height", propValue: Number(heightField.text)}
+                             ])
+
+            currentDmxValue += dmxIncrement
+            currentRfPosValue += rfPosIncrement
+            currentRfChValue += rfChIncrement
+            currentId++
+        }
+    }
+
+    function edit()
+    {
+        //--- Определяем инкремент канала DMX
+
+        let isNegative = false
+        let operatorIndex = dmxField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = dmxField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+
+
+        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+
+        let dmxIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                dmxIncrement = -dmxIncrement
+        }
+
+        //--- Определяем инкремент RF pos
+
+        isNegative = false
+        operatorIndex = rfPosField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = rfPosField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+
+
+        let currentRfPosValue = (operatorIndex === -1) ? Number(rfPosField.text) : Number(rfPosField.text.slice(0, operatorIndex))
+
+        let rfPosIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            rfPosIncrement = Number(rfPosField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                rfPosIncrement = -rfPosIncrement
+        }
+
+        //--- Определяем инкремент RF pos
+
+        isNegative = false
+        operatorIndex = rfChField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = rfChField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+
+
+        let currentRfChValue = (operatorIndex === -1) ? Number(rfChField.text) : Number(rfChField.text.slice(0, operatorIndex))
+
+        let rfChIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            rfChIncrement = Number(rfChField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                rfChIncrement = -rfChIncrement
+        }
+
+        for(let i = 0; i < changedIdList.length; i++)
+        {
+            project.editPatch(
+                             [
+                              {propName: "ID", propValue: changedIdList[i]},
+                              {propName: "DMX", propValue: currentDmxValue},
+                              {propName: "min ang", propValue: Number(minAngField.text)},
+                              {propName: "max ang", propValue: Number(maxAngField.text)},
+                              {propName: "RF pos", propValue: currentRfPosValue},
+                              {propName: "RF ch", propValue: currentRfChValue},
+                              {propName: "height", propValue: Number(heightField.text)}
+                             ])
+
+            currentDmxValue += dmxIncrement
+            currentRfPosValue += rfPosIncrement
+            currentRfChValue += rfChIncrement
+        }
     }
 
     Rectangle
@@ -54,6 +250,7 @@ Item
 
         Text
         {
+            id: windowTitle
             color: "#ffffff"
             text: qsTr("Add Sequences")
             horizontalAlignment: Text.AlignHCenter
@@ -105,6 +302,7 @@ Item
 
         Text
         {
+            id: quantityText
             y: 40
             height: 17
             color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
@@ -117,6 +315,8 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
             font.family: "Roboto"
+
+            visible: !(changedIdList.length > 1)
         }
 
         TextField
@@ -132,6 +332,7 @@ Item
             padding: 0
             leftPadding: -2
             font.pointSize: 8
+            visible: !(changedIdList.length > 1)
 
             property bool isActiveInput: true
             property string lastSelectedText
@@ -477,102 +678,14 @@ Item
 
             onClicked:
             {
-                //--- Определяем инкремент канала DMX
-
-                let isNegative = false
-                let operatorIndex = dmxField.text.indexOf('+')
-
-                if(operatorIndex === -1)
+                if(addSequWindow.isEditMode)
                 {
-                    operatorIndex = dmxField.text.indexOf('-')
-                    if(operatorIndex !== -1)
-                        isNegative = true
+                    addSequWindow.edit()
                 }
 
-
-
-                let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-                let dmxIncrement = 0
-                if(operatorIndex !== -1)
+                else
                 {
-                    dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-                    if(isNegative)
-                        dmxIncrement = -dmxIncrement
-                }
-
-                //--- Определяем инкремент RF pos
-
-                isNegative = false
-                operatorIndex = rfPosField.text.indexOf('+')
-
-                if(operatorIndex === -1)
-                {
-                    operatorIndex = rfPosField.text.indexOf('-')
-                    if(operatorIndex !== -1)
-                        isNegative = true
-                }
-
-
-
-                let currentRfPosValue = (operatorIndex === -1) ? Number(rfPosField.text) : Number(rfPosField.text.slice(0, operatorIndex))
-
-                let rfPosIncrement = 0
-                if(operatorIndex !== -1)
-                {
-                    rfPosIncrement = Number(rfPosField.text.slice(operatorIndex + 1))
-                    if(isNegative)
-                        rfPosIncrement = -rfPosIncrement
-                }
-
-                //--- Определяем инкремент RF pos
-
-                isNegative = false
-                operatorIndex = rfChField.text.indexOf('+')
-
-                if(operatorIndex === -1)
-                {
-                    operatorIndex = rfChField.text.indexOf('-')
-                    if(operatorIndex !== -1)
-                        isNegative = true
-                }
-
-
-
-                let currentRfChValue = (operatorIndex === -1) ? Number(rfChField.text) : Number(rfChField.text.slice(0, operatorIndex))
-
-                let rfChIncrement = 0
-                if(operatorIndex !== -1)
-                {
-                    rfChIncrement = Number(rfChField.text.slice(operatorIndex + 1))
-                    if(isNegative)
-                        rfChIncrement = -rfChIncrement
-                }
-
-                let currentId = project.lastPatchId() + 1;
-
-                for(let i = 0; i < Number(quantityField.text); i++)
-                {
-                    if(groupName)
-                    {
-                        project.addPatchToGroup(groupName, currentId)
-                    }
-
-                    project.addPatch( "Sequences",
-                                     [
-                                      {propName: "ID", propValue: currentId},
-                                      {propName: "DMX", propValue: currentDmxValue},
-                                      {propName: "min ang", propValue: Number(minAngField.text)},
-                                      {propName: "max ang", propValue: Number(maxAngField.text)},
-                                      {propName: "RF pos", propValue: currentRfPosValue},
-                                      {propName: "RF ch", propValue: currentRfChValue},
-                                      {propName: "height", propValue: Number(heightField.text)}
-                                     ])
-
-                    currentDmxValue += dmxIncrement
-                    currentRfPosValue += rfPosIncrement
-                    currentRfChValue += rfChIncrement
-                    currentId++
+                    addSequWindow.add()
                 }
 
                 addSequWindow.destroy();
@@ -1008,7 +1121,17 @@ Item
         }
     }
 
-
+    states: [
+        State
+        {
+            name: "editMode"
+            when: addSequWindow.isEditMode
+            PropertyChanges {target: windowTitle; text: qsTr("Edit sequences")}
+            PropertyChanges {target: setButton; text: qsTr("Apply")}
+            PropertyChanges {target: quantityText; text: qsTr("Patch ID")}
+            PropertyChanges {target: quantityField; maximumLength: 3}
+        }
+    ]
 
     Connections
     {

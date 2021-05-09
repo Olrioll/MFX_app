@@ -116,6 +116,7 @@ public slots:
 
     int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
+    void editPatch(QVariantList properties);
     void removePatches(QList<int> indexes);
     int patchCount() const;
     int patchIndexForId(int id) const;

@@ -201,6 +201,33 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     emit patchListChanged();
 }
 
+void ProjectManager::editPatch(QVariantList properties)
+{
+    Patch newPatch;
+
+    foreach(auto prop, properties)
+    {
+        newPatch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toInt()});
+    }
+
+    int changedIndex = -1;
+    for(int i = 0; i < _patches.size(); i++)
+    {
+        if(_patches.at(i).property("ID") == properties.at(0).toMap().last().toInt())
+        {
+            changedIndex = i;
+            newPatch.type = _patches.at(i).type;
+            break;
+        }
+    }
+
+    if(changedIndex != -1)
+    {
+        _patches.replace(changedIndex, newPatch);
+        emit patchListChanged();
+    }
+}
+
 void ProjectManager::removePatches(QList<int> indexes)
 {
     QList<Patch> newList;

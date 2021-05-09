@@ -11,6 +11,7 @@ Item
     property var parentList: null
     property int no: 0
     property string name: "Patch Plate"
+    property string type: ""
     property string imageFile: ""
     property bool checked: false
     property bool held: false
@@ -20,6 +21,11 @@ Item
     Drag.source: this
     Drag.hotSpot.x: width / 2
     Drag.hotSpot.y: height / 2
+
+    function getId()
+    {
+        return cells.get(0).propValue
+    }
 
     Rectangle
     {
