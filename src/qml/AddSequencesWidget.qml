@@ -7,7 +7,7 @@ Item
 {
     id: addSequWindow
     width: 300
-    height: 250
+    height: 294
 
     property bool isEditMode: false
     property var changedIdList: []
@@ -1119,6 +1119,164 @@ Item
             color: "white"
             clip: true
         }
+
+        Text
+        {
+            id: effectText
+            y: 266
+            height: 17
+            color: "#ffffff"
+            text: qsTr("Effect type")
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            anchors.rightMargin: 200
+            anchors.leftMargin: 35
+            elide: Text.ElideMiddle
+            anchors.left: parent.left
+            anchors.right: parent.right
+            font.family: "Roboto"
+        }
+
+        ButtonGroup
+        {
+            id: colorButtons
+        }
+
+        Button
+        {
+            id: colorButton1
+            x: 120
+            y: 258
+            width: 32
+            height: 32
+            checkable: true
+
+            property string colorType: "red"
+
+            background: Rectangle
+            {
+                color: parent.colorType
+                opacity: parent.checked ? 0.6 : 0.3
+                radius: 2
+            }
+
+            Image
+            {
+                source: parent.checked ? "qrc:/checked" : ""
+                anchors.centerIn: parent
+            }
+
+            ButtonGroup.group: colorButtons
+        }
+
+        Button
+        {
+            id: colorButton2
+            x: 156
+            y: 258
+            width: 32
+            height: 32
+            checkable: true
+
+            property string colorType: "blue"
+
+            background: Rectangle
+            {
+                color: parent.colorType
+                opacity: parent.checked ? 0.6 : 0.3
+                radius: 2
+            }
+
+            Image
+            {
+                source: parent.checked ? "qrc:/checked" : ""
+                anchors.centerIn: parent
+            }
+
+            ButtonGroup.group: colorButtons
+        }
+
+        Button
+        {
+            id: colorButton3
+            x: 192
+            y: 258
+            width: 32
+            height: 32
+            checkable: true
+
+            property string colorType: "green"
+
+            background: Rectangle
+            {
+                color: parent.colorType
+                opacity: parent.checked ? 0.6 : 0.3
+                radius: 2
+            }
+
+            Image
+            {
+                source: parent.checked ? "qrc:/checked" : ""
+                anchors.centerIn: parent
+            }
+
+            ButtonGroup.group: colorButtons
+        }
+
+        Button
+        {
+            id: colorButton4
+            x: 228
+            y: 258
+            width: 32
+            height: 32
+            checkable: true
+
+            property string colorType: "yellow"
+
+            background: Rectangle
+            {
+                color: parent.colorType
+                opacity: parent.checked ? 0.8 : 0.3
+                radius: 2
+            }
+
+            Image
+            {
+                source: parent.checked ? "qrc:/checked" : ""
+                anchors.centerIn: parent
+            }
+
+            ButtonGroup.group: colorButtons
+        }
+
+        Button
+        {
+            id: colorButton5
+            x: 264
+            y: 258
+            width: 32
+            height: 32
+            checkable: true
+
+            property string colorType: "purple"
+
+            background: Rectangle
+            {
+                color: parent.colorType
+                opacity: parent.checked ? 0.6 : 0.3
+                radius: 2
+            }
+
+            Image
+            {
+                source: parent.checked ? "qrc:/checked" : ""
+                anchors.centerIn: parent
+            }
+
+            ButtonGroup.group: colorButtons
+        }
+
     }
 
     states: [
