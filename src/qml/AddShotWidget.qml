@@ -1215,6 +1215,22 @@ Item
             currentInput.text = currentInput.text + digit
         }
     }
+
+    Component.onCompleted:
+    {
+        if(isEditMode && changedIdList.length === 1)
+        {
+            var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
+            var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
+
+            quantityField.text = propValuesList[propNamesList.indexOf("ID")];
+            dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
+            rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
+            rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
+            heightField.text = propValuesList[propNamesList.indexOf("height")];
+            angField.text = propValuesList[propNamesList.indexOf("anhle")];
+        }
+    }
 }
 
 /*##^##
