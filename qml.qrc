@@ -32,5 +32,6 @@
         <file>src/qml/GeneralDeviceListWidget.qml</file>
         <file alias="checked">src/img/checked.png</file>
         <file>src/qml/AddShotWidget.qml</file>
+        <file>src/qml/AddDimmerWidget.qml</file>
     </qresource>
 </RCC>

@@ -107,6 +107,13 @@ ListView
                 addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
                 addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
             }
+
+            else if(prevType === "Dimmer")
+            {
+                var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
+                addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+                addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
+            }
         }
     }
 
@@ -153,8 +160,9 @@ ListView
 
             else if (drag.source.name === "Dimmer")
             {
-                addDimmerPlate(dropToIndex)
-                refreshPlatesNo()
+                var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
+                addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+                addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
             }
 
             else if (drag.source.name === "Shot")

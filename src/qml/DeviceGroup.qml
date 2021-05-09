@@ -83,14 +83,16 @@ Item
 
                     else if (drag.source.name === "Dimmer")
                     {
-                        addDimmerPlate(dropToIndex)
-                        refreshPlatesNo()
+                        var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                        addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+                        addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
                     }
 
                     else if (drag.source.name === "Shot")
                     {
-                        addShotPlate(dropToIndex)
-                        refreshPlatesNo()
+                        var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                        addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                        addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
                     }
 
                     else if (drag.source.name === "Pyro")
