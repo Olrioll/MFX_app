@@ -1228,7 +1228,7 @@ Item
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
             heightField.text = propValuesList[propNamesList.indexOf("height")];
-            angField.text = propValuesList[propNamesList.indexOf("anhle")];
+            angField.text = propValuesList[propNamesList.indexOf("angle")];
         }
     }
 }
