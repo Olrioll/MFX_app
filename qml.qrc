@@ -31,5 +31,6 @@
         <file>src/qml/AddSequencesWidget.qml</file>
         <file>src/qml/GeneralDeviceListWidget.qml</file>
         <file alias="checked">src/img/checked.png</file>
+        <file>src/qml/AddShotWidget.qml</file>
     </qresource>
 </RCC>

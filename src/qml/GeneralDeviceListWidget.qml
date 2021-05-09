@@ -86,6 +86,13 @@ Item
                     addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
                     addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
                 }
+
+                else if(prevType === "Shot")
+                {
+                    var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
+                    addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                    addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
+                }
             }
         }
 
@@ -140,8 +147,9 @@ Item
 
                 else if (drag.source.name === "Shot")
                 {
-                    addShotPlate(dropToIndex)
-                    refreshPlatesNo()
+                    var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow);
+                    addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                    addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
                 }
 
                 else if (drag.source.name === "Pyro")

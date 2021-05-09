@@ -33,7 +33,7 @@ ListView
                 cells.push({propName: propNamesList[j], propValue: propValuesList[j]})
             }
 
-            var deviceType = project.patchType(i)
+            var deviceType = project.patchType(index)
             var imageFile
             if (deviceType === "Sequences")
                 imageFile = "qrc:/device_sequences"
@@ -100,6 +100,13 @@ ListView
                 addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
                 addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
             }
+
+            else if(prevType === "Shot")
+            {
+                var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
+                addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
+            }
         }
     }
 
@@ -152,8 +159,9 @@ ListView
 
             else if (drag.source.name === "Shot")
             {
-                addShotPlate(dropToIndex)
-                refreshPlatesNo()
+                var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
+                addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
             }
 
             else if (drag.source.name === "Pyro")
