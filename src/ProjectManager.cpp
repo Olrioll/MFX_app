@@ -146,6 +146,8 @@ void ProjectManager::addPatchToGroup(QString groupName, int patchId)
             break;
         }
     }
+
+    emit groupChanged(currentGroupIndex());
 }
 
 void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> indexes)
@@ -171,7 +173,7 @@ void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> indexe
 
 
     _groups[groupIndex].patches = newList;
-    emit patchListChanged();
+    emit groupChanged(currentGroupIndex());
 }
 
 int ProjectManager::lastPatchId() const
@@ -333,4 +335,6 @@ void ProjectManager::setCurrentGroup(QString name)
 
         index++;
     }
+
+    emit currentGroupIndexChanged(m_currentGroupIndex);
 }

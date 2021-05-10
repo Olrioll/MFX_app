@@ -128,6 +128,8 @@ Item
             loadGeneralDeviceList()
         }
 
+
+
         DropArea
         {
             id: deviceListWidgetDropArea
@@ -135,18 +137,18 @@ Item
 
             onDropped:
             {
-                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
+//                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
 
-                if(drag.source.name === "Patch Plate")
-                {
-                    if(dropToIndex !== -1)
-                    {
-                        deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-                        refreshPlatesNo()
-                    }
-                }
+//                if(drag.source.name === "Patch Plate")
+//                {
+//                    if(dropToIndex !== -1)
+//                    {
+//                        deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
+//                        refreshPlatesNo()
+//                    }
+//                }
 
-                else if (drag.source.name === "Sequences")
+                if (drag.source.name === "Sequences")
                 {
                     var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
                     addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2

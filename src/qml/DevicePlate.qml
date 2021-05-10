@@ -57,17 +57,6 @@ Item
             font.family: "Roboto"
             font.pixelSize: 12
         }
-
-//        states: State {
-//                            when: devicePlate.held
-
-//                            ParentChange { target: devicePlate; parent: patchScreen }
-//                            AnchorChanges {
-//                                target: devicePlate
-//                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
-//                            }
-//                        }
-
     }
 }
 

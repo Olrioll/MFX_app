@@ -197,6 +197,15 @@ ListView
         }
     }
 
+    Connections
+    {
+        target: project
+        function onGroupChanged()
+        {
+            loadDeviceList()
+        }
+    }
+
 
     Component.onCompleted:
     {

@@ -11,7 +11,6 @@ ListView
     anchors.fill: parent
     clip: true
     spacing: 2
-//    interactive: false
     ScrollBar.vertical: ScrollBar {}
 
     property bool held: false
