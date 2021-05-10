@@ -98,19 +98,61 @@ Item
                 id: sceneFrame
                 x: project.property("sceneFrameX") * sceneImage.contentWidth
                 y: project.property("sceneFrameY") * sceneImage.contentHeight
-                width: 500
-                height: 250
+                width: project.property("sceneFrameWidth") * sceneImage.contentWidth
+                height: width * project.property("sceneHeight") / project.property("sceneWidth")
                 color: "transparent"
                 border.width: 2
                 border.color: "#507FE6"
                 radius: 2
+
+                property int minWidth: 100
+
+//                MouseArea
+//                {
+//                    id: widthResizeArea
+//                    width: 4
+//                    height: sceneFrame.height
+//                    x: sceneFrame.x + sceneFrame.width
+//                    y: sceneFrame.y
+//                    property int previousX
+
+////                    anchors
+////                    {
+////                        top: sceneFrame.top
+////                        bottom: sceneFrame.bottom
+////                        left: sceneFrame.left
+////                    }
+//                    cursorShape: Qt.SizeHorCursor
+
+//                    onPressed:
+//                    {
+//                        previousX = mouseX
+//                    }
+
+//                    onMouseXChanged:
+//                    {
+//                        var dx = mouseX - previousX
+//                        project.setProperty("sceneFrameWidth", (sceneFrame.width + dx) / sceneFrame.width * project.property("sceneFrameWidth"))
+//                    }
+//                }
+            }
+
+            Button
+            {
+                text: "test"
+                onClicked:
+                {
+                    sceneFrame.width = (project.property("sceneFrameWidth") + 0.1) * sceneImage.contentWidth
+                    sceneFrame.height = sceneFrame.width * project.property("sceneHeight") / project.property("sceneWidth")
+                    project.setProperty("sceneFrameWidth", project.property("sceneFrameWidth") + 0.1)
+                }
             }
 
             Rectangle
             {
+                id: sceneTitle
                 x: sceneFrame.x + sceneFrame.width / 2 - width / 2
                 y: sceneFrame.y - height / 2
-                id: sceneTitle
                 width: 62
                 height: 20
                 color: "#507FE6"
@@ -145,7 +187,6 @@ Item
                     }
                 }
             }
-
         }
 
         Item

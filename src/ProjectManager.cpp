@@ -7,11 +7,9 @@
 ProjectManager::ProjectManager(QObject *parent) : QObject(parent)
 {
     loadProject("test.json");
-//    foreach(auto group, _groups)
-//    {
-//        qDebug() << group.name;
-//        qDebug() << group.patches;
-//    }
+    _properties.insert("sceneWidth", 10.5);
+    _properties.insert("sceneHeight", 5.6);
+    _properties.insert("sceneFrameWidth", 0.5);
 }
 
 ProjectManager::~ProjectManager()
