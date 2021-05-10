@@ -91,7 +91,5 @@ ListView
                 deviceLibView.held = false
             }
         }
-
-
     }
 }

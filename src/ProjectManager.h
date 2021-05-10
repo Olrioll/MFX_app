@@ -112,7 +112,8 @@ public slots:
     void removeGroup(QString name);
     bool renameGroup(QString newName);
     void addPatchToGroup(QString groupName, int patchId);
-    void removePatchesFromGroup(QString groupName, QList<int> indexes);
+    void addPatchesToGroup(QString groupName, QList<int> patchIDs);
+    void removePatchesFromGroup(QString groupName, QList<int> patchIDs);
 
     int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
@@ -135,6 +136,7 @@ signals:
 
     void currentGroupIndexChanged(int currentGroupIndex);
     void groupChanged(int index);
+    void groupCountChanged();
     void patchListChanged();
 
 private:

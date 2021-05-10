@@ -101,6 +101,11 @@ Item
                         addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
                         addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
                     }
+
+                    else if(drag.source.name === "Patch Plate")
+                    {
+                        project.addPatchesToGroup(deviceGroup.name, drag.source.checkedIDs)
+                    }
                 }
             }
         }

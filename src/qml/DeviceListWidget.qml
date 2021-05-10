@@ -22,6 +22,7 @@ ListView
     {
         deviceListModel.clear()
         var patchesList = project.patchesIdList(groupName)
+
         for(let i = 0; i < patchesList.length; i++)
         {
             let index = project.patchIndexForId(patchesList[i])
@@ -60,16 +61,16 @@ ListView
 
     function deleteSelected()
     {
-        var removedIndexes = []
+        var removedIDs = []
         for(let i = 0; i < deviceListView.count; i++)
         {
             if(deviceListView.itemAtIndex(i).checked)
             {
-                removedIndexes.push(i)
+                removedIDs.push(deviceListView.itemAtIndex(i).getId())
             }
         }
 
-        project.removePatchesFromGroup(groupName, removedIndexes)
+        project.removePatchesFromGroup(groupName, removedIDs)
     }
 
     function openEditWindow()
@@ -153,7 +154,8 @@ ListView
             {
                 if(dropToIndex !== -1)
                 {
-                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
+//                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
+                    project.addPatchesToGroup(deviceListView.groupName, drag.source.checkedIDs)
                     refreshPlatesNo()
                 }
             }

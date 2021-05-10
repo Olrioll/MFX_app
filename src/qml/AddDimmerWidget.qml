@@ -100,10 +100,6 @@ Item
 
         for(let i = 0; i < Number(quantityField.text); i++)
         {
-            if(groupName)
-            {
-                project.addPatchToGroup(groupName, currentId)
-            }
 
             project.addPatch( "Dimmer",
                              [
@@ -113,6 +109,11 @@ Item
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "channel", propValue: Number(channelField.text)}
                              ])
+
+            if(groupName)
+            {
+                project.addPatchToGroup(groupName, currentId)
+            }
 
             currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement

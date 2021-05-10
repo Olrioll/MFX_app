@@ -11,20 +11,23 @@ Item
     property var parentList: null
     property int no: 0
     property string name: "Patch Plate"
+    property bool withBorder: false
     property string type: ""
     property string imageFile: ""
     property bool checked: false
-    property bool held: false
-    property var cells
-
-    Drag.active: held
-    Drag.source: this
-    Drag.hotSpot.x: width / 2
-    Drag.hotSpot.y: height / 2
+    property var cells: []
+    property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
 
     function getId()
     {
         return cells.get(0).propValue
+    }
+
+    function refreshCells()
+    {
+        cellListModel.clear()
+        for(let i = 0; i < cells.count; i++)
+            cellListModel.append(cells.get(i))
     }
 
     Rectangle
@@ -33,7 +36,7 @@ Item
         color: patchPlate.checked ? "#27AE60" : "#4f4f4f"
         radius: 2
         border.width: 2
-        border.color: patchPlate.held ? "lightblue" : "#4f4f4f"
+        border.color: patchPlate.withBorder ? "lightblue" : "#4f4f4f"
 
         Image
         {
@@ -120,30 +123,14 @@ Item
 
             Component.onCompleted:
             {
-                for(let i = 0; i < cells.count; i++)
-                    cellListModel.append(cells.get(i))
+                refreshCells()
             }
         }
-
-        states: State {
-                            when: patchPlate.held
-
-                            ParentChange { target: patchPlate; parent: patchScreen }
-                            AnchorChanges {
-                                target: patchPlate
-                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
-                            }
-                        }
-
-
 
         MouseArea
         {
             id: mouseArea
             anchors.fill: parent
-
-            drag.target: patchPlate.held ? patchPlate : undefined
-            drag.axis: Drag.YAxis
 
             onClicked:
             {
@@ -152,18 +139,6 @@ Item
                 {
                     project.setCurrentGroup(parentList.groupName)
                 }
-            }
-
-            onPressAndHold:
-            {
-                patchPlate.held = true
-            }
-
-            onReleased:
-            {
-                if(drag.target)
-                    drag.target.Drag.drop()
-                patchPlate.held = false
             }
         }
     }

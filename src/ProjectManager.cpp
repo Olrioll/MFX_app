@@ -98,7 +98,7 @@ bool ProjectManager::addGroup(QString name)
     }
 
     _groups.push_back(Group(name));
-    emit groupChanged(_groups.size() - 1);
+    emit groupCountChanged();
     return true;
 }
 
@@ -117,7 +117,7 @@ void ProjectManager::removeGroup(QString name)
     if(index != -1)
     {
         _groups.removeAt(index);
-        emit groupChanged(index);
+        emit groupCountChanged();
     }
 }
 
@@ -150,7 +150,15 @@ void ProjectManager::addPatchToGroup(QString groupName, int patchId)
     emit groupChanged(currentGroupIndex());
 }
 
-void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> indexes)
+void ProjectManager::addPatchesToGroup(QString groupName, QList<int> patchIDs)
+{
+    foreach(auto patchId, patchIDs)
+    {
+        addPatchToGroup(groupName, patchId);
+    }
+}
+
+void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> patchIDs)
 {
     QList<int> newList;
     int groupIndex = -1;
@@ -161,7 +169,7 @@ void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> indexe
         {
             for(int i = 0; i < _groups[j].patches.size(); i++)
             {
-                if(!indexes.contains(i))
+                if(!patchIDs.contains(_groups[j].patches.at(i)))
                 {
                     newList.push_back(_groups[j].patches.at(i));
                 }

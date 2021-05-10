@@ -21,6 +21,8 @@ Item
         spacing: 2
         ScrollBar.vertical: ScrollBar {}
 
+        property bool held: false
+
         function loadGeneralDeviceList()
         {
             deviceListModel.clear()
@@ -128,7 +130,73 @@ Item
             loadGeneralDeviceList()
         }
 
+        PatchPlate
+        {
+            id: draggedPlate
+            visible: deviceListView.held
+            opacity: 0.8
+            withBorder: true
 
+            Drag.active: deviceListView.held
+            Drag.source: this
+//            Drag.hotSpot.x: this.width / 2
+//            Drag.hotSpot.y: this.height / 2
+
+            states: State
+            {
+                when: deviceListView.held
+
+                ParentChange { target: draggedPlate; parent: patchScreen }
+                AnchorChanges {
+                    target: draggedPlate
+                    anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+                }
+            }
+        }
+
+        MouseArea
+        {
+            id: mouseArea
+            anchors.fill: parent
+            propagateComposedEvents: true
+
+            drag.target: deviceListView.held ? draggedPlate : undefined
+            drag.axis: Drag.XAndYAxis
+
+            onPressAndHold:
+            {
+                var pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                if(pressedItem)
+                {
+                    draggedPlate.checkedIDs = []
+                    for(let i = 0; i < deviceListView.count; i++)
+                    {
+                        if(deviceListView.itemAtIndex(i).checked)
+                            draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).getId())
+                    }
+
+                    deviceListView.held = true
+                    draggedPlate.x = pressedItem.mapToItem(patchScreen, 0, 0).x
+                    draggedPlate.y = pressedItem.mapToItem(patchScreen, 0, 0).y
+                    draggedPlate.no = pressedItem.no
+                    draggedPlate.width = pressedItem.width
+                    draggedPlate.height = pressedItem.height
+                    draggedPlate.name = pressedItem.name
+                    draggedPlate.imageFile = pressedItem.imageFile
+                    draggedPlate.cells = pressedItem.cells
+                    draggedPlate.refreshCells()
+                }
+            }
+
+            onReleased:
+            {
+                if(drag.target)
+                {
+                    drag.target.Drag.drop()
+                    deviceListView.held = false
+                }
+            }
+        }
 
         DropArea
         {

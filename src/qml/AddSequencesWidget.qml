@@ -103,11 +103,6 @@ Item
 
         for(let i = 0; i < Number(quantityField.text); i++)
         {
-            if(groupName)
-            {
-                project.addPatchToGroup(groupName, currentId)
-            }
-
             project.addPatch( "Sequences",
                              [
                               {propName: "ID", propValue: currentId},
@@ -118,6 +113,11 @@ Item
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "height", propValue: Number(heightField.text)}
                              ])
+
+            if(groupName)
+            {
+                project.addPatchToGroup(groupName, currentId)
+            }
 
             currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement

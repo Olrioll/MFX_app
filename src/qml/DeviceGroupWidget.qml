@@ -199,7 +199,7 @@ Item
     Connections
     {
         target: project
-        function onGroupChanged(index)
+        function onGroupCountChanged()
         {
             groupListView.loadGroups();
         }
