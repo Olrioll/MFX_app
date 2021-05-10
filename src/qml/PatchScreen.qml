@@ -37,7 +37,6 @@ Item
 
         Component.onCompleted:
         {
-//            addContentItem("DeviceListWidget.qml", {isGeneralList: true})
             addContentItem("GeneralDeviceListWidget.qml", {})
         }
     }
@@ -62,24 +61,140 @@ Item
     Item
     {
         id: sceneWidget
-
         anchors.margins: 2
         anchors.left: patchScreen.left
         anchors.right: groupList.left
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        Rectangle
+        Flickable
         {
+            id: sceneImage
             anchors.fill: parent
-            color: "#000000"
+            contentWidth: backgroundImage.width
+            contentHeight: backgroundImage.height
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.vertical: ScrollBar { /*policy: ScrollBar.AlwaysOn*/ }
+            ScrollBar.horizontal: ScrollBar { /*policy: ScrollBar.AlwaysOn*/ }
+
+            property real scaleFactor: 1.0
+
+            function zoom(step)
+            {
+                sceneImage.scaleFactor += step
+            }
 
             Image
             {
                 id: backgroundImage
+                width: sourceSize.width * sceneImage.scaleFactor
+                height: sourceSize.height * sceneImage.scaleFactor
                 source: "file:///d:/Upwork/MFX/scene.png"
-                anchors.fill: parent
             }
+
         }
+
+        Item
+        {
+            id: zoomControls
+            width: 24
+            height: 60
+
+            anchors.leftMargin: 10
+            anchors.left: parent.left
+
+            anchors.bottomMargin: 48
+            anchors.bottom: parent.bottom
+
+            Rectangle
+            {
+                y: 20
+                width: 24
+                height: 30
+                color: "#333333"
+            }
+
+            Button
+            {
+                id: zoomInButton
+
+                width: 24
+                height: 30
+
+                bottomPadding: 0
+                topPadding: 0
+                rightPadding: 0
+                leftPadding: 0
+
+                text: "+"
+
+                background: Rectangle
+                {
+                    color: parent.pressed ? "#222222" : "#333333"
+                    radius: 20
+                }
+
+                contentItem: Text
+                {
+                    color: parent.enabled ? "#ffffff" : "#777777"
+                    text: parent.text
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    font.family: "Roboto"
+                    font.pixelSize: 16
+                }
+
+                onClicked: sceneImage.zoom(0.05)
+            }
+
+            Button
+            {
+                id: zoomOutButton
+
+                y: 32
+                width: 24
+                height: 30
+
+                bottomPadding: 0
+                topPadding: 0
+                rightPadding: 0
+                leftPadding: 0
+
+                text: "-"
+
+                background: Rectangle
+                {
+                    color: parent.pressed ? "#222222" : "#333333"
+                    radius: 20
+                }
+
+                contentItem: Text
+                {
+                    color: parent.enabled ? "#ffffff" : "#777777"
+                    text: parent.text
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    font.family: "Roboto"
+                    font.pixelSize: 20
+                }
+
+                onClicked: sceneImage.zoom(-0.05)
+            }
+
+            Rectangle
+            {
+                x: 2
+                y: 30
+                width: 20
+                height: 2
+                color: "#222222"
+            }
+
+        }
+
+
     }
 }
