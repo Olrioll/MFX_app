@@ -19,6 +19,48 @@ ProjectManager::~ProjectManager()
     saveProject();
 }
 
+QVariant ProjectManager::property(QString name)
+{
+    return _properties.value(name);
+}
+
+void ProjectManager::setProperty(QString name, QVariant value)
+{
+    _properties.insert(name, value);
+}
+
+//double ProjectManager::sceneFrameX() const
+//{
+//    return m_sceneFrameX;
+//}
+
+//double ProjectManager::sceneFrameY() const
+//{
+//    return m_sceneFrameY;
+//}
+
+//double ProjectManager::sceneFrameWidth() const
+//{
+//    return m_sceneFrameWidth;
+//}
+
+//double ProjectManager::sceneFrameHeight() const
+//{
+//    return m_sceneFrameHeight;
+//}
+
+//double ProjectManager::sceneWidth() const
+//{
+//    return m_sceneWidth;
+//}
+
+//double ProjectManager::sceneHeight() const
+//{
+//    return m_sceneHeight;
+//}
+
+
+
 int ProjectManager::currentGroupIndex() const
 {
     return m_currentGroupIndex;
@@ -346,3 +388,39 @@ void ProjectManager::setCurrentGroup(QString name)
 
     emit currentGroupIndexChanged(m_currentGroupIndex);
 }
+
+//void ProjectManager::setSceneFrameX(double sceneFrameX)
+//{
+//    m_sceneFrameX = sceneFrameX;
+//    emit sceneFrameXChanged(m_sceneFrameX);
+//}
+
+//void ProjectManager::setSceneFrameY(double sceneFrameY)
+//{
+//    m_sceneFrameY = sceneFrameY;
+//    emit sceneFrameYChanged(m_sceneFrameY);
+//}
+
+//void ProjectManager::setSceneFrameWidth(double sceneFrameWidth)
+//{
+//    m_sceneFrameWidth = sceneFrameWidth;
+//    emit sceneFrameWidthChanged(m_sceneFrameWidth);
+//}
+
+//void ProjectManager::setSceneFrameHeight(double sceneFrameHeight)
+//{
+//    m_sceneFrameHeight = sceneFrameHeight;
+//    emit sceneFrameHeightChanged(m_sceneFrameHeight);
+//}
+
+//void ProjectManager::setSceneWidth(double sceneWidth)
+//{
+//    m_sceneWidth = sceneWidth;
+//    emit sceneWidthChanged(m_sceneWidth);
+//}
+
+//void ProjectManager::setSceneHeight(double sceneHeight)
+//{
+//    m_sceneHeight = sceneHeight;
+//    emit sceneHeightChanged(m_sceneHeight);
+//}

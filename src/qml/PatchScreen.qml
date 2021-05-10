@@ -93,6 +93,59 @@ Item
                 source: "file:///d:/Upwork/MFX/scene.png"
             }
 
+            Rectangle
+            {
+                id: sceneFrame
+                x: project.property("sceneFrameX") * sceneImage.contentWidth
+                y: project.property("sceneFrameY") * sceneImage.contentHeight
+                width: 500
+                height: 250
+                color: "transparent"
+                border.width: 2
+                border.color: "#507FE6"
+                radius: 2
+            }
+
+            Rectangle
+            {
+                x: sceneFrame.x + sceneFrame.width / 2 - width / 2
+                y: sceneFrame.y - height / 2
+                id: sceneTitle
+                width: 62
+                height: 20
+                color: "#507FE6"
+                radius: 26
+
+                Text
+                {
+                    anchors.centerIn: parent
+                    text: qsTr("SCENE")
+                    color: "#ffffff"
+                    font.family: "Roboto"
+                    font.pixelSize: 12
+                }
+
+                MouseArea
+                {
+                    id: mouseArea
+                    anchors.fill: parent
+
+                    drag.target: sceneFrame
+                    drag.axis: Drag.XandYAxis
+
+                    drag.minimumX: sceneWidget.mapToItem(sceneImage, 0, 0).x
+                    drag.maximumX: sceneImage.contentWidth - sceneFrame.width
+                    drag.minimumY: sceneWidget.mapToItem(sceneImage, 0, 0).y + 10
+                    drag.maximumY: sceneImage.contentHeight - sceneFrame.height
+
+                    onReleased:
+                    {
+                        project.setProperty("sceneFrameX", sceneFrame.x / sceneImage.contentWidth)
+                        project.setProperty("sceneFrameY", sceneFrame.y / sceneImage.contentHeight)
+                    }
+                }
+            }
+
         }
 
         Item
