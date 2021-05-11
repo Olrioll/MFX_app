@@ -332,7 +332,6 @@ Item
                     color: parent.pressed ? "#222222" : "#333333"
                     radius: 20
                 }
-
                 contentItem: Text
                 {
                     color: parent.enabled ? "#ffffff" : "#777777"
@@ -354,6 +353,39 @@ Item
                 width: 20
                 height: 2
                 color: "#222222"
+            }
+
+            Button
+            {
+                id: fitButton
+
+                y: 76
+                width: 24
+                height: 24
+
+                bottomPadding: 0
+                topPadding: 0
+                rightPadding: 0
+                leftPadding: 0
+
+                text: "-"
+
+                background: Rectangle
+                {
+                    color: parent.pressed ? "#222222" : "#333333"
+                    radius: 24
+                }
+
+                Image
+                {
+                    anchors.centerIn: parent
+                    source: "qrc:/fit"
+                }
+
+                onClicked:
+                {
+
+                }
             }
 
         }

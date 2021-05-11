@@ -34,5 +34,6 @@
         <file>src/qml/AddShotWidget.qml</file>
         <file>src/qml/AddDimmerWidget.qml</file>
         <file>src/qml/AddPyroWidget.qml</file>
+        <file alias="fit">src/img/fitButton.png</file>
     </qresource>
 </RCC>
