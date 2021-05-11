@@ -74,7 +74,6 @@ Item
         {
             for(var i = 0; i < sceneWidget.patchIcons.length; i++)
             {
-                console.log(sceneWidget.patchIcons[i].patchId)
                 sceneWidget.patchIcons[i].destroy()
             }
 
