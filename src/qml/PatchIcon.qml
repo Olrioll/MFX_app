@@ -10,11 +10,12 @@ Item
     x: sceneFrame.x + posXRatio * sceneFrame.width
     y: sceneFrame.y + posYRatio * sceneFrame.height
 
+    property int patchId
     property double realSizeWidth: 0.35
     property double realSizeHeight: 0.35
     property string imageFile
-    property real posXRatio: 0.5
-    property real posYRatio: 0.5
+    property real posXRatio: project.patchProperty(patchId, "posXRatio")
+    property real posYRatio: project.patchProperty(patchId, "posYRatio")
 
     Rectangle
     {
@@ -46,6 +47,9 @@ Item
         {
             patchIcon.posXRatio = (patchIcon.x - sceneFrame.x) / sceneFrame.width
             patchIcon.posYRatio = (patchIcon.y - sceneFrame.y) / sceneFrame.height
+
+            project.setPatchProperty(patchId, "posXRatio", patchIcon.posXRatio)
+            project.setPatchProperty(patchId, "posYRatio", patchIcon.posYRatio)
         }
     }
 }

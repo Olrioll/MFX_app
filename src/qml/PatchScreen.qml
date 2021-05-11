@@ -72,7 +72,33 @@ Item
 
         function loadPatches()
         {
-            var test = Qt.createComponent("PatchIcon.qml").createObject(sceneWidget, {imageFile: "qrc:/device_sequences"})
+            for(var i = 0; i < sceneWidget.patchIcons.length; i++)
+            {
+                console.log(sceneWidget.patchIcons[i].patchId)
+                sceneWidget.patchIcons[i].destroy()
+            }
+
+            sceneWidget.patchIcons = []
+
+            for(i = 0; i < project.patchCount(); i++)
+            {
+                var deviceType = project.patchType(i)
+                var imageFile
+                if (deviceType === "Sequences")
+                    imageFile = "qrc:/device_sequences"
+                else if (deviceType === "Pyro")
+                    imageFile = "qrc:/device_pyro"
+                else if (deviceType === "Shot")
+                    imageFile = "qrc:/device_shot"
+                else if (deviceType === "Dimmer")
+                    imageFile = "qrc:/device_dimmer"
+
+                patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(sceneWidget,
+                                                                                 {  imageFile: imageFile,
+                                                                                     patchId: project.patchPropertyForIndex(i, "ID"),
+                                                                                     posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
+                                                                                     posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
+            }
         }
 
         Flickable
@@ -119,13 +145,13 @@ Item
                 pressedY = mouseY
             }
 
-//            onPositionChanged:
-//            {
-//                sceneImage.contentX = pressedX - mouseX
-//                sceneImage.contentY = pressedY - mouseY
-//                sceneFrame.x = project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
-//                sceneFrame.y = project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
-//            }
+            //            onPositionChanged:
+            //            {
+            //                sceneImage.contentX = pressedX - mouseX
+            //                sceneImage.contentY = pressedY - mouseY
+            //                sceneFrame.x = project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
+            //                sceneFrame.y = project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
+            //            }
 
             onWheel:
             {
@@ -429,10 +455,19 @@ Item
 
         }
 
-    Component.onCompleted:
-    {
-        loadPatches()
-    }
+        Connections
+        {
+            target: project
+            function onPatchListChanged()
+            {
+                sceneWidget.loadPatches()
+            }
+        }
+
+        Component.onCompleted:
+        {
+            loadPatches()
+        }
 
     }
 }

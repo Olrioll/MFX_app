@@ -50,7 +50,7 @@ public:
     struct Patch
     {
         QString type;
-        QList<QPair<QString, int>> properties;
+        QList<QPair<QString, double>> properties;
 
         Patch() {}
 
@@ -61,7 +61,7 @@ public:
             {
                 auto propObject = property.toObject();
                 auto key = propObject.keys().first();
-                properties.push_back({key, propObject.value(key).toInt()});
+                properties.push_back({key, propObject.value(key).toDouble()});
             }
 
         }
@@ -83,7 +83,7 @@ public:
             return patchObject;
         }
 
-        int property(QString name) const
+        double property(QString name) const
         {
             foreach(auto prop, properties)
             {
@@ -91,7 +91,21 @@ public:
                     return prop.second;
             }
 
-            return -1;
+            return 0;
+        }
+
+        void setProperty(QString name, double value)
+        {
+            for(auto & prop : properties)
+            {
+                if(prop.first == name)
+                {
+                    prop.second = value;
+                    return;
+                }
+            }
+
+            properties.push_back({name, value});
         }
     };
 
@@ -124,6 +138,10 @@ public slots:
     int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
     void editPatch(QVariantList properties);
+    double patchProperty(int id, QString propertyName) const;
+    double patchPropertyForIndex(int index, QString propertyName) const;
+    void setPatchProperty(int id, QString propertyName, double value);
+    void setPatchPropertyForIndex(int index, QString propertyName, double value);
     void removePatches(QList<int> indexes);
     int patchCount() const;
     int patchIndexForId(int id) const;

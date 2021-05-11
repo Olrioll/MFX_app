@@ -27,7 +27,14 @@ Item
     {
         cellListModel.clear()
         for(let i = 0; i < cells.count; i++)
-            cellListModel.append(cells.get(i))
+        {
+            let currentProp = cells.get(i)
+            let currentPropName = currentProp.propName
+            if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio")
+            {
+                cellListModel.append(currentProp)
+            }
+        }
     }
 
     Rectangle

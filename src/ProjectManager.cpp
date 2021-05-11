@@ -226,7 +226,7 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
 
     foreach(auto prop, properties)
     {
-        patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toInt()});
+        patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toDouble()});
     }
 
     _patches.push_back(patch);
@@ -240,7 +240,7 @@ void ProjectManager::editPatch(QVariantList properties)
 
     foreach(auto prop, properties)
     {
-        newPatch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toInt()});
+        newPatch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toDouble()});
     }
 
     int changedIndex = -1;
@@ -259,6 +259,40 @@ void ProjectManager::editPatch(QVariantList properties)
         _patches.replace(changedIndex, newPatch);
         emit patchListChanged();
     }
+}
+
+double ProjectManager::patchProperty(int id, QString propertyName) const
+{
+    for(int i = 0; i < _patches.size(); i++)
+    {
+        if(_patches[i].property("ID") == id)
+        {
+            return _patches[i].property(propertyName);
+        }
+    }
+
+    return 0;
+}
+
+double ProjectManager::patchPropertyForIndex(int index, QString propertyName) const
+{
+    return _patches[index].property(propertyName);
+}
+
+void ProjectManager::setPatchProperty(int id, QString propertyName, double value)
+{
+    for(int i = 0; i < _patches.size(); i++)
+    {
+        if(_patches[i].property("ID") == id)
+        {
+            _patches[i].setProperty(propertyName, value);
+        }
+    }
+}
+
+void ProjectManager::setPatchPropertyForIndex(int index, QString propertyName, double value)
+{
+    _patches[index].setProperty(propertyName, value);
 }
 
 void ProjectManager::removePatches(QList<int> indexes)
