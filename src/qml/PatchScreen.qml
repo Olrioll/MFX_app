@@ -68,6 +68,13 @@ Item
         anchors.bottom: patchScreen.bottom
         clip: true
 
+        property var patchIcons: []
+
+        function loadPatches()
+        {
+            var test = Qt.createComponent("PatchIcon.qml").createObject(sceneWidget, {imageFile: "qrc:/device_sequences"})
+        }
+
         Flickable
         {
             id: sceneImage
@@ -76,8 +83,8 @@ Item
             contentHeight: backgroundImage.height
             clip: true
             boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar { /*policy: ScrollBar.AlwaysOn*/ }
-            ScrollBar.horizontal: ScrollBar { /*policy: ScrollBar.AlwaysOn*/ }
+            ScrollBar.vertical: ScrollBar { policy: sceneImage.visibleArea.heightRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
+            ScrollBar.horizontal: ScrollBar { policy: sceneImage.visibleArea.widthRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
 
             property real scaleFactor: project.property("sceneScaleFactor")
 
@@ -95,6 +102,35 @@ Item
                 source: "file:///d:/Upwork/MFX/scene.png"
             }
 
+        }
+
+        MouseArea
+        {
+            anchors.margins: 12
+            anchors.fill: parent
+            propagateComposedEvents: true
+
+            property int pressedX
+            property int pressedY
+
+            onPressed:
+            {
+                pressedX = mouseX
+                pressedY = mouseY
+            }
+
+//            onPositionChanged:
+//            {
+//                sceneImage.contentX = pressedX - mouseX
+//                sceneImage.contentY = pressedY - mouseY
+//                sceneFrame.x = project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
+//                sceneFrame.y = project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
+//            }
+
+            onWheel:
+            {
+                wheel.angleDelta.y > 0 ? sceneImage.zoom(0.05) : sceneImage.zoom(-0.05)
+            }
         }
 
         Rectangle
@@ -270,7 +306,7 @@ Item
             anchors.leftMargin: 10
             anchors.left: parent.left
 
-            anchors.bottomMargin: 48
+            anchors.bottomMargin: 58
             anchors.bottom: parent.bottom
 
             Rectangle
@@ -392,5 +428,11 @@ Item
             }
 
         }
+
+    Component.onCompleted:
+    {
+        loadPatches()
+    }
+
     }
 }
