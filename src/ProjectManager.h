@@ -100,22 +100,12 @@ public:
 
     Q_PROPERTY(int currentGroupIndex READ currentGroupIndex WRITE setCurrentGroupIndex NOTIFY currentGroupIndexChanged)
 
-    Q_INVOKABLE QVariant property(QString name);
+    Q_INVOKABLE QVariant property(QString name) const;
     Q_INVOKABLE void setProperty(QString name, QVariant value);
 
-//    Q_PROPERTY(double sceneFrameX READ sceneFrameX WRITE setSceneFrameX NOTIFY sceneFrameXChanged)
-//    Q_PROPERTY(double sceneFrameY READ sceneFrameY WRITE setSceneFrameY NOTIFY sceneFrameYChanged)
-//    Q_PROPERTY(double sceneFrameWidth READ sceneFrameWidth WRITE setSceneFrameWidth NOTIFY sceneFrameWidthChanged)
-//    Q_PROPERTY(double sceneFrameHeight READ sceneFrameHeight WRITE setSceneFrameHeight NOTIFY sceneFrameHeightChanged)
-//    Q_PROPERTY(double sceneWidth READ sceneWidth WRITE setSceneWidth NOTIFY sceneWidthChanged)
-//    Q_PROPERTY(double sceneHeight READ sceneHeight WRITE setSceneHeight NOTIFY sceneHeightChanged)
+    Q_PROPERTY(double sceneFrameWidth READ sceneFrameWidth WRITE setSceneFrameWidth NOTIFY sceneFrameWidthChanged)
 
-//    Q_INVOKABLE double sceneFrameX() const;
-//    Q_INVOKABLE double sceneFrameY() const;
-//    Q_INVOKABLE double sceneFrameWidth() const;
-//    Q_INVOKABLE double sceneFrameHeight() const;
-//    Q_INVOKABLE double sceneWidth() const;
-//    Q_INVOKABLE double sceneHeight() const;
+    Q_INVOKABLE double sceneFrameWidth() const;
 
 public slots:
 
@@ -148,12 +138,7 @@ public slots:
     void setCurrentGroupIndex(int currentGroupIndex);
     void setCurrentGroup(QString name);
 
-//    void setSceneFrameX(double sceneFrameX);
-//    void setSceneFrameY(double sceneFrameY);
-//    void setSceneFrameWidth(double sceneFrameWidth);
-//    void setSceneFrameHeight(double sceneFrameHeight);
-//    void setSceneWidth(double sceneWidth);
-//    void setSceneHeight(double sceneHeight);
+    void setSceneFrameWidth(double sceneFrameWidth);
 
 signals:
 
@@ -162,16 +147,7 @@ signals:
     void groupCountChanged();
     void patchListChanged();
 
-    void sceneFrameXChanged(double sceneFrameX);
-    void sceneFrameYChanged(double sceneFrameY);
-
     void sceneFrameWidthChanged(double sceneFrameWidth);
-
-    void sceneFrameHeightChanged(double sceneFrameHeight);
-
-    void sceneWidthChanged(double sceneWidth);
-
-    void sceneHeightChanged(double sceneHeight);
 
 private:
 
@@ -182,12 +158,6 @@ private:
     QVariantMap _properties;
 
     int m_currentGroupIndex;
-//    double m_sceneFrameX = 0.1;
-//    double m_sceneFrameY = 0.1;
-//    double m_sceneFrameWidth;
-//    double m_sceneFrameHeight;
-//    double m_sceneWidth = 10.5;
-//    double m_sceneHeight = 5.6;
 };
 
 #endif // PROJECTMANAGER_H

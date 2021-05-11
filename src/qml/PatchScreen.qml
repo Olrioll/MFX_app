@@ -78,11 +78,12 @@ Item
             ScrollBar.vertical: ScrollBar { /*policy: ScrollBar.AlwaysOn*/ }
             ScrollBar.horizontal: ScrollBar { /*policy: ScrollBar.AlwaysOn*/ }
 
-            property real scaleFactor: 1.0
+            property real scaleFactor: project.property("sceneScaleFactor")
 
             function zoom(step)
             {
                 sceneImage.scaleFactor += step
+                project.setProperty("sceneScaleFactor", sceneImage.scaleFactor)
             }
 
             Image
@@ -98,7 +99,7 @@ Item
                 id: sceneFrame
                 x: project.property("sceneFrameX") * sceneImage.contentWidth
                 y: project.property("sceneFrameY") * sceneImage.contentHeight
-                width: project.property("sceneFrameWidth") * sceneImage.contentWidth
+                width: project.sceneFrameWidth * sceneImage.contentWidth
                 height: width * project.property("sceneHeight") / project.property("sceneWidth")
                 color: "transparent"
                 border.width: 2
@@ -107,44 +108,112 @@ Item
 
                 property int minWidth: 100
 
-//                MouseArea
-//                {
-//                    id: widthResizeArea
-//                    width: 4
-//                    height: sceneFrame.height
-//                    x: sceneFrame.x + sceneFrame.width
-//                    y: sceneFrame.y
-//                    property int previousX
-
-////                    anchors
-////                    {
-////                        top: sceneFrame.top
-////                        bottom: sceneFrame.bottom
-////                        left: sceneFrame.left
-////                    }
-//                    cursorShape: Qt.SizeHorCursor
-
-//                    onPressed:
-//                    {
-//                        previousX = mouseX
-//                    }
-
-//                    onMouseXChanged:
-//                    {
-//                        var dx = mouseX - previousX
-//                        project.setProperty("sceneFrameWidth", (sceneFrame.width + dx) / sceneFrame.width * project.property("sceneFrameWidth"))
-//                    }
-//                }
-            }
-
-            Button
-            {
-                text: "test"
-                onClicked:
+                Item
                 {
-                    sceneFrame.width = (project.property("sceneFrameWidth") + 0.1) * sceneImage.contentWidth
-                    sceneFrame.height = sceneFrame.width * project.property("sceneHeight") / project.property("sceneWidth")
-                    project.setProperty("sceneFrameWidth", project.property("sceneFrameWidth") + 0.1)
+                    id: resizeControls
+                    width: 24
+                    height: 60
+
+                    anchors.topMargin: 10
+                    anchors.top: parent.top
+                    anchors.rightMargin: 10
+                    anchors.right: parent.right
+
+                    anchors.bottomMargin: 48
+                    anchors.bottom: parent.bottom
+
+                    Rectangle
+                    {
+                        y: 20
+                        width: 24
+                        height: 30
+                        color: "#507FE6"
+                    }
+
+                    Button
+                    {
+                        id: button_plus
+
+                        width: 24
+                        height: 30
+
+                        bottomPadding: 0
+                        topPadding: 0
+                        rightPadding: 0
+                        leftPadding: 0
+
+                        text: "+"
+
+                        background: Rectangle
+                        {
+                            color: parent.pressed ? "#666666" : "#507FE6"
+                            radius: 20
+                        }
+
+                        contentItem: Text
+                        {
+                            color: parent.enabled ? "#ffffff" : "#777777"
+                            text: parent.text
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            font.family: "Roboto"
+                            font.pixelSize: 16
+                        }
+
+                        onClicked:
+                        {
+                            project.sceneFrameWidth += 0.01
+                        }
+                    }
+
+                    Button
+                    {
+                        id: button_minus
+
+                        y: 32
+                        width: 24
+                        height: 30
+
+                        bottomPadding: 0
+                        topPadding: 0
+                        rightPadding: 0
+                        leftPadding: 0
+
+                        text: "-"
+
+                        background: Rectangle
+                        {
+                            color: parent.pressed ? "#666666" : "#507FE6"
+                            radius: 20
+                        }
+
+                        contentItem: Text
+                        {
+                            color: parent.enabled ? "#ffffff" : "#777777"
+                            text: parent.text
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideRight
+                            font.family: "Roboto"
+                            font.pixelSize: 20
+                        }
+
+                        onClicked:
+                        {
+                            project.sceneFrameWidth -= 0.01
+                        }
+                    }
+
+                    Rectangle
+                    {
+                        x: 2
+                        y: 30
+                        width: 20
+                        height: 2
+                        color: "#222222"
+                    }
+
                 }
             }
 
@@ -288,7 +357,5 @@ Item
             }
 
         }
-
-
     }
 }
