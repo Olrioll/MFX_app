@@ -116,35 +116,6 @@ Item
             source: "file:///" + applicationDirPath + "/scene.png"
         }
 
-//        Flickable
-//        {
-//            id: sceneImage
-//            anchors.fill: parent
-//            contentWidth: backgroundImage.width
-//            contentHeight: backgroundImage.height
-//            clip: true
-//            boundsBehavior: Flickable.StopAtBounds
-//            ScrollBar.vertical: ScrollBar { policy: sceneImage.visibleArea.heightRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
-//            ScrollBar.horizontal: ScrollBar { policy: sceneImage.visibleArea.widthRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
-
-//            property real scaleFactor: project.property("sceneScaleFactor")
-
-//            function zoom(step)
-//            {
-//                sceneImage.scaleFactor += step
-//                project.setProperty("sceneScaleFactor", sceneImage.scaleFactor)
-//            }
-
-//            Image
-//            {
-//                id: backgroundImage
-//                width: sourceSize.width * sceneImage.scaleFactor
-//                height: sourceSize.height * sceneImage.scaleFactor
-//                source: "file:///" + applicationDirPath + "/scene.png"
-//            }
-
-//        }
-
         MouseArea
         {
             anchors.margins: 12
@@ -240,13 +211,14 @@ Item
             y: project.property("sceneFrameY") * backgroundImage.height
             width: 200
             height: 100
+            visible: false
 
             function restorePreviousGeometry()
             {
                 sceneFrameItem.x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
                 sceneFrameItem.y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
-                sceneFrameItem.height = project.property("sceneFrameHeight") / project.property("sceneImageHeight") * backgroundImage.height
                 sceneFrameItem.width = project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
+                sceneFrameItem.height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
             }
 
             Rectangle
@@ -417,6 +389,50 @@ Item
             Component.onCompleted:
             {
                 restorePreviousGeometry()
+            }
+        }
+
+
+        Button
+        {
+            id: sceneSettingsButton
+
+            x: 8
+            y: 8
+            width: 112
+            height: 24
+
+            background: Rectangle
+            {
+                color: "#333333"
+                radius: 2
+            }
+
+            Image
+            {
+                x: 6
+                y: 6
+
+                source: "qrc:/sceneSettings"
+            }
+
+            contentItem: Text
+            {
+                color: "#ffffff"
+                text: "Scene settings"
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+                leftPadding: 16
+                font.family: "Roboto"
+                font.pixelSize: 12
+            }
+
+            onClicked:
+            {
+                var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
+                sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
+                sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
             }
         }
 

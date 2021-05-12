@@ -38,5 +38,7 @@
         <file>src/qml/PatchIcon.qml</file>
         <file alias="apply">src/img/apply.png</file>
         <file alias="cancel">src/img/cancelButton.png</file>
+        <file alias="sceneSettings">src/img/sceneSettingsButton.png</file>
+        <file>src/qml/SceneSettingsWidget.qml</file>
     </qresource>
 </RCC>
