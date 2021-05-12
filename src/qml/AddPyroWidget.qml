@@ -227,7 +227,11 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-            onClicked: addPyroWidget.destroy()
+            onClicked:
+            {
+                applicationWindow.isPatchEditorOpened = false
+                addPyroWidget.destroy()
+            }
         }
 
         //--- Рабочая область
@@ -544,6 +548,7 @@ Item
                     addPyroWidget.add()
                 }
 
+                applicationWindow.isPatchEditorOpened = false
                 addPyroWidget.destroy();
             }
         }
@@ -579,6 +584,8 @@ Item
 
     Component.onCompleted:
     {
+        applicationWindow.isPatchEditorOpened = true
+
         if(isEditMode && changedIdList.length === 1)
         {
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))

@@ -243,8 +243,8 @@ Item
 
             function restorePreviousGeometry()
             {
-                sceneFrameItem.x = project.property("sceneFrameX") * backgroundImage.width
-                sceneFrameItem.y = project.property("sceneFrameY") * backgroundImage.height
+                sceneFrameItem.x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
+                sceneFrameItem.y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
                 sceneFrameItem.height = project.property("sceneFrameHeight") / project.property("sceneImageHeight") * backgroundImage.height
                 sceneFrameItem.width = project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
             }
@@ -354,8 +354,8 @@ Item
 
                     onReleased:
                     {
-                        project.setProperty("sceneFrameX", (sceneFrameItem.x / sceneWidget.width))
-                        project.setProperty("sceneFrameY", (sceneFrameItem.y / sceneWidget.height))
+                        project.setProperty("sceneFrameX", (sceneFrameItem.x / backgroundImage.width))
+                        project.setProperty("sceneFrameY", (sceneFrameItem.y / backgroundImage.height))
                     }
                 }
             }

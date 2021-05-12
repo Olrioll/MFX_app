@@ -216,32 +216,35 @@ Item
 //                    }
 //                }
 
-                if (drag.source.name === "Sequences")
+                if(!applicationWindow.isPatchEditorOpened)
                 {
-                    var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
-                    addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
-                    addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
-                }
+                    if (drag.source.name === "Sequences")
+                    {
+                        var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
+                        addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+                        addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+                    }
 
-                else if (drag.source.name === "Dimmer")
-                {
-                    var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow);
-                    addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
-                    addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
-                }
+                    else if (drag.source.name === "Dimmer")
+                    {
+                        var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow);
+                        addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+                        addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
+                    }
 
-                else if (drag.source.name === "Shot")
-                {
-                    var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow);
-                    addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
-                    addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
-                }
+                    else if (drag.source.name === "Shot")
+                    {
+                        var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow);
+                        addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                        addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
+                    }
 
-                else if (drag.source.name === "Pyro")
-                {
-                    var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow);
-                    addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
-                    addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
+                    else if (drag.source.name === "Pyro")
+                    {
+                        var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow);
+                        addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+                        addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
+                    }
                 }
             }
         }

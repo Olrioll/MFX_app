@@ -281,7 +281,11 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-            onClicked: addDimmerWidget.destroy()
+            onClicked:
+            {
+                applicationWindow.isPatchEditorOpened = false
+                addDimmerWidget.destroy()
+            }
         }
 
         //--- Рабочая область
@@ -667,6 +671,7 @@ Item
                     addDimmerWidget.add()
                 }
 
+                applicationWindow.isPatchEditorOpened = false
                 addDimmerWidget.destroy();
             }
         }
@@ -702,6 +707,8 @@ Item
 
     Component.onCompleted:
     {
+        applicationWindow.isPatchEditorOpened = true
+
         if(isEditMode && changedIdList.length === 1)
         {
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))

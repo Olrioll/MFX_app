@@ -25,6 +25,8 @@ ApplicationWindow
     property int previousGeometryWidth: 1280
     property int previousGeometryHeight: 960
 
+    property bool isPatchEditorOpened: false
+
     function childWidgetsArea()
     {
         return {x:0, width:width, y:mainMenu.height, height:height}

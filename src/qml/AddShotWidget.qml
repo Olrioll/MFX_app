@@ -284,7 +284,11 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-            onClicked: addShotWidget.destroy()
+            onClicked:
+            {
+                applicationWindow.isPatchEditorOpened = false
+                addShotWidget.destroy()
+            }
         }
 
         //--- Рабочая область
@@ -686,6 +690,7 @@ Item
                     addShotWidget.add()
                 }
 
+                applicationWindow.isPatchEditorOpened = false
                 addShotWidget.destroy();
             }
         }
@@ -1220,6 +1225,8 @@ Item
 
     Component.onCompleted:
     {
+        applicationWindow.isPatchEditorOpened = true
+
         if(isEditMode && changedIdList.length === 1)
         {
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
