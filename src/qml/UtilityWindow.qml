@@ -51,7 +51,7 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
             font.family: "Roboto"
-            topPadding: 4
+            topPadding: 8
         }
 
         Button
@@ -59,6 +59,8 @@ Item
             id: closeButton
             width: 25
             height: 25
+            anchors.top: parent.top
+            anchors.topMargin: 3
             anchors.right: parent.right
 
             bottomPadding: 0

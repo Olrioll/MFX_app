@@ -254,7 +254,7 @@ Item
             anchors.right: parent.right
             font.family: "Roboto"
             font.pixelSize: 12
-            topPadding: 4
+            topPadding: 9
         }
 
         Button
@@ -262,6 +262,8 @@ Item
             id: closeButton
             width: 25
             height: 25
+            anchors.top: parent.top
+            anchors.topMargin: 4
             anchors.right: parent.right
 
             bottomPadding: 0

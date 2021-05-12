@@ -124,7 +124,7 @@ Item
                 id: backgroundImage
                 width: sourceSize.width * sceneImage.scaleFactor
                 height: sourceSize.height * sceneImage.scaleFactor
-                source: "file:///d:/Upwork/MFX/scene.png"
+                source: "file:///" + applicationDirPath + "/scene.png"
             }
 
         }
