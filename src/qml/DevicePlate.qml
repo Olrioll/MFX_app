@@ -19,13 +19,25 @@ Item
         border.width: 2
         border.color: withBorder ? "lightblue" : "#4f4f4f"
 
+        Rectangle
+        {
+            id: imageRect
+            anchors.topMargin: 6
+            anchors.leftMargin: 8
+            anchors.bottomMargin: 6
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            width: height
+            color: "transparent"
+        }
+
         Image
         {
-            x: 2
-            y: 2
-            height: 36
-            width: 36
             source: devicePlate.imageFile
+            anchors.centerIn: imageRect
+            height: imageRect.height
+            width: sourceSize.width / sourceSize.height * height
         }
 
         Rectangle {

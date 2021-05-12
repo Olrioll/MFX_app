@@ -45,14 +45,25 @@ Item
         border.width: 2
         border.color: patchPlate.withBorder ? "lightblue" : "#4f4f4f"
 
+        Rectangle
+        {
+            id: imageRect
+            anchors.topMargin: 6
+            anchors.leftMargin: 8
+            anchors.bottomMargin: 6
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            width: height
+            color: "transparent"
+        }
+
         Image
         {
-            id: deviceImage
-            x: 2
-            height: 36
-            width: 36
             source: patchPlate.imageFile
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.centerIn: imageRect
+            height: imageRect.height
+            width: sourceSize.width / sourceSize.height * height
         }
 
         Rectangle
@@ -108,10 +119,10 @@ Item
         {
             id: cellListView
             width: parent.width
-            anchors.leftMargin: 6
+            anchors.leftMargin: 10
             anchors.topMargin: 2
             anchors.bottomMargin: 2
-            anchors.left: deviceImage.right
+            anchors.left: imageRect.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             orientation: ListView.Horizontal
