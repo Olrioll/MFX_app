@@ -69,258 +69,337 @@ Item
         clip: true
 
         property var patchIcons: []
+        property real scaleFactor: project.property("sceneScaleFactor")
 
         function loadPatches()
         {
-            for(var i = 0; i < sceneWidget.patchIcons.length; i++)
-            {
-                sceneWidget.patchIcons[i].destroy()
-            }
+//            for(var i = 0; i < sceneWidget.patchIcons.length; i++)
+//            {
+//                sceneWidget.patchIcons[i].destroy()
+//            }
 
-            sceneWidget.patchIcons = []
+//            sceneWidget.patchIcons = []
 
-            for(i = 0; i < project.patchCount(); i++)
-            {
-                var deviceType = project.patchType(i)
-                var imageFile
-                if (deviceType === "Sequences")
-                    imageFile = "qrc:/device_sequences"
-                else if (deviceType === "Pyro")
-                    imageFile = "qrc:/device_pyro"
-                else if (deviceType === "Shot")
-                    imageFile = "qrc:/device_shot"
-                else if (deviceType === "Dimmer")
-                    imageFile = "qrc:/device_dimmer"
+//            for(i = 0; i < project.patchCount(); i++)
+//            {
+//                var deviceType = project.patchType(i)
+//                var imageFile
+//                if (deviceType === "Sequences")
+//                    imageFile = "qrc:/device_sequences"
+//                else if (deviceType === "Pyro")
+//                    imageFile = "qrc:/device_pyro"
+//                else if (deviceType === "Shot")
+//                    imageFile = "qrc:/device_shot"
+//                else if (deviceType === "Dimmer")
+//                    imageFile = "qrc:/device_dimmer"
 
-                patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(sceneWidget,
-                                                                                 {  imageFile: imageFile,
-                                                                                     patchId: project.patchPropertyForIndex(i, "ID"),
-                                                                                     posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
-                                                                                     posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
-            }
+//                patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(sceneWidget,
+//                                                                                 {  imageFile: imageFile,
+//                                                                                     patchId: project.patchPropertyForIndex(i, "ID"),
+//                                                                                     posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
+//                                                                                     posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
+//            }
         }
 
-        Flickable
+
+        function zoom(step)
         {
-            id: sceneImage
-            anchors.fill: parent
-            contentWidth: backgroundImage.width
-            contentHeight: backgroundImage.height
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar { policy: sceneImage.visibleArea.heightRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
-            ScrollBar.horizontal: ScrollBar { policy: sceneImage.visibleArea.widthRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
-
-            property real scaleFactor: project.property("sceneScaleFactor")
-
-            function zoom(step)
-            {
-                sceneImage.scaleFactor += step
-                project.setProperty("sceneScaleFactor", sceneImage.scaleFactor)
-            }
-
-            Image
-            {
-                id: backgroundImage
-                width: sourceSize.width * sceneImage.scaleFactor
-                height: sourceSize.height * sceneImage.scaleFactor
-                source: "file:///" + applicationDirPath + "/scene.png"
-            }
-
+            sceneWidget.scaleFactor += step
+            project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
         }
+
+        Image
+        {
+            id: backgroundImage
+            width: sourceSize.width * sceneWidget.scaleFactor
+            height: sourceSize.height * sceneWidget.scaleFactor
+            source: "file:///" + applicationDirPath + "/scene.png"
+        }
+
+//        Flickable
+//        {
+//            id: sceneImage
+//            anchors.fill: parent
+//            contentWidth: backgroundImage.width
+//            contentHeight: backgroundImage.height
+//            clip: true
+//            boundsBehavior: Flickable.StopAtBounds
+//            ScrollBar.vertical: ScrollBar { policy: sceneImage.visibleArea.heightRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
+//            ScrollBar.horizontal: ScrollBar { policy: sceneImage.visibleArea.widthRatio < 1.0 ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff }
+
+//            property real scaleFactor: project.property("sceneScaleFactor")
+
+//            function zoom(step)
+//            {
+//                sceneImage.scaleFactor += step
+//                project.setProperty("sceneScaleFactor", sceneImage.scaleFactor)
+//            }
+
+//            Image
+//            {
+//                id: backgroundImage
+//                width: sourceSize.width * sceneImage.scaleFactor
+//                height: sourceSize.height * sceneImage.scaleFactor
+//                source: "file:///" + applicationDirPath + "/scene.png"
+//            }
+
+//        }
 
         MouseArea
         {
             anchors.margins: 12
             anchors.fill: parent
             propagateComposedEvents: true
+            acceptedButtons: Qt.LeftButton | Qt.MiddleButton
 
             property int pressedX
             property int pressedY
+            property int currentBackgroundImageX
+            property int currentBackgroundImageY
+            property bool isDraggingMode: false
 
             onPressed:
             {
-                pressedX = mouseX
-                pressedY = mouseY
+                if(mouse.button & Qt.MiddleButton)
+                {
+                    isDraggingMode = true
+                    pressedX = mouseX
+                    pressedY = mouseY
+                    currentBackgroundImageX = backgroundImage.x
+                    currentBackgroundImageY = backgroundImage.y
+                }
             }
 
-            //            onPositionChanged:
-            //            {
-            //                sceneImage.contentX = pressedX - mouseX
-            //                sceneImage.contentY = pressedY - mouseY
-            //                sceneFrame.x = project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
-            //                sceneFrame.y = project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
-            //            }
+            onReleased:
+            {
+                isDraggingMode = false
+            }
+
+            onPositionChanged:
+            {
+                if(isDraggingMode)
+                {
+                    let dx = mouseX - pressedX
+                    let dy = mouseY - pressedY
+
+                    if(backgroundImage.width <= sceneWidget.width)
+                        backgroundImage.x = 0
+                    else
+                    {
+                        if(dx < 0)
+                        {
+                            if(!((backgroundImage.x + backgroundImage.width) <= sceneWidget.width))
+                            {
+                                backgroundImage.x = currentBackgroundImageX + dx
+                            }
+                        }
+
+                        else if(dx > 0)
+                        {
+                            if(!(backgroundImage.x > 0))
+                            {
+                                backgroundImage.x = currentBackgroundImageX + dx
+                            }
+                        }
+                    }
+
+                    if(backgroundImage.height <= sceneWidget.height)
+                        backgroundImage.y = 0
+
+                    else
+                    {
+                        if(dy < 0)
+                        {
+                            if(!((backgroundImage.y + backgroundImage.height) <= sceneWidget.height))
+                            {
+                                backgroundImage.y = currentBackgroundImageY + dy
+                            }
+                        }
+
+                        else if(dy > 0)
+                        {
+                            if(!(backgroundImage.y > 0))
+                            {
+                                backgroundImage.y = currentBackgroundImageY + dy
+                            }
+                        }
+                    }
+                }
+//                sceneImage.contentX = pressedX - mouseX
+//                sceneImage.contentY = pressedY - mouseY
+//                sceneFrame.x = project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
+//                sceneFrame.y = project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
+            }
 
             onWheel:
             {
-                wheel.angleDelta.y > 0 ? sceneImage.zoom(0.05) : sceneImage.zoom(-0.05)
+                wheel.angleDelta.y > 0 ? sceneWidget.zoom(0.05) : sceneWidget.zoom(-0.05)
             }
         }
 
-        Rectangle
-        {
-            id: sceneFrame
-            x: project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
-            y: project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
-            width: project.sceneFrameWidth * sceneImage.contentWidth
-            height: width * project.property("sceneHeight") / project.property("sceneWidth")
-            color: "transparent"
-            border.width: 2
-            border.color: "#507FE6"
-            radius: 2
+//        Rectangle
+//        {
+//            id: sceneFrame
+//            x: project.property("sceneFrameX") * sceneImage.contentWidth + ( - sceneImage.visibleArea.xPosition * sceneImage.contentWidth)
+//            y: project.property("sceneFrameY") * sceneImage.contentHeight + ( - sceneImage.visibleArea.yPosition * sceneImage.contentHeight)
+//            width: project.sceneFrameWidth * sceneImage.contentWidth
+//            height: width * project.property("sceneHeight") / project.property("sceneWidth")
+//            color: "transparent"
+//            border.width: 2
+//            border.color: "#507FE6"
+//            radius: 2
 
-            property int minWidth: 100
+//            property int minWidth: 100
 
-            Item
-            {
-                id: resizeControls
-                width: 24
-                height: 60
+//            Item
+//            {
+//                id: resizeControls
+//                width: 24
+//                height: 60
 
-                anchors.topMargin: 10
-                anchors.top: parent.top
-                anchors.rightMargin: 10
-                anchors.right: parent.right
+//                anchors.topMargin: 10
+//                anchors.top: parent.top
+//                anchors.rightMargin: 10
+//                anchors.right: parent.right
 
-                anchors.bottomMargin: 48
-                anchors.bottom: parent.bottom
+//                anchors.bottomMargin: 48
+//                anchors.bottom: parent.bottom
 
-                Rectangle
-                {
-                    y: 20
-                    width: 24
-                    height: 30
-                    color: "#507FE6"
-                }
+//                Rectangle
+//                {
+//                    y: 20
+//                    width: 24
+//                    height: 30
+//                    color: "#507FE6"
+//                }
 
-                Button
-                {
-                    id: button_plus
+//                Button
+//                {
+//                    id: button_plus
 
-                    width: 24
-                    height: 30
+//                    width: 24
+//                    height: 30
 
-                    bottomPadding: 0
-                    topPadding: 0
-                    rightPadding: 0
-                    leftPadding: 0
+//                    bottomPadding: 0
+//                    topPadding: 0
+//                    rightPadding: 0
+//                    leftPadding: 0
 
-                    text: "+"
+//                    text: "+"
 
-                    background: Rectangle
-                    {
-                        color: parent.pressed ? "#666666" : "#507FE6"
-                        radius: 20
-                    }
+//                    background: Rectangle
+//                    {
+//                        color: parent.pressed ? "#666666" : "#507FE6"
+//                        radius: 20
+//                    }
 
-                    contentItem: Text
-                    {
-                        color: parent.enabled ? "#ffffff" : "#777777"
-                        text: parent.text
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                        font.family: "Roboto"
-                        font.pixelSize: 16
-                    }
+//                    contentItem: Text
+//                    {
+//                        color: parent.enabled ? "#ffffff" : "#777777"
+//                        text: parent.text
+//                        horizontalAlignment: Text.AlignHCenter
+//                        verticalAlignment: Text.AlignVCenter
+//                        elide: Text.ElideRight
+//                        font.family: "Roboto"
+//                        font.pixelSize: 16
+//                    }
 
-                    onClicked:
-                    {
-                        project.sceneFrameWidth += 0.01
-                    }
-                }
+//                    onClicked:
+//                    {
+//                        project.sceneFrameWidth += 0.01
+//                    }
+//                }
 
-                Button
-                {
-                    id: button_minus
+//                Button
+//                {
+//                    id: button_minus
 
-                    y: 32
-                    width: 24
-                    height: 30
+//                    y: 32
+//                    width: 24
+//                    height: 30
 
-                    bottomPadding: 0
-                    topPadding: 0
-                    rightPadding: 0
-                    leftPadding: 0
+//                    bottomPadding: 0
+//                    topPadding: 0
+//                    rightPadding: 0
+//                    leftPadding: 0
 
-                    text: "-"
+//                    text: "-"
 
-                    background: Rectangle
-                    {
-                        color: parent.pressed ? "#666666" : "#507FE6"
-                        radius: 20
-                    }
+//                    background: Rectangle
+//                    {
+//                        color: parent.pressed ? "#666666" : "#507FE6"
+//                        radius: 20
+//                    }
 
-                    contentItem: Text
-                    {
-                        color: parent.enabled ? "#ffffff" : "#777777"
-                        text: parent.text
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        elide: Text.ElideRight
-                        font.family: "Roboto"
-                        font.pixelSize: 20
-                    }
+//                    contentItem: Text
+//                    {
+//                        color: parent.enabled ? "#ffffff" : "#777777"
+//                        text: parent.text
+//                        horizontalAlignment: Text.AlignHCenter
+//                        verticalAlignment: Text.AlignVCenter
+//                        elide: Text.ElideRight
+//                        font.family: "Roboto"
+//                        font.pixelSize: 20
+//                    }
 
-                    onClicked:
-                    {
-                        project.sceneFrameWidth -= 0.01
-                    }
-                }
+//                    onClicked:
+//                    {
+//                        project.sceneFrameWidth -= 0.01
+//                    }
+//                }
 
-                Rectangle
-                {
-                    x: 2
-                    y: 30
-                    width: 20
-                    height: 2
-                    color: "#222222"
-                }
+//                Rectangle
+//                {
+//                    x: 2
+//                    y: 30
+//                    width: 20
+//                    height: 2
+//                    color: "#222222"
+//                }
 
-            }
-        }
+//            }
+//        }
 
-        Rectangle
-        {
-            id: sceneTitle
-            x: sceneFrame.x + sceneFrame.width / 2 - width / 2
-            y: sceneFrame.y - height / 2
-            width: 62
-            height: 20
-            color: "#507FE6"
-            radius: 26
+//        Rectangle
+//        {
+//            id: sceneTitle
+//            x: sceneFrame.x + sceneFrame.width / 2 - width / 2
+//            y: sceneFrame.y - height / 2
+//            width: 62
+//            height: 20
+//            color: "#507FE6"
+//            radius: 26
 
-            Text
-            {
-                anchors.centerIn: parent
-                text: qsTr("SCENE")
-                color: "#ffffff"
-                font.family: "Roboto"
-                font.pixelSize: 12
-            }
+//            Text
+//            {
+//                anchors.centerIn: parent
+//                text: qsTr("SCENE")
+//                color: "#ffffff"
+//                font.family: "Roboto"
+//                font.pixelSize: 12
+//            }
 
-            MouseArea
-            {
-                id: mouseArea
-                anchors.fill: parent
-                preventStealing: true
+//            MouseArea
+//            {
+//                id: mouseArea
+//                anchors.fill: parent
+//                preventStealing: true
 
-                drag.target: sceneFrame
-                drag.axis: Drag.XandYAxis
+//                drag.target: sceneFrame
+//                drag.axis: Drag.XandYAxis
 
-                drag.minimumX: sceneWidget.mapToItem(sceneImage, 0, 0).x
-                drag.maximumX: sceneImage.contentWidth - sceneFrame.width
-                drag.minimumY: sceneWidget.mapToItem(sceneImage, 0, 0).y + 10
-                drag.maximumY: sceneImage.contentHeight - sceneFrame.height
+//                drag.minimumX: sceneWidget.mapToItem(sceneImage, 0, 0).x
+//                drag.maximumX: sceneImage.contentWidth - sceneFrame.width
+//                drag.minimumY: sceneWidget.mapToItem(sceneImage, 0, 0).y + 10
+//                drag.maximumY: sceneImage.contentHeight - sceneFrame.height
 
-                onReleased:
-                {
-                    project.setProperty("sceneFrameX", (sceneFrame.x + sceneImage.visibleArea.xPosition * sceneImage.contentWidth) / sceneImage.contentWidth)
-                    project.setProperty("sceneFrameY", (sceneFrame.y + sceneImage.visibleArea.yPosition * sceneImage.contentHeight) / sceneImage.contentHeight)
-                }
-            }
-        }
+//                onReleased:
+//                {
+//                    project.setProperty("sceneFrameX", (sceneFrame.x + sceneImage.visibleArea.xPosition * sceneImage.contentWidth) / sceneImage.contentWidth)
+//                    project.setProperty("sceneFrameY", (sceneFrame.y + sceneImage.visibleArea.yPosition * sceneImage.contentHeight) / sceneImage.contentHeight)
+//                }
+//            }
+//        }
 
         Item
         {
@@ -373,7 +452,7 @@ Item
                     font.pixelSize: 16
                 }
 
-                onClicked: sceneImage.zoom(0.05)
+                onClicked: sceneWidget.zoom(0.05)
             }
 
             Button
@@ -407,7 +486,7 @@ Item
                     font.pixelSize: 20
                 }
 
-                onClicked: sceneImage.zoom(-0.05)
+                onClicked: sceneWidget.zoom(-0.05)
             }
 
             Rectangle
