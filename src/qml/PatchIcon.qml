@@ -5,10 +5,10 @@ import QtQuick.Layouts 1.15
 Item
 {
     id: patchIcon
-    width: realSizeWidth * sceneFrame.width / project.property("sceneWidth")
-    height: realSizeHeight * sceneFrame.width / project.property("sceneWidth")
-    x: sceneFrame.x + posXRatio * sceneFrame.width
-    y: sceneFrame.y + posYRatio * sceneFrame.height
+    width: realSizeWidth * backgroundImage.width / project.property("sceneImageWidth")
+    height: realSizeHeight * backgroundImage.width / project.property("sceneImageWidth")
+    x: backgroundImage.x + posXRatio * backgroundImage.width
+    y: backgroundImage.y + posYRatio * backgroundImage.height
 
     property int patchId
     property bool checked: false
@@ -95,10 +95,10 @@ Item
         drag.target: patchIcon
         drag.axis: Drag.XandYAxis
 
-        drag.minimumX: sceneWidget.mapToItem(sceneImage, 0, 0).x
-        drag.maximumX: sceneImage.contentWidth - patchIcon.width
-        drag.minimumY: sceneWidget.mapToItem(sceneImage, 0, 0).y + 10
-        drag.maximumY: sceneImage.contentHeight - patchIcon.height
+        drag.minimumX: sceneWidget.mapToItem(sceneWidget, 0, 0).x
+        drag.maximumX: sceneWidget.width - patchIcon.width
+        drag.minimumY: sceneWidget.mapToItem(sceneWidget, 0, 0).y
+        drag.maximumY: sceneWidget.height - patchIcon.height
 
         onClicked:
         {
@@ -107,8 +107,8 @@ Item
 
         onReleased:
         {
-            patchIcon.posXRatio = (patchIcon.x - sceneFrame.x) / sceneFrame.width
-            patchIcon.posYRatio = (patchIcon.y - sceneFrame.y) / sceneFrame.height
+            patchIcon.posXRatio = (patchIcon.x - backgroundImage.x) / backgroundImage.width
+            patchIcon.posYRatio = (patchIcon.y - backgroundImage.y) / backgroundImage.height
 
             project.setPatchProperty(patchId, "posXRatio", patchIcon.posXRatio)
             project.setPatchProperty(patchId, "posYRatio", patchIcon.posYRatio)

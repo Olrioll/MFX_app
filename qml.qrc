@@ -36,5 +36,7 @@
         <file>src/qml/AddPyroWidget.qml</file>
         <file alias="fit">src/img/fitButton.png</file>
         <file>src/qml/PatchIcon.qml</file>
+        <file alias="apply">src/img/apply.png</file>
+        <file alias="cancel">src/img/cancelButton.png</file>
     </qresource>
 </RCC>
