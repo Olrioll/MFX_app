@@ -122,6 +122,7 @@ Item
             anchors.fill: parent
             propagateComposedEvents: true
             acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+            hoverEnabled: true
 
             property int pressedX
             property int pressedY
@@ -200,7 +201,46 @@ Item
 
             onWheel:
             {
-                wheel.angleDelta.y > 0 ? sceneWidget.zoom(0.05) : sceneWidget.zoom(-0.05)
+//                wheel.angleDelta.y > 0 ? sceneWidget.zoom(0.05) : sceneWidget.zoom(-0.05)
+                var step
+                wheel.angleDelta.y > 0 ? step = 0.05 : step = -0.05
+                var prevWidth = backgroundImage.width
+                var prevHeight = backgroundImage.height
+                var newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor + step)
+                var newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor + step)
+                var currWidthChange = newWidth - prevWidth
+                var currHeightChange = newHeight - prevHeight
+
+                sceneWidget.scaleFactor += step
+                project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+
+                if(backgroundImage.width <= sceneWidget.width)
+                {
+                    backgroundImage.x = 0
+                }
+
+                else
+                {
+                    let dx = (mouseX - backgroundImage.x) / prevWidth * currWidthChange
+                    if((backgroundImage.x - dx) <= 0 && (backgroundImage.x + newWidth - dx) >= sceneWidget.width)
+                    {
+                        backgroundImage.x -= dx
+                    }
+                }
+
+                if(backgroundImage.height <= sceneWidget.height)
+                {
+                    backgroundImage.y = 0
+                }
+
+                else
+                {
+                    let dy = (mouseY - backgroundImage.y) / prevHeight * currWidthChange
+                    if((backgroundImage.y - dy) <= 0 && (backgroundImage.y + newHeight - dy) >= sceneWidget.height)
+                    {
+                        backgroundImage.y -= dy
+                    }
+                }
             }
         }
 
