@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs 1.0
 
 Item
 {
@@ -251,6 +252,65 @@ Item
                 elide: Text.ElideMiddle
                 font.family: "Roboto"
             }
+
+            Rectangle
+            {
+                width: 140
+                height: 90
+                x: 9
+                y: 30
+
+                radius: 2
+                color: "#000000"
+
+                Image
+                {
+                    anchors.centerIn: parent
+                    source: "qrc:/imagePlaceholder"
+                }
+
+                Text {
+                    id: buttonText
+                    anchors.topMargin: 62
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    color: "#888888"
+                    text: qsTr("Click on the area\nto load the image")
+                    elide: Text.ElideMiddle
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.family: "Roboto"
+                    font.pixelSize: 10
+                }
+
+                FileDialog
+                {
+                     id: fileDialog
+                     title: "Please choose a file"
+                     folder: shortcuts.home
+                     onAccepted:
+                     {
+                         project.setProperty("backgroundImageFile", fileDialog.fileUrls[0])
+                         console.log(project.property("backgroundImageFile"))
+                         fileDialog.close()
+                     }
+                     onRejected:
+                     {
+                         fileDialog.close()
+                     }
+                 }
+
+                MouseArea
+                {
+                    anchors.fill: parent
+
+                    onClicked:
+                    {
+                        fileDialog.open()
+                    }
+                }
+            }
         }
 
         Button
@@ -310,6 +370,6 @@ Item
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:2}D{i:11}D{i:13}D{i:14}D{i:15}D{i:16}
+    D{i:0;formeditorZoom:2}D{i:17}
 }
 ##^##*/
