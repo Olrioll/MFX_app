@@ -8,6 +8,8 @@ Item
 {
     id: patchScreen
 
+    property alias backgroundImage: backgroundImage
+
     SideDockedWindow
     {
         id: deviceLib
@@ -222,10 +224,7 @@ Item
                 else
                 {
                     let dx = (mouseX - backgroundImage.x) / prevWidth * currWidthChange
-                    if((backgroundImage.x - dx) <= 0 && (backgroundImage.x + newWidth - dx) >= sceneWidget.width)
-                    {
-                        backgroundImage.x -= dx
-                    }
+                    backgroundImage.x -= dx
                 }
 
                 if(backgroundImage.height <= sceneWidget.height)
@@ -235,11 +234,8 @@ Item
 
                 else
                 {
-                    let dy = (mouseY - backgroundImage.y) / prevHeight * currWidthChange
-                    if((backgroundImage.y - dy) <= 0 && (backgroundImage.y + newHeight - dy) >= sceneWidget.height)
-                    {
-                        backgroundImage.y -= dy
-                    }
+                    let dy = (mouseY - backgroundImage.y) / prevHeight * currHeightChange
+                    backgroundImage.y -= dy
                 }
             }
         }
@@ -265,8 +261,6 @@ Item
             {
                 id: sceneFrame
                 anchors.fill: parent
-                //            width: project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
-                //            height: project.property("sceneFrameHeight") / project.property("sceneImageHeight") * backgroundImage.height
                 color: "transparent"
                 border.width: 2
                 border.color: "#507FE6"
@@ -296,7 +290,6 @@ Item
                     onMouseYChanged:
                     {
                         var dy = mouseY - prevY
-                        //                    project.setProperty("sceneFrameHeight", (sceneFrame.height + dy) / sceneFrame.height * project.property("sceneFrameHeight"))
                         sceneFrameItem.height += dy
                         sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
                     }
@@ -324,7 +317,6 @@ Item
                     onMouseYChanged:
                     {
                         var dx = mouseX - prevX
-                        //                    project.setProperty("sceneFrameHeight", (sceneFrame.height + dy) / sceneFrame.height * project.property("sceneFrameHeight"))
                         sceneFrameItem.width += dx
                         sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
                     }

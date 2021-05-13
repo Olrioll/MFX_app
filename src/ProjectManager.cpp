@@ -226,7 +226,7 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
 
     foreach(auto prop, properties)
     {
-        patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toDouble()});
+        patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last()});
     }
 
     _patches.push_back(patch);
@@ -240,7 +240,7 @@ void ProjectManager::editPatch(QVariantList properties)
 
     foreach(auto prop, properties)
     {
-        newPatch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last().toDouble()});
+        newPatch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last()});
     }
 
     int changedIndex = -1;

@@ -26,7 +26,7 @@ Item
         y: 20
         anchors.horizontalCenter: parent.horizontalCenter
         color: "#ffffff"
-        text: plateCell.propertyValue
+        text: (plateCell.propertyName === "DMX" && Number(plateCell.propertyValue) === 0) ? "-" : plateCell.propertyValue
         font.family: "Roboto"
         font.pixelSize: 12
     }

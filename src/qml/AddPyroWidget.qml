@@ -78,10 +78,12 @@ Item
             project.addPatch( "Pyro",
                              [
                               {propName: "ID", propValue: currentId},
+                              {propName: "DMX", propValue: 0},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "channel", propValue: Number(channelField.text)}
                              ])
+
 
             if(groupName)
             {

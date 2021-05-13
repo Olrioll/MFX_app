@@ -292,7 +292,7 @@ Item
                      onAccepted:
                      {
                          project.setProperty("backgroundImageFile", fileDialog.fileUrls[0])
-                         console.log(project.property("backgroundImageFile"))
+                         patchScreen.backgroundImage.source = fileDialog.fileUrls[0]
                          fileDialog.close()
                      }
                      onRejected:

@@ -106,9 +106,9 @@ Item
                              [
                               {propName: "ID", propValue: currentId},
                               {propName: "DMX", propValue: currentDmxValue},
-                              {propName: "angle", propValue: Number(angField.text)},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
+                              {propName: "angle", propValue: Number(angField.text)},
                               {propName: "height", propValue: Number(heightField.text)}
                              ])
 

@@ -61,7 +61,7 @@ public:
             {
                 auto propObject = property.toObject();
                 auto key = propObject.keys().first();
-                properties.push_back({key, propObject.value(key).toDouble()});
+                properties.push_back({key, propObject.value(key).toVariant()});
             }
 
         }
