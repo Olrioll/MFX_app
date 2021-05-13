@@ -10,30 +10,51 @@ Item
 
     property var parentList: null
     property int no: 0
+    property int patchId
     property string name: "Patch Plate"
     property bool withBorder: false
     property string type: ""
-    property string imageFile: ""
-    property bool checked: false
-    property var cells: []
+    property bool checked: project.patchProperty(patchId, "checked")
     property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
-
-    function getId()
-    {
-        return cells.get(0).propValue
-    }
+    property string imageFile: ""
 
     function refreshCells()
     {
+        if(patchId <= 0)
+            return
+
         cellListModel.clear()
-        for(let i = 0; i < cells.count; i++)
+        var propNamesList = project.patchPropertiesNames(project.patchIndexForId(patchId))
+        var propValuesList = project.patchPropertiesValues(project.patchIndexForId(patchId))
+        for(let i = 0; i < propNamesList.length; i++)
         {
-            let currentProp = cells.get(i)
-            let currentPropName = currentProp.propName
-            if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio")
+            let currentPropName = propNamesList[i]
+            if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio" && currentPropName !== "checked")
             {
-                cellListModel.append(currentProp)
+                cellListModel.append({propName: propNamesList[i], propValue: propValuesList[i]})
             }
+        }
+
+        patchPlate.type = project.patchType(project.patchIndexForId(patchId))
+        patchPlate.checked = project.patchProperty(patchId, "checked")
+
+        switch (patchPlate.type)
+        {
+        case "Sequences" :
+            imageFile = "qrc:/device_sequences"
+            break;
+
+        case "Pyro" :
+            imageFile = "qrc:/device_pyro"
+            break;
+
+        case "Shot" :
+            imageFile = "qrc:/device_shot"
+            break;
+
+        case "Dimmer" :
+            imageFile = "qrc:/device_dimmer"
+            break;
         }
     }
 
@@ -152,11 +173,12 @@ Item
 
             onClicked:
             {
-                patchPlate.checked = !patchPlate.checked
+                project.setPatchProperty(patchId, "checked", !project.patchProperty(patchId, "checked"))
                 if(parentList)
                 {
                     project.setCurrentGroup(parentList.groupName)
                 }
+                refreshCells()
             }
         }
     }

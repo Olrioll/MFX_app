@@ -29,26 +29,7 @@ Item
             var listSize = project.patchCount()
             for(let i = 0; i < listSize; i++)
             {
-                var propNamesList = project.patchPropertiesNames(i)
-                var propValuesList = project.patchPropertiesValues(i)
-                var cells = []
-                for(let j = 0; j < propNamesList.length; j++)
-                {
-                    cells.push({propName: propNamesList[j], propValue: propValuesList[j]})
-                }
-
-                var deviceType = project.patchType(i)
-                var imageFile
-                if (deviceType === "Sequences")
-                    imageFile = "qrc:/device_sequences"
-                else if (deviceType === "Pyro")
-                    imageFile = "qrc:/device_pyro"
-                else if (deviceType === "Shot")
-                    imageFile = "qrc:/device_shot"
-                else if (deviceType === "Dimmer")
-                    imageFile = "qrc:/device_dimmer"
-
-                deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, devType: deviceType, img: imageFile, currentCells: cells})
+                deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, currentId: project.patchPropertyForIndex(i, "ID")})
             }
         }
 
@@ -114,10 +95,8 @@ Item
 
         delegate: PatchPlate
         {
-            type: devType
-            imageFile: img
             no: counter
-            cells: currentCells
+            patchId: currentId
         }
 
         model: ListModel
@@ -172,7 +151,7 @@ Item
                     for(let i = 0; i < deviceListView.count; i++)
                     {
                         if(deviceListView.itemAtIndex(i).checked)
-                            draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).getId())
+                            draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
                     }
 
                     deviceListView.held = true
@@ -183,7 +162,6 @@ Item
                     draggedPlate.height = pressedItem.height
                     draggedPlate.name = pressedItem.name
                     draggedPlate.imageFile = pressedItem.imageFile
-                    draggedPlate.cells = pressedItem.cells
                     draggedPlate.refreshCells()
                 }
             }

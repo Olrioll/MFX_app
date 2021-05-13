@@ -25,27 +25,7 @@ ListView
 
         for(let i = 0; i < patchesList.length; i++)
         {
-            let index = project.patchIndexForId(patchesList[i])
-            var propNamesList = project.patchPropertiesNames(index)
-            var propValuesList = project.patchPropertiesValues(index)
-            var cells = []
-            for(let j = 0; j < propNamesList.length; j++)
-            {
-                cells.push({propName: propNamesList[j], propValue: propValuesList[j]})
-            }
-
-            var deviceType = project.patchType(index)
-            var imageFile
-            if (deviceType === "Sequences")
-                imageFile = "qrc:/device_sequences"
-            else if (deviceType === "Pyro")
-                imageFile = "qrc:/device_pyro"
-            else if (deviceType === "Shot")
-                imageFile = "qrc:/device_shot"
-            else if (deviceType === "Dimmer")
-                imageFile = "qrc:/device_dimmer"
-
-            deviceListModel.insert(i, {counter: i + 1, devType: deviceType, img: imageFile, currentCells: cells})
+            deviceListModel.insert(i, {counter: i + 1, currentId: patchesList[i]})
         }
     }
 
@@ -127,10 +107,8 @@ ListView
 
     delegate: PatchPlate
     {
-        type: devType
-        imageFile: img
         no: counter
-        cells: currentCells
+        patchId: currentId
         parentList: deviceListView
     }
 

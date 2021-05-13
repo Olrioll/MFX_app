@@ -50,7 +50,7 @@ public:
     struct Patch
     {
         QString type;
-        QList<QPair<QString, double>> properties;
+        QList<QPair<QString, QVariant>> properties;
 
         Patch() {}
 
@@ -75,7 +75,7 @@ public:
             foreach(auto prop, properties)
             {
                 QJsonObject propObject;
-                propObject.insert(prop.first, prop.second);
+                propObject.insert(prop.first, prop.second.toJsonValue());
                 propertiesArray.append(propObject);
             }
 
@@ -83,7 +83,7 @@ public:
             return patchObject;
         }
 
-        double property(QString name) const
+        QVariant property(QString name) const
         {
             foreach(auto prop, properties)
             {
@@ -94,7 +94,7 @@ public:
             return 0;
         }
 
-        void setProperty(QString name, double value)
+        void setProperty(QString name, QVariant value)
         {
             for(auto & prop : properties)
             {
@@ -138,8 +138,8 @@ public slots:
     int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
     void editPatch(QVariantList properties);
-    double patchProperty(int id, QString propertyName) const;
-    double patchPropertyForIndex(int index, QString propertyName) const;
+    QVariant patchProperty(int id, QString propertyName) const;
+    QVariant patchPropertyForIndex(int index, QString propertyName) const;
     void setPatchProperty(int id, QString propertyName, double value);
     void setPatchPropertyForIndex(int index, QString propertyName, double value);
     void removePatches(QList<int> indexes);
@@ -149,7 +149,7 @@ public slots:
 
     QString patchType(int index) const;
     QStringList patchPropertiesNames(int index) const;
-    QList<int> patchPropertiesValues(int index) const;
+    QList<QVariant> patchPropertiesValues(int index) const;
 
     int currentGroupIndex() const;
     QString currentGroup() const;
