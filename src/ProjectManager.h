@@ -140,8 +140,8 @@ public slots:
     void editPatch(QVariantList properties);
     QVariant patchProperty(int id, QString propertyName) const;
     QVariant patchPropertyForIndex(int index, QString propertyName) const;
-    void setPatchProperty(int id, QString propertyName, double value);
-    void setPatchPropertyForIndex(int index, QString propertyName, double value);
+    void setPatchProperty(int id, QString propertyName, QVariant value);
+    void setPatchPropertyForIndex(int index, QString propertyName, QVariant value);
     void removePatches(QList<int> indexes);
     int patchCount() const;
     int patchIndexForId(int id) const;
@@ -164,6 +164,7 @@ signals:
     void groupChanged(int index);
     void groupCountChanged();
     void patchListChanged();
+    void patchCheckedChanged(int id, bool checked);
 
     void sceneFrameWidthChanged(double sceneFrameWidth);
 

@@ -178,8 +178,17 @@ Item
                 {
                     project.setCurrentGroup(parentList.groupName)
                 }
-                refreshCells()
             }
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onPatchCheckedChanged(checkedId, checked)
+        {
+            if(checkedId === patchPlate.patchId)
+                patchPlate.checked = checked
         }
     }
 }

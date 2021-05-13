@@ -102,7 +102,7 @@ Item
 
         onClicked:
         {
-            patchIcon.checked = !patchIcon.checked
+            project.setPatchProperty(patchId, "checked", !project.patchProperty(patchId, "checked"))
         }
 
         onReleased:
@@ -112,6 +112,16 @@ Item
 
             project.setPatchProperty(patchId, "posXRatio", patchIcon.posXRatio)
             project.setPatchProperty(patchId, "posYRatio", patchIcon.posYRatio)
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onPatchCheckedChanged(checkedId, checked)
+        {
+            if(checkedId === patchIcon.patchId)
+                patchIcon.checked = checked
         }
     }
 }

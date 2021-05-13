@@ -279,20 +279,28 @@ QVariant ProjectManager::patchPropertyForIndex(int index, QString propertyName) 
     return _patches[index].property(propertyName);
 }
 
-void ProjectManager::setPatchProperty(int id, QString propertyName, double value)
+void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant value)
 {
     for(int i = 0; i < _patches.size(); i++)
     {
         if(_patches[i].property("ID") == id)
         {
             _patches[i].setProperty(propertyName, value);
+            if(propertyName == "checked")
+            {
+                emit patchCheckedChanged(id, value.toBool());
+            }
         }
     }
 }
 
-void ProjectManager::setPatchPropertyForIndex(int index, QString propertyName, double value)
+void ProjectManager::setPatchPropertyForIndex(int index, QString propertyName, QVariant value)
 {
     _patches[index].setProperty(propertyName, value);
+    if(propertyName == "checked")
+    {
+        emit patchCheckedChanged(patchPropertyForIndex(index, "ID").toInt(), value.toBool());
+    }
 }
 
 void ProjectManager::removePatches(QList<int> indexes)
