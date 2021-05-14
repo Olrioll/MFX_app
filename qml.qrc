@@ -41,5 +41,6 @@
         <file alias="sceneSettings">src/img/sceneSettingsButton.png</file>
         <file>src/qml/SceneSettingsWidget.qml</file>
         <file alias="imagePlaceholder">src/img/imagePlaceholder.png</file>
+        <file>src/qml/SceneWidget.qml</file>
     </qresource>
 </RCC>

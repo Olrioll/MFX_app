@@ -292,7 +292,7 @@ Item
                      onAccepted:
                      {
                          project.setProperty("backgroundImageFile", fileDialog.fileUrls[0])
-                         patchScreen.backgroundImage.source = fileDialog.fileUrls[0]
+                         sceneWidget.backgroundImage.source = fileDialog.fileUrls[0]
                          fileDialog.close()
                      }
                      onRejected:
