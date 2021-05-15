@@ -53,44 +53,16 @@ Item
         }
     }
 
-    Button
+    MfxButton
     {
         id: addGroupButton
         text: qsTr("Add")
-        height: 24
         width: 100
+        color: "#2F80ED"
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottomMargin: 10
         anchors.bottom: parent.bottom
-
-
-        bottomPadding: 2
-        topPadding: 2
-        rightPadding: 2
-        leftPadding: 2
-
-        background: Rectangle
-        {
-            color:
-            {
-                if(parent.enabled)
-                    parent.pressed ? "#222222" : "#27AE60"
-                else
-                    "#444444"
-            }
-            radius: 2
-        }
-
-        contentItem: Text
-        {
-            color: parent.enabled ? "#ffffff" : "#777777"
-            text: parent.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            font.family: "Roboto"
-        }
 
         onClicked:
         {

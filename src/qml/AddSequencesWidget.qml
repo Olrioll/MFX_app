@@ -640,13 +640,13 @@ Item
             minusButtonText: heightField.isActiveInput ? "." : "-"
         }
 
-        Button
+        MfxButton
         {
             id: setButton
             x: 172
             y: 221
             width: 124
-            height: 24
+            color: "#2F80ED"
             text: qsTr("Set")
             enabled:
             {
@@ -657,29 +657,6 @@ Item
                         minAngField.checkValue() &&
                         maxAngField.checkValue()
 
-            }
-
-            background: Rectangle
-            {
-                color:
-                {
-                    if(parent.enabled)
-                        parent.pressed ? "#888888" : "#2F80ED"
-                    else
-                        "#222222"
-                }
-                radius: 2
-            }
-
-            contentItem: Text
-            {
-                color: parent.enabled ? "#ffffff" : "#777777"
-                text: parent.text
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-                font.family: "Roboto"
-                font.pixelSize: 12
             }
 
             onClicked:

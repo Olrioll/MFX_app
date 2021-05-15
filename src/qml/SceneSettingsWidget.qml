@@ -313,10 +313,11 @@ Item
             }
         }
 
-        Button
+        MfxButton
         {
             id: setButton
 
+            color: "#2F80ED"
             anchors.margins: 8
             anchors
             {
@@ -324,31 +325,8 @@ Item
                 right: parent.right
                 bottom: parent.bottom
             }
-            height: 24
+
             text: qsTr("Apply")
-
-            background: Rectangle
-            {
-                color:
-                {
-                    if(parent.enabled)
-                        parent.pressed ? "#888888" : "#2F80ED"
-                    else
-                        "#222222"
-                }
-                radius: 2
-            }
-
-            contentItem: Text
-            {
-                color: parent.enabled ? "#ffffff" : "#777777"
-                text: parent.text
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-                font.family: "Roboto"
-                font.pixelSize: 12
-            }
 
             onClicked:
             {
