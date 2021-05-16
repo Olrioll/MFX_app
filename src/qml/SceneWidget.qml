@@ -57,7 +57,19 @@ Item
             if(project.isGroupContainsPatch(groupName, patchIcons[i].patchId))
             {
                 patchIcons[i].visible = state
+//                console.log("Patch " + patchIcons[i].patchId + "for group " + groupName + " set visible: " + patchIcons[i].visible);
             }
+        }
+    }
+
+    function refreshPatchIconsVisibility(changedGroupName, state)
+    {
+        showPatchIcons(changedGroupName, state)
+        for(let i = 0; i < switchGroupsButtons.count; i ++)
+        {
+            let currButton = switchGroupsButtons.itemAtIndex(i)
+            if(currButton && currButton.text !== changedGroupName)
+                showPatchIcons(currButton.text, currButton.checked)
         }
     }
 
@@ -624,7 +636,7 @@ Item
 
             onCheckedChanged:
             {
-                sceneWidget.showPatchIcons(text, checked)
+                sceneWidget.refreshPatchIconsVisibility(text, checked)
             }
         }
 
