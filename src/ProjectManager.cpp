@@ -386,6 +386,23 @@ QStringList ProjectManager::groupNames() const
 
 }
 
+bool ProjectManager::isGroupContainsPatch(QString groupName, int patchId) const
+{
+    for(auto & group : _groups)
+    {
+        if(group.name == groupName)
+        {
+            foreach(auto currentPatchId, group.patches)
+            {
+                if(patchId == currentPatchId)
+                    return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void ProjectManager::setCurrentGroupIndex(int currentGroupIndex)
 {
     if (m_currentGroupIndex == currentGroupIndex)

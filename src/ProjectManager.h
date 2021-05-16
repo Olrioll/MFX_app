@@ -127,6 +127,7 @@ public slots:
     void saveProject();
 
     QStringList groupNames() const;
+    bool isGroupContainsPatch(QString groupName, int patchId) const;
 
     bool addGroup(QString name);
     void removeGroup(QString name);

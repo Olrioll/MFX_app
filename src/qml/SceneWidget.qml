@@ -50,6 +50,17 @@ Item
         project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
     }
 
+    function showPatchIcons(groupName, state)
+    {
+        for(let i = 0; i < patchIcons.length; i++)
+        {
+            if(project.isGroupContainsPatch(groupName, patchIcons[i].patchId))
+            {
+                patchIcons[i].visible = state
+            }
+        }
+    }
+
     Image
     {
         id: backgroundImage
@@ -551,6 +562,14 @@ Item
             left: zoomControls.right
             bottom: sceneWidget.bottom
         }
+
+        onCheckedChanged:
+        {
+            for(let i = 0; i < switchGroupsButtons.count; i++)
+            {
+                switchGroupsButtons.itemAtIndex(i).checked = checked
+            }
+        }
     }
 
     Rectangle
@@ -558,7 +577,7 @@ Item
         id: backgroundRect
         x: switchGroupsButtons.x
         y: switchGroupsButtons.y
-        color: "transparent"
+        color: "#222222"
         height: 24
         width: switchGroupsButtons.contentItem.width
         radius: 2
@@ -600,6 +619,11 @@ Item
             checked: delegateChecked
             width: delegateWidth
             text: delegateText
+
+            onCheckedChanged:
+            {
+                sceneWidget.showPatchIcons(text, checked)
+            }
         }
 
         model: ListModel
