@@ -554,6 +554,7 @@ Item
         id: showAllButton
         width: 48
         checkable: true
+        checked: true
         text: qsTr("All")
         anchors.leftMargin: 12
         anchors.bottomMargin: 18
@@ -606,10 +607,11 @@ Item
 
         function refreshList()
         {
+            buttonListModel.clear()
             let groupNames = project.groupNames()
             for (let i = 0; i < groupNames.length; i++)
             {
-                buttonListModel.append({delegateChecked: false, delegateWidth: 70, delegateText: groupNames[i]})
+                buttonListModel.append({delegateChecked: showAllButton.checked, delegateWidth: 70, delegateText: groupNames[i]})
             }
         }
 
@@ -640,6 +642,15 @@ Item
         function onPatchListChanged()
         {
             sceneWidget.loadPatches()
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onGroupCountChanged()
+        {
+            switchGroupsButtons.refreshList()
         }
     }
 
