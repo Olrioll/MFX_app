@@ -553,6 +553,19 @@ Item
         }
     }
 
+    Rectangle
+    {
+        id: backgroundRect
+        x: switchGroupsButtons.x
+        y: switchGroupsButtons.y
+        color: "transparent"
+        height: 24
+        width: switchGroupsButtons.contentItem.width
+        radius: 2
+        border.width: 2
+        border.color: "#333333"
+    }
+
     ListView
     {
         id: switchGroupsButtons
@@ -574,9 +587,10 @@ Item
 
         function refreshList()
         {
-            for (let i = 0; i < 10; i++)
+            let groupNames = project.groupNames()
+            for (let i = 0; i < groupNames.length; i++)
             {
-                buttonListModel.append({delegateChecked: false, delegateWidth: 70, delegateText: i})
+                buttonListModel.append({delegateChecked: false, delegateWidth: 70, delegateText: groupNames[i]})
             }
         }
 
@@ -591,18 +605,6 @@ Item
         model: ListModel
         {
             id: buttonListModel
-        }
-
-        Rectangle
-        {
-            id: backgroundRect
-//            anchors.fill: switchGroupsButtons.contentItem
-            color: "transparent"
-            height: 24
-            width: switchGroupsButtons.contentItem.width
-            radius: 2
-            border.width: 2
-            border.color: "#333333"
         }
 
         Component.onCompleted: refreshList()

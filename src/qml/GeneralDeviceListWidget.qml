@@ -154,6 +154,11 @@ Item
                             draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
                     }
 
+                    if(draggedPlate.checkedIDs.length === 0) // Перетаскивем только одну плашку, а она может быть и не выделена
+                    {
+                        draggedPlate.checkedIDs.push(pressedItem.patchId)
+                    }
+
                     deviceListView.held = true
                     draggedPlate.x = pressedItem.mapToItem(patchScreen, 0, 0).x
                     draggedPlate.y = pressedItem.mapToItem(patchScreen, 0, 0).y

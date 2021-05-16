@@ -46,7 +46,7 @@ ListView
         {
             if(deviceListView.itemAtIndex(i).checked)
             {
-                removedIDs.push(deviceListView.itemAtIndex(i).getId())
+                removedIDs.push(deviceListView.itemAtIndex(i).patchId)
             }
         }
 
