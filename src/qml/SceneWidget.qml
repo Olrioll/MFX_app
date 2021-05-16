@@ -555,7 +555,35 @@ Item
 
             onClicked:
             {
+                let minX = 9999
+                let minY = 9999
+                let maxX = 0
+                let maxY = 0
 
+                for(let i = 0; i < patchIcons.length; i++)
+                {
+                    let currIcon = patchIcons[i]
+                    let currIconCoord = patchIcons[i].mapToGlobal(0, 0)
+                    if(currIcon.visible)
+                    {
+                        if(currIconCoord.x < minX)
+                            minX = currIconCoord.x
+                        if(currIconCoord.y < minY)
+                            minY = currIconCoord.y
+                        if(currIconCoord.x > maxX)
+                            maxX = currIconCoord.x
+                        if(currIconCoord.y > maxY)
+                            maxY = currIconCoord.y
+                    }
+                }
+
+                let areaCenterX = minX + (maxX - minX) / 2
+                let areaCenterY = minY + (maxY - minY) / 2
+                let sceneWidgetCenterX = sceneWidget.mapToGlobal(0, 0).x + sceneWidget.width / 2
+                let sceneWidgetCenterY = sceneWidget.mapToGlobal(0, 0).y + sceneWidget.height / 2
+
+                backgroundImage.x += sceneWidgetCenterX - areaCenterX
+                backgroundImage.y += sceneWidgetCenterY - areaCenterY
             }
         }
 
