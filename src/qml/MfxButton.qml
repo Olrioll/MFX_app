@@ -6,7 +6,7 @@ Button
     id: button
     height: 24
 
-    property string color: "#ffffff"
+    property string color: "#4f4f4f"
 
     background: Rectangle
     {
@@ -15,7 +15,7 @@ Button
             if(button.checkable)
             {
                 if(parent.enabled)
-                    parent.checked ? button.color : "#888888"
+                    parent.checked ? button.color : "#333333"
                 else
                     "#222222"
             }
@@ -33,7 +33,20 @@ Button
 
     contentItem: Text
     {
-        color: parent.enabled ? "#ffffff" : "#777777"
+        color:
+        {
+            if(button.checkable)
+            {
+                if(parent.enabled)
+                    parent.checked ? "#ffffff" : "#777777"
+                else
+                    "#222222"
+            }
+
+            else
+                parent.enabled ? "#ffffff" : "#777777"
+        }
+
         text: parent.text
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter

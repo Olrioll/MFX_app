@@ -143,9 +143,7 @@ Item
 
         onWheel:
         {
-//                wheel.angleDelta.y > 0 ? sceneWidget.zoom(0.05) : sceneWidget.zoom(-0.05)
-            var step
-            wheel.angleDelta.y > 0 ? step = 0.05 : step = -0.05
+            var step = wheel.angleDelta.y > 0 ? 0.05 : -0.05
             var prevWidth = backgroundImage.width
             var prevHeight = backgroundImage.height
             var newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor + step)
@@ -538,6 +536,76 @@ Item
             }
         }
 
+    }
+
+    MfxButton
+    {
+        id: showAllButton
+        width: 48
+        checkable: true
+        text: qsTr("All")
+        anchors.leftMargin: 12
+        anchors.bottomMargin: 18
+        anchors
+        {
+            left: zoomControls.right
+            bottom: sceneWidget.bottom
+        }
+    }
+
+    ListView
+    {
+        id: switchGroupsButtons
+        orientation: ListView.Horizontal
+        width: contentItem.width
+        spacing: 2
+
+        anchors.rightMargin: 4
+        anchors.leftMargin: 2
+        anchors.bottomMargin: 24
+        anchors
+        {
+            left: showAllButton.right
+            right: parent.right
+            bottom: showAllButton.bottom
+        }
+
+        ScrollBar.horizontal: ScrollBar {}
+
+        function refreshList()
+        {
+            for (let i = 0; i < 10; i++)
+            {
+                buttonListModel.append({delegateChecked: false, delegateWidth: 70, delegateText: i})
+            }
+        }
+
+        delegate: MfxButton
+        {
+            checkable: true
+            checked: delegateChecked
+            width: delegateWidth
+            text: delegateText
+        }
+
+        model: ListModel
+        {
+            id: buttonListModel
+        }
+
+        Rectangle
+        {
+            id: backgroundRect
+//            anchors.fill: switchGroupsButtons.contentItem
+            color: "transparent"
+            height: 24
+            width: switchGroupsButtons.contentItem.width
+            radius: 2
+            border.width: 2
+            border.color: "#333333"
+        }
+
+        Component.onCompleted: refreshList()
     }
 
     Connections
