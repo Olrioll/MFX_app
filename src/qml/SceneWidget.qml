@@ -83,7 +83,7 @@ Item
 
     MouseArea
     {
-        anchors.margins: 12
+//        anchors.margins: 12
         anchors.fill: parent
         propagateComposedEvents: true
         preventStealing: true
@@ -102,14 +102,15 @@ Item
 
         onClicked:
         {
+            console.log(mouse.x)
             for(let i = 0; i < patchIcons.length; i++)
             {
                 let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
                 let currWidth = patchIcons[i].width
                 let currHeight = patchIcons[i].height
-                if(mouseX > currCoord.x - 10 && mouseX < currCoord.x + currWidth + 10)
+                if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
                 {
-                    if(mouseY > currCoord.y -10 && mouseY < currCoord.y + currHeight + 10)
+                    if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
                     {
                         project.setPatchProperty(patchIcons[i].patchId, "checked", !project.patchProperty(patchIcons[i].patchId, "checked"))
                         break;
