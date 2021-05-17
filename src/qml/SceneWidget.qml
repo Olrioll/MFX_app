@@ -99,10 +99,29 @@ Item
         property int currentBackgroundImageY
         property bool isDraggingBackgroungImage: false
         property bool isDraggingIcon: false
+        property bool isSelectingIcons: false
+
+        Rectangle
+        {
+            id: selectRect
+            color: "transparent"
+            border.width: 2
+            border.color: "#2F4C8A"
+
+            Rectangle
+            {
+                id: fillRect
+                anchors.margins: selectRect.border.width
+                anchors.fill: parent
+                color: "#2F4C8A"
+                opacity: 0.5
+            }
+        }
+
 
         onClicked:
         {
-            console.log(mouse.x)
+            let isClickedOnIcon = false
             for(let i = 0; i < patchIcons.length; i++)
             {
                 let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
@@ -113,6 +132,7 @@ Item
                     if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
                     {
                         project.setPatchProperty(patchIcons[i].patchId, "checked", !project.patchProperty(patchIcons[i].patchId, "checked"))
+                        isClickedOnIcon = true
                         break;
                     }
                 }
@@ -160,7 +180,9 @@ Item
 
                 else
                 {
-                    console.log("pressed")
+                    isSelectingIcons = true
+                    selectRect.x = mouseX
+                    selectRect.y = mouseY
                 }
             }
         }
@@ -177,17 +199,44 @@ Item
                 project.setPatchProperty(drag.target.patchId, "posYRatio", drag.target.posYRatio)
             }
 
+            else if(isSelectingIcons)
+            {
+                for(let j = 0; j < patchIcons.length; j++)
+                {
+                    project.setPatchProperty(patchIcons[j].patchId, "checked", false)
+                }
+
+                for(let i = 0; i < patchIcons.length; i++)
+                {
+                    let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
+                    let currWidth = patchIcons[i].width
+                    let currHeight = patchIcons[i].height
+                    if(currCoord.x > pressedX && currCoord.x < pressedX + selectRect.width)
+                    {
+                        if(currCoord.y > pressedY && currCoord.y < pressedY + selectRect.height)
+                        {
+                            project.setPatchProperty(patchIcons[i].patchId, "checked", true)
+                        }
+                    }
+                }
+
+                selectRect.width = 0
+                selectRect.height = 0
+            }
+
             isDraggingBackgroungImage = false
             isDraggingIcon = false
+            isSelectingIcons = false
             drag.target = null
         }
 
         onPositionChanged:
         {
+            let dx = mouseX - pressedX
+            let dy = mouseY - pressedY
+
             if(isDraggingBackgroungImage)
             {
-                let dx = mouseX - pressedX
-                let dy = mouseY - pressedY
 
                 if(backgroundImage.width <= sceneWidget.width)
                     backgroundImage.x = 0
@@ -233,9 +282,15 @@ Item
                 }
             }
 
-            else if(isDraggingIcon)
+            else if(isSelectingIcons)
             {
+                selectRect.width = Math.abs(dx)
+                selectRect.height = Math.abs(dy)
 
+                if(dx < 0)
+                    selectRect.x = pressedX - selectRect.width
+                if(dy < 0)
+                    selectRect.y = pressedY - selectRect.height
             }
         }
 
