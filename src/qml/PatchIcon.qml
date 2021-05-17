@@ -7,8 +7,8 @@ Item
     id: patchIcon
     width: realSizeWidth * backgroundImage.width / project.property("sceneImageWidth")
     height: realSizeHeight * backgroundImage.width / project.property("sceneImageWidth")
-    x: backgroundImage.x + posXRatio * backgroundImage.width
-    y: backgroundImage.y + posYRatio * backgroundImage.height
+    x: /*backgroundImage.x + */posXRatio * backgroundImage.width
+    y: /*backgroundImage.y + */posYRatio * backgroundImage.height
 
     property int patchId
     property bool checked: false
@@ -87,33 +87,33 @@ Item
 
 //-------------------------
 
-    MouseArea
-    {
-        id: mouseArea
-        anchors.fill: parent
+//    MouseArea
+//    {
+//        id: mouseArea
+//        anchors.fill: parent
 
-        drag.target: patchIcon
-        drag.axis: Drag.XandYAxis
+//        drag.target: patchIcon
+//        drag.axis: Drag.XandYAxis
 
-        drag.minimumX: sceneWidget.mapToItem(sceneWidget, 0, 0).x
-        drag.maximumX: sceneWidget.width - patchIcon.width
-        drag.minimumY: sceneWidget.mapToItem(sceneWidget, 0, 0).y
-        drag.maximumY: sceneWidget.height - patchIcon.height
+//        drag.minimumX: sceneWidget.mapToItem(sceneWidget, 0, 0).x
+//        drag.maximumX: sceneWidget.width - patchIcon.width
+//        drag.minimumY: sceneWidget.mapToItem(sceneWidget, 0, 0).y
+//        drag.maximumY: sceneWidget.height - patchIcon.height
 
-        onClicked:
-        {
-            project.setPatchProperty(patchId, "checked", !project.patchProperty(patchId, "checked"))
-        }
+//        onClicked:
+//        {
+//            project.setPatchProperty(patchId, "checked", !project.patchProperty(patchId, "checked"))
+//        }
 
-        onReleased:
-        {
-            patchIcon.posXRatio = (patchIcon.x - backgroundImage.x) / backgroundImage.width
-            patchIcon.posYRatio = (patchIcon.y - backgroundImage.y) / backgroundImage.height
+//        onReleased:
+//        {
+//            patchIcon.posXRatio = (patchIcon.x /*- backgroundImage.x*/) / backgroundImage.width
+//            patchIcon.posYRatio = (patchIcon.y /*- backgroundImage.y*/) / backgroundImage.height
 
-            project.setPatchProperty(patchId, "posXRatio", patchIcon.posXRatio)
-            project.setPatchProperty(patchId, "posYRatio", patchIcon.posYRatio)
-        }
-    }
+//            project.setPatchProperty(patchId, "posXRatio", patchIcon.posXRatio)
+//            project.setPatchProperty(patchId, "posYRatio", patchIcon.posYRatio)
+//        }
+//    }
 
     Connections
     {

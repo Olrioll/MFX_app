@@ -35,7 +35,7 @@ Item
             else if (deviceType === "Dimmer")
                 imageFile = "qrc:/device_dimmer"
 
-            patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(sceneWidget,
+            patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(backgroundImage,
                                                                              {  imageFile: imageFile,
                                                                                  patchId: project.patchPropertyForIndex(i, "ID"),
                                                                                  posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
@@ -86,35 +86,86 @@ Item
         anchors.margins: 12
         anchors.fill: parent
         propagateComposedEvents: true
+        preventStealing: true
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton
         hoverEnabled: true
+
+        drag.target: null
+        drag.axis: Drag.XandYAxis
 
         property int pressedX
         property int pressedY
         property int currentBackgroundImageX
         property int currentBackgroundImageY
-        property bool isDraggingMode: false
+        property bool isDraggingBackgroungImage: false
+        property bool isDraggingIcon: false
 
         onPressed:
         {
+            pressedX = mouseX
+            pressedY = mouseY
+            currentBackgroundImageX = backgroundImage.x
+            currentBackgroundImageY = backgroundImage.y
+
             if(mouse.button & Qt.MiddleButton)
             {
-                isDraggingMode = true
-                pressedX = mouseX
-                pressedY = mouseY
-                currentBackgroundImageX = backgroundImage.x
-                currentBackgroundImageY = backgroundImage.y
+                isDraggingBackgroungImage = true
+            }
+
+            else
+            {
+                for(let i = 0; i < patchIcons.length; i++)
+                {
+                    let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
+                    let currWidth = patchIcons[i].width
+                    let currHeight = patchIcons[i].height
+                    if(mouseX > currCoord.x - 10 && mouseX < currCoord.x + currWidth + 10)
+                    {
+                        if(mouseY > currCoord.y -10 && mouseY < currCoord.y + currHeight + 10)
+                        {
+                            isDraggingIcon = true
+                            drag.target = patchIcons[i]
+                            drag.minimumX = 0
+                            drag.minimumY = 0
+                            drag.maximumX = backgroundImage.mapToItem(sceneWidget, 0, 0).x + backgroundImage.width - drag.target.width
+                            drag.maximumY = backgroundImage.mapToItem(sceneWidget, 0, 0).y + backgroundImage.height - drag.target.height
+                            break;
+                        }
+                    }
+                }
+
+                if(isDraggingIcon)
+                {
+                    console.log("drag.maximumX " + drag.maximumX)
+                }
+
+                else
+                {
+                    console.log("pressed")
+                }
             }
         }
 
         onReleased:
         {
-            isDraggingMode = false
+            if(isDraggingIcon)
+            {
+                let currRelPosition = drag.target.mapToItem(backgroundImage, 0, 0)
+                drag.target.posXRatio = currRelPosition.x / backgroundImage.width
+                drag.target.posYRatio = currRelPosition.y / backgroundImage.height
+
+                project.setPatchProperty(drag.target.patchId, "posXRatio", drag.target.posXRatio)
+                project.setPatchProperty(drag.target.patchId, "posYRatio", drag.target.posYRatio)
+            }
+
+            isDraggingBackgroungImage = false
+            isDraggingIcon = false
+            drag.target = null
         }
 
         onPositionChanged:
         {
-            if(isDraggingMode)
+            if(isDraggingBackgroungImage)
             {
                 let dx = mouseX - pressedX
                 let dy = mouseY - pressedY
@@ -161,6 +212,11 @@ Item
                         }
                     }
                 }
+            }
+
+            else if(isDraggingIcon)
+            {
+
             }
         }
 
@@ -586,7 +642,6 @@ Item
                 backgroundImage.y += sceneWidgetCenterY - areaCenterY
             }
         }
-
     }
 
     MfxButton
