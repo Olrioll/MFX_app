@@ -175,7 +175,7 @@ Item
 
                 if(isDraggingIcon)
                 {
-//                    console.log("drag.maximumX " + drag.maximumX)
+
                 }
 
                 else
@@ -690,12 +690,15 @@ Item
                 let maxX = 0
                 let maxY = 0
 
+                let hasVisibleIcons = false
+
                 for(let i = 0; i < patchIcons.length; i++)
                 {
                     let currIcon = patchIcons[i]
                     let currIconCoord = patchIcons[i].mapToGlobal(0, 0)
                     if(currIcon.visible)
                     {
+                        hasVisibleIcons = true
                         if(currIconCoord.x < minX)
                             minX = currIconCoord.x
                         if(currIconCoord.y < minY)
@@ -707,13 +710,109 @@ Item
                     }
                 }
 
-                let areaCenterX = minX + (maxX - minX) / 2
-                let areaCenterY = minY + (maxY - minY) / 2
-                let sceneWidgetCenterX = sceneWidget.mapToGlobal(0, 0).x + sceneWidget.width / 2
-                let sceneWidgetCenterY = sceneWidget.mapToGlobal(0, 0).y + sceneWidget.height / 2
+                if(hasVisibleIcons)
+                {
+                    maxX += patchIcons[0].width
+                    maxY += patchIcons[0].height
 
-                backgroundImage.x += sceneWidgetCenterX - areaCenterX
-                backgroundImage.y += sceneWidgetCenterY - areaCenterY
+                    let areaWidth = maxX - minX
+                    let areaHeight = maxY - minY
+                    let areaCenterX = minX + areaWidth / 2
+                    let areaCenterY = minY + areaHeight / 2
+                    let sceneWidgetCenterX = sceneWidget.mapToGlobal(0, 0).x + sceneWidget.width / 2
+                    let sceneWidgetCenterY = sceneWidget.mapToGlobal(0, 0).y + sceneWidget.height / 2
+
+                    let dScaleX = areaWidth / sceneWidget.width
+                    let dScaleY = areaHeight / sceneWidget.height
+
+                    let dScale = dScaleX > dScaleY ? dScaleX : dScaleY
+                    dScale = dScale + 0.2 * dScale
+
+                    backgroundImage.x += sceneWidgetCenterX - areaCenterX
+                    backgroundImage.y += sceneWidgetCenterY - areaCenterY
+
+                    var prevWidth = backgroundImage.width
+                    var prevHeight = backgroundImage.height
+                    var newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor / dScale)
+                    var newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor / dScale)
+                    var currWidthChange = newWidth - prevWidth
+                    var currHeightChange = newHeight - prevHeight
+
+                    sceneWidget.scaleFactor = sceneWidget.scaleFactor / dScale
+                    project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+
+                    let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
+                    backgroundImage.x -= dx
+
+                    let dy = (areaCenterY - backgroundImage.y) / prevHeight * currHeightChange
+                    backgroundImage.y -= dy
+                }
+
+
+                ///--- Пока дублируем вышестоящий код, чтоб отцентрировалось точнее
+
+                minX = 9999
+                minY = 9999
+                maxX = 0
+                maxY = 0
+
+                hasVisibleIcons = false
+
+                for(let j = 0; j < patchIcons.length; j++)
+                {
+                    let currIcon = patchIcons[j]
+                    let currIconCoord = patchIcons[j].mapToGlobal(0, 0)
+                    if(currIcon.visible)
+                    {
+                        hasVisibleIcons = true
+                        if(currIconCoord.x < minX)
+                            minX = currIconCoord.x
+                        if(currIconCoord.y < minY)
+                            minY = currIconCoord.y
+                        if(currIconCoord.x > maxX)
+                            maxX = currIconCoord.x
+                        if(currIconCoord.y > maxY)
+                            maxY = currIconCoord.y
+                    }
+                }
+
+                if(hasVisibleIcons)
+                {
+                    maxX += patchIcons[0].width
+                    maxY += patchIcons[0].height
+
+                    let areaWidth = maxX - minX
+                    let areaHeight = maxY - minY
+                    let areaCenterX = minX + areaWidth / 2
+                    let areaCenterY = minY + areaHeight / 2
+                    let sceneWidgetCenterX = sceneWidget.mapToGlobal(0, 0).x + sceneWidget.width / 2
+                    let sceneWidgetCenterY = sceneWidget.mapToGlobal(0, 0).y + sceneWidget.height / 2
+
+                    let dScaleX = areaWidth / sceneWidget.width
+                    let dScaleY = areaHeight / sceneWidget.height
+
+                    let dScale = dScaleX > dScaleY ? dScaleX : dScaleY
+                    dScale = dScale + 0.2 * dScale
+
+                    backgroundImage.x += sceneWidgetCenterX - areaCenterX
+                    backgroundImage.y += sceneWidgetCenterY - areaCenterY
+
+                    prevWidth = backgroundImage.width
+                    prevHeight = backgroundImage.height
+                    newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor / dScale)
+                    newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor / dScale)
+                    currWidthChange = newWidth - prevWidth
+                    currHeightChange = newHeight - prevHeight
+
+                    sceneWidget.scaleFactor = sceneWidget.scaleFactor / dScale
+                    project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+
+                    let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
+                    backgroundImage.x -= dx
+
+                    let dy = (areaCenterY - backgroundImage.y) / prevHeight * currHeightChange
+                    backgroundImage.y -= dy
+                }
             }
         }
     }
