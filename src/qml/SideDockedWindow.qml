@@ -21,6 +21,22 @@ Item
         var contentItem = Qt.createComponent(itemFilename).createObject(workArea, properties)
     }
 
+    function setActive(state)
+    {
+        if(state)
+        {
+            sideDockedWindow.enabled = true
+        }
+
+        else
+        {
+            sideDockedWindow.width = sideDockedWindow.collapsedWidth
+            layout.currentIndex = 0
+            sideDockedWindow.enabled = false
+        }
+    }
+
+
     StackLayout
     {
         id: layout

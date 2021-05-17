@@ -480,6 +480,9 @@ Item
                 project.setProperty("sceneImageHeight", backgroundImage.height / sceneFrame.height * project.property("sceneFrameHeight"))
                 project.setProperty("sceneImageWidth", backgroundImage.width / sceneFrame.width * project.property("sceneFrameWidth"))
                 sceneFrameItem.visible = false
+                deviceLib.setActive(true)
+                deviceList.setActive(true)
+                groupList.setActive(true)
             }
         }
 
@@ -506,6 +509,9 @@ Item
             onClicked:
             {
                 sceneFrameItem.visible = false
+                deviceLib.setActive(true)
+                deviceList.setActive(true)
+                groupList.setActive(true)
             }
         }
 
@@ -556,6 +562,10 @@ Item
             var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
             sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
             sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
+
+            deviceLib.setActive(false)
+            deviceList.setActive(false)
+            groupList.setActive(false)
         }
     }
 
