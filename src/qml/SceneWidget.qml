@@ -46,7 +46,7 @@ Item
 
     function zoom(step)
     {
-        sceneWidget.scaleFactor += step
+        sceneWidget.scaleFactor += sceneWidget.scaleFactor * step
         project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
     }
 
@@ -299,12 +299,12 @@ Item
             var step = wheel.angleDelta.y > 0 ? 0.05 : -0.05
             var prevWidth = backgroundImage.width
             var prevHeight = backgroundImage.height
-            var newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor + step)
-            var newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor + step)
+            var newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor + sceneWidget.scaleFactor * step)
+            var newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor + sceneWidget.scaleFactor * step)
             var currWidthChange = newWidth - prevWidth
             var currHeightChange = newHeight - prevHeight
 
-            sceneWidget.scaleFactor += step
+            sceneWidget.scaleFactor += sceneWidget.scaleFactor * step
             project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
 
             if(backgroundImage.width <= sceneWidget.width)
