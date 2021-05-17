@@ -8,8 +8,6 @@ Item
 {
     id: patchScreen
 
-//    property alias backgroundImage: sceneWidget.backgroundImage
-
     SideDockedWindow
     {
         id: deviceLib
