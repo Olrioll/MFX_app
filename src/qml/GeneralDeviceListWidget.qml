@@ -225,6 +225,37 @@ Item
                 id: deviceListWidgetDropArea
                 anchors.fill: parent
 
+                property var currPlate: null
+
+                onEntered:
+                {
+                    if(deviceListView.itemAt(drag.x, drag.y))
+                    {
+                        currPlate = deviceListView.itemAt(drag.x, drag.y)
+                        currPlate.withBorder = true
+                    }
+                }
+
+                onExited:
+                {
+                    if(currPlate)
+                        currPlate.withBorder = false
+                }
+
+                onPositionChanged:
+                {
+                    if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
+                    {
+                        if(currPlate)
+                            currPlate.withBorder = false
+
+                        currPlate = deviceListView.itemAt(drag.x, drag.y)
+
+                        if(currPlate)
+                            currPlate.withBorder = true
+                    }
+                }
+
                 onDropped:
                 {
                     //                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)

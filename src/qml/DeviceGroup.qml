@@ -69,8 +69,12 @@ Item
             {
                 anchors.fill: parent
 
+                onEntered: groupNameText.color = "#EB5757"
+                onExited: groupNameText.color = "#ffffff"
+
                 onDropped:
                 {
+                    groupNameText.color = "#ffffff"
                     project.setCurrentGroup(deviceGroup.name)
                     collapseButton.checked = true
 
