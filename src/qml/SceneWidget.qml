@@ -337,6 +337,26 @@ Item
                     draggingIconsList[i].x = draggingIconsX[i] + dx
                     draggingIconsList[i].y = draggingIconsY[i] + dy
                 }
+
+                if((sceneWidget.width - mouseX) < 10)
+                {
+                    backgroundImage.x -= 15 * sceneWidget.scaleFactor
+                }
+
+                else if(mouseX < 10)
+                {
+                    backgroundImage.x += 15 * sceneWidget.scaleFactor
+                }
+
+                if((sceneWidget.height - mouseY) < 10)
+                {
+                    backgroundImage.y -= 15 * sceneWidget.scaleFactor
+                }
+
+                else if(mouseY < 10)
+                {
+                    backgroundImage.y += 15 * sceneWidget.scaleFactor
+                }
             }
         }
 
