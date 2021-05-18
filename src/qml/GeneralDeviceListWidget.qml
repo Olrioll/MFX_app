@@ -9,6 +9,36 @@ Item
     id: generalListWidget
     anchors.fill: parent
 
+    Button
+    {
+        id: changeViewButton
+        width: 20
+        height: 20
+        x: 355
+        y: - 22
+
+        bottomPadding: 0
+        topPadding: 0
+        rightPadding: 0
+        leftPadding: 0
+
+        background: Rectangle {
+                color: "#444444"
+                opacity: 0
+                radius: 2
+            }
+
+        Image
+        {
+            source: "qrc:/changeView"
+        }
+
+        onClicked:
+        {
+            layout.currentIndex  = layout.currentIndex === 0 ? 1 : 0
+        }
+    }
+
     StackLayout
     {
         id: layout
@@ -18,6 +48,8 @@ Item
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: deleteButton.top
+
+
 
         ListView
         {
@@ -241,6 +273,39 @@ Item
             {
                 target: project
                 function onPatchListChanged() {deviceListView.loadGeneralDeviceList()}
+            }
+        }
+
+        ListView
+        {
+            id: sortedDeviceListView
+            clip: true
+            spacing: 10
+            ScrollBar.vertical: ScrollBar {}
+
+            property bool held: false
+
+            function loadGroups()
+            {
+                groupListModel.append({groupName: "Sequences"})
+                groupListModel.append({groupName: "Dimmer"})
+                groupListModel.append({groupName: "Shot"})
+                groupListModel.append({groupName: "Pyro"})
+            }
+
+            delegate: TypeGroup
+            {
+                name: groupName
+            }
+
+            model: ListModel
+            {
+                id: groupListModel
+            }
+
+            Component.onCompleted:
+            {
+                loadGroups();
             }
         }
     }

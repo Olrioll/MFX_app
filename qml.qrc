@@ -43,5 +43,8 @@
         <file alias="imagePlaceholder">src/img/imagePlaceholder.png</file>
         <file>src/qml/SceneWidget.qml</file>
         <file>src/qml/MfxButton.qml</file>
+        <file>src/qml/TypeGroup.qml</file>
+        <file alias="changeView">src/img/changeViewButton.png</file>
+        <file>src/qml/SortedDeviceListWidget.qml</file>
     </qresource>
 </RCC>
