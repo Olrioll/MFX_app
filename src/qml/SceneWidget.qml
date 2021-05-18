@@ -102,6 +102,10 @@ Item
         property bool isDraggingIcon: false
         property bool isSelectingIcons: false
 
+        property var draggingIconsList: []
+        property var draggingIconsX: []
+        property var draggingIconsY: []
+
         Rectangle
         {
             id: selectRect
@@ -150,6 +154,8 @@ Item
             if(mouse.button & Qt.MiddleButton)
             {
                 isDraggingBackgroungImage = true
+                cursorShape = Qt.OpenHandCursor
+
             }
 
             else
@@ -169,6 +175,23 @@ Item
                             drag.minimumY = 0
                             drag.maximumX = backgroundImage.mapToItem(sceneWidget, 0, 0).x + backgroundImage.width - drag.target.width
                             drag.maximumY = backgroundImage.mapToItem(sceneWidget, 0, 0).y + backgroundImage.height - drag.target.height
+
+                            //--- Обрабатываем другие выделенные иконки
+
+                            draggingIconsList = []
+                            draggingIconsX = []
+                            draggingIconsY = []
+
+                            for(i = 0; i < patchIcons.length; i++)
+                            {
+                                if(patchIcons[i] !== drag.target && patchIcons[i].checked)
+                                {
+                                    draggingIconsList.push(patchIcons[i])
+                                    draggingIconsX.push(patchIcons[i].x)
+                                    draggingIconsY.push(patchIcons[i].y)
+                                }
+                            }
+
                             break;
                         }
                     }
@@ -198,6 +221,18 @@ Item
 
                 project.setPatchProperty(drag.target.patchId, "posXRatio", drag.target.posXRatio)
                 project.setPatchProperty(drag.target.patchId, "posYRatio", drag.target.posYRatio)
+
+                for(let idx = 0; idx < draggingIconsList.length; idx++)
+                {
+                    let currRelPosition = draggingIconsList[idx].mapToItem(backgroundImage, 0, 0)
+                    draggingIconsList[idx].posXRatio = currRelPosition.x / backgroundImage.width
+                    draggingIconsList[idx].posYRatio = currRelPosition.y / backgroundImage.height
+
+                    project.setPatchProperty(draggingIconsList[idx].patchId, "posXRatio", draggingIconsList[idx].posXRatio)
+                    project.setPatchProperty(draggingIconsList[idx].patchId, "posYRatio", draggingIconsList[idx].posYRatio)
+                }
+
+                loadPatches();
             }
 
             else if(isSelectingIcons)
@@ -229,6 +264,7 @@ Item
             isDraggingIcon = false
             isSelectingIcons = false
             drag.target = null
+            cursorShape = Qt.ArrowCursor
         }
 
         onPositionChanged:
@@ -292,6 +328,15 @@ Item
                     selectRect.x = pressedX - selectRect.width
                 if(dy < 0)
                     selectRect.y = pressedY - selectRect.height
+            }
+
+            else if(isDraggingIcon)
+            {
+                for(let i = 0; i < draggingIconsList.length; i++)
+                {
+                    draggingIconsList[i].x = draggingIconsX[i] + dx
+                    draggingIconsList[i].y = draggingIconsY[i] + dy
+                }
             }
         }
 
