@@ -268,13 +268,14 @@ Item
 
                 Image
                 {
-                    anchors.centerIn: parent
+                    x: (parent.width - width) / 2
+                    y: 20
                     source: "qrc:/imagePlaceholder"
                 }
 
                 Text {
                     id: buttonText
-                    anchors.topMargin: 62
+                    anchors.topMargin: 56
                     anchors.top: parent.top
                     anchors.horizontalCenter: parent.horizontalCenter
 

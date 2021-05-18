@@ -732,13 +732,13 @@ Item
                     if(currentHandler === "min")
                     {
                         let currMin = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        if(currMin < Number(maxAngField.text))
+                        if(currMin <= Number(maxAngField.text))
                             minAngField.text = currMin
                     }
                     else if(currentHandler === "max")
                     {
                         let currMax = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        if(currMax > Number(minAngField.text))
+                        if(currMax >= Number(minAngField.text))
                             maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
                     }
                 }
@@ -859,7 +859,7 @@ Item
                 if(text === "")
                     return false
 
-                return (Number(text) >= -115 && Number(text) < 116)
+                return ((Number(text) >= -115 && Number(text) < 116) && Number(text) <= Number(maxAngField.text))
             }
 
             maximumLength: 4
@@ -905,7 +905,7 @@ Item
                 if(text === "")
                     return false
 
-                return (Number(text) >= -115 && Number(text) < 116)
+                return ((Number(text) >= -115 && Number(text) < 116) && Number(text) >= Number(minAngField.text))
             }
 
             maximumLength: 4
