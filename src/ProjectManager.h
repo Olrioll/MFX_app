@@ -177,7 +177,7 @@ private:
 
     QVariantMap _properties;
 
-    int m_currentGroupIndex;
+    int m_currentGroupIndex = 0;
 };
 
 #endif // PROJECTMANAGER_H

@@ -7,7 +7,7 @@ Item
     id: deviceGroup
     height: collapseButton.checked ? collapseButton.height + deviceList.contentItem.height + 20 : collapseButton.height
     property string name
-    property bool checked
+    property bool checked: name === project.currentGroup() ? true : false
     property alias deviceList: deviceList
 
     signal groupNameClicked
@@ -198,5 +198,5 @@ Item
             id: deviceList
             groupName: deviceGroup.name
         }
-    }    
+    }
 }

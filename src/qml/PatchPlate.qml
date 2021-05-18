@@ -14,9 +14,24 @@ Item
     property string name: "Patch Plate"
     property bool withBorder: false
     property string type: ""
-    property bool checked: project.patchProperty(patchId, "checked")
+    property bool checked: isNeedToShowChecked();
     property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
     property string imageFile: ""
+    property bool isInGroupList: false
+
+    function isNeedToShowChecked()
+    {
+        if(parentList)
+        {
+            if(parentList.groupName === project.currentGroup())
+                return project.patchProperty(patchId, "checked")
+            else
+                return false
+        }
+
+        else
+            return project.patchProperty(patchId, "checked")
+    }
 
     function refreshCells()
     {
@@ -36,7 +51,7 @@ Item
         }
 
         patchPlate.type = project.patchType(project.patchIndexForId(patchId))
-        patchPlate.checked = project.patchProperty(patchId, "checked")
+//        patchPlate.checked = project.patchProperty(patchId, "checked")
 
         switch (patchPlate.type)
         {
@@ -187,8 +202,8 @@ Item
         target: project
         function onPatchCheckedChanged(checkedId, checked)
         {
-            if(checkedId === patchPlate.patchId)
-                patchPlate.checked = checked
+            if((checkedId === patchPlate.patchId))
+                patchPlate.checked = isNeedToShowChecked()
         }
     }
 }

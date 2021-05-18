@@ -187,6 +187,15 @@ ListView
     }
 
 
+    Connections
+    {
+        target: project
+        function onCurrentGroupIndexChanged()
+        {
+            loadDeviceList()
+        }
+    }
+
     Component.onCompleted:
     {
         loadDeviceList();
