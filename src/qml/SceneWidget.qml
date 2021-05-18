@@ -105,6 +105,7 @@ Item
         property var draggingIconsList: []
         property var draggingIconsX: []
         property var draggingIconsY: []
+        property bool wasDragging: false
 
         Rectangle
         {
@@ -126,7 +127,6 @@ Item
 
         onClicked:
         {
-            let isClickedOnIcon = false
             for(let i = 0; i < patchIcons.length; i++)
             {
                 let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
@@ -136,8 +136,10 @@ Item
                 {
                     if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
                     {
-                        project.setPatchProperty(patchIcons[i].patchId, "checked", !project.patchProperty(patchIcons[i].patchId, "checked"))
-                        isClickedOnIcon = true
+                        if(!wasDragging)
+                            project.setPatchProperty(patchIcons[i].patchId, "checked", !project.patchProperty(patchIcons[i].patchId, "checked"))
+
+                        wasDragging = false
                         break;
                     }
                 }
@@ -170,12 +172,6 @@ Item
                         if(mouseY > currCoord.y -10 && mouseY < currCoord.y + currHeight + 10)
                         {
                             isDraggingIcon = true
-//                            drag.target = patchIcons[i]
-//                            drag.minimumX = 0
-//                            drag.minimumY = 0
-//                            drag.maximumX = backgroundImage.mapToItem(sceneWidget, 0, 0).x + backgroundImage.width - drag.target.width
-//                            drag.maximumY = backgroundImage.mapToItem(sceneWidget, 0, 0).y + backgroundImage.height - drag.target.height
-
 
                             draggingIconsList = []
                             draggingIconsX = []
@@ -219,13 +215,6 @@ Item
         {
             if(isDraggingIcon)
             {
-//                let currRelPosition = drag.target.mapToItem(backgroundImage, 0, 0)
-//                drag.target.posXRatio = currRelPosition.x / backgroundImage.width
-//                drag.target.posYRatio = currRelPosition.y / backgroundImage.height
-
-//                project.setPatchProperty(drag.target.patchId, "posXRatio", drag.target.posXRatio)
-//                project.setPatchProperty(drag.target.patchId, "posYRatio", drag.target.posYRatio)
-
                 for(let idx = 0; idx < draggingIconsList.length; idx++)
                 {
                     let currRelPosition = draggingIconsList[idx].mapToItem(backgroundImage, 0, 0)
@@ -336,6 +325,8 @@ Item
 
             else if(isDraggingIcon)
             {
+                wasDragging = true
+
                 for(var i = 0; i < draggingIconsList.length; i++)
                 {
                     draggingIconsList[i].x = draggingIconsX[i] + dx
