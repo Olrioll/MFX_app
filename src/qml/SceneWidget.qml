@@ -170,18 +170,22 @@ Item
                         if(mouseY > currCoord.y -10 && mouseY < currCoord.y + currHeight + 10)
                         {
                             isDraggingIcon = true
-                            drag.target = patchIcons[i]
-                            drag.minimumX = 0
-                            drag.minimumY = 0
-                            drag.maximumX = backgroundImage.mapToItem(sceneWidget, 0, 0).x + backgroundImage.width - drag.target.width
-                            drag.maximumY = backgroundImage.mapToItem(sceneWidget, 0, 0).y + backgroundImage.height - drag.target.height
+//                            drag.target = patchIcons[i]
+//                            drag.minimumX = 0
+//                            drag.minimumY = 0
+//                            drag.maximumX = backgroundImage.mapToItem(sceneWidget, 0, 0).x + backgroundImage.width - drag.target.width
+//                            drag.maximumY = backgroundImage.mapToItem(sceneWidget, 0, 0).y + backgroundImage.height - drag.target.height
 
-                            //--- Обрабатываем другие выделенные иконки
 
                             draggingIconsList = []
                             draggingIconsX = []
                             draggingIconsY = []
 
+                            draggingIconsList.push(patchIcons[i])
+                            draggingIconsX.push(patchIcons[i].x)
+                            draggingIconsY.push(patchIcons[i].y)
+
+                            //--- Обрабатываем другие выделенные иконки
                             for(i = 0; i < patchIcons.length; i++)
                             {
                                 if(patchIcons[i] !== drag.target && patchIcons[i].checked)
@@ -215,12 +219,12 @@ Item
         {
             if(isDraggingIcon)
             {
-                let currRelPosition = drag.target.mapToItem(backgroundImage, 0, 0)
-                drag.target.posXRatio = currRelPosition.x / backgroundImage.width
-                drag.target.posYRatio = currRelPosition.y / backgroundImage.height
+//                let currRelPosition = drag.target.mapToItem(backgroundImage, 0, 0)
+//                drag.target.posXRatio = currRelPosition.x / backgroundImage.width
+//                drag.target.posYRatio = currRelPosition.y / backgroundImage.height
 
-                project.setPatchProperty(drag.target.patchId, "posXRatio", drag.target.posXRatio)
-                project.setPatchProperty(drag.target.patchId, "posYRatio", drag.target.posYRatio)
+//                project.setPatchProperty(drag.target.patchId, "posXRatio", drag.target.posXRatio)
+//                project.setPatchProperty(drag.target.patchId, "posYRatio", drag.target.posYRatio)
 
                 for(let idx = 0; idx < draggingIconsList.length; idx++)
                 {
@@ -332,7 +336,7 @@ Item
 
             else if(isDraggingIcon)
             {
-                for(let i = 0; i < draggingIconsList.length; i++)
+                for(var i = 0; i < draggingIconsList.length; i++)
                 {
                     draggingIconsList[i].x = draggingIconsX[i] + dx
                     draggingIconsList[i].y = draggingIconsY[i] + dy
@@ -340,22 +344,54 @@ Item
 
                 if((sceneWidget.width - mouseX) < 10)
                 {
-                    backgroundImage.x -= 15 * sceneWidget.scaleFactor
+                    if(!((backgroundImage.x + backgroundImage.width) <= sceneWidget.width))
+                    {
+                        backgroundImage.x -= 15 * sceneWidget.scaleFactor
+                        for(let i = 0; i < draggingIconsList.length; i++)
+                        {
+                            draggingIconsX[i] += 15 * sceneWidget.scaleFactor
+                            draggingIconsList[i].x = draggingIconsX[i] + dx
+                        }
+                    }
                 }
 
                 else if(mouseX < 10)
                 {
-                    backgroundImage.x += 15 * sceneWidget.scaleFactor
+                    if(!(backgroundImage.x > 0))
+                    {
+                        backgroundImage.x += 15 * sceneWidget.scaleFactor
+                        for(let i = 0; i < draggingIconsList.length; i++)
+                        {
+                            draggingIconsX[i] -= 15 * sceneWidget.scaleFactor
+                            draggingIconsList[i].x = draggingIconsX[i] + dx
+                        }
+                    }
                 }
 
                 if((sceneWidget.height - mouseY) < 10)
                 {
-                    backgroundImage.y -= 15 * sceneWidget.scaleFactor
+                    if(!((backgroundImage.y + backgroundImage.height) <= sceneWidget.height))
+                    {
+                        backgroundImage.y -= 15 * sceneWidget.scaleFactor
+                        for(let i = 0; i < draggingIconsList.length; i++)
+                        {
+                            draggingIconsY[i] += 15 * sceneWidget.scaleFactor
+                            draggingIconsList[i].y = draggingIconsX[i] + dy
+                        }
+                    }
                 }
 
                 else if(mouseY < 10)
                 {
-                    backgroundImage.y += 15 * sceneWidget.scaleFactor
+                    if(!(backgroundImage.y > 0))
+                    {
+                        backgroundImage.y += 15 * sceneWidget.scaleFactor
+                        for(let i = 0; i < draggingIconsList.length; i++)
+                        {
+                            draggingIconsY[i] -= 15 * sceneWidget.scaleFactor
+                            draggingIconsList[i].y = draggingIconsX[i] + dy
+                        }
+                    }
                 }
             }
         }
