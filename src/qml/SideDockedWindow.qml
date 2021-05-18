@@ -13,12 +13,13 @@ Item
     property int expandedWidth: 120
     property int minWidth: expandedWidth
     property string caption: "Caption"
+    property var contentItem: null
 
     property int previousX
 
     function addContentItem(itemFilename, properties)
     {
-        var contentItem = Qt.createComponent(itemFilename).createObject(workArea, properties)
+        contentItem = Qt.createComponent(itemFilename).createObject(workArea, properties)
     }
 
     function setActive(state)

@@ -14,7 +14,8 @@ Item
         id: changeViewButton
         width: 20
         height: 20
-        x: 355
+        anchors.rightMargin: 22
+        anchors.right: parent.right
         y: - 22
 
         bottomPadding: 0
@@ -36,6 +37,7 @@ Item
         onClicked:
         {
             layout.currentIndex  = layout.currentIndex === 0 ? 1 : 0
+            deviceList.width = layout.currentIndex ? 420 : 400
         }
     }
 
