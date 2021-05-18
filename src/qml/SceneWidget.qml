@@ -38,6 +38,7 @@ Item
             patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(backgroundImage,
                                                                              {  imageFile: imageFile,
                                                                                  patchId: project.patchPropertyForIndex(i, "ID"),
+                                                                                 checked: project.patchPropertyForIndex(i, "checked"),
                                                                                  posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
                                                                                  posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
         }

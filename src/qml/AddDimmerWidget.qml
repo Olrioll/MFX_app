@@ -652,62 +652,6 @@ Item
                 addDimmerWidget.destroy();
             }
         }
-
-//        Button
-//        {
-//            id: setButton
-//            x: 7
-//            y: 327
-//            width: 124
-//            height: 24
-//            text: qsTr("Set")
-//            enabled:
-//            {
-//                dmxField.checkValue() &&
-//                        rfPosField.checkValue() &&
-//                        rfChField.checkValue() &&
-//                        channelField.checkValue()
-//            }
-
-//            background: Rectangle
-//            {
-//                color:
-//                {
-//                    if(parent.enabled)
-//                        parent.pressed ? "#888888" : "#2F80ED"
-//                    else
-//                        "#222222"
-//                }
-//                radius: 2
-//            }
-
-//            contentItem: Text
-//            {
-//                color: parent.enabled ? "#ffffff" : "#777777"
-//                text: parent.text
-//                horizontalAlignment: Text.AlignHCenter
-//                verticalAlignment: Text.AlignVCenter
-//                elide: Text.ElideRight
-//                font.family: "Roboto"
-//                font.pixelSize: 12
-//            }
-
-//            onClicked:
-//            {
-//                if(addDimmerWidget.isEditMode)
-//                {
-//                    addDimmerWidget.edit()
-//                }
-
-//                else
-//                {
-//                    addDimmerWidget.add()
-//                }
-
-//                applicationWindow.isPatchEditorOpened = false
-//                addDimmerWidget.destroy();
-//            }
-//        }
     }
 
     states: [

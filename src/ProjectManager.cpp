@@ -228,9 +228,31 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     {
         patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last()});
     }
-
     _patches.push_back(patch);
 
+    for(int i = 0; i < 20; i++)
+    {
+        bool hasUnplacedPatch = false;
+        for(auto & currPatch : _patches)
+        {
+            if(currPatch.property("posXRatio").toDouble() == (0.05 + 0.01 * i) &&
+                    currPatch.property("posYRatio").toDouble() == (0.05 + 0.01 * i))
+            {
+                hasUnplacedPatch = true;
+            }
+        }
+
+        if(!hasUnplacedPatch)
+        {
+             _patches.last().setProperty("posXRatio", (0.05 + 0.01 * i));
+            _patches.last().setProperty("posYRatio", (0.05 + 0.01 * i));
+            emit patchListChanged();
+            return;
+        }
+    }
+
+    _patches.last().setProperty("posXRatio", 0.05);
+    _patches.last().setProperty("posXRatio", 0.05);
     emit patchListChanged();
 }
 
