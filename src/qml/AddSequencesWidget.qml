@@ -730,9 +730,17 @@ Item
                 if(containsPress)
                 {
                     if(currentHandler === "min")
-                        minAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                    {
+                        let currMin = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                        if(currMin < Number(maxAngField.text))
+                            minAngField.text = currMin
+                    }
                     else if(currentHandler === "max")
-                        maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                    {
+                        let currMax = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                        if(currMax > Number(minAngField.text))
+                            maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                    }
                 }
             }
         }
