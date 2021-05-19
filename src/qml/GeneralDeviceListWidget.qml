@@ -9,6 +9,20 @@ Item
     id: generalListWidget
     anchors.fill: parent
 
+    function deleteSelected()
+    {
+        var removedIndexes = []
+        for(let i = 0; i < deviceListView.count; i++)
+        {
+            if(deviceListView.itemAtIndex(i).checked)
+            {
+                removedIndexes.push(i)
+            }
+        }
+
+        project.removePatches(removedIndexes)
+    }
+
     Button
     {
         id: changeViewButton
@@ -468,16 +482,15 @@ Item
 
         onClicked:
         {
-            var removedIndexes = []
-            for(let i = 0; i < deviceListView.count; i++)
-            {
-                if(deviceListView.itemAtIndex(i).checked)
-                {
-                    removedIndexes.push(i)
-                }
-            }
-
-            project.removePatches(removedIndexes)
+            var confirmDeleteDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+            confirmDeleteDialog.x = applicationWindow.width / 2 - confirmDeleteDialog.width / 2
+            confirmDeleteDialog.y = applicationWindow.height / 2 - confirmDeleteDialog.height / 2
+            confirmDeleteDialog.accepted.connect(generalListWidget.deleteSelected)
+            confirmDeleteDialog.caption = qsTr("Action confirmation")
+            confirmDeleteDialog.dialogText = qsTr("Are you shure you want\nto delete selected patches?")
+            confirmDeleteDialog.acceptButtonText = qsTr("Delete")
+            confirmDeleteDialog.cancelButtonText = qsTr("Cancel")
+            confirmDeleteDialog.acceptButtonColor = "#EB5757"
         }
     }
 }

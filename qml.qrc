@@ -46,5 +46,6 @@
         <file>src/qml/TypeGroup.qml</file>
         <file alias="changeView">src/img/changeViewButton.png</file>
         <file>src/qml/SortedDeviceListWidget.qml</file>
+        <file>src/qml/ConfirmationDialog.qml</file>
     </qresource>
 </RCC>
