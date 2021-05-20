@@ -12,6 +12,8 @@ Item
     property alias backgroundImage: backgroundImage
     property var patchIcons: []
     property real scaleFactor: project.property("sceneScaleFactor")
+    property real maxScaleFactor: 3.0
+    property real minScaleFactor: 0.2
 
     function loadPatches()
     {
@@ -44,11 +46,14 @@ Item
         }
     }
 
-
     function zoom(step)
     {
-        sceneWidget.scaleFactor += sceneWidget.scaleFactor * step
-        project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+        let newScaleFactror = sceneWidget.scaleFactor + sceneWidget.scaleFactor * step
+        if(newScaleFactror <= maxScaleFactor && newScaleFactror >= minScaleFactor)
+        {
+            sceneWidget.scaleFactor = newScaleFactror
+            project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+        }
     }
 
     function showPatchIcons(groupName, state)
@@ -58,19 +63,22 @@ Item
             if(project.isGroupContainsPatch(groupName, patchIcons[i].patchId))
             {
                 patchIcons[i].visible = state
-//                console.log("Patch " + patchIcons[i].patchId + "for group " + groupName + " set visible: " + patchIcons[i].visible);
             }
         }
     }
 
-    function refreshPatchIconsVisibility(changedGroupName, state)
+    function refreshPatchIconsVisibility()
     {
-        showPatchIcons(changedGroupName, state)
-        for(let i = 0; i < switchGroupsButtons.count; i ++)
+        for(var i = 0; i < patchIcons.length; i++)
+        {
+            patchIcons[i].visible = false
+        }
+
+        for(i = 0; i < switchGroupsButtons.count; i ++)
         {
             let currButton = switchGroupsButtons.itemAtIndex(i)
-            if(currButton && currButton.text !== changedGroupName)
-                showPatchIcons(currButton.text, currButton.checked)
+            if(currButton && currButton.checked)
+                showPatchIcons(currButton.text, true)
         }
     }
 
@@ -397,29 +405,35 @@ Item
             var currWidthChange = newWidth - prevWidth
             var currHeightChange = newHeight - prevHeight
 
-            sceneWidget.scaleFactor += sceneWidget.scaleFactor * step
-            project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
-
-            if(backgroundImage.width <= sceneWidget.width)
+            let newScaleFactror = sceneWidget.scaleFactor + sceneWidget.scaleFactor * step
+            if(newScaleFactror <= maxScaleFactor && newScaleFactror >= minScaleFactor)
             {
-                backgroundImage.x = 0
-            }
+                sceneWidget.scaleFactor = newScaleFactror
+                project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
 
-            else
-            {
-                let dx = (mouseX - backgroundImage.x) / prevWidth * currWidthChange
-                backgroundImage.x -= dx
-            }
+                if(backgroundImage.width <= sceneWidget.width)
+                {
+//                    backgroundImage.x = 0
+                    backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
+                }
 
-            if(backgroundImage.height <= sceneWidget.height)
-            {
-                backgroundImage.y = 0
-            }
+                else
+                {
+                    let dx = (mouseX - backgroundImage.x) / prevWidth * currWidthChange
+                    backgroundImage.x -= dx
+                }
 
-            else
-            {
-                let dy = (mouseY - backgroundImage.y) / prevHeight * currHeightChange
-                backgroundImage.y -= dy
+                if(backgroundImage.height <= sceneWidget.height)
+                {
+//                    backgroundImage.y = 0
+                    backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
+                }
+
+                else
+                {
+                    let dy = (mouseY - backgroundImage.y) / prevHeight * currHeightChange
+                    backgroundImage.y -= dy
+                }
             }
         }
     }
@@ -924,8 +938,8 @@ Item
     {
         id: showAllButton
         width: 48
-        checkable: true
-        checked: true
+//        checkable: true
+//        checked: true
         text: qsTr("All")
         anchors.leftMargin: 12
         anchors.bottomMargin: 18
@@ -935,11 +949,11 @@ Item
             bottom: sceneWidget.bottom
         }
 
-        onCheckedChanged:
+        onClicked:
         {
             for(let i = 0; i < switchGroupsButtons.count; i++)
             {
-                switchGroupsButtons.itemAtIndex(i).checked = checked
+                switchGroupsButtons.itemAtIndex(i).checked = true
             }
         }
     }
@@ -982,7 +996,7 @@ Item
             let groupNames = project.groupNames()
             for (let i = 0; i < groupNames.length; i++)
             {
-                buttonListModel.append({delegateChecked: showAllButton.checked, delegateWidth: 70, delegateText: groupNames[i]})
+                buttonListModel.append({delegateChecked: true, delegateWidth: 70, delegateText: groupNames[i]})
             }
         }
 
@@ -995,7 +1009,7 @@ Item
 
             onCheckedChanged:
             {
-                sceneWidget.refreshPatchIconsVisibility(text, checked)
+                sceneWidget.refreshPatchIconsVisibility()
             }
         }
 

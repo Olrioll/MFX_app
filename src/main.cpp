@@ -11,6 +11,8 @@
 int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
+    app.setOrganizationName("MFX");
+    app.setOrganizationDomain("mfx.com");
 
     SettingsManager settings;
     ProjectManager project;
