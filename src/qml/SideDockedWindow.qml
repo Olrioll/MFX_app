@@ -7,20 +7,16 @@ import "qrc:/"
 Item
 {
     id: sideDockedWindow
-    width: collapsedRect.width
+    width: isExpanded ? expandedWidth : collapsedWidth
 
+    property bool isExpanded: false
     property int collapsedWidth: 28
-    property int expandedWidth: 120
+    property int expandedWidth: contentItem.width
     property int minWidth: expandedWidth
     property string caption: "Caption"
     property var contentItem: null
 
     property int previousX
-
-    function addContentItem(itemFilename, properties)
-    {
-        contentItem = Qt.createComponent(itemFilename).createObject(workArea, properties)
-    }
 
     function setActive(state)
     {
@@ -76,6 +72,7 @@ Item
 
                 onClicked:
                 {
+                    sideDockedWindow.isExpanded = true
                     sideDockedWindow.width = sideDockedWindow.expandedWidth
                     layout.currentIndex = 1
                 }
@@ -140,6 +137,7 @@ Item
 
                 onClicked:
                 {
+                    sideDockedWindow.isExpanded = false
                     sideDockedWindow.width = sideDockedWindow.collapsedWidth
                     layout.currentIndex = 0
                 }
@@ -168,38 +166,61 @@ Item
                 anchors.rightMargin: 2
                 anchors.fill: parent
 
+                clip: true
                 color: "#000000"
             }
         }
     }
 
-    MouseArea
+//    MouseArea
+//    {
+//        id: resizeArea
+//        width: 4
+//        visible: layout.currentIndex
+
+//        anchors
+//        {
+//            top: sideDockedWindow.top
+//            bottom: sideDockedWindow.bottom
+//            left: sideDockedWindow.left
+//        }
+//        cursorShape: Qt.SizeHorCursor
+
+//        onPressed:
+//        {
+//            sideDockedWindow.previousX = mouseX
+//        }
+
+//        onMouseXChanged:
+//        {
+//            var dx = mouseX - sideDockedWindow.previousX
+
+//            if((sideDockedWindow.width - dx) < minWidth)
+//                sideDockedWindow.width = minWidth
+//            else
+//                sideDockedWindow.width = sideDockedWindow.width - dx
+//        }
+//    }
+
+    Component.onCompleted:
     {
-        id: resizeArea
-        width: 4
-        visible: layout.currentIndex
-
-        anchors
+        if(contentItem)
         {
-            top: sideDockedWindow.top
-            bottom: sideDockedWindow.bottom
-            left: sideDockedWindow.left
+            contentItem.parent = workArea
+            contentItem.anchors.margins = 2
+            contentItem.anchors.left = workArea.left
+            contentItem.anchors.top = workArea.top
+            contentItem.anchors.bottom = workArea.bottom
         }
-        cursorShape: Qt.SizeHorCursor
+    }
 
-        onPressed:
+    Connections
+    {
+        target: contentItem
+        function onWidthChanged()
         {
-            sideDockedWindow.previousX = mouseX
-        }
-
-        onMouseXChanged:
-        {
-            var dx = mouseX - sideDockedWindow.previousX
-
-            if((sideDockedWindow.width - dx) < minWidth)
-                sideDockedWindow.width = minWidth
-            else
-                sideDockedWindow.width = sideDockedWindow.width - dx
+            expandedWidth = contentItem.width
+            width = isExpanded ? expandedWidth : collapsedWidth
         }
     }
 }

@@ -6,11 +6,14 @@ Item
 {
     id: deviceGroup
     height: collapseButton.checked ? collapseButton.height + deviceList.contentItem.height + 20 : collapseButton.height
+
     property string name
     property bool checked: name === project.currentGroup() ? true : false
     property alias deviceList: deviceList
+    property bool isExpanded: collapseButton.checked
 
     signal groupNameClicked
+    signal viewChanged
 
     Button
     {
@@ -40,6 +43,12 @@ Item
         }
 
         onClicked: project.setCurrentGroup(deviceGroup.name)
+
+        onCheckedChanged:
+        {
+            isExpanded = checked
+            viewChanged()
+        }
     }
 
     Rectangle

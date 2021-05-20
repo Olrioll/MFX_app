@@ -18,9 +18,9 @@ Item
         caption: qsTr("Library")
         expandedWidth: 140
 
-        Component.onCompleted:
+        contentItem: DeviceLibWidget
         {
-            addContentItem("DeviceLibWidget.qml", {})
+
         }
     }
 
@@ -33,11 +33,47 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: qsTr("Devices list")
-        expandedWidth: 400
 
-        Component.onCompleted:
+        contentItem: GeneralDeviceListWidget
         {
-            addContentItem("GeneralDeviceListWidget.qml", {})
+            id: devListWidget
+        }
+
+        Button
+        {
+            id: changeViewButton
+            width: 20
+            height: 20
+            anchors.rightMargin: 22
+            anchors.right: parent.right
+            anchors.topMargin: 6
+            anchors.top: parent.top
+            visible: parent.isExpanded
+
+            bottomPadding: 0
+            topPadding: 0
+            rightPadding: 0
+            leftPadding: 0
+
+            background: Rectangle {
+                    color: "#444444"
+                    opacity: 0
+                    radius: 2
+                }
+
+            Image
+            {
+                source: "qrc:/changeView"
+            }
+        }
+
+        Connections
+        {
+            target: changeViewButton
+            function onClicked()
+            {
+                devListWidget.changeView()
+            }
         }
     }
 
@@ -50,11 +86,10 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: qsTr("Device groups")
-        expandedWidth: 430
 
-        Component.onCompleted:
+        contentItem: DeviceGroupWidget
         {
-            addContentItem("DeviceGroupWidget.qml", {})
+
         }
     }
 

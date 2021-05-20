@@ -6,23 +6,57 @@ import "qrc:/"
 
 Item
 {
-    anchors.margins: 2
-    anchors.fill: parent
+//    anchors.margins: 2
+//    anchors.fill: parent
+    width: groupListView.width
+
     ListView
     {
         id: groupListView
+        width: widthNeeded()
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.right: parent.right
+//        anchors.right: parent.right
         anchors.bottomMargin: 10
         anchors.bottom: addGroupButton.top
         clip: true
         spacing: 10
-        ScrollBar.vertical: ScrollBar {}
+
+        ScrollBar.vertical: ScrollBar
+        {
+            anchors
+            {
+                right: groupListView.right
+                top: groupListView.top
+                bottom: groupListView.bottom
+                rightMargin: 6
+            }
+        }
+
+        function widthNeeded()
+        {
+
+            for(let i = 0; i < groupListView.count; i++)
+            {
+                if(groupListView.itemAtIndex(i).isExpanded)
+                    return 420
+            }
+
+            return 200
+        }
 
         delegate: DeviceGroup
         {
+            id: deviceGroup
             name: groupName
+            Connections
+            {
+                target: deviceGroup
+                function onViewChanged()
+                {
+                    groupListView.width = groupListView.widthNeeded()
+                }
+            }
         }
 
         function addGroup(name)
@@ -56,9 +90,8 @@ Item
         id: addGroupButton
         text: qsTr("Add Group")
         height: 24
-        width: (parent.width - anchors.margins * 4) / 3
+        width: (parent.width) / 3 - 4
 
-        anchors.margins: 2
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
@@ -105,9 +138,9 @@ Item
         id: editButton
         text: qsTr("Edit")
         height: 24
-        width: (parent.width - anchors.margins * 4) / 3
+        width: addGroupButton.width
 
-        anchors.margins: 2
+        anchors.leftMargin: 2
         anchors.left: addGroupButton.right
         anchors.bottom: parent.bottom
 
@@ -151,9 +184,9 @@ Item
         id: deleteButton
         text: qsTr("Delete selected")
         height: 24
-        width: (parent.width - anchors.margins * 4) / 3
+        width: editButton.width
 
-        anchors.margins: 2
+        anchors.leftMargin: 2
         anchors.left: editButton.right
         anchors.bottom: parent.bottom
 

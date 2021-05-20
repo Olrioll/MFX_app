@@ -7,8 +7,8 @@ import "qrc:/"
 ListView
 {
     id: deviceLibView
-    anchors.margins: 2
-    anchors.fill: parent
+    width: 132
+
     clip: true
     spacing: 2
     ScrollBar.vertical: ScrollBar {}

@@ -1042,5 +1042,15 @@ Item
     Component.onCompleted:
     {
         loadPatches()
+
+        if(backgroundImage.width <= sceneWidget.width)
+        {
+            backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
+        }
+
+        if(backgroundImage.height <= sceneWidget.height)
+        {
+            backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
+        }
     }
 }

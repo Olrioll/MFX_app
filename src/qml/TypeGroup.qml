@@ -8,6 +8,9 @@ Item
     height: collapseButton.checked ? collapseButton.height + deviceList.contentItem.height + 20 : collapseButton.height
     property string name
     property alias deviceList: deviceList
+    property bool isExpanded: collapseButton.checked
+
+    signal viewChanged
 
     Button
     {
@@ -34,6 +37,12 @@ Item
             elide: Text.ElideRight
             font.family: "Roboto"
             font.pixelSize: 14
+        }
+
+        onCheckedChanged:
+        {
+            isExpanded = checked
+            viewChanged()
         }
     }
 

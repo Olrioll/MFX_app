@@ -7,7 +7,7 @@ import "qrc:/"
 Item
 {
     id: generalListWidget
-    anchors.fill: parent
+    width: layout.width
 
     function deleteSelected()
     {
@@ -23,56 +23,56 @@ Item
         project.removePatches(removedIndexes)
     }
 
-    Button
+    function changeView()
     {
-        id: changeViewButton
-        width: 20
-        height: 20
-        anchors.rightMargin: 22
-        anchors.right: parent.right
-        y: - 22
-
-        bottomPadding: 0
-        topPadding: 0
-        rightPadding: 0
-        leftPadding: 0
-
-        background: Rectangle {
-                color: "#444444"
-                opacity: 0
-                radius: 2
-            }
-
-        Image
-        {
-            source: "qrc:/changeView"
-        }
-
-        onClicked:
-        {
-            layout.currentIndex  = layout.currentIndex === 0 ? 1 : 0
-            deviceList.width = layout.currentIndex ? 420 : 400
-        }
+        layout.currentIndex  = layout.currentIndex === 0 ? 1 : 0
+        layout.width = layout.widthNeeded()
     }
 
     StackLayout
     {
         id: layout
 
-        anchors.margins: 2
+        width: widthNeeded()
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.bottomMargin: 10
         anchors.bottom: deleteButton.top
 
+        function widthNeeded()
+        {
+            if(currentIndex === 0)
+            {
+                return 400
+            }
 
+            else if (currentIndex === 1)
+            {
+                for(let i = 0; i < sortedDeviceListView.count; i++)
+                {
+                    if(sortedDeviceListView.itemAtIndex(i).isExpanded)
+                        return 420
+                }
+
+                return 170
+            }
+        }
 
         ListView
         {
             id: deviceListView
             clip: true
             spacing: 2
-            ScrollBar.vertical: ScrollBar {}
+            ScrollBar.vertical: ScrollBar
+            {
+                anchors
+                {
+                    right: deviceListView.right
+                    top: deviceListView.top
+                    bottom: deviceListView.bottom
+                    rightMargin: 6
+                }
+            }
 
             property bool held: false
 
@@ -359,7 +359,16 @@ Item
             id: sortedDeviceListView
             clip: true
             spacing: 10
-            ScrollBar.vertical: ScrollBar {}
+            ScrollBar.vertical: ScrollBar
+            {
+                anchors
+                {
+                    right: sortedDeviceListView.right
+                    top: sortedDeviceListView.top
+                    bottom: sortedDeviceListView.bottom
+                    rightMargin: 6
+                }
+            }
 
             property bool held: false
 
@@ -373,7 +382,16 @@ Item
 
             delegate: TypeGroup
             {
+                id: typeGroup
                 name: groupName
+                Connections
+                {
+                    target: typeGroup
+                    function onViewChanged()
+                    {
+                        layout.width = layout.widthNeeded()
+                    }
+                }
             }
 
             model: ListModel
@@ -442,10 +460,8 @@ Item
         id: editButton
         text: qsTr("Edit")
         height: 24
-        width: (parent.width - anchors.margins * 3) / 2
+        width: (parent.width - 10) / 2
 
-        anchors.margins: 2
-        anchors.bottomMargin: 4
         anchors.left: parent.left
         anchors.bottom: parent.bottom
 
@@ -482,13 +498,11 @@ Item
         id: deleteButton
         text: qsTr("Delete selected")
         height: 24
-        width: (parent.width - anchors.margins * 3) / 2
+        width: editButton.width
 
-        anchors.margins: 2
-        anchors.bottomMargin: 4
+        anchors.leftMargin: 2
         anchors.left: editButton.right
         anchors.bottom: parent.bottom
-
 
         bottomPadding: 2
         topPadding: 2
