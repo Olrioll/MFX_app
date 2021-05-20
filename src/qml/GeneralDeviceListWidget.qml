@@ -165,11 +165,11 @@ Item
             PatchPlate
             {
                 id: draggedPlate
-                visible: deviceListView.held
+                visible: mouseArea.wasDragging
                 opacity: 0.8
                 withBorder: true
 
-                Drag.active: deviceListView.held
+                Drag.active: mouseArea.wasDragging
                 Drag.source: this
                 //            Drag.hotSpot.x: this.width / 2
                 //            Drag.hotSpot.y: this.height / 2
@@ -192,12 +192,33 @@ Item
                 anchors.fill: parent
                 propagateComposedEvents: true
 
+                property var pressedItem: null
+                property int pressedX
+                property int pressedY
+                property bool wasDragging: false
+
                 drag.target: deviceListView.held ? draggedPlate : undefined
                 drag.axis: Drag.XAndYAxis
 
-                onPressAndHold:
+                onClicked:
                 {
-                    var pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                    pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                    if(pressedItem)
+                    {
+                        if(!wasDragging)
+                            project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
+
+                        wasDragging = false
+                    }
+                }
+
+
+                onPressed:
+                {
+                    pressedX = mouseX
+                    pressedY = mouseY
+
+                    pressedItem = deviceListView.itemAt(mouseX, mouseY)
                     if(pressedItem)
                     {
                         draggedPlate.checkedIDs = []
@@ -224,12 +245,22 @@ Item
                     }
                 }
 
+                onPositionChanged:
+                {
+                    wasDragging = true
+                    let dx = mouseX - pressedX
+                    let dy = mouseY - pressedY
+                }
+
                 onReleased:
                 {
                     if(drag.target)
                     {
                         drag.target.Drag.drop()
                         deviceListView.held = false
+                        wasDragging = false
+                        pressedItem.withBorder = false
+                        pressedItem = null
                     }
                 }
             }
