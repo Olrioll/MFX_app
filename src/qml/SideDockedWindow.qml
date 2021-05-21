@@ -172,35 +172,35 @@ Item
         }
     }
 
-//    MouseArea
-//    {
-//        id: resizeArea
-//        width: 4
-//        visible: layout.currentIndex
+    MouseArea
+    {
+        id: resizeArea
+        width: 4
+        visible: layout.currentIndex
 
-//        anchors
-//        {
-//            top: sideDockedWindow.top
-//            bottom: sideDockedWindow.bottom
-//            left: sideDockedWindow.left
-//        }
-//        cursorShape: Qt.SizeHorCursor
+        anchors
+        {
+            top: sideDockedWindow.top
+            bottom: sideDockedWindow.bottom
+            left: sideDockedWindow.left
+        }
+        cursorShape: Qt.SizeHorCursor
 
-//        onPressed:
-//        {
-//            sideDockedWindow.previousX = mouseX
-//        }
+        onPressed:
+        {
+            sideDockedWindow.previousX = mouseX
+        }
 
-//        onMouseXChanged:
-//        {
-//            var dx = mouseX - sideDockedWindow.previousX
+        onMouseXChanged:
+        {
+            var dx = mouseX - sideDockedWindow.previousX
 
-//            if((sideDockedWindow.width - dx) < minWidth)
-//                sideDockedWindow.width = minWidth
-//            else
-//                sideDockedWindow.width = sideDockedWindow.width - dx
-//        }
-//    }
+            if((sideDockedWindow.width - dx) < minWidth)
+                sideDockedWindow.width = minWidth
+            else
+                sideDockedWindow.width = sideDockedWindow.width - dx
+        }
+    }
 
     Component.onCompleted:
     {

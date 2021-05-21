@@ -7,7 +7,7 @@ import "qrc:/"
 Item
 {
     id: generalListWidget
-    width: layout.width
+    width: layout.width + 10
 
     function deleteSelected()
     {
@@ -61,7 +61,7 @@ Item
         ListView
         {
             id: deviceListView
-            clip: true
+//            clip: true
             spacing: 2
             ScrollBar.vertical: ScrollBar
             {
@@ -70,7 +70,7 @@ Item
                     right: deviceListView.right
                     top: deviceListView.top
                     bottom: deviceListView.bottom
-                    rightMargin: 6
+                    rightMargin: -3
                 }
             }
 
@@ -357,7 +357,7 @@ Item
         ListView
         {
             id: sortedDeviceListView
-            clip: true
+//            clip: true
             spacing: 10
             ScrollBar.vertical: ScrollBar
             {
@@ -366,7 +366,7 @@ Item
                     right: sortedDeviceListView.right
                     top: sortedDeviceListView.top
                     bottom: sortedDeviceListView.bottom
-                    rightMargin: 6
+                    rightMargin: -3
                 }
             }
 
@@ -454,6 +454,17 @@ Item
 //            }
 //        }
 //    }
+
+    Rectangle
+    {
+        id: buttonsBackground
+        height: 34
+        width: parent.width
+        anchors.left: parent.left
+        anchors.bottomMargin: -2
+        anchors.bottom: parent.bottom
+        color: "#000000"
+    }
 
     Button
     {

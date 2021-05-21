@@ -8,7 +8,7 @@ Item
 {
 //    anchors.margins: 2
 //    anchors.fill: parent
-    width: groupListView.width
+    width: groupListView.width + 10
 
     ListView
     {
@@ -16,10 +16,9 @@ Item
         width: widthNeeded()
         anchors.top: parent.top
         anchors.left: parent.left
-//        anchors.right: parent.right
         anchors.bottomMargin: 10
         anchors.bottom: addGroupButton.top
-        clip: true
+//        clip: true
         spacing: 10
 
         ScrollBar.vertical: ScrollBar
@@ -29,7 +28,7 @@ Item
                 right: groupListView.right
                 top: groupListView.top
                 bottom: groupListView.bottom
-                rightMargin: 6
+                rightMargin: -3
             }
         }
 
@@ -83,6 +82,17 @@ Item
         {
             loadGroups();
         }
+    }
+
+    Rectangle
+    {
+        id: buttonsBackground
+        height: 34
+        width: parent.width
+        anchors.left: parent.left
+        anchors.bottomMargin: -2
+        anchors.bottom: parent.bottom
+        color: "#000000"
     }
 
     Button
