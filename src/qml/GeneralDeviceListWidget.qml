@@ -265,6 +265,15 @@ Item
                 }
             }
 
+            Rectangle
+            {
+                id: dropMarker
+                width: parent.width - 8
+                height: 2
+                color: "lightblue"
+                visible: false
+            }
+
             DropArea
             {
                 id: deviceListWidgetDropArea
@@ -277,42 +286,35 @@ Item
                     if(deviceListView.itemAt(drag.x, drag.y))
                     {
                         currPlate = deviceListView.itemAt(drag.x, drag.y)
-                        currPlate.withBorder = true
+                        dropMarker.width = currPlate.width
+                        dropMarker.visible = true
                     }
                 }
 
                 onExited:
                 {
-                    if(currPlate)
-                        currPlate.withBorder = false
+                    dropMarker.visible = false
                 }
 
                 onPositionChanged:
                 {
                     if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
                     {
-                        if(currPlate)
-                            currPlate.withBorder = false
-
                         currPlate = deviceListView.itemAt(drag.x, drag.y)
 
                         if(currPlate)
-                            currPlate.withBorder = true
+                        {
+                            dropMarker.width = currPlate.width
+                            dropMarker.x = currPlate.x
+                            dropMarker.y = currPlate.y + currPlate.height
+                            dropMarker.visible = true
+                        }
                     }
                 }
 
                 onDropped:
                 {
-                    //                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-
-                    //                if(drag.source.name === "Patch Plate")
-                    //                {
-                    //                    if(dropToIndex !== -1)
-                    //                    {
-                    //                        deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-                    //                        refreshPlatesNo()
-                    //                    }
-                    //                }
+                    dropMarker.visible = false
 
                     if(!applicationWindow.isPatchEditorOpened)
                     {
@@ -405,55 +407,6 @@ Item
             }
         }
     }
-
-//    Button
-//    {
-//        id: addGroupButton
-//        text: qsTr("Reverse Selection")
-//        height: 24
-//        width: (parent.width - anchors.margins * 4) / 3
-
-//        anchors.margins: 2
-//        anchors.bottomMargin: 4
-//        anchors.left: parent.left
-//        anchors.bottom: parent.bottom
-
-
-//        bottomPadding: 2
-//        topPadding: 2
-//        rightPadding: 2
-//        leftPadding: 2
-
-//        background: Rectangle
-//        {
-//            color:
-//            {
-//                if(parent.enabled)
-//                    parent.pressed ? "#222222" : "#27AE60"
-//                else
-//                    "#444444"
-//            }
-//            radius: 2
-//        }
-
-//        contentItem: Text
-//        {
-//            color: parent.enabled ? "#ffffff" : "#777777"
-//            text: parent.text
-//            horizontalAlignment: Text.AlignHCenter
-//            verticalAlignment: Text.AlignVCenter
-//            elide: Text.ElideRight
-//            font.family: "Roboto"
-//        }
-
-//        onClicked:
-//        {
-//            for(let i = 0; i < deviceListView.count; i++)
-//            {
-//                deviceListView.itemAtIndex(i).checked = !deviceListView.itemAtIndex(i).checked;
-//            }
-//        }
-//    }
 
     Rectangle
     {

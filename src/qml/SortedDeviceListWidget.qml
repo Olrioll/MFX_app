@@ -12,7 +12,7 @@ ListView
     anchors.left: parent.left
     width: 392
     height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
-    clip: true
+//    clip: true
     spacing: 2
     ScrollBar.vertical: ScrollBar {}
 
@@ -178,23 +178,56 @@ ListView
         }
     }
 
+    Rectangle
+    {
+        id: dropMarker
+        width: parent.width - 8
+        height: 2
+        color: "lightblue"
+        visible: false
+    }
+
     DropArea
     {
         id: deviceListWidgetDropArea
         anchors.fill: parent
 
+        property var currPlate: null
+
+        onEntered:
+        {
+            if(deviceListView.itemAt(drag.x, drag.y))
+            {
+                currPlate = deviceListView.itemAt(drag.x, drag.y)
+                dropMarker.width = currPlate.width
+                dropMarker.visible = true
+            }
+        }
+
+        onExited:
+        {
+            dropMarker.visible = false
+        }
+
+        onPositionChanged:
+        {
+            if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
+            {
+                currPlate = deviceListView.itemAt(drag.x, drag.y)
+
+                if(currPlate)
+                {
+                    dropMarker.width = currPlate.width
+                    dropMarker.x = currPlate.x
+                    dropMarker.y = currPlate.y + currPlate.height
+                    dropMarker.visible = true
+                }
+            }
+        }
+
         onDropped:
         {
-            //                var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
-
-            //                if(drag.source.name === "Patch Plate")
-            //                {
-            //                    if(dropToIndex !== -1)
-            //                    {
-            //                        deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-            //                        refreshPlatesNo()
-            //                    }
-            //                }
+            dropMarker.visible = false
 
             if(!applicationWindow.isPatchEditorOpened)
             {

@@ -12,7 +12,7 @@ ListView
     anchors.left: parent.left
     width: 392
     height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
-    clip: true
+//    clip: true
     spacing: 2
     ScrollBar.vertical: ScrollBar {}
 
@@ -117,6 +117,15 @@ ListView
         id: deviceListModel
     }
 
+    Rectangle
+    {
+        id: dropMarker
+        width: parent.width - 8
+        height: 2
+        color: "lightblue"
+        visible: false
+    }
+
     DropArea
     {
         id: deviceListWidgetDropArea
@@ -129,32 +138,37 @@ ListView
             if(deviceListView.itemAt(drag.x, drag.y))
             {
                 currPlate = deviceListView.itemAt(drag.x, drag.y)
-                currPlate.withBorder = true
+                dropMarker.width = currPlate.width
+                dropMarker.visible = true
             }
         }
 
         onExited:
         {
-            if(currPlate)
-                currPlate.withBorder = false
+            dropMarker.visible = false
         }
 
         onPositionChanged:
         {
             if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
             {
-                if(currPlate)
-                    currPlate.withBorder = false
-
                 currPlate = deviceListView.itemAt(drag.x, drag.y)
 
                 if(currPlate)
-                    currPlate.withBorder = true
+                {
+                    dropMarker.width = currPlate.width
+                    dropMarker.x = currPlate.x
+                    dropMarker.y = currPlate.y + currPlate.height
+                    dropMarker.visible = true
+                }
             }
         }
 
         onDropped:
         {
+
+            dropMarker.visible = false
+
             project.setCurrentGroup(deviceListView.groupName)
 
             var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
