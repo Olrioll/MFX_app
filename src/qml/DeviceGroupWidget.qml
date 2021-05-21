@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
+import QtGraphicalEffects 1.0
 
 import "qrc:/"
 
@@ -84,15 +85,26 @@ Item
         }
     }
 
-    Rectangle
+    Item
     {
         id: buttonsBackground
-        height: 34
+        height: 40
         width: parent.width
         anchors.left: parent.left
         anchors.bottomMargin: -2
         anchors.bottom: parent.bottom
-        color: "#000000"
+
+        LinearGradient
+        {
+            anchors.fill: parent
+            start: Qt.point(0, parent.height / 3)
+            end: Qt.point(0, 0)
+            gradient: Gradient
+            {
+                GradientStop { position: 1.0; color: "#00000000" }
+                GradientStop { position: 0.0; color: "#FF000000" }
+            }
+        }
     }
 
     Button
