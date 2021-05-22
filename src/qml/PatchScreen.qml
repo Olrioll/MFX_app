@@ -8,6 +8,23 @@ Item
 {
     id: patchScreen
 
+    property var sceneWidget: null
+
+    function setupSceneWidget(widget)
+    {
+        sceneWidget = widget
+
+        if(!sceneWidget)
+            return
+
+        sceneWidget.parent = this
+        sceneWidget.anchors.margins = 2
+        sceneWidget.anchors.left = patchScreen.left
+        sceneWidget.anchors.right = groupList.left
+        sceneWidget.anchors.top = patchScreen.top
+        sceneWidget.anchors.bottom = patchScreen.bottom
+    }
+
     SideDockedWindow
     {
         id: deviceLib
@@ -93,13 +110,13 @@ Item
         }
     }
 
-    SceneWidget
-    {
-        id: sceneWidget
-        anchors.margins: 2
-        anchors.left: patchScreen.left
-        anchors.right: groupList.left
-        anchors.top: patchScreen.top
-        anchors.bottom: patchScreen.bottom
-    }
+//    SceneWidget
+//    {
+//        id: sceneWidget
+//        anchors.margins: 2
+//        anchors.left: patchScreen.left
+//        anchors.right: groupList.left
+//        anchors.top: patchScreen.top
+//        anchors.bottom: patchScreen.bottom
+//    }
 }

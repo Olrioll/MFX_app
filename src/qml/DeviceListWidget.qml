@@ -64,7 +64,7 @@ ListView
             {
                 if(prevType === "" || deviceListView.itemAtIndex(i).type === prevType)
                 {
-                    editedList.push(deviceListView.itemAtIndex(i).getId())
+                    editedList.push(deviceListView.itemAtIndex(i).patchId)
                     prevType = deviceListView.itemAtIndex(i).type
                 }
 

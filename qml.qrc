@@ -47,5 +47,8 @@
         <file alias="changeView">src/img/changeViewButton.png</file>
         <file>src/qml/SortedDeviceListWidget.qml</file>
         <file>src/qml/ConfirmationDialog.qml</file>
+        <file>src/qml/MfxMenu.qml</file>
+        <file>src/qml/MainScreen.qml</file>
+        <file>src/qml/OutputScreen.qml</file>
     </qresource>
 </RCC>
