@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
-import WaveformWidget 1.0
 import "qrc:/"
 
 ApplicationWindow
@@ -113,6 +112,7 @@ ApplicationWindow
     StackLayout
     {
         id: screensLayout
+
         anchors
         {
             topMargin: 2
@@ -147,27 +147,6 @@ ApplicationWindow
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
-
-//        WaveformWidget
-//        {
-//            id: waveformWidget
-//            Layout.fillHeight: true
-//            Layout.fillWidth: true
-//            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-//            MouseArea
-//            {
-//                anchors.fill: parent
-//                onWheel: (wheel.angleDelta.y > 0) ? waveformWidget.zoomOut()
-//                                                  : waveformWidget.zoomIn()
-//            }
-
-//            Slider
-//            {
-//                id: slider
-//                anchors.bottom: parent.bottom
-//            }
-//        }
     }
 
     Item

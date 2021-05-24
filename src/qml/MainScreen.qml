@@ -2,7 +2,6 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
-import WaveformWidget 1.0
 import "qrc:/"
 
 Item
@@ -23,29 +22,49 @@ Item
         sceneWidget.anchors.left = mainScreen.left
         sceneWidget.anchors.right = mainScreen.right
         sceneWidget.anchors.top = mainScreen.top
-        sceneWidget.anchors.bottom = waveformWidget.top
+        sceneWidget.anchors.bottom = playerWidget.top
     }
 
-    WaveformWidget
+    PlayerWidget
     {
-        id: waveformWidget
+        id: playerWidget
         height: 200
         anchors.margins: 2
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        property int minHeight: 200
+        property int previousY
+
         MouseArea
         {
-            anchors.fill: parent
-            onWheel: (wheel.angleDelta.y > 0) ? waveformWidget.zoomOut()
-                                              : waveformWidget.zoomIn()
-        }
+            id: playerResizeArea
+            height: 4
 
-        Slider
-        {
-            id: slider
-            anchors.bottom: parent.bottom
+            anchors.topMargin: -2
+            anchors
+            {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
+            cursorShape: Qt.SizeVerCursor
+
+            onPressed:
+            {
+                playerWidget.previousY = mouseY
+            }
+
+            onMouseYChanged:
+            {
+                var dy= mouseY - playerWidget.previousY
+
+                if((playerWidget.height - dy) < playerWidget.minHeight)
+                    playerWidget.height = playerWidget.minHeight
+                else
+                    playerWidget.height = playerWidget.height - dy
+            }
         }
     }
 }

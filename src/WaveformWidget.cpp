@@ -1,6 +1,7 @@
 #include "WaveformWidget.h"
 
 #include <QPainter>
+#include <QPainterPath>
 
 WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), _track(this)
 {
@@ -10,7 +11,7 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
 
 void WaveformWidget::paint(QPainter *painter)
 {
-    QBrush  brush(Qt::white);
+    QBrush  brush(QColor("#646464"));
     QPen pen;
     pen.setBrush(brush);
 

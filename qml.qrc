@@ -50,5 +50,6 @@
         <file>src/qml/MfxMenu.qml</file>
         <file>src/qml/MainScreen.qml</file>
         <file>src/qml/OutputScreen.qml</file>
+        <file>src/qml/PlayerWidget.qml</file>
     </qresource>
 </RCC>
