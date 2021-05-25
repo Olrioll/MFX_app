@@ -15,6 +15,22 @@ Item
     signal groupNameClicked
     signal viewChanged
 
+    Rectangle
+    {
+        id: groupBackground
+//        x: parent.x
+//        y: parent.y
+        anchors.left: parent.left
+        anchors.topMargin: -2
+        anchors.top: parent.top
+        height: parent.height + 2
+        width: parent.parent.width
+        color: deviceGroup.checked ? "#42FF55" : "transparent"
+        opacity:  0.1
+        radius: 2
+
+    }
+
     Button
     {
         id: collapseButton
@@ -53,12 +69,12 @@ Item
 
     Rectangle
     {
-        color: parent.checked ? "#444444" : "#000000"
+        color: "transparent"
         radius: 2
         anchors.leftMargin: 10
         anchors.left: collapseButton.right
         height: collapseButton.height
-        width: groupNameText.width + 4
+        width: parent.parent.width
 
         Text
         {
@@ -73,52 +89,53 @@ Item
             elide: Text.ElideRight
             font.family: "Roboto"
             font.pixelSize: 12
+            font.bold: deviceGroup.checked
+        }
 
-            DropArea
+        DropArea
+        {
+            anchors.fill: parent
+
+            onEntered: groupNameText.color = "#EB5757"
+            onExited: groupNameText.color = "#ffffff"
+
+            onDropped:
             {
-                anchors.fill: parent
+                groupNameText.color = "#ffffff"
+                project.setCurrentGroup(deviceGroup.name)
+                collapseButton.checked = true
 
-                onEntered: groupNameText.color = "#EB5757"
-                onExited: groupNameText.color = "#ffffff"
-
-                onDropped:
+                if (drag.source.name === "Sequences")
                 {
-                    groupNameText.color = "#ffffff"
-                    project.setCurrentGroup(deviceGroup.name)
-                    collapseButton.checked = true
+                    var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                    addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+                    addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+                }
 
-                    if (drag.source.name === "Sequences")
-                    {
-                        var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
-                        addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
-                        addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
-                    }
+                else if (drag.source.name === "Dimmer")
+                {
+                    var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                    addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+                    addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
+                }
 
-                    else if (drag.source.name === "Dimmer")
-                    {
-                        var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
-                        addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
-                        addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
-                    }
+                else if (drag.source.name === "Shot")
+                {
+                    var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                    addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                    addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
+                }
 
-                    else if (drag.source.name === "Shot")
-                    {
-                        var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
-                        addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
-                        addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
-                    }
+                else if (drag.source.name === "Pyro")
+                {
+                    var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
+                    addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+                    addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
+                }
 
-                    else if (drag.source.name === "Pyro")
-                    {
-                        var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {groupName: deviceGroup.name});
-                        addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
-                        addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
-                    }
-
-                    else if(drag.source.name === "Patch Plate")
-                    {
-                        project.addPatchesToGroup(deviceGroup.name, drag.source.checkedIDs)
-                    }
+                else if(drag.source.name === "Patch Plate")
+                {
+                    project.addPatchesToGroup(deviceGroup.name, drag.source.checkedIDs)
                 }
             }
         }
