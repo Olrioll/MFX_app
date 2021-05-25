@@ -18,8 +18,6 @@ Item
     Rectangle
     {
         id: groupBackground
-//        x: parent.x
-//        y: parent.y
         anchors.left: parent.left
         anchors.topMargin: -2
         anchors.top: parent.top

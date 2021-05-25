@@ -941,7 +941,7 @@ Item
         id: showAllButton
         width: 48
 //        checkable: true
-//        checked: true
+        color: isNeedToBeChecked() ? "#444444" : "#222222"
         text: qsTr("All")
         anchors.leftMargin: 12
         anchors.bottomMargin: 18
@@ -949,6 +949,16 @@ Item
         {
             left: zoomControls.right
             bottom: sceneWidget.bottom
+        }
+
+        function isNeedToBeChecked()
+        {
+            for(let i = 0; i < switchGroupsButtons.count; i++)
+            {
+                if(!switchGroupsButtons.itemAtIndex(i).checked)
+                    return false
+            }
+            return true
         }
 
         onClicked:
