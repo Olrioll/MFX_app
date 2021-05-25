@@ -277,7 +277,8 @@ Item
             {
 
                 if(backgroundImage.width <= sceneWidget.width)
-                    backgroundImage.x = 0
+//                    backgroundImage.x = 0
+                    backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
                 else
                 {
                     if(dx < 0)
@@ -298,7 +299,8 @@ Item
                 }
 
                 if(backgroundImage.height <= sceneWidget.height)
-                    backgroundImage.y = 0
+//                    backgroundImage.y = 0
+                    backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
 
                 else
                 {
