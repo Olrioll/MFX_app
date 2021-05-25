@@ -7,6 +7,8 @@ Button
     height: 24
 
     property string color: "#4f4f4f"
+    property string pressedColor: "#888888"
+    property int textSize: 12
 
     background: Rectangle
     {
@@ -23,7 +25,7 @@ Button
             else
             {
                 if(parent.enabled)
-                    parent.pressed ? "#888888" : button.color
+                    parent.pressed ? button.pressedColor : button.color
                 else
                     "#222222"
             }
@@ -52,6 +54,6 @@ Button
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
         font.family: "Roboto"
-        font.pixelSize: 12
+        font.pixelSize: button.textSize
     }
 }

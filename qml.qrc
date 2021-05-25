@@ -51,5 +51,12 @@
         <file>src/qml/MainScreen.qml</file>
         <file>src/qml/OutputScreen.qml</file>
         <file>src/qml/PlayerWidget.qml</file>
+        <file alias="stopButton">src/img/player_stopButton.png</file>
+        <file alias="playButton">src/img/player_playPauseButton.png</file>
+        <file alias="pauseButton">src/img/player_pauseButton.png</file>
+        <file alias="recordButton">src/img/player_recordButton.png</file>
+        <file alias="settingsButton">src/img/player_settingsButton.png</file>
+        <file alias="repeatButton">src/img/player_repeatButton.png</file>
+        <file alias="repeatButtonChecked">src/img/player_repeatButtonChecked.png</file>
     </qresource>
 </RCC>

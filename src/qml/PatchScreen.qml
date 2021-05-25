@@ -10,6 +10,10 @@ Item
 
     property var sceneWidget: null
 
+    property alias deviceLibWidget: deviceLib
+    property alias deviceListWidget: deviceList
+    property alias groupListWidget: groupList
+
     function setupSceneWidget(widget)
     {
         sceneWidget = widget

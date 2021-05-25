@@ -587,9 +587,9 @@ Item
                 project.setProperty("sceneImageHeight", backgroundImage.height / sceneFrame.height * project.property("sceneFrameHeight"))
                 project.setProperty("sceneImageWidth", backgroundImage.width / sceneFrame.width * project.property("sceneFrameWidth"))
                 sceneFrameItem.visible = false
-                deviceLib.setActive(true)
-                deviceList.setActive(true)
-                groupList.setActive(true)
+                patchScreen.deviceLibWidget.setActive(true)
+                patchScreen.deviceListWidget.setActive(true)
+                patchScreen.groupListWidget.setActive(true)
             }
         }
 
@@ -670,9 +670,9 @@ Item
             sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
             sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
 
-            deviceLib.setActive(false)
-            deviceList.setActive(false)
-            groupList.setActive(false)
+            patchScreen.deviceLibWidget.setActive(false)
+            patchScreen.deviceListWidget.setActive(false)
+            patchScreen.groupListWidget.setActive(false)
         }
     }
 
