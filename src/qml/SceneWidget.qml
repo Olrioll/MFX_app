@@ -248,9 +248,9 @@ Item
                     let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
                     let currWidth = patchIcons[i].width
                     let currHeight = patchIcons[i].height
-                    if(currCoord.x > pressedX && currCoord.x < pressedX + selectRect.width)
+                    if(currCoord.x > selectRect.x && currCoord.x < selectRect.x + selectRect.width)
                     {
-                        if(currCoord.y > pressedY && currCoord.y < pressedY + selectRect.height)
+                        if(currCoord.y > selectRect.y && currCoord.y < selectRect.y + selectRect.height)
                         {
                             project.setPatchProperty(patchIcons[i].patchId, "checked", true)
                         }
