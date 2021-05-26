@@ -13,6 +13,7 @@ Item
     property int patchId
     property string name: "Patch Plate"
     property bool withBorder: false
+    property bool halfChecked: isNeedToShowHalfChecked()
     property string type: ""
     property bool checked: isNeedToShowChecked();
     property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
@@ -33,6 +34,19 @@ Item
             return project.patchProperty(patchId, "checked")
     }
 
+    function isNeedToShowHalfChecked()
+    {
+        if(parentList)
+        {
+            if(parentList.groupName !== project.currentGroup())
+                return project.patchProperty(patchId, "checked")
+            else
+                return false
+        }
+
+        return false
+    }
+
     function refreshCells()
     {
         if(patchId <= 0)
@@ -51,7 +65,6 @@ Item
         }
 
         patchPlate.type = project.patchType(project.patchIndexForId(patchId))
-//        patchPlate.checked = project.patchProperty(patchId, "checked")
 
         switch (patchPlate.type)
         {
@@ -79,7 +92,8 @@ Item
         color: patchPlate.checked ? "#27AE60" : "#4f4f4f"
         radius: 2
         border.width: 2
-        border.color: patchPlate.withBorder ? "lightblue" : "#4f4f4f"
+        border.color: patchPlate.withBorder ? "lightblue" :
+                                              patchPlate.halfChecked ? "#27AE60" : "#4f4f4f"
 
         Rectangle
         {
@@ -203,7 +217,11 @@ Item
         function onPatchCheckedChanged(checkedId, checked)
         {
             if((checkedId === patchPlate.patchId))
+            {
                 patchPlate.checked = isNeedToShowChecked()
+                patchPlate.halfChecked = isNeedToShowHalfChecked()
+
+            }
         }
     }
 }

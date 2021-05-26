@@ -15,6 +15,8 @@ Item
     {
         id: groupListView
         width: widthNeeded()
+        anchors.topMargin: 2
+        anchors.leftMargin: 2
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottomMargin: 10

@@ -126,92 +126,92 @@ ListView
         visible: false
     }
 
-    DropArea
-    {
-        id: deviceListWidgetDropArea
-        anchors.fill: parent
+//    DropArea
+//    {
+//        id: deviceListWidgetDropArea
+//        anchors.fill: parent
 
-        property var currPlate: null
+//        property var currPlate: null
 
-        onEntered:
-        {
-            if(deviceListView.itemAt(drag.x, drag.y))
-            {
-                currPlate = deviceListView.itemAt(drag.x, drag.y)
-                dropMarker.width = currPlate.width
-                dropMarker.visible = true
-            }
-        }
+//        onEntered:
+//        {
+//            if(deviceListView.itemAt(drag.x, drag.y))
+//            {
+//                currPlate = deviceListView.itemAt(drag.x, drag.y)
+//                dropMarker.width = currPlate.width
+//                dropMarker.visible = true
+//            }
+//        }
 
-        onExited:
-        {
-            dropMarker.visible = false
-        }
+//        onExited:
+//        {
+//            dropMarker.visible = false
+//        }
 
-        onPositionChanged:
-        {
-            if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
-            {
-                currPlate = deviceListView.itemAt(drag.x, drag.y)
+//        onPositionChanged:
+//        {
+//            if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
+//            {
+//                currPlate = deviceListView.itemAt(drag.x, drag.y)
 
-                if(currPlate)
-                {
-                    dropMarker.width = currPlate.width
-                    dropMarker.x = currPlate.x
-                    dropMarker.y = currPlate.y + currPlate.height
-                    dropMarker.visible = true
-                }
-            }
-        }
+//                if(currPlate)
+//                {
+//                    dropMarker.width = currPlate.width
+//                    dropMarker.x = currPlate.x
+//                    dropMarker.y = currPlate.y + currPlate.height
+//                    dropMarker.visible = true
+//                }
+//            }
+//        }
 
-        onDropped:
-        {
+//        onDropped:
+//        {
 
-            dropMarker.visible = false
+//            dropMarker.visible = false
 
-            project.setCurrentGroup(deviceListView.groupName)
+//            project.setCurrentGroup(deviceListView.groupName)
 
-            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
+//            var dropToIndex = deviceListView.indexAt(drag.x, drag.y)
 
-            if(drag.source.name === "Patch Plate")
-            {
-                if(dropToIndex !== -1)
-                {
-//                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
-                    project.addPatchesToGroup(deviceListView.groupName, drag.source.checkedIDs)
-                    refreshPlatesNo()
-                }
-            }
+//            if(drag.source.name === "Patch Plate")
+//            {
+//                if(dropToIndex !== -1)
+//                {
+////                    deviceListModel.move(drag.source.no - 1, dropToIndex, 1)
+//                    project.addPatchesToGroup(deviceListView.groupName, drag.source.checkedIDs)
+//                    refreshPlatesNo()
+//                }
+//            }
 
-            else if (drag.source.name === "Sequences")
-            {
-                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
-                addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
-                addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
-            }
+//            else if (drag.source.name === "Sequences")
+//            {
+//                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
+//                addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+//                addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+//            }
 
-            else if (drag.source.name === "Dimmer")
-            {
-                var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
-                addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
-                addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
-            }
+//            else if (drag.source.name === "Dimmer")
+//            {
+//                var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
+//                addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+//                addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
+//            }
 
-            else if (drag.source.name === "Shot")
-            {
-                var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
-                addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
-                addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
-            }
+//            else if (drag.source.name === "Shot")
+//            {
+//                var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
+//                addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+//                addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
+//            }
 
-            else if (drag.source.name === "Pyro")
-            {
-                var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
-                addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
-                addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
-            }
-        }
-    }
+//            else if (drag.source.name === "Pyro")
+//            {
+//                var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {groupName: deviceListView.groupName});
+//                addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+//                addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
+//            }
+//        }
+//    }
 
     Connections
     {
