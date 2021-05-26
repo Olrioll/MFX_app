@@ -113,6 +113,8 @@ ListView
         opacity: 0.8
         withBorder: true
 
+        property string infoText: ""
+
         Drag.active: deviceListView.held
         Drag.source: this
         //            Drag.hotSpot.x: this.width / 2
@@ -128,6 +130,15 @@ ListView
                 anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
             }
         }
+
+        Text
+        {
+            anchors.centerIn: parent
+            color: "#ffffff"
+            font.family: "Roboto"
+            font.pixelSize: 12
+            text: parent.infoText
+        }
     }
 
     MouseArea
@@ -136,12 +147,33 @@ ListView
         anchors.fill: parent
         propagateComposedEvents: true
 
+        property var pressedItem: null
+        property int pressedX
+        property int pressedY
+        property bool wasDragging: false
+
         drag.target: deviceListView.held ? draggedPlate : undefined
         drag.axis: Drag.XAndYAxis
 
-        onPressAndHold:
+        onClicked:
         {
-            var pressedItem = deviceListView.itemAt(mouseX, mouseY)
+            pressedItem = deviceListView.itemAt(mouseX, mouseY)
+            if(pressedItem)
+            {
+                if(!wasDragging)
+                    project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
+
+                wasDragging = false
+            }
+        }
+
+
+        onPressed:
+        {
+            pressedX = mouseX
+            pressedY = mouseY
+
+            pressedItem = deviceListView.itemAt(mouseX, mouseY)
             if(pressedItem)
             {
                 draggedPlate.checkedIDs = []
@@ -164,8 +196,18 @@ ListView
                 draggedPlate.height = pressedItem.height
                 draggedPlate.name = pressedItem.name
                 draggedPlate.imageFile = pressedItem.imageFile
+
+                draggedPlate.infoText = qsTr("Adding patches with IDs: " + draggedPlate.checkedIDs)
+
                 draggedPlate.refreshCells()
             }
+        }
+
+        onPositionChanged:
+        {
+            wasDragging = true
+            let dx = mouseX - pressedX
+            let dy = mouseY - pressedY
         }
 
         onReleased:
@@ -174,6 +216,9 @@ ListView
             {
                 drag.target.Drag.drop()
                 deviceListView.held = false
+                wasDragging = false
+                pressedItem.withBorder = false
+                pressedItem = null
             }
         }
     }

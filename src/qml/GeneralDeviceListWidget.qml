@@ -170,6 +170,8 @@ Item
                 opacity: 0.8
                 withBorder: true
 
+                property string infoText: ""
+
                 Drag.active: mouseArea.wasDragging
                 Drag.source: this
                 //            Drag.hotSpot.x: this.width / 2
@@ -184,6 +186,15 @@ Item
                         target: draggedPlate
                         anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
                     }
+                }
+
+                Text
+                {
+                    anchors.centerIn: parent
+                    color: "#ffffff"
+                    font.family: "Roboto"
+                    font.pixelSize: 12
+                    text: parent.infoText
                 }
             }
 
@@ -242,6 +253,9 @@ Item
                         draggedPlate.height = pressedItem.height
                         draggedPlate.name = pressedItem.name
                         draggedPlate.imageFile = pressedItem.imageFile
+
+                        draggedPlate.infoText = qsTr("Adding patches with IDs: " + draggedPlate.checkedIDs)
+
                         draggedPlate.refreshCells()
                     }
                 }
