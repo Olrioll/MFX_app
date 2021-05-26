@@ -42,7 +42,7 @@ Item
             gradient: Gradient
             {
                 GradientStop { position: 1.0; color: "#802F4C8A" }
-                GradientStop { position: 0.0; color: "#402F4C8A" }
+                GradientStop { position: 0.0; color: "#202F4C8A" }
             }
         }
 

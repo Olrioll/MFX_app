@@ -23,9 +23,33 @@ ListView
         deviceListModel.clear()
         var patchesList = project.patchesIdList(groupName)
 
-        for(let i = 0; i < patchesList.length; i++)
+        var sequ = []
+        var dimm = []
+        var shot = []
+        var pyro = []
+
+        for(var i = 0; i < patchesList.length; i++)
         {
-            deviceListModel.insert(i, {counter: i + 1, currentId: patchesList[i]})
+            let currType = project.patchType(project.patchIndexForId(patchesList[i]))
+
+            if(currType === "Sequences")
+                sequ.push(patchesList[i])
+
+            else if(currType === "Dimmer")
+                dimm.push(patchesList[i])
+
+            else if(currType === "Shot")
+                shot.push(patchesList[i])
+
+            else if(currType === "Pyro")
+                pyro.push(patchesList[i])
+        }
+
+        var totalList = sequ.concat(dimm.concat(shot.concat(pyro)))
+
+        for(i = 0; i < totalList.length; i++)
+        {
+            deviceListModel.insert(i, {counter: i + 1, currentId: totalList[i]})
         }
     }
 
