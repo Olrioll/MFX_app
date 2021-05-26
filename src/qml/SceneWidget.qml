@@ -92,7 +92,7 @@ Item
 
     MouseArea
     {
-//        anchors.margins: 12
+        id: mainMouseArea
         anchors.fill: parent
         propagateComposedEvents: true
         preventStealing: true
@@ -135,7 +135,7 @@ Item
 
         onClicked:
         {
-            for(let i = 0; i < patchIcons.length; i++)
+            for(let i = patchIcons.length - 1; i >= 0 ; i--)
             {
                 let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
                 let currWidth = patchIcons[i].width
@@ -170,7 +170,7 @@ Item
 
             else
             {
-                for(let i = 0; i < patchIcons.length; i++)
+                for(let i = patchIcons.length - 1; i >= 0 ; i--)
                 {
                     let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
                     let currWidth = patchIcons[i].width
