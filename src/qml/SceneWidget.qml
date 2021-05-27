@@ -90,15 +90,25 @@ Item
     {
         for(var i = 0; i < patchIcons.length; i++)
         {
-            patchIcons[i].visible = false
+                patchIcons[i].visible = false
         }
 
-        for(i = 0; i < switchGroupsButtons.count; i ++)
+        let groupNames = project.groupNames()
+
+        for(i = 0; i < groupNames.length; i ++)
         {
-            let currButton = switchGroupsButtons.itemAtIndex(i)
-            if(currButton && currButton.checked)
-                showPatchIcons(currButton.text, true)
+            if(project.isGroupVisible(groupNames[i]))
+            {
+                showPatchIcons(groupNames[i], true)
+            }
         }
+
+//        for(i = 0; i < switchGroupsButtons.count; i ++)
+//        {
+//            let currButton = switchGroupsButtons.itemAtIndex(i)
+//            if(currButton && currButton.checked)
+//                showPatchIcons(currButton.text, true)
+//        }
     }
 
     Image
@@ -106,7 +116,7 @@ Item
         id: backgroundImage
         width: sourceSize.width * sceneWidget.scaleFactor
         height: sourceSize.height * sceneWidget.scaleFactor
-        source: project.property("backgroundImageFile") === "" ? "file:///" + applicationDirPath + "/default.png" : project.property("backgroundImageFile")
+        source: project.property("backgroundImageFile") === "" ? "file:///" + settingsManager.workDirectory() + "/default.png" : project.property("backgroundImageFile")
     }
 
     MouseArea
@@ -974,7 +984,7 @@ Item
         {
             for(let i = 0; i < switchGroupsButtons.count; i++)
             {
-                if(!switchGroupsButtons.itemAtIndex(i).checked)
+                if(switchGroupsButtons.itemAtIndex(i) && !switchGroupsButtons.itemAtIndex(i).checked)
                     return false
             }
             return true
@@ -1027,7 +1037,7 @@ Item
             let groupNames = project.groupNames()
             for (let i = 0; i < groupNames.length; i++)
             {
-                buttonListModel.append({delegateChecked: true, delegateWidth: 70, delegateText: groupNames[i]})
+                buttonListModel.append({delegateChecked: project.isGroupVisible(groupNames[i]), delegateWidth: 70, delegateText: groupNames[i]})
             }
         }
 
@@ -1040,7 +1050,18 @@ Item
 
             onCheckedChanged:
             {
+                project.setGroupVisible(text, checked)
                 sceneWidget.refreshPatchIconsVisibility()
+
+                // Показываем иконки патчей не имеющие группы
+                if(showAllButton.isNeedToBeChecked())
+                {
+                    for(var i = 0; i < patchIcons.length; i++)
+                    {
+                        if(!project.isPatchHasGroup(patchIcons[i].patchId))
+                            patchIcons[i].visible = true
+                    }
+                }
             }
         }
 
@@ -1058,6 +1079,15 @@ Item
         function onPatchListChanged()
         {
             sceneWidget.loadPatches()
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onGroupChanged()
+        {
+            sceneWidget.refreshPatchIconsVisibility()
         }
     }
 

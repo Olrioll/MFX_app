@@ -22,3 +22,8 @@ QVariant SettingsManager::value(QString name)
 {
     return _settings.value(name);
 }
+
+QString SettingsManager::workDirectory()
+{
+    return _workDirectory;
+}

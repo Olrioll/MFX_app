@@ -26,6 +26,7 @@ Item
 
         ScrollBar.vertical: ScrollBar
         {
+            policy: ScrollBar.AsNeeded
             anchors
             {
                 right: groupListView.right

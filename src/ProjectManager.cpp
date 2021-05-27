@@ -4,9 +4,9 @@
 #include <QFile>
 #include <QJsonArray>
 
-ProjectManager::ProjectManager(QObject *parent) : QObject(parent)
+ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
-    loadProject("test.json");
+    loadProject(_settings.workDirectory() + "/test.json");
 }
 
 ProjectManager::~ProjectManager()
@@ -103,7 +103,7 @@ void ProjectManager::saveProject()
 
     _project.insert("properties", properties);
 
-    QFile file("test.json");
+    QFile file(_settings.workDirectory() + "/test.json");
         if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
             QJsonDocument doc;
@@ -423,6 +423,47 @@ bool ProjectManager::isGroupContainsPatch(QString groupName, int patchId) const
     }
 
     return false;
+}
+
+bool ProjectManager::isPatchHasGroup(int patchId) const
+{
+    for(auto & group : _groups)
+    {
+        if(isGroupContainsPatch(group.name, patchId))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool ProjectManager::isGroupVisible(QString groupName) const
+{
+    for(auto & group : _groups)
+    {
+        if(group.name == groupName)
+        {
+            return group.visible;
+        }
+    }
+
+    return false;
+}
+
+void ProjectManager::setGroupVisible(QString groupName, bool state)
+{
+    int counter = 0;
+    for(auto & group : _groups)
+    {
+        if(group.name == groupName)
+        {
+            group.visible = state;
+            emit groupChanged(counter);
+            break;
+        }
+        counter++;
+    }
 }
 
 void ProjectManager::setCurrentGroupIndex(int currentGroupIndex)

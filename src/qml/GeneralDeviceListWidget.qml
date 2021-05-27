@@ -66,6 +66,7 @@ Item
             spacing: 2
             ScrollBar.vertical: ScrollBar
             {
+                policy: ScrollBar.AsNeeded
                 anchors
                 {
                     right: deviceListView.right
@@ -378,6 +379,7 @@ Item
             spacing: 10
             ScrollBar.vertical: ScrollBar
             {
+                policy: ScrollBar.AsNeeded
                 anchors
                 {
                     right: sortedDeviceListView.right

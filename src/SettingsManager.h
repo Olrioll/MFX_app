@@ -17,14 +17,15 @@ public:
 
     Q_INVOKABLE void setValue(QString name, QVariant value);
     Q_INVOKABLE QVariant value(QString name);
+    Q_INVOKABLE QString workDirectory();
 
 signals:
 
 private:
 
-//        QString _workDirectory = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation); // For release version
+        QString _workDirectory = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation); // For release version
 //        QString _workDirectory = QDir(".").absolutePath(); //For test version
-        QString _workDirectory = QDir("../..").absolutePath(); //For development
+//        QString _workDirectory = QDir("../..").absolutePath(); //For development
 
         QSettings _settings;
 

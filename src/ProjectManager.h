@@ -5,6 +5,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QSharedPointer>
+#include <QSettings>
+
+#include "SettingsManager.h"
 
 class ProjectManager : public QObject
 {
@@ -15,6 +19,7 @@ public:
     struct Group
     {
         QString name;
+        bool visible = true;
         QList<int> patches;
 
         Group(QString name)
@@ -109,7 +114,7 @@ public:
         }
     };
 
-    explicit ProjectManager(QObject *parent = nullptr);
+    ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
     ~ProjectManager();
 
     Q_PROPERTY(int currentGroupIndex READ currentGroupIndex WRITE setCurrentGroupIndex NOTIFY currentGroupIndexChanged)
@@ -128,6 +133,9 @@ public slots:
 
     QStringList groupNames() const;
     bool isGroupContainsPatch(QString groupName, int patchId) const;
+    bool isPatchHasGroup(int patchId) const;
+    bool isGroupVisible(QString groupName) const;
+    void setGroupVisible(QString groupName, bool state);
 
     bool addGroup(QString name);
     void removeGroup(QString name);
@@ -170,6 +178,8 @@ signals:
     void sceneFrameWidthChanged(double sceneFrameWidth);
 
 private:
+
+    SettingsManager& _settings;
 
     QJsonObject _project;
     QList<Group> _groups;

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-project(MFX_app VERSION 0.1)
+project(MFX VERSION 0.1)
 
 find_package(Qt5 COMPONENTS Widgets Multimedia Qml Quick REQUIRED)
 

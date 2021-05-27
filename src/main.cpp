@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QTranslator>
+#include <QSharedPointer>
 
 #include "SettingsManager.h"
 #include "ProjectManager.h"
@@ -15,7 +16,7 @@ int main(int argc, char** argv)
     app.setOrganizationDomain("mfx.com");
 
     SettingsManager settings;
-    ProjectManager project;
+    ProjectManager project(settings);
 
     QTranslator translator;
     translator.load(settings.value("workDirectory").toString() + "/translations/russian.qm");
@@ -24,7 +25,7 @@ int main(int argc, char** argv)
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("settings", &settings);
+    engine.rootContext()->setContextProperty("settingsManager", &settings);
     engine.rootContext()->setContextProperty("project", &project);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.load(QUrl(QStringLiteral("qrc:/src/qml/main.qml")));

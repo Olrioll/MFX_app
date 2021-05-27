@@ -292,13 +292,14 @@ Item
                 {
                      id: fileDialog
                      title: "Please choose a file"
-//                     folder: shortcuts.home
+                     folder: "file:///" + settingsManager.workDirectory()
                      onAccepted:
                      {
                          project.setProperty("backgroundImageFile", fileDialog.fileUrls[0])
                          sceneWidget.backgroundImage.source = fileDialog.fileUrls[0]
                          fileDialog.close()
                      }
+
                      onRejected:
                      {
                          fileDialog.close()
