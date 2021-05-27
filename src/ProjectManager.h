@@ -151,7 +151,7 @@ public slots:
     QVariant patchPropertyForIndex(int index, QString propertyName) const;
     void setPatchProperty(int id, QString propertyName, QVariant value);
     void setPatchPropertyForIndex(int index, QString propertyName, QVariant value);
-    void removePatches(QList<int> indexes);
+    void removePatches(QList<int> IDs);
     int patchCount() const;
     int patchIndexForId(int id) const;
     QList<int> patchesIdList(QString groupName) const;

@@ -325,22 +325,21 @@ void ProjectManager::setPatchPropertyForIndex(int index, QString propertyName, Q
     }
 }
 
-void ProjectManager::removePatches(QList<int> indexes)
+void ProjectManager::removePatches(QList<int> IDs)
 {
     QList<Patch> newList;
-    for(int i = 0; i < _patches.size(); i++)
+    for(auto & patch : _patches)
     {
-        if(!indexes.contains(i))
+        if(!IDs.contains(patch.property("ID").toInt()))
         {
-            newList.push_back(_patches.at(i));
+            newList.push_back(patch);
         }
 
         else
         {
-            int removedId = _patches.at(i).property("ID").toInt();
             for(auto & group : _groups)
             {
-                group.patches.removeOne(removedId);
+                group.patches.removeOne(patch.property("ID").toInt());
             }
         }
     }

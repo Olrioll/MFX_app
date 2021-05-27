@@ -13,15 +13,14 @@ Item
     function deleteSelected()
     {
         var removedIndexes = []
-        for(let i = 0; i < deviceListView.count; i++)
+        for(let i = 0; i < project.patchCount(); i++)
         {
-            if(deviceListView.itemAtIndex(i).checked)
-            {
-                removedIndexes.push(i)
-            }
+            if(project.patchPropertyForIndex(i, "checked"))
+                removedIndexes.push(project.patchPropertyForIndex(i, "ID"))
         }
 
         project.removePatches(removedIndexes)
+
     }
 
     function changeView()
@@ -66,6 +65,7 @@ Item
             spacing: 2
             ScrollBar.vertical: ScrollBar
             {
+                id: scrollBar
                 policy: ScrollBar.AsNeeded
                 anchors
                 {
@@ -215,7 +215,7 @@ Item
 
                 onClicked:
                 {
-                    pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                    pressedItem = deviceListView.itemAt(mouseX, mouseY + deviceListView.contentY)
                     if(pressedItem)
                     {
                         if(!wasDragging)
@@ -231,14 +231,14 @@ Item
                     pressedX = mouseX
                     pressedY = mouseY
 
-                    pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                    pressedItem = deviceListView.itemAt(mouseX, mouseY + deviceListView.contentY)
                     if(pressedItem)
                     {
                         draggedPlate.checkedIDs = []
-                        for(let i = 0; i < deviceListView.count; i++)
+                        for(let i = 0; i < project.patchCount(); i++)
                         {
-                            if(deviceListView.itemAtIndex(i).checked)
-                                draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
+                            if(project.patchPropertyForIndex(i, "checked"))
+                                draggedPlate.checkedIDs.push(project.patchPropertyForIndex(i, "ID"))
                         }
 
                         if(draggedPlate.checkedIDs.length === 0) // Перетаскивем только одну плашку, а она может быть и не выделена
