@@ -43,6 +43,25 @@ Item
         {
 
         }
+
+        Connections
+        {
+            target: deviceLib
+            function onWidthChanged()
+            {
+                let dx = deviceLib.expandedWidth - deviceLib.collapsedWidth
+
+                if(deviceLib.width === deviceLib.collapsedWidth)
+                {
+                    sceneWidget.adjustBackgroundImageOnX(-dx)
+                }
+
+                else
+                {
+                    sceneWidget.adjustBackgroundImageOnX(dx)
+                }
+            }
+        }
     }
 
     SideDockedWindow
@@ -96,6 +115,25 @@ Item
                 devListWidget.changeView()
             }
         }
+
+        Connections
+        {
+            target: deviceList
+            function onWidthChanged()
+            {
+                let dx = deviceList.expandedWidth - deviceList.collapsedWidth
+
+                if(deviceList.width === deviceList.collapsedWidth)
+                {
+                    sceneWidget.adjustBackgroundImageOnX(-dx)
+                }
+
+                else
+                {
+                    sceneWidget.adjustBackgroundImageOnX(dx)
+                }
+            }
+        }
     }
 
     SideDockedWindow
@@ -111,6 +149,25 @@ Item
         contentItem: DeviceGroupWidget
         {
 
+        }
+
+        Connections
+        {
+            target: groupList
+            function onWidthChanged()
+            {
+                let dx = groupList.expandedWidth - groupList.collapsedWidth
+
+                if(groupList.width === groupList.collapsedWidth)
+                {
+                    sceneWidget.adjustBackgroundImageOnX(-dx)
+                }
+
+                else
+                {
+                    sceneWidget.adjustBackgroundImageOnX(dx)
+                }
+            }
         }
     }
 

@@ -292,7 +292,7 @@ Item
                 {
                      id: fileDialog
                      title: "Please choose a file"
-                     folder: shortcuts.home
+//                     folder: shortcuts.home
                      onAccepted:
                      {
                          project.setProperty("backgroundImageFile", fileDialog.fileUrls[0])

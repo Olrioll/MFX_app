@@ -56,6 +56,25 @@ Item
         }
     }
 
+    function centerBackgroundImage()
+    {
+        backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
+        backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
+    }
+
+    function adjustBackgroundImageOnX(dx)
+    {
+        if(backgroundImage.width <= sceneWidget.width)
+        {
+            backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
+        }
+
+        else
+        {
+            backgroundImage.x -= dx
+        }
+    }
+
     function showPatchIcons(groupName, state)
     {
         for(let i = 0; i < patchIcons.length; i++)

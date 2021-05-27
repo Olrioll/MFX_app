@@ -16,6 +16,28 @@ Item
     signal groupNameClicked
     signal viewChanged
 
+    function backgroundBorderColor()
+    {
+        if(deviceGroup.isExpanded)
+        {
+            return "transparent"
+        }
+
+        else
+        {
+            let IDs = project.patchesIdList(deviceGroup.name)
+            for(let i = 0; i < IDs.length; i++)
+            {
+                if(project.patchProperty(IDs[i], "checked"))
+                {
+                    return "#8027AE60"
+                }
+            }
+
+            return "transparent"
+        }
+    }
+
     Rectangle
     {
         id: groupBackground
@@ -29,7 +51,7 @@ Item
         radius: 2
 
         border.width: 2
-        border.color: "transparent"
+        border.color: backgroundBorderColor()
 
         LinearGradient
         {
@@ -127,6 +149,7 @@ Item
         onCheckedChanged:
         {
             isExpanded = checked
+            groupBackground.border.color = backgroundBorderColor()
             viewChanged()
         }
     }
@@ -243,6 +266,15 @@ Item
         {
             id: deviceList
             groupName: deviceGroup.name
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onPatchCheckedChanged()
+        {
+            groupBackground.border.color = backgroundBorderColor()
         }
     }
 }
