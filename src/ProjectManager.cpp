@@ -9,7 +9,10 @@
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
-    loadProject(_settings.workDirectory() + "/test.mfx");
+    if(_settings.value("lastProject").toString() == "")
+        loadProject(_settings.workDirectory() + "/test.mfx");
+    else
+        loadProject(_settings.value("lastProject").toString());
 }
 
 ProjectManager::~ProjectManager()
@@ -161,6 +164,11 @@ void ProjectManager::setBackgroundImage(QString fileName)
 QString ProjectManager::selectBackgroundImageDialog()
 {
     return QFileDialog::getOpenFileName(nullptr, tr("Open Image"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("Image Files (*.png *.jpg *.bmp)"));
+}
+
+QString ProjectManager::openProjectDialog()
+{
+    return QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("MFX projects (*.mfx)"));
 }
 
 bool ProjectManager::addGroup(QString name)

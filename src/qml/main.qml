@@ -262,7 +262,18 @@ ApplicationWindow
                     id: fileMenu
                     y: fileMenuButton.height
                     Action { text: qsTr("New") }
-                    Action { text: qsTr("Open") }
+                    Action
+                    {
+                        text: qsTr("Open")
+                        onTriggered:
+                        {
+                            let openingProject = project.openProjectDialog();
+                            if(openingProject)
+                            {
+                                project.loadProject(openingProject);
+                            }
+                        }
+                    }
 
                     MfxMenu
                     {
