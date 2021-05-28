@@ -1,7 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
-import QtQuick.Dialogs 1.0
 
 Item
 {
@@ -10,6 +9,7 @@ Item
     height: 276
 
     property string caption: "Scene settings"
+    property string choosenImageFile: project.property("backgroundImageFile")
 
     Rectangle
     {
@@ -268,10 +268,12 @@ Item
 
                 Image
                 {
+                    id: placeholderImage
                     x: (parent.width - width) / 2
                     y: 20
                     source: "qrc:/imagePlaceholder"
                 }
+
 
                 Text {
                     id: buttonText
@@ -288,23 +290,12 @@ Item
                     font.pixelSize: 10
                 }
 
-                FileDialog
+                Image
                 {
-                     id: fileDialog
-                     title: "Please choose a file"
-                     folder: "file:///" + settingsManager.workDirectory()
-                     onAccepted:
-                     {
-                         project.setProperty("backgroundImageFile", fileDialog.fileUrls[0])
-                         sceneWidget.backgroundImage.source = fileDialog.fileUrls[0]
-                         fileDialog.close()
-                     }
-
-                     onRejected:
-                     {
-                         fileDialog.close()
-                     }
-                 }
+                    id: previewImage
+                    anchors.fill: parent
+                    source: sceneSettingsWidget.choosenImageFile === "" ? "" : "file:///" + sceneSettingsWidget.choosenImageFile
+                }
 
                 MouseArea
                 {
@@ -312,7 +303,8 @@ Item
 
                     onClicked:
                     {
-                        fileDialog.open()
+//                        fileDialog.open()
+                        sceneSettingsWidget.choosenImageFile = project.selectBackgroundImageDialog();
                     }
                 }
             }
@@ -337,6 +329,12 @@ Item
             {
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
+
+                if(sceneSettingsWidget.choosenImageFile !== "")
+                {
+                    project.setProperty("backgroundImageFile", sceneSettingsWidget.choosenImageFile)
+                    sceneWidget.backgroundImage.source = "file:///" + sceneSettingsWidget.choosenImageFile
+                }
                 sceneFrameItem.visible = true
                 applicationWindow.isPatchEditorOpened = false
                 sceneSettingsWidget.destroy();

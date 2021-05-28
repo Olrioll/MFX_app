@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QFile>
 #include <QJsonArray>
+#include <QFileDialog>
+#include <QStandardPaths>
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
@@ -110,6 +112,11 @@ void ProjectManager::saveProject()
             doc.setObject(_project);
             file.write(doc.toJson());
         }
+}
+
+QString ProjectManager::selectBackgroundImageDialog()
+{
+    return QFileDialog::getOpenFileName(nullptr, tr("Open Image"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("Image Files (*.png *.jpg *.bmp)"));
 }
 
 bool ProjectManager::addGroup(QString name)

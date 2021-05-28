@@ -131,6 +131,8 @@ public slots:
     void loadProject(QString fileName);
     void saveProject();
 
+    QString selectBackgroundImageDialog();
+
     QStringList groupNames() const;
     bool isGroupContainsPatch(QString groupName, int patchId) const;
     bool isPatchHasGroup(int patchId) const;
