@@ -128,6 +128,8 @@ void ProjectManager::saveProject()
     jsonFile.waitForBytesWritten(30000);
     jsonFile.close();
 
+    QFile::remove(_settings.value("lastProject").toString());
+
     QProcess proc;
     proc.setProgram("7z.exe");
     QStringList args = {};
@@ -145,6 +147,15 @@ void ProjectManager::saveProject()
     img.remove();
     QFile track(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
     track.remove();
+}
+
+void ProjectManager::setBackgroundImage(QString fileName)
+{
+    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    QFileInfo info(fileName);
+    QString shortName = info.completeBaseName();
+    QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
+    setProperty("backgroundImageFile", info.completeBaseName() + "." + info.completeSuffix());
 }
 
 QString ProjectManager::selectBackgroundImageDialog()

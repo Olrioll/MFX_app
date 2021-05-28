@@ -131,6 +131,8 @@ public slots:
     void loadProject(QString fileName);
     void saveProject();
 
+    void setBackgroundImage(QString fileName);
+
     QString selectBackgroundImageDialog();
 
     QStringList groupNames() const;

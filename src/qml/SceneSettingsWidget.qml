@@ -9,7 +9,7 @@ Item
     height: 276
 
     property string caption: "Scene settings"
-    property string choosenImageFile: project.property("backgroundImageFile")
+    property string choosenImageFile: project.property("backgroundImageFile") === "" ? "" : settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
 
     Rectangle
     {
@@ -332,8 +332,8 @@ Item
 
                 if(sceneSettingsWidget.choosenImageFile !== "")
                 {
-                    project.setProperty("backgroundImageFile", sceneSettingsWidget.choosenImageFile)
-                    sceneWidget.backgroundImage.source = "file:///" + sceneSettingsWidget.choosenImageFile
+                    project.setBackgroundImage(sceneSettingsWidget.choosenImageFile)
+                    sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
                 }
                 sceneFrameItem.visible = true
                 applicationWindow.isPatchEditorOpened = false
