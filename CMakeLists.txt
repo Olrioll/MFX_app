@@ -8,6 +8,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-add_executable(${PROJECT_NAME} WIN32 "appIcon.rc" "qml.qrc" "src/main.cpp" "src/AudioTrackRepresentation.cpp" "src/WaveformWidget.cpp"
+add_executable(${PROJECT_NAME}  "appIcon.rc" "qml.qrc" "src/main.cpp" "src/AudioTrackRepresentation.cpp" "src/WaveformWidget.cpp"
                                         "src/SettingsManager.cpp" "src/ProjectManager.cpp")
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Qml Qt5::Quick Qt5::Multimedia)

@@ -116,7 +116,9 @@ Item
         id: backgroundImage
         width: sourceSize.width * sceneWidget.scaleFactor
         height: sourceSize.height * sceneWidget.scaleFactor
-        source: project.property("backgroundImageFile") === "" ? "file:///" + settingsManager.workDirectory() + "/default.png" : "file:///" + project.property("backgroundImageFile")
+        source: project.property("backgroundImageFile") === "" ?
+                    "file:///" + settingsManager.workDirectory() + "/default.png" :
+                    "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
     }
 
     MouseArea

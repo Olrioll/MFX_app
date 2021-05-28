@@ -5,10 +5,11 @@
 #include <QJsonArray>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QProcess>
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
-    loadProject(_settings.workDirectory() + "/test.json");
+    loadProject(_settings.workDirectory() + "/test.mfx");
 }
 
 ProjectManager::~ProjectManager()
@@ -43,9 +44,20 @@ QString ProjectManager::currentGroup() const
 
 void ProjectManager::loadProject(QString fileName)
 {
-    QFile file(fileName);
+    QProcess proc;
+    proc.setProgram("7z.exe");
+    QStringList args = {};
+    args.append("e");
+    args.append("-o" + _settings.workDirectory());
+    args.append("-y");
+    args.append(fileName);
+    proc.start("7z.exe", args);
+    proc.waitForFinished();
+
+    QFile file(_settings.workDirectory() + "/project.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        _settings.setValue("lastProject", fileName);
         _project = QJsonDocument::fromJson(file.readAll()).object();
 
         // Загружаем группы приборов
@@ -105,13 +117,34 @@ void ProjectManager::saveProject()
 
     _project.insert("properties", properties);
 
-    QFile file(_settings.workDirectory() + "/test.json");
-        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
-        {
-            QJsonDocument doc;
-            doc.setObject(_project);
-            file.write(doc.toJson());
-        }
+    QFile jsonFile(_settings.workDirectory() + "/project.json");
+    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        QJsonDocument doc;
+        doc.setObject(_project);
+        jsonFile.write(doc.toJson());
+    }
+
+    jsonFile.waitForBytesWritten(30000);
+    jsonFile.close();
+
+    QProcess proc;
+    proc.setProgram("7z.exe");
+    QStringList args = {};
+    args.append("a");
+    args.append(_settings.value("lastProject").toString());
+    args.append("-y");
+    args.append(_settings.workDirectory() + "/project.json");
+    args.append(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    args.append(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+    proc.start("7z.exe", args);
+    proc.waitForFinished();
+
+    jsonFile.remove();
+    QFile img(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    img.remove();
+    QFile track(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+    track.remove();
 }
 
 QString ProjectManager::selectBackgroundImageDialog()
