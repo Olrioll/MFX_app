@@ -16,11 +16,33 @@ Item
     signal groupNameClicked
     signal viewChanged
 
-    function backgroundBorderColor()
+//    function backgroundBorderColor()
+//    {
+//        if(deviceGroup.isExpanded)
+//        {
+//            return "transparent"
+//        }
+
+//        else
+//        {
+//            let IDs = project.patchesIdList(deviceGroup.name)
+//            for(let i = 0; i < IDs.length; i++)
+//            {
+//                if(project.patchProperty(IDs[i], "checked"))
+//                {
+//                    return "#8027AE60"
+//                }
+//            }
+
+//            return "transparent"
+//        }
+//    }
+
+    function needToShowIndicator()
     {
         if(deviceGroup.isExpanded)
         {
-            return "transparent"
+            return false
         }
 
         else
@@ -30,11 +52,11 @@ Item
             {
                 if(project.patchProperty(IDs[i], "checked"))
                 {
-                    return "#8027AE60"
+                    return true
                 }
             }
 
-            return "transparent"
+            return false
         }
     }
 
@@ -47,26 +69,49 @@ Item
         anchors.top: parent.top
         height: parent.height + 4
         width: parent.parent ? parent.parent.width : parent.width
+        visible: deviceGroup.checked
         color: "transparent"
         radius: 2
 
-        border.width: 2
-        border.color: backgroundBorderColor()
+        border.width: 1
+//        border.color: backgroundBorderColor()
+        border.color: "#2F80ED"
 
-        LinearGradient
+
+        Rectangle
         {
-            id: groupBackgroundGradient
             anchors.fill: parent
-            start: Qt.point(0, parent.height + 2)
-            end: Qt.point(0, 0)
-            visible: deviceGroup.checked
-
-            gradient: Gradient
-            {
-                GradientStop { position: 1.0; color: "#802F4C8A" }
-                GradientStop { position: 0.0; color: "#202F4C8A" }
-            }
+            color: "#2F80ED"
+            opacity: 0.5
+            radius: 2
         }
+
+        Rectangle
+        {
+            anchors.topMargin: 22
+            anchors.leftMargin: 2
+            anchors.rightMargin: 2
+            anchors.bottomMargin: 2
+            anchors.fill: parent
+            color: "black"
+        }
+
+
+
+//        LinearGradient
+//        {
+//            id: groupBackgroundGradient
+//            anchors.fill: parent
+//            start: Qt.point(0, parent.height + 2)
+//            end: Qt.point(0, 0)
+//            visible: deviceGroup.checked
+
+//            gradient: Gradient
+//            {
+//                GradientStop { position: 1.0; color: "#802F4C8A" }
+//                GradientStop { position: 0.0; color: "#202F4C8A" }
+//            }
+//        }
 
         DropArea
         {
@@ -117,6 +162,30 @@ Item
         }
     }
 
+    Rectangle
+    {
+        id: indicator
+        width: 12
+        height: 12
+        radius: 6
+        anchors.topMargin: 1
+        anchors.rightMargin: 3
+        anchors.top: parent.top
+        anchors.right: groupBackground.right
+        color: "#27AE60"
+        opacity: 0.5
+        visible: needToShowIndicator()
+
+        Rectangle
+        {
+            width: 8
+            height: 8
+            radius: 4
+            anchors.centerIn: parent
+            color: "#27AE60"
+        }
+    }
+
     Button
     {
         id: collapseButton
@@ -149,7 +218,8 @@ Item
         onCheckedChanged:
         {
             isExpanded = checked
-            groupBackground.border.color = backgroundBorderColor()
+//            groupBackground.border.color = backgroundBorderColor()
+            indicator.visible = needToShowIndicator()
             viewChanged()
         }
     }
@@ -274,7 +344,8 @@ Item
         target: project
         function onPatchCheckedChanged()
         {
-            groupBackground.border.color = backgroundBorderColor()
+//            groupBackground.border.color = backgroundBorderColor()
+            indicator.visible = needToShowIndicator()
         }
     }
 }
