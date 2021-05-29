@@ -876,12 +876,22 @@ Item
 
                     var prevWidth = backgroundImage.width
                     var prevHeight = backgroundImage.height
-                    var newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor / dScale)
-                    var newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor / dScale)
+
+                    var newScaleFactor = sceneWidget.scaleFactor
+
+                    if(sceneWidget.scaleFactor / dScale > maxScaleFactor)
+                        newScaleFactor = maxScaleFactor
+                    else if (sceneWidget.scaleFactor / dScale < minScaleFactor)
+                        newScaleFactor = minScaleFactor
+                    else
+                        newScaleFactor = sceneWidget.scaleFactor / dScale
+
+                    var newWidth = backgroundImage.sourceSize.width * newScaleFactor
+                    var newHeight = backgroundImage.sourceSize.height * newScaleFactor
                     var currWidthChange = newWidth - prevWidth
                     var currHeightChange = newHeight - prevHeight
 
-                    sceneWidget.scaleFactor = sceneWidget.scaleFactor / dScale
+                    sceneWidget.scaleFactor = newScaleFactor
                     project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
 
                     let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
@@ -942,14 +952,97 @@ Item
 
                     prevWidth = backgroundImage.width
                     prevHeight = backgroundImage.height
-                    newWidth = backgroundImage.sourceSize.width * (sceneWidget.scaleFactor / dScale)
-                    newHeight = backgroundImage.sourceSize.height * (sceneWidget.scaleFactor / dScale)
+
+                    newScaleFactor = sceneWidget.scaleFactor
+
+                    if(sceneWidget.scaleFactor / dScale > maxScaleFactor)
+                        newScaleFactor = maxScaleFactor
+                    else if (sceneWidget.scaleFactor / dScale < minScaleFactor)
+                        newScaleFactor = minScaleFactor
+                    else
+                        newScaleFactor = sceneWidget.scaleFactor / dScale
+
+                    newWidth = backgroundImage.sourceSize.width * newScaleFactor
+                    newHeight = backgroundImage.sourceSize.height * newScaleFactor
                     currWidthChange = newWidth - prevWidth
                     currHeightChange = newHeight - prevHeight
 
-                    sceneWidget.scaleFactor = sceneWidget.scaleFactor / dScale
+                    sceneWidget.scaleFactor = newScaleFactor
                     project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+                    let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
+                    backgroundImage.x -= dx
 
+                    let dy = (areaCenterY - backgroundImage.y) / prevHeight * currHeightChange
+                    backgroundImage.y -= dy
+                }
+
+                ///--- И еще раз дублируем
+
+                minX = 9999
+                minY = 9999
+                maxX = 0
+                maxY = 0
+
+                hasVisibleIcons = false
+
+                for(let z = 0; z < patchIcons.length; z++)
+                {
+                    let currIcon = patchIcons[z]
+                    let currIconCoord = patchIcons[z].mapToGlobal(0, 0)
+                    if(currIcon.visible)
+                    {
+                        hasVisibleIcons = true
+                        if(currIconCoord.x < minX)
+                            minX = currIconCoord.x
+                        if(currIconCoord.y < minY)
+                            minY = currIconCoord.y
+                        if(currIconCoord.x > maxX)
+                            maxX = currIconCoord.x
+                        if(currIconCoord.y > maxY)
+                            maxY = currIconCoord.y
+                    }
+                }
+
+                if(hasVisibleIcons)
+                {
+                    maxX += patchIcons[0].width
+                    maxY += patchIcons[0].height
+
+                    let areaWidth = maxX - minX
+                    let areaHeight = maxY - minY
+                    let areaCenterX = minX + areaWidth / 2
+                    let areaCenterY = minY + areaHeight / 2
+                    let sceneWidgetCenterX = sceneWidget.mapToGlobal(0, 0).x + sceneWidget.width / 2
+                    let sceneWidgetCenterY = sceneWidget.mapToGlobal(0, 0).y + sceneWidget.height / 2
+
+                    let dScaleX = areaWidth / sceneWidget.width
+                    let dScaleY = areaHeight / sceneWidget.height
+
+                    let dScale = dScaleX > dScaleY ? dScaleX : dScaleY
+                    dScale = dScale + 0.2 * dScale
+
+                    backgroundImage.x += sceneWidgetCenterX - areaCenterX
+                    backgroundImage.y += sceneWidgetCenterY - areaCenterY
+
+                    prevWidth = backgroundImage.width
+                    prevHeight = backgroundImage.height
+
+                    newScaleFactor = sceneWidget.scaleFactor
+
+                    if(sceneWidget.scaleFactor / dScale > maxScaleFactor)
+                        newScaleFactor = maxScaleFactor
+                    else if (sceneWidget.scaleFactor / dScale < minScaleFactor)
+                        newScaleFactor = minScaleFactor
+                    else
+                        newScaleFactor = sceneWidget.scaleFactor / dScale
+
+                    newWidth = backgroundImage.sourceSize.width * newScaleFactor
+                    newHeight = backgroundImage.sourceSize.height * newScaleFactor
+                    currWidthChange = newWidth - prevWidth
+                    currHeightChange = newHeight - prevHeight
+
+                    sceneWidget.scaleFactor = newScaleFactor
+                    project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
                     let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
                     backgroundImage.x -= dx
 
