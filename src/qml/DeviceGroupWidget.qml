@@ -7,8 +7,6 @@ import "qrc:/"
 
 Item
 {
-//    anchors.margins: 2
-//    anchors.fill: parent
     width: groupListView.width + 10
 
     ListView
@@ -21,7 +19,6 @@ Item
         anchors.left: parent.left
         anchors.bottomMargin: 10
         anchors.bottom: addGroupButton.top
-//        clip: true
         spacing: 10
 
         ScrollBar.vertical: ScrollBar

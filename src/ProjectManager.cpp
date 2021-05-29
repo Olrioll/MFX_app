@@ -394,6 +394,16 @@ void ProjectManager::setPatchPropertyForIndex(int index, QString propertyName, Q
     }
 }
 
+void ProjectManager::setPatchesInGroupChecked(QString groupName, bool state)
+{
+    auto IDs = patchesIdList(groupName);
+    for(auto & id : IDs)
+    {
+        setPatchProperty(id, "checked", state);
+        emit patchCheckedChanged(id, state);
+    }
+}
+
 void ProjectManager::removePatches(QList<int> IDs)
 {
     QList<Patch> newList;

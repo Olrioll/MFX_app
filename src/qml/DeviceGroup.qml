@@ -267,6 +267,15 @@ Item
                 }
             }
 
+            onDoubleClicked:
+            {
+                if (mouse.button === Qt.LeftButton)
+                {
+                    project.setCurrentGroup(deviceGroup.name)
+                    project.setPatchesInGroupChecked(deviceGroup.name, true)
+                }
+            }
+
             Menu
             {
                 id: contextMenu
@@ -320,8 +329,6 @@ Item
             }
         }
     }
-
-
 
     Item
     {
