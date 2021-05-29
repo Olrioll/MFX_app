@@ -102,13 +102,6 @@ Item
                 showPatchIcons(groupNames[i], true)
             }
         }
-
-//        for(i = 0; i < switchGroupsButtons.count; i ++)
-//        {
-//            let currButton = switchGroupsButtons.itemAtIndex(i)
-//            if(currButton && currButton.checked)
-//                showPatchIcons(currButton.text, true)
-//        }
     }
 
     Image
@@ -1099,6 +1092,17 @@ Item
         function onGroupCountChanged()
         {
             switchGroupsButtons.refreshList()
+        }
+    }
+
+    Connections
+    {
+        target: project
+        function onBackgroundImageChanged()
+        {
+            backgroundImage.source = project.property("backgroundImageFile") === "" ?
+                        "file:///" + settingsManager.workDirectory() + "/default.png" :
+                        "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
         }
     }
 

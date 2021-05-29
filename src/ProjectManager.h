@@ -179,6 +179,7 @@ signals:
     void groupCountChanged();
     void patchListChanged();
     void patchCheckedChanged(int id, bool checked);
+    void backgroundImageChanged();
 
     void sceneFrameWidthChanged(double sceneFrameWidth);
 

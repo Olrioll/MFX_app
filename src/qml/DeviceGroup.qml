@@ -46,7 +46,7 @@ Item
         anchors.topMargin: -3
         anchors.top: parent.top
         height: parent.height + 4
-        width: parent.parent.width
+        width: parent.parent ? parent.parent.width : parent.width
         color: "transparent"
         radius: 2
 
@@ -161,7 +161,7 @@ Item
         anchors.leftMargin: 10
         anchors.left: collapseButton.right
         height: collapseButton.height
-        width: parent.parent.width
+        width: parent.parent ? parent.parent.width : parent.width
 
         Text
         {

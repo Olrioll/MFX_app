@@ -47,6 +47,8 @@ QString ProjectManager::currentGroup() const
 
 void ProjectManager::loadProject(QString fileName)
 {
+    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+
     QProcess proc;
     proc.setProgram("7z.exe");
     QStringList args = {};
@@ -65,6 +67,8 @@ void ProjectManager::loadProject(QString fileName)
 
         // Загружаем группы приборов
 
+        _groups.clear();
+
         auto groupsArray = _project["groups"].toArray();
         foreach(auto group, groupsArray)
         {
@@ -72,6 +76,8 @@ void ProjectManager::loadProject(QString fileName)
         }
 
         // Загружаем список патчей
+
+        _patches.clear();
 
         auto patchesArray = _project["patches"].toArray();
         foreach(auto patch, patchesArray)
@@ -81,7 +87,13 @@ void ProjectManager::loadProject(QString fileName)
 
         // Загружаем свойства
 
+        _properties.clear();
+
         _properties = _project.value("properties").toObject().toVariantMap();
+
+        emit groupCountChanged();
+        emit patchListChanged();
+        emit backgroundImageChanged();
     }
 }
 
@@ -146,10 +158,8 @@ void ProjectManager::saveProject()
     proc.waitForFinished();
 
     jsonFile.remove();
-    QFile img(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
-    img.remove();
-    QFile track(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
-    track.remove();
+    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
 }
 
 void ProjectManager::setBackgroundImage(QString fileName)
