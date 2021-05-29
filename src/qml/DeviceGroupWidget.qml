@@ -110,43 +110,15 @@ Item
         }
     }
 
-    Button
+    MfxHilightedButton
     {
         id: addGroupButton
         text: qsTr("Add Group")
-        height: 24
         width: (parent.width) / 3 - 4
+        color: "#27AE60"
 
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-
-
-        bottomPadding: 2
-        topPadding: 2
-        rightPadding: 2
-        leftPadding: 2
-
-        background: Rectangle
-        {
-            color:
-            {
-                if(parent.enabled)
-                    parent.pressed ? "#222222" : "#27AE60"
-                else
-                    "#444444"
-            }
-            radius: 2
-        }
-
-        contentItem: Text
-        {
-            color: parent.enabled ? "#ffffff" : "#777777"
-            text: parent.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            font.family: "Roboto"
-        }
 
         onClicked:
         {
@@ -158,38 +130,17 @@ Item
         }
     }
 
-    Button
+
+    MfxHilightedButton
     {
         id: editButton
         text: qsTr("Edit")
-        height: 24
         width: addGroupButton.width
+        color: "#2F80ED"
 
         anchors.leftMargin: 2
         anchors.left: addGroupButton.right
         anchors.bottom: parent.bottom
-
-
-        bottomPadding: 2
-        topPadding: 2
-        rightPadding: 2
-        leftPadding: 2
-
-        background: Rectangle
-        {
-            color: parent.pressed ? "#222222" : "#2F80ED"
-            radius: 2
-        }
-
-        contentItem: Text
-        {
-            color: "#ffffff"
-            text: parent.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            font.family: "Roboto"
-        }
 
         onClicked:
         {
@@ -204,38 +155,16 @@ Item
         }
     }
 
-    Button
+    MfxHilightedButton
     {
         id: deleteButton
         text: qsTr("Delete selected")
-        height: 24
         width: editButton.width
+        color: "#EB5757"
 
         anchors.leftMargin: 2
         anchors.left: editButton.right
         anchors.bottom: parent.bottom
-
-
-        bottomPadding: 2
-        topPadding: 2
-        rightPadding: 2
-        leftPadding: 2
-
-        background: Rectangle
-        {
-            color: parent.pressed ? "#222222" : "#EB5757"
-            radius: 2
-        }
-
-        contentItem: Text
-        {
-            color: "#ffffff"
-            text: parent.text
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            font.family: "Roboto"
-        }
 
         onClicked:
         {

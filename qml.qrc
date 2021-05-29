@@ -58,5 +58,6 @@
         <file alias="settingsButton">src/img/player_settingsButton.png</file>
         <file alias="repeatButton">src/img/player_repeatButton.png</file>
         <file alias="repeatButtonChecked">src/img/player_repeatButtonChecked.png</file>
+        <file>src/qml/MfxHilightedButton.qml</file>
     </qresource>
 </RCC>
