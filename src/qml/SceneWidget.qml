@@ -987,9 +987,20 @@ Item
 
         onClicked:
         {
-            for(let i = 0; i < switchGroupsButtons.count; i++)
+            if(isNeedToBeChecked())
             {
-                switchGroupsButtons.itemAtIndex(i).checked = true
+                for(let i = 0; i < switchGroupsButtons.count; i++)
+                {
+                    switchGroupsButtons.itemAtIndex(i).checked = false
+                }
+            }
+
+            else
+            {
+                for(let i = 0; i < switchGroupsButtons.count; i++)
+                {
+                    switchGroupsButtons.itemAtIndex(i).checked = true
+                }
             }
         }
     }
