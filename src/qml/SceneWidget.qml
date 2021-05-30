@@ -469,8 +469,8 @@ Item
         id: sceneFrameItem
         x: project.property("sceneFrameX") * backgroundImage.width
         y: project.property("sceneFrameY") * backgroundImage.height
-        width: 200
-        height: 100
+        width: project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
+        height: project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
         visible: false
 
         function restorePreviousGeometry()
@@ -514,8 +514,11 @@ Item
                 onMouseYChanged:
                 {
                     var dy = mouseY - prevY
-                    sceneFrameItem.height += dy
-                    sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
+                    if(!(sceneFrameItem.y + sceneFrameItem.height + dy > backgroundImage.y + backgroundImage.height))
+                    {
+                        sceneFrameItem.height += dy
+                        sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
+                    }
                 }
             }
 
@@ -541,8 +544,11 @@ Item
                 onMouseYChanged:
                 {
                     var dx = mouseX - prevX
-                    sceneFrameItem.width += dx
-                    sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
+                    if(!(sceneFrameItem.x + sceneFrameItem.width + dx > backgroundImage.x + backgroundImage.width))
+                    {
+                        sceneFrameItem.width += dx
+                        sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
+                    }
                 }
             }
         }
@@ -575,15 +581,20 @@ Item
                 drag.target: sceneFrameItem
                 drag.axis: Drag.XandYAxis
 
-                drag.minimumX: backgroundImage.mapToItem(sceneWidget, 0, 0).x
-                drag.maximumX: sceneWidget.width - sceneFrame.width
-                drag.minimumY: sceneWidget.mapToItem(sceneWidget, 0, 0).y + 10
-                drag.maximumY: sceneWidget.height - sceneFrame.height
+//                drag.minimumX: backgroundImage.mapToItem(sceneWidget, 0, 0).x
+//                drag.maximumX: sceneWidget.width - sceneFrame.width
+//                drag.minimumY: sceneWidget.mapToItem(sceneWidget, 0, 0).y + 10
+//                drag.maximumY: sceneWidget.height - sceneFrame.height
+
+                drag.minimumX: backgroundImage.x
+                drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
+                drag.minimumY: backgroundImage.y + 10
+                drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
 
                 onReleased:
                 {
-                    project.setProperty("sceneFrameX", (sceneFrameItem.x / backgroundImage.width))
-                    project.setProperty("sceneFrameY", (sceneFrameItem.y / backgroundImage.height))
+//                    project.setProperty("sceneFrameX", (sceneFrameItem.x / backgroundImage.width))
+//                    project.setProperty("sceneFrameY", (sceneFrameItem.y / backgroundImage.height))
                 }
             }
         }
@@ -610,6 +621,8 @@ Item
 
             onClicked:
             {
+                project.setProperty("sceneFrameX", (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width)
+                project.setProperty("sceneFrameY", (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height)
                 project.setProperty("sceneImageHeight", backgroundImage.height / sceneFrame.height * project.property("sceneFrameHeight"))
                 project.setProperty("sceneImageWidth", backgroundImage.width / sceneFrame.width * project.property("sceneFrameWidth"))
                 sceneFrameItem.visible = false

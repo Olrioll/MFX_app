@@ -335,6 +335,7 @@ Item
                     project.setBackgroundImage(sceneSettingsWidget.choosenImageFile)
                     sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
                 }
+                sceneFrameItem.restorePreviousGeometry()
                 sceneFrameItem.visible = true
                 applicationWindow.isPatchEditorOpened = false
                 sceneSettingsWidget.destroy();

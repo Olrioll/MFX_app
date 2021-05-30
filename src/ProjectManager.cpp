@@ -164,11 +164,14 @@ void ProjectManager::saveProject()
 
 void ProjectManager::setBackgroundImage(QString fileName)
 {
-    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
     QFileInfo info(fileName);
-    QString shortName = info.completeBaseName();
-    QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
-    setProperty("backgroundImageFile", info.completeBaseName() + "." + info.completeSuffix());
+    if((info.completeBaseName() + "." + info.completeSuffix()) != property("backgroundImageFile").toString())
+    {
+        QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+        QString shortName = info.completeBaseName();
+        QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
+        setProperty("backgroundImageFile", info.completeBaseName() + "." + info.completeSuffix());
+    }
 }
 
 QString ProjectManager::selectBackgroundImageDialog()
