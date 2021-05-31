@@ -10,9 +10,13 @@
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
     if(_settings.value("lastProject").toString() == "")
-        loadProject(_settings.workDirectory() + "/test.mfx");
+    {
+//        loadProject(_settings.workDirectory() + "/test.mfx");
+    }
     else
+    {
         loadProject(_settings.value("lastProject").toString());
+    }
 }
 
 ProjectManager::~ProjectManager()
@@ -95,6 +99,19 @@ void ProjectManager::loadProject(QString fileName)
         emit patchListChanged();
         emit backgroundImageChanged();
     }
+}
+
+void ProjectManager::newProject()
+{
+    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+
+    _groups.clear();
+    _patches.clear();
+    _properties.clear();
+
+    emit groupCountChanged();
+    emit patchListChanged();
+    emit backgroundImageChanged();
 }
 
 void ProjectManager::saveProject()

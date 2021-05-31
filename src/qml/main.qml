@@ -261,7 +261,14 @@ ApplicationWindow
                 {
                     id: fileMenu
                     y: fileMenuButton.height
-                    Action { text: qsTr("New") }
+                    Action
+                    {
+                        text: qsTr("New")
+                        onTriggered:
+                        {
+                            project.newProject()
+                        }
+                    }
                     Action
                     {
                         text: qsTr("Open")

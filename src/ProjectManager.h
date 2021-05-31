@@ -129,6 +129,7 @@ public:
 public slots:
 
     void loadProject(QString fileName);
+    void newProject();
     void saveProject();
 
     void setBackgroundImage(QString fileName);

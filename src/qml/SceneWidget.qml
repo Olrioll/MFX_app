@@ -11,7 +11,7 @@ Item
 
     property alias backgroundImage: backgroundImage
     property var patchIcons: []
-    property real scaleFactor: project.property("sceneScaleFactor")
+    property real scaleFactor: project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
     property real maxScaleFactor: 3.0
     property real minScaleFactor: 0.2
 
@@ -109,8 +109,8 @@ Item
         id: backgroundImage
         width: sourceSize.width * sceneWidget.scaleFactor
         height: sourceSize.height * sceneWidget.scaleFactor
-        source: project.property("backgroundImageFile") === "" ?
-                    "file:///" + settingsManager.workDirectory() + "/default.png" :
+        source: project.property("backgroundImageFile") === "" || project.property("backgroundImageFile") === undefined ?
+                    "" :
                     "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
     }
 
@@ -655,9 +655,9 @@ Item
             onClicked:
             {
                 sceneFrameItem.visible = false
-                deviceLib.setActive(true)
-                deviceList.setActive(true)
-                groupList.setActive(true)
+                patchScreen.deviceLibWidget.setActive(true)
+                patchScreen.deviceListWidget.setActive(true)
+                patchScreen.groupListWidget.setActive(true)
             }
         }
 
