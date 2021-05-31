@@ -487,6 +487,26 @@ void ProjectManager::setPatchesInGroupChecked(QString groupName, bool state)
     }
 }
 
+void ProjectManager::attemptToCheckPatches(QString groupName)
+{
+    bool hasUnchecked = false;
+    auto IDs = patchesIdList(groupName);
+    for(auto & id : IDs)
+    {
+        if(!patchProperty(id, "checked").toBool())
+        {
+            hasUnchecked = true;
+            break;
+        }
+    }
+
+    for(auto & id : IDs)
+    {
+        setPatchProperty(id, "checked", hasUnchecked);
+        emit patchCheckedChanged(id, hasUnchecked);
+    }
+}
+
 void ProjectManager::removePatches(QList<int> IDs)
 {
     QList<Patch> newList;

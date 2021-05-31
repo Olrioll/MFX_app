@@ -169,9 +169,9 @@ Item
         height: 12
         radius: 6
         anchors.topMargin: 1
-        anchors.rightMargin: 3
+        anchors.leftMargin: 24
         anchors.top: parent.top
-        anchors.right: groupBackground.right
+        anchors.left: groupBackground.left
         color: "#27AE60"
         opacity: 0.5
         visible: needToShowIndicator()
@@ -238,7 +238,7 @@ Item
             id: groupNameText
             color: "#ffffff"
             text: deviceGroup.name
-            anchors.leftMargin: 2
+            anchors.leftMargin: 10
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignHLeft
@@ -272,7 +272,7 @@ Item
                 if (mouse.button === Qt.LeftButton)
                 {
                     project.setCurrentGroup(deviceGroup.name)
-                    project.setPatchesInGroupChecked(deviceGroup.name, true)
+                    project.attemptToCheckPatches(deviceGroup.name)
                 }
             }
 
