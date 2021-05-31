@@ -218,17 +218,50 @@ void ProjectManager::setBackgroundImage(QString fileName)
 
 QString ProjectManager::selectBackgroundImageDialog()
 {
-    return QFileDialog::getOpenFileName(nullptr, tr("Open Image"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("Image Files (*.png *.jpg *.bmp)"));
+    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
+    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
+
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Image"), lastOpenedDir, tr("Image Files (*.png *.jpg *.bmp)"));
+
+    if(fileName.size())
+    {
+        QFileInfo info(fileName);
+        _settings.setValue("lastOpenedDirectory", info.canonicalPath());
+    }
+
+    return fileName;
 }
 
 QString ProjectManager::openProjectDialog()
 {
-    return QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("MFX projects (*.mfx)"));
+    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
+    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
+
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), lastOpenedDir, tr("MFX projects (*.mfx)"));
+
+    if(fileName.size())
+    {
+        QFileInfo info(fileName);
+        _settings.setValue("lastOpenedDirectory", info.canonicalPath());
+    }
+
+    return fileName;
 }
 
 QString ProjectManager::saveProjectDialog()
 {
-    return QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("MFX projects (*.mfx)"));
+    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
+    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
+
+    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), lastOpenedDir, tr("MFX projects (*.mfx)"));
+
+    if(fileName.size())
+    {
+        QFileInfo info(fileName);
+        _settings.setValue("lastOpenedDirectory", info.canonicalPath());
+    }
+
+    return fileName;
 }
 
 bool ProjectManager::addGroup(QString name)
