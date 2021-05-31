@@ -104,13 +104,26 @@ Item
         }
     }
 
+    Rectangle
+    {
+        id: defaultBackgroundRect
+        x: backgroundImage.x
+        y: backgroundImage.y
+        width: backgroundImage.width
+        height: backgroundImage.height
+        color: "transparent"
+
+        border.width: 2
+        border.color: "lightblue"
+    }
+
     Image
     {
         id: backgroundImage
         width: sourceSize.width * sceneWidget.scaleFactor
         height: sourceSize.height * sceneWidget.scaleFactor
         source: project.property("backgroundImageFile") === "" || project.property("backgroundImageFile") === undefined ?
-                    "" :
+                    "file:///" + settingsManager.workDirectory() + "/default.png" :
                     "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
     }
 
@@ -473,6 +486,9 @@ Item
         height: project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
         visible: false
 
+        property int minWidth: 200
+        property int minHeight: 100
+
         function restorePreviousGeometry()
         {
             sceneFrameItem.x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
@@ -514,11 +530,24 @@ Item
                 onMouseYChanged:
                 {
                     var dy = mouseY - prevY
-                    if(!(sceneFrameItem.y + sceneFrameItem.height + dy > backgroundImage.y + backgroundImage.height))
+
+                    var newHeight = sceneFrameItem.height + dy
+                    var newWidth = sceneFrameItem.width * newHeight / sceneFrameItem.height
+
+                    if(!(sceneFrameItem.y + newHeight > backgroundImage.y + backgroundImage.height) &&
+                            !(sceneFrameItem.x + newWidth > backgroundImage.x + backgroundImage.width) &&
+                            newHeight >= sceneFrameItem.minHeight &&
+                            newWidth >= sceneFrameItem.minWidth)
                     {
                         sceneFrameItem.height += dy
                         sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
                     }
+
+//                    if(!(sceneFrameItem.y + sceneFrameItem.height + dy > backgroundImage.y + backgroundImage.height))
+//                    {
+//                        sceneFrameItem.height += dy
+//                        sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
+//                    }
                 }
             }
 
@@ -544,11 +573,24 @@ Item
                 onMouseYChanged:
                 {
                     var dx = mouseX - prevX
-                    if(!(sceneFrameItem.x + sceneFrameItem.width + dx > backgroundImage.x + backgroundImage.width))
+
+                    var newWidth = sceneFrameItem.width + dx
+                    var newHeight = sceneFrameItem.height * newWidth / sceneFrameItem.width
+
+                    if(!(sceneFrameItem.y + newHeight > backgroundImage.y + backgroundImage.height) &&
+                            !(sceneFrameItem.x + newWidth > backgroundImage.x + backgroundImage.width) &&
+                            newHeight >= sceneFrameItem.minHeight &&
+                            newWidth >= sceneFrameItem.minWidth)
                     {
                         sceneFrameItem.width += dx
                         sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
                     }
+
+//                    if(!(sceneFrameItem.x + sceneFrameItem.width + dx > backgroundImage.x + backgroundImage.width))
+//                    {
+//                        sceneFrameItem.width += dx
+//                        sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
+//                    }
                 }
             }
         }

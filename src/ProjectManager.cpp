@@ -11,7 +11,7 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 {
     if(_settings.value("lastProject").toString() == "")
     {
-//        loadProject(_settings.workDirectory() + "/test.mfx");
+        newProject();
     }
     else
     {
@@ -67,6 +67,7 @@ void ProjectManager::loadProject(QString fileName)
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         _settings.setValue("lastProject", fileName);
+        _currentProjectFile = fileName;
         _project = QJsonDocument::fromJson(file.readAll()).object();
 
         // Загружаем группы приборов
@@ -103,11 +104,20 @@ void ProjectManager::loadProject(QString fileName)
 
 void ProjectManager::newProject()
 {
-    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    if(!_project.isEmpty())
+        saveProject();
 
     _groups.clear();
     _patches.clear();
     _properties.clear();
+
+    _currentProjectFile = "";
+    setProperty("backgroundImageFile", "");
+    setProperty("audioTrackFile", "");
+    setProperty("sceneFrameX", 0);
+    setProperty("sceneFrameY", 0);
+    setProperty("sceneImageWidth", 0);
+    setProperty("sceneScaleFactor", 1.0);
 
     emit groupCountChanged();
     emit patchListChanged();
@@ -116,6 +126,14 @@ void ProjectManager::newProject()
 
 void ProjectManager::saveProject()
 {
+    if(_currentProjectFile == "")
+    {
+        _currentProjectFile = saveProjectDialog();
+    }
+
+    if(_currentProjectFile == "")
+        return;
+
     _project = {};
 
     // Сохранияем группы приборов
@@ -160,23 +178,30 @@ void ProjectManager::saveProject()
     jsonFile.waitForBytesWritten(30000);
     jsonFile.close();
 
-    QFile::remove(_settings.value("lastProject").toString());
+    QFile::remove(_currentProjectFile);
 
     QProcess proc;
     proc.setProgram("7z.exe");
     QStringList args = {};
     args.append("a");
-    args.append(_settings.value("lastProject").toString());
+    args.append(_currentProjectFile);
     args.append("-y");
     args.append(_settings.workDirectory() + "/project.json");
-    args.append(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
-    args.append(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+
+    if(property("backgroundImageFile").toString() != "")
+        args.append(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+
+    if(property("audioTrackFile").toString() != "")
+        args.append(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+
     proc.start("7z.exe", args);
     proc.waitForFinished();
 
     jsonFile.remove();
     QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
     QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+
+    _settings.setValue("lastProject", _currentProjectFile);
 }
 
 void ProjectManager::setBackgroundImage(QString fileName)
@@ -199,6 +224,11 @@ QString ProjectManager::selectBackgroundImageDialog()
 QString ProjectManager::openProjectDialog()
 {
     return QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("MFX projects (*.mfx)"));
+}
+
+QString ProjectManager::saveProjectDialog()
+{
+    return QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation), tr("MFX projects (*.mfx)"));
 }
 
 bool ProjectManager::addGroup(QString name)

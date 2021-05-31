@@ -323,12 +323,18 @@ Item
                 bottom: parent.bottom
             }
 
+            enabled: Number(widthField.text) > 0 && Number(heightField.text) > 0
+
             text: qsTr("Apply")
 
             onClicked:
             {
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
+                if(project.property("sceneImageWidth") === 0 || !project.property("sceneImageWidth"))
+                {
+                    project.setProperty("sceneImageWidth", Number(widthField.text))
+                }
 
                 if(sceneSettingsWidget.choosenImageFile !== "")
                 {

@@ -136,6 +136,7 @@ public slots:
 
     QString selectBackgroundImageDialog();
     QString openProjectDialog();
+    QString saveProjectDialog();
 
     QStringList groupNames() const;
     bool isGroupContainsPatch(QString groupName, int patchId) const;
@@ -188,6 +189,7 @@ signals:
 private:
 
     SettingsManager& _settings;
+    QString _currentProjectFile = "";
 
     QJsonObject _project;
     QList<Group> _groups;
