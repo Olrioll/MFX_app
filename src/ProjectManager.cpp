@@ -52,6 +52,7 @@ QString ProjectManager::currentGroup() const
 void ProjectManager::loadProject(QString fileName)
 {
     QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
 
     QProcess proc;
     proc.setProgram("7z.exe");
@@ -216,12 +217,40 @@ void ProjectManager::setBackgroundImage(QString fileName)
     }
 }
 
+void ProjectManager::setAudioTrack(QString fileName)
+{
+    QFileInfo info(fileName);
+    if((info.completeBaseName() + "." + info.completeSuffix()) != property("audioTrackFile").toString())
+    {
+        QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+        QString shortName = info.completeBaseName();
+        QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
+        setProperty("audioTrackFile", info.completeBaseName() + "." + info.completeSuffix());
+    }
+}
+
 QString ProjectManager::selectBackgroundImageDialog()
 {
     QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
     lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
 
     QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Image"), lastOpenedDir, tr("Image Files (*.png *.jpg *.bmp)"));
+
+    if(fileName.size())
+    {
+        QFileInfo info(fileName);
+        _settings.setValue("lastOpenedDirectory", info.canonicalPath());
+    }
+
+    return fileName;
+}
+
+QString ProjectManager::selectAudioTrackDialog()
+{
+    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
+    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
+
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Audio Track"), lastOpenedDir, tr("Audio Files (*.wav *.mp3)"));
 
     if(fileName.size())
     {

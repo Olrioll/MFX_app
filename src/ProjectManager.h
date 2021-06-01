@@ -133,8 +133,10 @@ public slots:
     void saveProject();
 
     void setBackgroundImage(QString fileName);
+    void setAudioTrack(QString fileName);
 
     QString selectBackgroundImageDialog();
+    QString selectAudioTrackDialog();
     QString openProjectDialog();
     QString saveProjectDialog();
 

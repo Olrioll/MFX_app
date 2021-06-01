@@ -69,13 +69,12 @@ Item
         anchors.top: parent.top
         height: parent.height + 4
         width: parent.parent ? parent.parent.width : parent.width
-        visible: deviceGroup.checked
         color: "transparent"
         radius: 2
 
         border.width: 1
 //        border.color: backgroundBorderColor()
-        border.color: "#2F80ED"
+        border.color: "transparent"
 
 
         Rectangle
@@ -84,6 +83,7 @@ Item
             color: "#2F80ED"
             opacity: 0.5
             radius: 2
+            visible: deviceGroup.checked
         }
 
         Rectangle
@@ -94,6 +94,7 @@ Item
             anchors.bottomMargin: 2
             anchors.fill: parent
             color: "black"
+            visible: deviceGroup.checked
         }
 
 
