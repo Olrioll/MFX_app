@@ -90,7 +90,7 @@ Item
     {
         for(var i = 0; i < patchIcons.length; i++)
         {
-                patchIcons[i].visible = false
+            patchIcons[i].visible = false
         }
 
         let groupNames = project.groupNames()
@@ -101,6 +101,12 @@ Item
             {
                 showPatchIcons(groupNames[i], true)
             }
+        }
+
+        for(i = 0; i < patchIcons.length; i++)
+        {
+            if(!project.isPatchHasGroup(patchIcons[i].patchId) && showAllButton.isNeedToBeChecked())
+                patchIcons[i].visible = true
         }
     }
 
@@ -303,6 +309,7 @@ Item
             isSelectingIcons = false
             drag.target = null
             cursorShape = Qt.ArrowCursor
+            refreshPatchIconsVisibility();
         }
 
         onPositionChanged:
