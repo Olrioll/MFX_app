@@ -364,6 +364,9 @@ Item
                         }
                     }
                 }
+
+                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * backgroundImage.width + backgroundImage.x
+                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * backgroundImage.height + backgroundImage.y
             }
 
             else if(isSelectingIcons)
@@ -564,12 +567,6 @@ Item
                         sceneFrameItem.width = newWidth
                         sceneFrameItem.height = newHeight
                     }
-
-//                    if(!(sceneFrameItem.y + sceneFrameItem.height + dy > backgroundImage.y + backgroundImage.height))
-//                    {
-//                        sceneFrameItem.height += dy
-//                        sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
-//                    }
                 }
             }
 
@@ -607,12 +604,6 @@ Item
                         sceneFrameItem.width = newWidth
                         sceneFrameItem.height = newHeight
                     }
-
-//                    if(!(sceneFrameItem.x + sceneFrameItem.width + dx > backgroundImage.x + backgroundImage.width))
-//                    {
-//                        sceneFrameItem.width += dx
-//                        sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
-//                    }
                 }
             }
         }
@@ -645,21 +636,10 @@ Item
                 drag.target: sceneFrameItem
                 drag.axis: Drag.XandYAxis
 
-//                drag.minimumX: backgroundImage.mapToItem(sceneWidget, 0, 0).x
-//                drag.maximumX: sceneWidget.width - sceneFrame.width
-//                drag.minimumY: sceneWidget.mapToItem(sceneWidget, 0, 0).y + 10
-//                drag.maximumY: sceneWidget.height - sceneFrame.height
-
                 drag.minimumX: backgroundImage.x
                 drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
                 drag.minimumY: backgroundImage.y + 10
                 drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
-
-                onReleased:
-                {
-//                    project.setProperty("sceneFrameX", (sceneFrameItem.x / backgroundImage.width))
-//                    project.setProperty("sceneFrameY", (sceneFrameItem.y / backgroundImage.height))
-                }
             }
         }
 
