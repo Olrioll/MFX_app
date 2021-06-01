@@ -180,6 +180,8 @@ public slots:
 
 signals:
 
+    void projectLoaded();
+
     void currentGroupIndexChanged(int currentGroupIndex);
     void groupChanged(int index);
     void groupCountChanged();

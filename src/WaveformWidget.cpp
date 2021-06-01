@@ -2,11 +2,15 @@
 
 #include <QPainter>
 #include <QPainterPath>
+#include <QTime>
 
 WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), _track(this)
 {
     connect(&_track, &AudioTrackRepresentation::bufferCreated, [this](){showAll();});
-    _track.loadFile("scorpions.mp3");
+    connect(&_valueForPositionTimer, &QTimer::timeout, [this]()
+    {
+        emit timerValueChanged(QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz"));
+    });
 }
 
 void WaveformWidget::paint(QPainter *painter)
@@ -32,6 +36,13 @@ void WaveformWidget::paint(QPainter *painter)
         int amplitude = maxY * _currentSamples[i];
         painter->drawLine(i + 1 , maxY - amplitude / 2 * m_scaleFactor,  i + 1, maxY + amplitude / 2  * m_scaleFactor);
     }
+}
+
+void WaveformWidget::setAudioTrackFile(QString fileName)
+{
+    _audioTrackFile = fileName;
+    _track.loadFile(_audioTrackFile);
+    _player.setMedia(QUrl::fromLocalFile(fileName));
 }
 
 void WaveformWidget::refresh()
@@ -108,4 +119,16 @@ void WaveformWidget::setscaleFactor(float scaleFactor)
     m_scaleFactor = scaleFactor;
     refresh();
     emit scaleFactorChanged(m_scaleFactor);
+}
+
+void WaveformWidget::play()
+{
+    _valueForPositionTimer.start(50);
+    _player.play();
+}
+
+void WaveformWidget::pause()
+{
+    _valueForPositionTimer.stop();
+    _player.pause();
 }

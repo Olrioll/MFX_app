@@ -40,6 +40,24 @@ Item
             onWheel: (wheel.angleDelta.y > 0) ? waveformWidget.zoomOut()
                                               : waveformWidget.zoomIn()
         }
+
+        Connections
+        {
+            target: project
+            function onProjectLoaded()
+            {
+                playButton.checked = false
+                waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+            }
+        }
+
+        Component.onCompleted:
+        {
+            if(project.property("audioTrackFile") !== "")
+            {
+                setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+            }
+        }
     }
 
     MfxButton
@@ -81,6 +99,11 @@ Item
             source: playButton.checked ? "qrc:/pauseButton" : "qrc:/playButton"
             anchors.centerIn: parent
         }
+
+        onCheckedChanged:
+        {
+            checked ? waveformWidget.play() : waveformWidget.pause()
+        }
     }
 
     MfxButton
@@ -118,7 +141,8 @@ Item
 
         Text
         {
-            text: "00:00:29.125"
+            id: timer
+            text: "00:00:00.000"
             color: "#eeeeee"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -126,6 +150,15 @@ Item
             anchors.centerIn: parent
             font.family: "Roboto"
             font.pixelSize: 12
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onTimerValueChanged(value)
+            {
+                timer.text = value
+            }
         }
     }
 
@@ -147,6 +180,15 @@ Item
             source: "qrc:/settingsButton"
             anchors.centerIn: parent
         }
+
+        onClicked:
+        {
+            let trackFileName = project.selectAudioTrackDialog()
+            if(trackFileName)
+            {
+                project.setAudioTrack(trackFileName)
+            }
+        }
     }
 
     MfxButton
@@ -159,7 +201,7 @@ Item
 
         anchors.leftMargin: 8
         anchors.bottomMargin: 4
-        anchors.left: timerArea.right
+        anchors.left: settingsButton.right
         anchors.bottom: parent.bottom
 
         text: qsTr("reset")

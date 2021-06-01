@@ -100,6 +100,7 @@ void ProjectManager::loadProject(QString fileName)
         emit groupCountChanged();
         emit patchListChanged();
         emit backgroundImageChanged();
+        emit projectLoaded();
     }
 }
 

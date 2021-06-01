@@ -1,7 +1,9 @@
 #ifndef WAVEFORMWIDGET_H
 #define WAVEFORMWIDGET_H
 
+#include <QMediaPlayer>
 #include <QQuickPaintedItem>
+#include <QTimer>
 #include "AudioTrackRepresentation.h"
 
 class WaveformWidget : public QQuickPaintedItem
@@ -34,6 +36,8 @@ public:
 
 public slots:
 
+    void setAudioTrackFile(QString fileName);
+
     void refresh();
     void setMax(int max);
     void setMin(int min);
@@ -41,19 +45,25 @@ public slots:
     void showAll();
     void zoomIn();
     void zoomOut();
-
     void setscaleFactor(float scaleFactor);
 
+    void play();
+    void pause();
+
 signals:
+
     void maxChanged(int max);
-
     void minChanged(int min);
-
     void scaleFactorChanged(float scaleFactor);
+    void positionChanged(qint64 position);
+    void timerValueChanged(QString value);
 
 private:
 
+    QString _audioTrackFile;
     AudioTrackRepresentation _track;
+    QMediaPlayer _player;
+    QTimer _valueForPositionTimer;
     QVector<float> _currentSamples;
     int m_max = 1100000;
     int m_min = 0;

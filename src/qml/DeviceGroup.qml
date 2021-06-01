@@ -16,28 +16,6 @@ Item
     signal groupNameClicked
     signal viewChanged
 
-//    function backgroundBorderColor()
-//    {
-//        if(deviceGroup.isExpanded)
-//        {
-//            return "transparent"
-//        }
-
-//        else
-//        {
-//            let IDs = project.patchesIdList(deviceGroup.name)
-//            for(let i = 0; i < IDs.length; i++)
-//            {
-//                if(project.patchProperty(IDs[i], "checked"))
-//                {
-//                    return "#8027AE60"
-//                }
-//            }
-
-//            return "transparent"
-//        }
-//    }
-
     function needToShowIndicator()
     {
         if(deviceGroup.isExpanded)
@@ -73,7 +51,6 @@ Item
         radius: 2
 
         border.width: 1
-//        border.color: backgroundBorderColor()
         border.color: "transparent"
 
 
@@ -352,7 +329,6 @@ Item
         target: project
         function onPatchCheckedChanged()
         {
-//            groupBackground.border.color = backgroundBorderColor()
             indicator.visible = needToShowIndicator()
         }
     }
