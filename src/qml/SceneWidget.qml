@@ -445,6 +445,7 @@ Item
             var currHeightChange = newHeight - prevHeight
 
             let newScaleFactror = sceneWidget.scaleFactor + sceneWidget.scaleFactor * step
+            let scaleRatio = newScaleFactror / sceneWidget.scaleFactor
             if(newScaleFactror <= maxScaleFactor && newScaleFactror >= minScaleFactor)
             {
                 sceneWidget.scaleFactor = newScaleFactror
@@ -473,6 +474,11 @@ Item
                     let dy = (mouseY - backgroundImage.y) / prevHeight * currHeightChange
                     backgroundImage.y -= dy
                 }
+
+                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * newWidth + backgroundImage.x
+                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * newHeight + backgroundImage.y
+                sceneFrameItem.width = sceneFrameItem.width * scaleRatio
+                sceneFrameItem.height = sceneFrameItem.height * scaleRatio
             }
         }
     }
@@ -480,21 +486,30 @@ Item
     Item
     {
         id: sceneFrameItem
-        x: project.property("sceneFrameX") * backgroundImage.width
-        y: project.property("sceneFrameY") * backgroundImage.height
-        width: project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
-        height: project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
         visible: false
 
         property int minWidth: 200
         property int minHeight: 100
 
+        property real currentSceneFrameX
+        property real currentSceneFrameY
+
+        onVisibleChanged:
+        {
+            if(visible)
+            {
+                restorePreviousGeometry();
+            }
+        }
+        onXChanged: currentSceneFrameX = (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width
+        onYChanged: currentSceneFrameY = (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height
+
         function restorePreviousGeometry()
         {
-            sceneFrameItem.x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
-            sceneFrameItem.y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
-            sceneFrameItem.width = project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
-            sceneFrameItem.height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
+            x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
+            y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
+            width = project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
+            height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
         }
 
         Rectangle
@@ -539,8 +554,8 @@ Item
                             newHeight >= sceneFrameItem.minHeight &&
                             newWidth >= sceneFrameItem.minWidth)
                     {
-                        sceneFrameItem.height += dy
-                        sceneFrameItem.width = sceneFrameItem.width * (sceneFrameItem.height + dy) / sceneFrameItem.height
+                        sceneFrameItem.width = newWidth
+                        sceneFrameItem.height = newHeight
                     }
 
 //                    if(!(sceneFrameItem.y + sceneFrameItem.height + dy > backgroundImage.y + backgroundImage.height))
@@ -570,7 +585,7 @@ Item
                     prevX = mouseX
                 }
 
-                onMouseYChanged:
+                onMouseXChanged:
                 {
                     var dx = mouseX - prevX
 
@@ -582,8 +597,8 @@ Item
                             newHeight >= sceneFrameItem.minHeight &&
                             newWidth >= sceneFrameItem.minWidth)
                     {
-                        sceneFrameItem.width += dx
-                        sceneFrameItem.height = sceneFrameItem.height * (sceneFrameItem.width + dx) / sceneFrameItem.width
+                        sceneFrameItem.width = newWidth
+                        sceneFrameItem.height = newHeight
                     }
 
 //                    if(!(sceneFrameItem.x + sceneFrameItem.width + dx > backgroundImage.x + backgroundImage.width))
