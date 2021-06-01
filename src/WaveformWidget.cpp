@@ -43,6 +43,7 @@ void WaveformWidget::setAudioTrackFile(QString fileName)
     _audioTrackFile = fileName;
     _track.loadFile(_audioTrackFile);
     _player.setMedia(QUrl::fromLocalFile(fileName));
+    showAll();
 }
 
 void WaveformWidget::refresh()
