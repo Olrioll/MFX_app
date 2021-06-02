@@ -116,8 +116,8 @@ void ProjectManager::newProject()
     _currentProjectFile = "";
     setProperty("backgroundImageFile", "");
     setProperty("audioTrackFile", "");
-    setProperty("sceneFrameX", 0);
-    setProperty("sceneFrameY", 0);
+    setProperty("sceneFrameX", 0.0);
+    setProperty("sceneFrameY", 0.0);
     setProperty("sceneImageWidth", 0);
     setProperty("sceneScaleFactor", 1.0);
 

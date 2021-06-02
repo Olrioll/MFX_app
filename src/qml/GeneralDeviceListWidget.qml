@@ -175,8 +175,8 @@ Item
 
                 Drag.active: mouseArea.wasDragging
                 Drag.source: this
-                //            Drag.hotSpot.x: this.width / 2
-                //            Drag.hotSpot.y: this.height / 2
+                Drag.hotSpot.x: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).x
+                Drag.hotSpot.y: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).y
 
                 states: State
                 {
@@ -208,6 +208,8 @@ Item
                 property var pressedItem: null
                 property int pressedX
                 property int pressedY
+                property int draggingStartX
+                property int draggingStartY
                 property bool wasDragging: false
 
                 drag.target: deviceListView.held ? draggedPlate : undefined
@@ -264,7 +266,15 @@ Item
                 onPositionChanged:
                 {
                     if(pressedItem)
-                        wasDragging = true
+                    {
+                        if(!wasDragging)
+                        {
+                            wasDragging = true
+                            draggingStartX = mouseX
+                            draggingStartY = mouseY
+                        }
+
+                    }
                 }
 
                 onReleased:

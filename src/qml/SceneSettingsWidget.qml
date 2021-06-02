@@ -329,8 +329,8 @@ Item
 
             onClicked:
             {
-                project.setProperty("sceneFrameWidth", Number(widthField.text))
-                project.setProperty("sceneFrameHeight", Number(heightField.text))
+                project.setProperty("sceneFrameWidth", Number(widthField.text) - Number(widthField.text) * 0.1)
+                project.setProperty("sceneFrameHeight", Number(heightField.text) - Number(widthField.text) * 0.1)
                 if(project.property("sceneImageWidth") === 0 || !project.property("sceneImageWidth"))
                 {
                     project.setProperty("sceneImageWidth", Number(widthField.text))
