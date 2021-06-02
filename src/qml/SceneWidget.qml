@@ -365,8 +365,8 @@ Item
                     }
                 }
 
-                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * backgroundImage.width + backgroundImage.x
-                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * backgroundImage.height + backgroundImage.y
+//                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * backgroundImage.width + backgroundImage.x
+//                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * backgroundImage.height + backgroundImage.y
             }
 
             else if(isSelectingIcons)
@@ -485,10 +485,10 @@ Item
                     backgroundImage.y -= dy
                 }
 
-                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * newWidth + backgroundImage.x
-                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * newHeight + backgroundImage.y
-                sceneFrameItem.width = sceneFrameItem.width * scaleRatio
-                sceneFrameItem.height = sceneFrameItem.height * scaleRatio
+//                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * newWidth + backgroundImage.x
+//                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * newHeight + backgroundImage.y
+//                sceneFrameItem.width = sceneFrameItem.width * scaleRatio
+//                sceneFrameItem.height = sceneFrameItem.height * scaleRatio
             }
         }
     }
@@ -501,8 +501,8 @@ Item
         property int minWidth: 200
         property int minHeight: 100
 
-        property real currentSceneFrameX
-        property real currentSceneFrameY
+//        property real currentSceneFrameX
+//        property real currentSceneFrameY
 
         onVisibleChanged:
         {
@@ -511,8 +511,8 @@ Item
                 restorePreviousGeometry();
             }
         }
-        onXChanged: currentSceneFrameX = (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width
-        onYChanged: currentSceneFrameY = (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height
+//        onXChanged: currentSceneFrameX = (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width
+//        onYChanged: currentSceneFrameY = (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height
 
         function restorePreviousGeometry()
         {
@@ -572,6 +572,46 @@ Item
 
             MouseArea
             {
+                id: topResizeArea
+                height: 4
+                anchors
+                {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                cursorShape: Qt.SizeVerCursor
+
+                property int prevY
+
+                onPressed:
+                {
+                    prevY = mouseY
+                }
+
+                onMouseYChanged:
+                {
+                    var dy = mouseY - prevY
+
+                    var newHeight = sceneFrameItem.height - dy
+                    var newWidth = sceneFrameItem.width * newHeight / sceneFrameItem.height
+                    var dx = sceneFrameItem.width - newWidth
+
+                    if((sceneFrameItem.y + dy > backgroundImage.y) &&
+                            (sceneFrameItem.x + dx > backgroundImage.x) &&
+                            newHeight >= sceneFrameItem.minHeight &&
+                            newWidth >= sceneFrameItem.minWidth)
+                    {
+                        sceneFrameItem.width = newWidth
+                        sceneFrameItem.height = newHeight
+                        sceneFrameItem.x += dx
+                        sceneFrameItem.y += dy
+                    }
+                }
+            }
+
+            MouseArea
+            {
                 id: rightResizeArea
                 width: 4
                 anchors
@@ -603,6 +643,46 @@ Item
                     {
                         sceneFrameItem.width = newWidth
                         sceneFrameItem.height = newHeight
+                    }
+                }
+            }
+
+            MouseArea
+            {
+                id: leftResizeArea
+                width: 4
+                anchors
+                {
+                    bottom: parent.bottom
+                    right: parent.left
+                    top: parent.top
+                }
+                cursorShape: Qt.SizeHorCursor
+
+                property int prevX
+
+                onPressed:
+                {
+                    prevX = mouseX
+                }
+
+                onMouseXChanged:
+                {
+                    var dx = mouseX - prevX
+
+                    var newWidth = sceneFrameItem.width - dx
+                    var newHeight = sceneFrameItem.height * newWidth / sceneFrameItem.width
+                    var dy = sceneFrameItem.height - newHeight
+
+                    if((sceneFrameItem.y + dy > backgroundImage.y) &&
+                            (sceneFrameItem.x + dx > backgroundImage.x) &&
+                            newHeight >= sceneFrameItem.minHeight &&
+                            newWidth >= sceneFrameItem.minWidth)
+                    {
+                        sceneFrameItem.width = newWidth
+                        sceneFrameItem.height = newHeight
+                        sceneFrameItem.x += dx
+                        sceneFrameItem.y += dy
                     }
                 }
             }
