@@ -263,9 +263,8 @@ Item
 
                 onPositionChanged:
                 {
-                    wasDragging = true
-                    let dx = mouseX - pressedX
-                    let dy = mouseY - pressedY
+                    if(pressedItem)
+                        wasDragging = true
                 }
 
                 onReleased:

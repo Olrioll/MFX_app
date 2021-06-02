@@ -88,7 +88,7 @@ Item
             anchors.right: parent.right
             anchors.topMargin: 6
             anchors.top: parent.top
-            visible: parent.isExpanded
+            visible: deviceList.isExpanded
 
             bottomPadding: 0
             topPadding: 0
@@ -170,14 +170,4 @@ Item
             }
         }
     }
-
-//    SceneWidget
-//    {
-//        id: sceneWidget
-//        anchors.margins: 2
-//        anchors.left: patchScreen.left
-//        anchors.right: groupList.left
-//        anchors.top: patchScreen.top
-//        anchors.bottom: patchScreen.bottom
-//    }
 }

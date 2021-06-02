@@ -29,6 +29,7 @@ Item
         {
             sideDockedWindow.width = sideDockedWindow.collapsedWidth
             layout.currentIndex = 0
+            sideDockedWindow.isExpanded = false
             sideDockedWindow.enabled = false
         }
     }
