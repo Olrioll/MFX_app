@@ -100,7 +100,7 @@ void ProjectManager::loadProject(QString fileName)
         emit groupCountChanged();
         emit patchListChanged();
         emit backgroundImageChanged();
-        emit projectLoaded();
+        emit audioTrackFileChanged();
     }
 }
 
@@ -116,8 +116,8 @@ void ProjectManager::newProject()
     _currentProjectFile = "";
     setProperty("backgroundImageFile", "");
     setProperty("audioTrackFile", "");
-    setProperty("sceneFrameX", 0.0);
-    setProperty("sceneFrameY", 0.0);
+    setProperty("sceneFrameX", 0.1);
+    setProperty("sceneFrameY", 0.1);
     setProperty("sceneImageWidth", 0);
     setProperty("sceneScaleFactor", 1.0);
 

@@ -180,7 +180,7 @@ public slots:
 
 signals:
 
-    void projectLoaded();
+    void audioTrackFileChanged();
 
     void currentGroupIndexChanged(int currentGroupIndex);
     void groupChanged(int index);

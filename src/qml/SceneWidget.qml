@@ -517,8 +517,8 @@ Item
         id: sceneFrameItem
         visible: false
 
-        property int minWidth: 50
-        property int minHeight: 25
+        property int minWidth: 12
+        property int minHeight: 12
 
         onVisibleChanged:
         {
@@ -715,7 +715,7 @@ Item
 
                 drag.minimumX: backgroundImage.x
                 drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
-                drag.minimumY: backgroundImage.y + 20
+                drag.minimumY: backgroundImage.y
                 drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
             }
         }
@@ -726,8 +726,6 @@ Item
             anchors.rightMargin: 8
             anchors.right: applyButton.left
             anchors.bottom: cancelButton.bottom
-//            x: sceneFrame.x + sceneFrame.width / 2 - width / 2
-//            y: sceneFrame.y - height / 2
             width: 62
             height: 20
             color: "#507FE6"
@@ -749,8 +747,6 @@ Item
             anchors.rightMargin: 4
             anchors.right: cancelButton.left
             anchors.bottom: cancelButton.bottom
-//            x: sceneFrame.x + sceneFrame.width - 50
-//            y: sceneFrame.y - height / 2
             width: 18
             height: 18
 
@@ -785,8 +781,6 @@ Item
             anchors.bottomMargin: 4
             anchors.right: sceneFrame.right
             anchors.bottom: sceneFrame.top
-//            x: sceneFrame.x + sceneFrame.width - 25
-//            y: sceneFrame.y - height / 2
             width: 18
             height: 18
 
@@ -809,6 +803,30 @@ Item
                 patchScreen.deviceListWidget.setActive(true)
                 patchScreen.groupListWidget.setActive(true)
             }
+        }
+
+        Text
+        {
+            id: frameHeightText
+            anchors.leftMargin: 4
+            anchors.left: sceneFrame.left
+            anchors.verticalCenter: sceneFrame.verticalCenter
+            text: project.property("sceneFrameHeight") + " m"
+            color: "#507FE6"
+            font.family: "Roboto"
+            font.pixelSize: 12
+        }
+
+        Text
+        {
+            id: frameWidthText
+            anchors.topMargin: 4
+            anchors.top: sceneFrame.top
+            anchors.horizontalCenter: sceneFrame.horizontalCenter
+            text: project.property("sceneFrameWidth") + " m"
+            color: "#507FE6"
+            font.family: "Roboto"
+            font.pixelSize: 12
         }
 
         Component.onCompleted:

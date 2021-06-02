@@ -44,7 +44,7 @@ Item
         Connections
         {
             target: project
-            function onProjectLoaded()
+            function onAudioTrackFileChanged()
             {
                 playButton.checked = false
                 waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
@@ -187,6 +187,7 @@ Item
             if(trackFileName)
             {
                 project.setAudioTrack(trackFileName)
+                waveformWidget.setAudioTrackFile(trackFileName)
             }
         }
     }
