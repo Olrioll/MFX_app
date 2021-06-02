@@ -517,8 +517,8 @@ Item
         id: sceneFrameItem
         visible: false
 
-        property int minWidth: 200
-        property int minHeight: 100
+        property int minWidth: 50
+        property int minHeight: 25
 
         onVisibleChanged:
         {
@@ -540,7 +540,7 @@ Item
         {
             id: sceneFrame
             anchors.fill: parent
-            color: "transparent"
+            color: "#20507FE6"
             border.width: 2
             border.color: "#507FE6"
             radius: 2
@@ -700,13 +700,34 @@ Item
                     }
                 }
             }
+
+            MouseArea
+            {
+                id: movingArea
+                anchors.top: topResizeArea.bottom
+                anchors.bottom: bottomResizeArea.top
+                anchors.left: leftResizeArea.right
+                anchors.right: rightResizeArea.left
+                preventStealing: true
+
+                drag.target: sceneFrameItem
+                drag.axis: Drag.XandYAxis
+
+                drag.minimumX: backgroundImage.x
+                drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
+                drag.minimumY: backgroundImage.y + 20
+                drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
+            }
         }
 
         Rectangle
         {
             id: sceneTitle
-            x: sceneFrame.x + sceneFrame.width / 2 - width / 2
-            y: sceneFrame.y - height / 2
+            anchors.rightMargin: 8
+            anchors.right: applyButton.left
+            anchors.bottom: cancelButton.bottom
+//            x: sceneFrame.x + sceneFrame.width / 2 - width / 2
+//            y: sceneFrame.y - height / 2
             width: 62
             height: 20
             color: "#507FE6"
@@ -720,28 +741,16 @@ Item
                 font.family: "Roboto"
                 font.pixelSize: 12
             }
-
-            MouseArea
-            {
-                id: mouseArea
-                anchors.fill: parent
-                preventStealing: true
-
-                drag.target: sceneFrameItem
-                drag.axis: Drag.XandYAxis
-
-                drag.minimumX: backgroundImage.x
-                drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
-                drag.minimumY: backgroundImage.y + 10
-                drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
-            }
         }
 
         Button
         {
             id: applyButton
-            x: sceneFrame.x + sceneFrame.width - 50
-            y: sceneFrame.y - height / 2
+            anchors.rightMargin: 4
+            anchors.right: cancelButton.left
+            anchors.bottom: cancelButton.bottom
+//            x: sceneFrame.x + sceneFrame.width - 50
+//            y: sceneFrame.y - height / 2
             width: 18
             height: 18
 
@@ -773,8 +782,11 @@ Item
         Button
         {
             id: cancelButton
-            x: sceneFrame.x + sceneFrame.width - 25
-            y: sceneFrame.y - height / 2
+            anchors.bottomMargin: 4
+            anchors.right: sceneFrame.right
+            anchors.bottom: sceneFrame.top
+//            x: sceneFrame.x + sceneFrame.width - 25
+//            y: sceneFrame.y - height / 2
             width: 18
             height: 18
 
