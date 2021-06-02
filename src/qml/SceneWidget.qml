@@ -149,6 +149,8 @@ Item
         property int pressedY
         property int currentBackgroundImageX
         property int currentBackgroundImageY
+        property real currentSceneFrameX
+        property real currentSceneFrameY
         property bool isDraggingBackgroungImage: false
         property bool isDraggingIcon: false
         property bool isSelectingIcons: false
@@ -203,6 +205,8 @@ Item
             pressedY = mouseY
             currentBackgroundImageX = backgroundImage.x
             currentBackgroundImageY = backgroundImage.y
+            currentSceneFrameX = (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width
+            currentSceneFrameY = (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height
 
             if(mouse.button & Qt.MiddleButton)
             {
@@ -322,7 +326,10 @@ Item
 
                 if(backgroundImage.width <= sceneWidget.width)
 //                    backgroundImage.x = 0
+                {
                     backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
+                    sceneFrameItem.x = currentSceneFrameX * backgroundImage.width + backgroundImage.x
+                }
                 else
                 {
                     if(dx < 0)
@@ -330,6 +337,7 @@ Item
                         if(!((backgroundImage.x + backgroundImage.width) <= sceneWidget.width))
                         {
                             backgroundImage.x = currentBackgroundImageX + dx
+                            sceneFrameItem.x = currentSceneFrameX * backgroundImage.width + backgroundImage.x
                         }
                     }
 
@@ -338,13 +346,17 @@ Item
                         if(!(backgroundImage.x > 0))
                         {
                             backgroundImage.x = currentBackgroundImageX + dx
+                            sceneFrameItem.x = currentSceneFrameX * backgroundImage.width + backgroundImage.x
                         }
                     }
                 }
 
                 if(backgroundImage.height <= sceneWidget.height)
 //                    backgroundImage.y = 0
+                {
                     backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
+                    sceneFrameItem.y = currentSceneFrameY * backgroundImage.height + backgroundImage.y
+                }
 
                 else
                 {
@@ -353,6 +365,7 @@ Item
                         if(!((backgroundImage.y + backgroundImage.height) <= sceneWidget.height))
                         {
                             backgroundImage.y = currentBackgroundImageY + dy
+                            sceneFrameItem.y = currentSceneFrameY * backgroundImage.height + backgroundImage.y
                         }
                     }
 
@@ -361,6 +374,7 @@ Item
                         if(!(backgroundImage.y > 0))
                         {
                             backgroundImage.y = currentBackgroundImageY + dy
+                            sceneFrameItem.y = currentSceneFrameY * backgroundImage.height + backgroundImage.y
                         }
                     }
                 }
@@ -446,6 +460,11 @@ Item
 
         onWheel:
         {
+            currentBackgroundImageX = backgroundImage.x
+            currentBackgroundImageY = backgroundImage.y
+            currentSceneFrameX = (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width
+            currentSceneFrameY = (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height
+
             var step = wheel.angleDelta.y > 0 ? 0.05 : -0.05
             var prevWidth = backgroundImage.width
             var prevHeight = backgroundImage.height
@@ -485,10 +504,10 @@ Item
                     backgroundImage.y -= dy
                 }
 
-//                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * newWidth + backgroundImage.x
-//                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * newHeight + backgroundImage.y
-//                sceneFrameItem.width = sceneFrameItem.width * scaleRatio
-//                sceneFrameItem.height = sceneFrameItem.height * scaleRatio
+                sceneFrameItem.x = currentSceneFrameX * newWidth + backgroundImage.x
+                sceneFrameItem.y = currentSceneFrameY * newHeight + backgroundImage.y
+                sceneFrameItem.width = sceneFrameItem.width * scaleRatio
+                sceneFrameItem.height = sceneFrameItem.height * scaleRatio
             }
         }
     }
@@ -501,9 +520,6 @@ Item
         property int minWidth: 200
         property int minHeight: 100
 
-//        property real currentSceneFrameX
-//        property real currentSceneFrameY
-
         onVisibleChanged:
         {
             if(visible)
@@ -511,8 +527,6 @@ Item
                 restorePreviousGeometry();
             }
         }
-//        onXChanged: currentSceneFrameX = (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width
-//        onYChanged: currentSceneFrameY = (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height
 
         function restorePreviousGeometry()
         {
