@@ -49,17 +49,18 @@ Item
             target: deviceLib
             function onWidthChanged()
             {
-                let dx = deviceLib.expandedWidth - deviceLib.collapsedWidth
+                sceneWidget.adjustBackgroundImageOnX()
+//                let dx = deviceLib.expandedWidth - deviceLib.collapsedWidth
 
-                if(deviceLib.width === deviceLib.collapsedWidth)
-                {
-                    sceneWidget.adjustBackgroundImageOnX(-dx)
-                }
+//                if(deviceLib.width === deviceLib.collapsedWidth)
+//                {
+//                    sceneWidget.adjustBackgroundImageOnX(-dx)
+//                }
 
-                else
-                {
-                    sceneWidget.adjustBackgroundImageOnX(dx)
-                }
+//                else
+//                {
+//                    sceneWidget.adjustBackgroundImageOnX(dx)
+//                }
             }
         }
     }
@@ -121,17 +122,19 @@ Item
             target: deviceList
             function onWidthChanged()
             {
-                let dx = deviceList.expandedWidth - deviceList.collapsedWidth
+                sceneWidget.adjustBackgroundImageOnX()
 
-                if(deviceList.width === deviceList.collapsedWidth)
-                {
-                    sceneWidget.adjustBackgroundImageOnX(-dx)
-                }
+//                let dx = deviceList.expandedWidth - deviceList.collapsedWidth
 
-                else
-                {
-                    sceneWidget.adjustBackgroundImageOnX(dx)
-                }
+//                if(deviceList.width === deviceList.collapsedWidth)
+//                {
+//                    sceneWidget.adjustBackgroundImageOnX(-dx)
+//                }
+
+//                else
+//                {
+//                    sceneWidget.adjustBackgroundImageOnX(dx)
+//                }
             }
         }
     }
@@ -156,17 +159,19 @@ Item
             target: groupList
             function onWidthChanged()
             {
-                let dx = groupList.expandedWidth - groupList.collapsedWidth
+                sceneWidget.adjustBackgroundImageOnX()
 
-                if(groupList.width === groupList.collapsedWidth)
-                {
-                    sceneWidget.adjustBackgroundImageOnX(-dx)
-                }
+//                let dx = groupList.expandedWidth - groupList.collapsedWidth
 
-                else
-                {
-                    sceneWidget.adjustBackgroundImageOnX(dx)
-                }
+//                if(groupList.width === groupList.collapsedWidth)
+//                {
+//                    sceneWidget.adjustBackgroundImageOnX(-dx)
+//                }
+
+//                else
+//                {
+//                    sceneWidget.adjustBackgroundImageOnX(dx)
+//                }
             }
         }
     }

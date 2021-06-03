@@ -14,6 +14,8 @@ Item
     property real scaleFactor: project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
     property real maxScaleFactor: 3.0
     property real minScaleFactor: 0.2
+    property int prevWidth
+    property int dWidth
 
     function loadPatches()
     {
@@ -62,7 +64,7 @@ Item
         backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
     }
 
-    function adjustBackgroundImageOnX(dx)
+    function adjustBackgroundImageOnX()
     {
         if(backgroundImage.width <= sceneWidget.width)
         {
@@ -71,7 +73,7 @@ Item
 
         else
         {
-            backgroundImage.x -= dx
+            backgroundImage.x += dWidth / 2
         }
     }
 
@@ -1391,6 +1393,12 @@ Item
         }
     }
 
+    onWidthChanged:
+    {
+        dWidth = width - prevWidth
+        prevWidth = width
+    }
+
     Component.onCompleted:
     {
         loadPatches()
@@ -1404,5 +1412,7 @@ Item
         {
             backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
         }
+
+        prevWidth = width
     }
 }
