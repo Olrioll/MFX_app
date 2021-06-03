@@ -175,7 +175,7 @@ Item
 
                 Drag.active: mouseArea.wasDragging
                 Drag.source: this
-                Drag.hotSpot.x: this.height / 2
+                Drag.hotSpot.x: this.width / 2
                 Drag.hotSpot.y: this.height / 2
 //                Drag.hotSpot.x: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).x
 //                Drag.hotSpot.y: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).y
@@ -427,6 +427,68 @@ Item
             model: ListModel
             {
                 id: groupListModel
+            }
+
+            Rectangle
+            {
+                id: dropZoneRect
+                anchors.left: parent.left
+                anchors.top: parent.top
+                height: parent.contentItem.height + 4
+                width: parent.parent ? parent.parent.width : parent.width
+                color: "transparent"
+                radius: 2
+
+                border.width: 1
+                border.color: "transparent"
+
+                DropArea
+                {
+                    anchors.fill: parent
+
+                    onEntered:
+                    {
+                        if (drag.source.name === "Sequences" || drag.source.name === "Dimmer" || drag.source.name === "Shot" || drag.source.name === "Pyro")
+                            dropZoneRect.border.color = "lightblue"
+                    }
+                    onExited: dropZoneRect.border.color = "transparent"
+
+                    onDropped:
+                    {
+                        dropZoneRect.border.color = "transparent"
+
+                        if(!applicationWindow.isPatchEditorOpened)
+                        {
+                            if (drag.source.name === "Sequences")
+                            {
+                                var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
+                                addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
+                                addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
+                            }
+
+                            else if (drag.source.name === "Dimmer")
+                            {
+                                var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow);
+                                addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
+                                addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
+                            }
+
+                            else if (drag.source.name === "Shot")
+                            {
+                                var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow);
+                                addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
+                                addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
+                            }
+
+                            else if (drag.source.name === "Pyro")
+                            {
+                                var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow);
+                                addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
+                                addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
+                            }
+                        }
+                    }
+                }
             }
 
             Component.onCompleted:

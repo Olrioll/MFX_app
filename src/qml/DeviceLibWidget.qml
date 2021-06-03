@@ -45,10 +45,8 @@ ListView
 
         Drag.active: deviceLibView.held
         Drag.source: this
-        Drag.hotSpot.x: this.height / 2
+        Drag.hotSpot.x: this.width / 2
         Drag.hotSpot.y: this.height / 2
-//        Drag.hotSpot.x: this.width / 2
-//        Drag.hotSpot.y: this.height / 2
 
         states: State
         {
