@@ -175,8 +175,10 @@ Item
 
                 Drag.active: mouseArea.wasDragging
                 Drag.source: this
-                Drag.hotSpot.x: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).x
-                Drag.hotSpot.y: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).y
+                Drag.hotSpot.x: this.height / 2
+                Drag.hotSpot.y: this.height / 2
+//                Drag.hotSpot.x: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).x
+//                Drag.hotSpot.y: mapFromItem(mouseArea, mouseArea.draggingStartX, mouseArea.draggingStartY).y
 
                 states: State
                 {
