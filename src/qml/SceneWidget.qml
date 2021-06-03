@@ -812,8 +812,8 @@ Item
         Text
         {
             id: frameHeightText
-            anchors.leftMargin: 4
-            anchors.left: sceneFrame.left
+            anchors.rightMargin: 4
+            anchors.right: sceneFrame.left
             anchors.verticalCenter: sceneFrame.verticalCenter
             text: project.property("sceneFrameHeight") + " m"
             color: "#507FE6"
@@ -825,7 +825,7 @@ Item
         {
             id: frameWidthText
             anchors.topMargin: 4
-            anchors.top: sceneFrame.top
+            anchors.top: sceneFrame.bottom
             anchors.horizontalCenter: sceneFrame.horizontalCenter
             text: project.property("sceneFrameWidth") + " m"
             color: "#507FE6"

@@ -323,7 +323,10 @@ Item
                 bottom: parent.bottom
             }
 
-            enabled: Number(widthField.text) > 0.4 && Number(heightField.text) > 0.4
+            enabled: Number(widthField.text) > 0.4 &&
+                     Number(heightField.text) > 0.4 &&
+                     (Number(widthField.text) >= Number(heightField.text) ?
+                     Number(widthField.text) / Number(heightField.text) <= 10 : Number(heightField.text) / Number(widthField.text) <= 10)
 
             text: qsTr("Apply")
 
@@ -331,11 +334,13 @@ Item
             {
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
-                if(project.property("sceneImageWidth") === 0 || !project.property("sceneImageWidth"))
-                {
-                    project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
-//                    project.setProperty("sceneImageHeight", Number(widthField.text) - Number(widthField.text) * 0.1)
-                }
+//                if(project.property("sceneImageWidth") === 0 || !project.property("sceneImageWidth"))
+//                {
+                    if(Number(widthField.text) >= Number(heightField.text))
+                        project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
+                    else
+                        project.setProperty("sceneImageWidth", Number(widthField.text) * 20)
+//                }
 
                 if(sceneSettingsWidget.choosenImageFile !== "")
                 {
