@@ -18,7 +18,8 @@ public slots:
     void createBuffer();
     int samplesCount() const {return _samples.size();}
     QVector<float> getSamples() const;
-    QVector<float> getSamples(int min, int max, int samplesCount) const;
+    QVector<float> getSamples(int min, int max, int samplesCount, float gain) const;
+    qint64 duration() const;
 
 signals:
 

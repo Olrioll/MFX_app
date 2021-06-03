@@ -20,11 +20,10 @@ void AudioTrackRepresentation::createBuffer()
 {
     _buffer = _decoder.read();
     qreal peak = getPeakValue(_buffer.format());
-    const qint16 *data = _buffer.constData<qint16>();
-    int count = _buffer.sampleCount() / 2;
-    for (int i = 0; i < count; i++)
+    QAudioBuffer::S16U *data = _buffer.data<QAudioBuffer::S16U>();
+    for (int i = 0; i < _buffer.frameCount(); i++)
     {
-        float val = data[i] / peak;
+        float val = data[i].average() / peak;
         _samples.append(val);
     }
 }
@@ -34,7 +33,7 @@ QVector<float> AudioTrackRepresentation::getSamples() const
     return _samples;
 }
 
-QVector<float> AudioTrackRepresentation::getSamples(int min, int max, int samplesCount) const
+QVector<float> AudioTrackRepresentation::getSamples(int min, int max, int samplesCount, float gain) const
 {
     QVector<float> samples;
     int step = 1;
@@ -46,7 +45,10 @@ QVector<float> AudioTrackRepresentation::getSamples(int min, int max, int sample
     for(int i = min; i < max; i ++)
     {
         counter++;
-        acc += abs(_samples[i]);
+        float curr = abs(_samples[i]);
+        if(curr > gain)
+            acc += curr;
+
         if(counter == step)
         {
             counter = 0;
@@ -57,6 +59,11 @@ QVector<float> AudioTrackRepresentation::getSamples(int min, int max, int sample
     }
 
     return samples;
+}
+
+qint64 AudioTrackRepresentation::duration() const
+{
+    return _buffer.duration() / 1000;
 }
 
 qreal AudioTrackRepresentation::getPeakValue(const QAudioFormat &format)

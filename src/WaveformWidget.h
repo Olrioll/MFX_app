@@ -67,7 +67,7 @@ private:
     QVector<float> _currentSamples;
     int m_max = 1100000;
     int m_min = 0;
-    float m_scaleFactor = 2.f;
+    float m_scaleFactor = 1.f;
 };
 
 #endif // WAVEFORMWIDGET_H

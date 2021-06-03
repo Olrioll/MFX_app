@@ -110,7 +110,7 @@ Item
     MfxHilightedButton
     {
         id: addGroupButton
-        text: qsTr("Add Group")
+        text: width > 70 ? qsTr("Add Group") : qsTr("Add")
         width: (parent.width) / 3 - 4
         color: "#27AE60"
 
@@ -155,7 +155,7 @@ Item
     MfxHilightedButton
     {
         id: deleteButton
-        text: qsTr("Delete selected")
+        text: width > 70 ? qsTr("Delete selected") : qsTr("Delete")
         width: editButton.width
         color: "#EB5757"
 

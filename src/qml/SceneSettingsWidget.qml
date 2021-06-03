@@ -323,7 +323,7 @@ Item
                 bottom: parent.bottom
             }
 
-            enabled: Number(widthField.text) > 0 && Number(heightField.text) > 0
+            enabled: Number(widthField.text) > 0.4 && Number(heightField.text) > 0.4
 
             text: qsTr("Apply")
 

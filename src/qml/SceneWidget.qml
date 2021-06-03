@@ -536,6 +536,8 @@ Item
             y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
             width = project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
             height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
+            frameHeightText.text = project.property("sceneFrameHeight") + " m"
+            frameWidthText.text = project.property("sceneFrameWidth") + " m"
         }
 
         Rectangle

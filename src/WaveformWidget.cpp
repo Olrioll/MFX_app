@@ -48,7 +48,7 @@ void WaveformWidget::setAudioTrackFile(QString fileName)
 
 void WaveformWidget::refresh()
 {
-    _currentSamples = _track.getSamples(m_min, m_max, boundingRect().width());
+    _currentSamples = _track.getSamples(m_min, m_max, boundingRect().width(), 1.85f);
     update();
 }
 
@@ -124,6 +124,7 @@ void WaveformWidget::setscaleFactor(float scaleFactor)
 
 void WaveformWidget::play()
 {
+//    qDebug() << QTime(0, 0).addMSecs(_track.duration()).toString("hh:mm:ss.zzz");
     _valueForPositionTimer.start(50);
     _player.play();
 }
