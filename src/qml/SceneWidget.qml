@@ -955,7 +955,14 @@ Item
                 font.pixelSize: 16
             }
 
-            onClicked: sceneWidget.zoom(0.05)
+            onClicked:
+            {
+                let oldWidth = backgroundImage.width
+                let oldHeight = backgroundImage.height
+                sceneWidget.zoom(0.05)
+                backgroundImage.x -= (backgroundImage.width - oldWidth) / 2
+                backgroundImage.y -= (backgroundImage.height - oldHeight) / 2
+            }
         }
 
         Button
@@ -989,7 +996,14 @@ Item
                 font.pixelSize: 20
             }
 
-            onClicked: sceneWidget.zoom(-0.05)
+            onClicked:
+            {
+                let oldWidth = backgroundImage.width
+                let oldHeight = backgroundImage.height
+                sceneWidget.zoom(-0.05)
+                backgroundImage.x -= (backgroundImage.width - oldWidth) / 2
+                backgroundImage.y -= (backgroundImage.height - oldHeight) / 2
+            }
         }
 
         Rectangle
