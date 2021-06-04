@@ -849,6 +849,8 @@ Item
         width: 112
         height: 24
 
+        visible: sceneWidget.parent === patchScreen
+
         background: Rectangle
         {
             color: "#333333"

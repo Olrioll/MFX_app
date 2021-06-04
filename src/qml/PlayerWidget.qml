@@ -60,6 +60,100 @@ Item
         }
     }
 
+    Item
+    {
+        id: positionCursor
+        width: 2
+        height: waveformBackground.height
+        anchors.top: waveformBackground.top
+
+        Rectangle
+        {
+            anchors.fill: parent
+            color: "#99006DFF"
+        }
+
+//        Canvas
+//        {
+//            anchors.fill: parent
+
+//            onPaint:
+//            {
+//                var ctx = getContext("2d")
+//                ctx.strokeStyle = "#ffffff"
+//                ctx.fillStyle = "#ffffff"
+//                ctx.moveTo(width / 2, 0)
+//                ctx.lineTo(width / 2, height)
+////                ctx.closePath()
+////                ctx.fill()
+//            }
+//        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onPositionChanged(pos)
+            {
+                if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
+                {
+                    positionCursor.visible = true
+                    positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+                }
+
+                else
+                {
+                    positionCursor.visible = false
+                }
+            }
+        }
+    }
+
+    Text
+    {
+        id: minValue
+        text: waveformWidget.minString()
+        anchors.left: parent.left
+        anchors.top:parent.top
+        color: "#eeeeee"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
+        font.family: "Roboto"
+        font.pixelSize: 8
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                minValue.text = waveformWidget.minString()
+            }
+        }
+    }
+
+    Text
+    {
+        id: maxValue
+        text: waveformWidget.maxString()
+        anchors.right: parent.right
+        anchors.top:parent.top
+        color: "#eeeeee"
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
+        font.family: "Roboto"
+        font.pixelSize: 8
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                maxValue.text = waveformWidget.maxString()
+            }
+        }
+    }
+
     MfxButton
     {
         id: stopButton
@@ -77,6 +171,12 @@ Item
         {
             source: "qrc:/stopButton"
             anchors.centerIn: parent
+        }
+
+        onClicked:
+        {
+            waveformWidget.stop()
+            playButton.checked = false
         }
     }
 

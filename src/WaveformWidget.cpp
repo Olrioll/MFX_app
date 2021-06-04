@@ -6,10 +6,16 @@
 
 WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), _track(this)
 {
-    connect(&_track, &AudioTrackRepresentation::bufferCreated, [this](){showAll();});
+    connect(&_track, &AudioTrackRepresentation::bufferCreated, [this]()
+    {
+        _ratio = static_cast<float>(_track.samplesCount()) / static_cast<float>(_player.duration());
+        showAll();
+    });
+
     connect(&_valueForPositionTimer, &QTimer::timeout, [this]()
     {
         emit timerValueChanged(QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz"));
+        emit positionChanged(_player.position());
     });
 }
 
@@ -23,7 +29,6 @@ void WaveformWidget::paint(QPainter *painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->setBrush(brush);
 
-    int maxY = boundingRect().height() / 2;
     float maxAmplitude = 0.f;
     for(auto & i : _currentSamples)
     {
@@ -33,17 +38,43 @@ void WaveformWidget::paint(QPainter *painter)
 
     for(int i = 0; i < _currentSamples.size(); i++)
     {
-        int amplitude = maxY * _currentSamples[i];
-        painter->drawLine(i + 1 , maxY - amplitude / 2 * m_scaleFactor,  i + 1, maxY + amplitude / 2  * m_scaleFactor);
+        float amplitudeInPixels = boundingRect().height() * maxAmplitude - boundingRect().height() * _currentSamples[i] / maxAmplitude;
+        float y1 = (boundingRect().height() - amplitudeInPixels) / 2;
+        float y2 = y1 + amplitudeInPixels;
+        painter->drawLine(i + 1 , y1,  i + 1, y2);
     }
+}
+
+qint64 WaveformWidget::max() const
+{
+    return m_max / _ratio;
+}
+
+qint64 WaveformWidget::min() const
+{
+    return m_min / _ratio;
+}
+
+QString WaveformWidget::maxString() const
+{
+    return QTime(0, 0).addMSecs(m_max / _ratio).toString("mm:ss");
+}
+
+QString WaveformWidget::minString() const
+{
+    return QTime(0, 0).addMSecs(m_min / _ratio).toString("mm:ss");
+}
+
+float WaveformWidget::scaleFactor() const
+{
+    return m_scaleFactor;
 }
 
 void WaveformWidget::setAudioTrackFile(QString fileName)
 {
     _audioTrackFile = fileName;
-    _track.loadFile(_audioTrackFile);
     _player.setMedia(QUrl::fromLocalFile(fileName));
-    showAll();
+    _track.loadFile(_audioTrackFile);
 }
 
 void WaveformWidget::refresh()
@@ -52,13 +83,13 @@ void WaveformWidget::refresh()
     update();
 }
 
-void WaveformWidget::setMax(int max)
+void WaveformWidget::setMax(qint64 maxMsec)
 {
-    if (m_max == max)
+    if (m_max == maxMsec * _ratio)
         return;
 
-    if(max <= _track.samplesCount())
-        m_max = max;
+    if(maxMsec * _ratio <= _track.samplesCount())
+        m_max = maxMsec * _ratio;
     else
         m_max = _track.samplesCount();
 
@@ -66,13 +97,13 @@ void WaveformWidget::setMax(int max)
     emit maxChanged(m_max);
 }
 
-void WaveformWidget::setMin(int min)
+void WaveformWidget::setMin(qint64 minMsec)
 {
-    if (m_min == min)
+    if (m_min == minMsec * _ratio)
         return;
 
-    if(min > 0)
-        m_min = min;
+    if(minMsec * _ratio > 0)
+        m_min = minMsec * _ratio;
     else
         m_min = 0;
 
@@ -80,17 +111,18 @@ void WaveformWidget::setMin(int min)
     emit minChanged(m_min);
 }
 
-void WaveformWidget::moveVisibleRange(double pos)
+void WaveformWidget::moveVisibleRange(qint64 pos)
 {
-    int range = m_max - m_min;
-    int tempMin = _track.samplesCount() * pos - range / 2;
-    int tempMax = _track.samplesCount() * pos + range / 2;
+    qint64 tempMin = m_min + pos * _ratio;
+    qint64 tempMax = m_max + pos * _ratio;
 
     if(tempMin > 0 && tempMax < _track.samplesCount())
     {
         m_min = tempMin;
         m_max = tempMax;
         refresh();
+        emit minChanged(m_min);
+        emit maxChanged(m_max);
     }
 }
 
@@ -99,20 +131,45 @@ void WaveformWidget::showAll()
     m_min = 0;
     m_max = _track.samplesCount();
     refresh();
+    emit minChanged(m_min);
+    emit maxChanged(m_max);
 }
 
 void WaveformWidget::zoomIn()
 {
-    setMax(m_max - 150000);
-    setMin(m_min + 150000);
-    refresh();
+    float range = m_max - m_min;
+    float newRange = range - range * 0.05;
+
+    if((m_max - (range - newRange) / 2) / _ratio - (m_min + (range - newRange) / 2) / _ratio > 1000) // Разница в 1000 мс
+    {
+        m_max -= (range - newRange) / 2;
+        m_min += (range - newRange) / 2;
+        refresh();
+        emit minChanged(m_min);
+        emit maxChanged(m_max);
+    }
 }
 
 void WaveformWidget::zoomOut()
 {
-    setMax(m_max + 150000);
-    setMin(m_min - 150000);
+    float range = m_max - m_min;
+    float newRange = range + range * 0.05;
+
+    if(m_max + (newRange - range) / 2 <= _track.samplesCount() && m_min - (newRange - range) / 2 >= 0)
+    {
+        m_max += (newRange - range) / 2;
+        m_min -= (newRange - range) / 2;
+    }
+
+    else
+    {
+        m_max = _track.samplesCount();
+        m_min = 0;
+    }
+
     refresh();
+    emit minChanged(m_min);
+    emit maxChanged(m_max);
 }
 
 void WaveformWidget::setscaleFactor(float scaleFactor)
@@ -124,7 +181,6 @@ void WaveformWidget::setscaleFactor(float scaleFactor)
 
 void WaveformWidget::play()
 {
-//    qDebug() << QTime(0, 0).addMSecs(_track.duration()).toString("hh:mm:ss.zzz");
     _valueForPositionTimer.start(50);
     _player.play();
 }
@@ -133,4 +189,12 @@ void WaveformWidget::pause()
 {
     _valueForPositionTimer.stop();
     _player.pause();
+}
+
+void WaveformWidget::stop()
+{
+    _valueForPositionTimer.stop();
+    _player.stop();
+    emit timerValueChanged(QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz"));
+    emit positionChanged(_player.position());
 }

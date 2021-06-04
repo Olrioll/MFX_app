@@ -9,9 +9,6 @@
 class WaveformWidget : public QQuickPaintedItem
 {
     Q_OBJECT
-    Q_PROPERTY(int max READ max WRITE setMax NOTIFY maxChanged)
-    Q_PROPERTY(int min READ min WRITE setMin NOTIFY minChanged)
-    Q_PROPERTY(float scaleFactor READ scaleFactor WRITE setscaleFactor NOTIFY scaleFactorChanged)
 
 public:
 
@@ -19,29 +16,20 @@ public:
 
     void paint(QPainter *painter) override;
 
-    int max() const
-    {
-        return m_max;
-    }
-
-    int min() const
-    {
-        return m_min;
-    }
-
-    float scaleFactor() const
-    {
-        return m_scaleFactor;
-    }
+    float scaleFactor() const;
 
 public slots:
 
     void setAudioTrackFile(QString fileName);
 
     void refresh();
-    void setMax(int max);
-    void setMin(int min);
-    void moveVisibleRange(double pos);
+    void setMax(qint64 maxMsec);
+    void setMin(qint64 minMsec);
+    QString maxString() const;
+    QString minString() const;
+    qint64 max() const;
+    qint64 min() const;
+    void moveVisibleRange(qint64 pos);
     void showAll();
     void zoomIn();
     void zoomOut();
@@ -49,6 +37,7 @@ public slots:
 
     void play();
     void pause();
+    void stop();
 
 signals:
 
@@ -67,6 +56,7 @@ private:
     QVector<float> _currentSamples;
     int m_max = 1100000;
     int m_min = 0;
+    float _ratio = 1.f; // Миллисекунд на каждый фрейм
     float m_scaleFactor = 1.f;
 };
 
