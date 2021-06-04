@@ -9,6 +9,11 @@ AudioTrackRepresentation::AudioTrackRepresentation(QObject *parent) : QObject(pa
 
 }
 
+float AudioTrackRepresentation::maxAmplitude() const
+{
+    return _maxAmplitude;
+}
+
 void AudioTrackRepresentation::loadFile(const QString &fileName)
 {
     _samples.clear();
@@ -24,6 +29,10 @@ void AudioTrackRepresentation::createBuffer()
     for (int i = 0; i < _buffer.frameCount(); i++)
     {
         float val = data[i].average() / peak;
+        if(/*val <= 1.f && */val > _maxAmplitude)
+        {
+            _maxAmplitude = val;
+        }
         _samples.append(val);
     }
 }

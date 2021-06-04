@@ -38,7 +38,8 @@ void WaveformWidget::paint(QPainter *painter)
 
     for(int i = 0; i < _currentSamples.size(); i++)
     {
-        float amplitudeInPixels = boundingRect().height() * maxAmplitude - boundingRect().height() * _currentSamples[i] / maxAmplitude;
+        float amplitudeInPixels = boundingRect().height() - boundingRect().height() * _currentSamples[i] / maxAmplitude;
+        amplitudeInPixels -= amplitudeInPixels * 0.1;
         float y1 = (boundingRect().height() - amplitudeInPixels) / 2;
         float y2 = y1 + amplitudeInPixels;
         painter->drawLine(i + 1 , y1,  i + 1, y2);
