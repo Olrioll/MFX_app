@@ -743,6 +743,21 @@ Item
                 font.family: "Roboto"
                 font.pixelSize: 12
             }
+
+            MouseArea
+            {
+                id: movingArea2
+                anchors.fill: parent
+                preventStealing: true
+
+                drag.target: sceneFrameItem
+                drag.axis: Drag.XandYAxis
+
+                drag.minimumX: backgroundImage.x
+                drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
+                drag.minimumY: backgroundImage.y
+                drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
+            }
         }
 
         Button

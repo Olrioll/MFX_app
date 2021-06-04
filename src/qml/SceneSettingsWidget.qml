@@ -340,6 +340,8 @@ Item
                         project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
                     else
                         project.setProperty("sceneImageWidth", Number(widthField.text) * 20)
+
+
 //                }
 
                 if(sceneSettingsWidget.choosenImageFile !== "")
@@ -347,6 +349,14 @@ Item
                     project.setBackgroundImage(sceneSettingsWidget.choosenImageFile)
                     sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
                 }
+
+                // Центруем рамку по фоновой картинке
+                let xPos = ((backgroundImage.width - project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width) / 2) / backgroundImage.width
+                project.setProperty("sceneFrameX", xPos)
+
+                let yPos = ((backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * backgroundImage.height) / 2) / backgroundImage.height
+                project.setProperty("sceneFrameY", yPos)
+
                 sceneFrameItem.restorePreviousGeometry()
                 sceneFrameItem.visible = true
                 applicationWindow.isPatchEditorOpened = false
