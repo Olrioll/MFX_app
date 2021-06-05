@@ -37,9 +37,11 @@ Item
 
         MouseArea
         {
+            id: mainMouseArea
             anchors.fill: parent
-            onWheel: (wheel.angleDelta.y > 0) ? scrollBar.zoomIn()
-                                              : scrollBar.zoomOut()
+            hoverEnabled: true
+            onWheel: (wheel.angleDelta.y > 0) ? scrollBar.zoomIn(mouseX / mainMouseArea.width)
+                                              : scrollBar.zoomOut(mouseX / mainMouseArea.width)
         }
 
         Connections
@@ -412,22 +414,22 @@ Item
             {
                 id: scrollBar
                 height: parent.height
-//                width: scrollBackgroundWaveform.width * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration()
                 width: scrollBackgroundWaveform.width
                 color: "#20507FE6"
                 border.width: 2
                 border.color: "#507FE6"
                 radius: 2
 
-//                property int prevX: 0
-
-                function zoomIn()
+                function zoomOut(zoomCenter)
                 {
                     let newWidth = width + width * 0.05
                     let dWidth = newWidth - width
-                    if((x - dWidth / 2) >= 0 && (x + width + dWidth / 2) <= scrollBackgroundWaveform.width)
+                    let leftShift = zoomCenter * dWidth
+                    let rightShift = (1 - zoomCenter) * dWidth
+
+                    if((x - leftShift) >= 0 && (x + width + rightShift) <= scrollBackgroundWaveform.width)
                     {
-                        x -= dWidth / 2
+                        x -= leftShift
                         width = newWidth
                         return
                     }
@@ -465,12 +467,16 @@ Item
                     }
                 }
 
-                function zoomOut()
+                function zoomIn(zoomCenter)
                 {
                     let newWidth = width - width * 0.05
+                    let dWidth = width - newWidth
+                    let leftShift = zoomCenter * dWidth
+                    let rightShift = (1 - zoomCenter) * dWidth
                     if(newWidth >= 10)
                     {
-                        x += (width -newWidth) / 2
+//                        x += (width -newWidth) / 2
+                        x += leftShift
                         width = newWidth
                     }
                 }
