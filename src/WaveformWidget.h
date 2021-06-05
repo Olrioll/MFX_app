@@ -23,6 +23,7 @@ public slots:
     void setAudioTrackFile(QString fileName);
 
     void refresh();
+    qint64 duration() const;
     void setMax(qint64 maxMsec);
     void setMin(qint64 minMsec);
     QString maxString() const;
@@ -41,8 +42,8 @@ public slots:
 
 signals:
 
-    void maxChanged(int max);
-    void minChanged(int min);
+    void maxChanged(qint64 max);
+    void minChanged(qint64 min);
     void scaleFactorChanged(float scaleFactor);
     void positionChanged(qint64 position);
     void timerValueChanged(QString value);

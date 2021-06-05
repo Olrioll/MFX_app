@@ -38,8 +38,8 @@ Item
         MouseArea
         {
             anchors.fill: parent
-            onWheel: (wheel.angleDelta.y > 0) ? waveformWidget.zoomOut()
-                                              : waveformWidget.zoomIn()
+            onWheel: (wheel.angleDelta.y > 0) ? scrollBar.zoomIn()
+                                              : scrollBar.zoomOut()
         }
 
         Connections
@@ -299,6 +299,7 @@ Item
             {
                 project.setAudioTrack(trackFileName)
                 waveformWidget.setAudioTrackFile(trackFileName)
+                scrollBackgroundWaveform.setAudioTrackFile(trackFileName)
             }
         }
     }
@@ -337,6 +338,192 @@ Item
         {
             source: repeatButton.checked ? "qrc:/repeatButtonChecked" : "qrc:/repeatButton"
             anchors.centerIn: parent
+        }
+    }
+
+    Rectangle
+    {
+        id: scrollArea
+        width: 164
+        height: 16
+        anchors.rightMargin: 2
+        anchors.bottomMargin: 4
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        radius: 2
+        color: "#222222"
+
+        Text
+        {
+            id: visibleAreaRatio
+            text: "0"
+            anchors.leftMargin: 4
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            color: "#eeeeee"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            font.family: "Roboto"
+            font.pixelSize: 10
+
+            Connections
+            {
+                target: waveformWidget
+                function onMaxChanged()
+                {
+                    visibleAreaRatio.text = Math.round((waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration() * 100) + "%"
+//                    scrollBar.width = scrollBackgroundWaveform.width * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration()
+//                    scrollBar.x = waveformWidget.min() / waveformWidget.duration() * scrollBackgroundWaveform.width
+                }
+            }
+
+            Connections
+            {
+                target: waveformWidget
+                function onMinChanged()
+                {
+                    visibleAreaRatio.text = Math.round((waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration() * 100) + "%"
+//                    scrollBar.width = scrollBackgroundWaveform.width * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration()
+//                    scrollBar.x = waveformWidget.min() / waveformWidget.duration() * scrollBackgroundWaveform.width
+                }
+            }
+        }
+
+        Rectangle
+        {
+            id: separator
+            width: 2
+            height: 16
+            color: "#444444"
+            anchors.right: scrollBackgroundWaveform.left
+        }
+
+        WaveformWidget
+        {
+            id: scrollBackgroundWaveform
+            width: 130
+            height: 16
+
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            Rectangle
+            {
+                id: scrollBar
+                height: parent.height
+//                width: scrollBackgroundWaveform.width * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration()
+                width: scrollBackgroundWaveform.width
+                color: "#20507FE6"
+                border.width: 2
+                border.color: "#507FE6"
+                radius: 2
+
+//                property int prevX: 0
+
+                function zoomIn()
+                {
+                    let newWidth = width + width * 0.05
+                    let dWidth = newWidth - width
+                    if((x - dWidth / 2) >= 0 && (x + width + dWidth / 2) <= scrollBackgroundWaveform.width)
+                    {
+                        x -= dWidth / 2
+                        width = newWidth
+                        return
+                    }
+
+                    let leftDist = x
+                    let rightDist = scrollBackgroundWaveform.width - x - width
+
+                    if(leftDist < rightDist)
+                    {
+                        dWidth -= x
+                        x = 0
+
+                        if((x + width + dWidth / 2) <= scrollBackgroundWaveform.width)
+                        {
+                            width = newWidth
+                        }
+
+                        else
+                            width = scrollBackgroundWaveform.width
+                    }
+
+                    else
+                    {
+                        if(newWidth < scrollBackgroundWaveform.width)
+                        {
+                            width = newWidth
+                            x = scrollBackgroundWaveform.width - width
+                        }
+
+                        else
+                        {
+                            x = 0
+                            width = scrollBackgroundWaveform.width
+                        }
+                    }
+                }
+
+                function zoomOut()
+                {
+                    let newWidth = width - width * 0.05
+                    if(newWidth >= 10)
+                    {
+                        x += (width -newWidth) / 2
+                        width = newWidth
+                    }
+                }
+
+                onXChanged:
+                {
+                    let minPos = waveformWidget.duration() / scrollBackgroundWaveform.width * x
+                    let maxPos = waveformWidget.duration() / scrollBackgroundWaveform.width * (x + scrollBar.width)
+                    waveformWidget.setMin(minPos)
+                    waveformWidget.setMax(maxPos)
+                }
+
+                onWidthChanged:
+                {
+                    let minPos = waveformWidget.duration() / scrollBackgroundWaveform.width * x
+                    let maxPos = waveformWidget.duration() / scrollBackgroundWaveform.width * (x + scrollBar.width)
+                    waveformWidget.setMin(minPos)
+                    waveformWidget.setMax(maxPos)
+                }
+
+                MouseArea
+                {
+                    id: movingArea
+                    anchors.fill: parent
+
+                    drag.target: scrollBar
+                    drag.axis: Drag.XAxis
+
+                    drag.minimumX: 0
+                    drag.maximumX: scrollBackgroundWaveform.width - scrollBar.width
+
+//                    onPressed:
+//                    {
+//                        scrollBar.prevX = scrollBar.x
+//                    }
+
+//                    onMouseXChanged:
+//                    {
+//                        let dt = waveformWidget.duration() / scrollBackgroundWaveform.width * (mouseX - pressedX)
+//                        waveformWidget.moveVisibleRange(dt)
+    //                    waveformWidget.setMin(scrollBar.x / scrollBackgroundWaveform.width * waveformWidget.duration())
+    //                    waveformWidget.setMax((scrollBar.x + scrollBar.width) / scrollBackgroundWaveform.width * waveformWidget.duration())
+//                    }
+                }
+            }
+
+            Component.onCompleted:
+            {
+                if(project.property("audioTrackFile") !== "")
+                {
+                    setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+                }
+            }
         }
     }
 }

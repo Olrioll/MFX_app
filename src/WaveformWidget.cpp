@@ -86,6 +86,11 @@ void WaveformWidget::refresh()
     update();
 }
 
+qint64 WaveformWidget::duration() const
+{
+    return _player.duration();
+}
+
 void WaveformWidget::setMax(qint64 maxMsec)
 {
     if (m_max == maxMsec * _ratio)
