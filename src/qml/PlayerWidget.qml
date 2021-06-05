@@ -8,6 +8,7 @@ import "qrc:/"
 Item
 {
     id: playerWidget
+    clip: true
 
     Rectangle
     {
@@ -64,30 +65,40 @@ Item
     {
         id: positionCursor
         width: 2
-        height: waveformBackground.height
-        anchors.top: waveformBackground.top
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        Canvas
+        {
+            width: 12
+            height: parent.height
+            x: - width / 2
+            y: 12
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = "#99006DFF"
+                ctx.lineWidth = 2
+                ctx.fillStyle = "#6BAAFF"
+                ctx.lineTo(width, 0)
+                ctx.lineTo(width / 2, width)
+                ctx.lineTo(0, 0)
+                ctx.closePath()
+                ctx.stroke()
+                ctx.fill()
+            }
+        }
 
         Rectangle
         {
-            anchors.fill: parent
+            width: 2
+            height: waveformBackground.height
             color: "#99006DFF"
+            x: -1
+            y: 24
         }
-
-//        Canvas
-//        {
-//            anchors.fill: parent
-
-//            onPaint:
-//            {
-//                var ctx = getContext("2d")
-//                ctx.strokeStyle = "#ffffff"
-//                ctx.fillStyle = "#ffffff"
-//                ctx.moveTo(width / 2, 0)
-//                ctx.lineTo(width / 2, height)
-////                ctx.closePath()
-////                ctx.fill()
-//            }
-//        }
 
         Connections
         {

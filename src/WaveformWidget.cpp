@@ -36,6 +36,8 @@ void WaveformWidget::paint(QPainter *painter)
            maxAmplitude = i;
     }
 
+    maxAmplitude = 0.5f;
+
     for(int i = 0; i < _currentSamples.size(); i++)
     {
         float amplitudeInPixels = boundingRect().height() - boundingRect().height() * _currentSamples[i] / maxAmplitude;
