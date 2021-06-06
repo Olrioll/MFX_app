@@ -124,6 +124,11 @@ void WaveformWidget::setMin(qint64 minMsec)
     emit minChanged(m_min);
 }
 
+void WaveformWidget::setPlayerPosition(qint64 pos)
+{
+    _player.setPosition(pos);
+}
+
 void WaveformWidget::moveVisibleRange(qint64 pos)
 {
     qint64 tempMin = m_min + pos * _ratio;

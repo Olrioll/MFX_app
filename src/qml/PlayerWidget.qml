@@ -217,6 +217,26 @@ Item
                 ctx.stroke()
                 ctx.fill()
             }
+
+            MouseArea
+            {
+                id: cursorMovingArea
+                anchors.fill: parent
+
+                drag.target: positionCursor
+                drag.axis: Drag.XAxis
+
+                drag.minimumX: 0
+                drag.maximumX: mainBackground.width - positionCursor.width
+
+                onMouseXChanged:
+                {
+                    let max = waveformWidget.max()
+                    let min = waveformWidget.min()
+                    let msecPerPx = (max - min) / waveformWidget.width
+                    waveformWidget.setPlayerPosition(min + positionCursor.x * msecPerPx)
+                }
+            }
         }
 
         Rectangle
@@ -246,52 +266,6 @@ Item
             }
         }
     }
-
-//    Text
-//    {
-//        id: minValue
-//        text: waveformWidget.minString()
-//        anchors.left: parent.left
-//        anchors.top:parent.top
-//        color: "#eeeeee"
-//        horizontalAlignment: Text.AlignHCenter
-//        verticalAlignment: Text.AlignVCenter
-//        elide: Text.ElideRight
-//        font.family: "Roboto"
-//        font.pixelSize: 8
-
-//        Connections
-//        {
-//            target: waveformWidget
-//            function onMinChanged()
-//            {
-//                minValue.text = waveformWidget.minString()
-//            }
-//        }
-//    }
-
-//    Text
-//    {
-//        id: maxValue
-//        text: waveformWidget.maxString()
-//        anchors.right: parent.right
-//        anchors.top:parent.top
-//        color: "#eeeeee"
-//        horizontalAlignment: Text.AlignHCenter
-//        verticalAlignment: Text.AlignVCenter
-//        elide: Text.ElideRight
-//        font.family: "Roboto"
-//        font.pixelSize: 8
-
-//        Connections
-//        {
-//            target: waveformWidget
-//            function onMaxChanged()
-//            {
-//                maxValue.text = waveformWidget.maxString()
-//            }
-//        }
-//    }
 
     MfxButton
     {
