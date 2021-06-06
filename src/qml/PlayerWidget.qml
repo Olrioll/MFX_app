@@ -74,149 +74,67 @@ Item
                 var ctx = getContext("2d")
                 ctx.reset()
 
+                var stepMsec = 0 // шаг делений в мсек
+
  // малое деление будет равно 1 сек
                 if(msecPerPx >= 50)
                 {
-                    // шаг делений в мсек
-                    let stepMsec = 1000
-                    // стартовая позиция в мсек
-                    let startMsec = Math.ceil(min / stepMsec) * stepMsec
-
-                    // стартовая позиция в пикселях
-                    let start = (startMsec - min) / msecPerPx
-
-                    // шаг делений в пикселях
-                    let step = stepMsec / msecPerPx
-
-                    ctx.miterLimit = 0.1
-                    ctx.strokeStyle = "#888888"
-
-                    let currPos = start;
-                    let currPosMsec = startMsec
-                    while(currPos + step < width)
-                    {
-                        let divisionHeight = 2
-
-                        if(!(currPosMsec % (10 * stepMsec)))
-                            divisionHeight = 6
-
-                        else if(!(currPosMsec % (5 * stepMsec)))
-                            divisionHeight = 4
-
-                        ctx.moveTo(currPos, height)
-                        ctx.lineTo(currPos, height - divisionHeight)
-                        currPos += step
-                        currPosMsec += stepMsec
-
-                        if(divisionHeight === 6) // создаем текстовый маркер
-                        {
-                            let marker = textMarker.createObject(mainBackground)
-                            timeScale.textMarkers.push(marker)
-
-                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
-                            marker.y = 2
-                            marker.x = currPos - step - marker.width / 2
-                        }
-                    }
-
-                    ctx.stroke()
+                    stepMsec = 1000
                 }
 
 // малое деление будет равно 0.5 сек
                 else if(msecPerPx >= 25)
                 {
-                    // шаг делений в мсек
-                    let stepMsec = 500
-                    // стартовая позиция в мсек
-                    let startMsec = Math.ceil(min / stepMsec) * stepMsec
-
-                    // стартовая позиция в пикселях
-                    let start = (startMsec - min) / msecPerPx
-
-                    // шаг делений в пикселях
-                    let step = stepMsec / msecPerPx
-
-                    ctx.miterLimit = 0.1
-                    ctx.strokeStyle = "#888888"
-
-                    let currPos = start;
-                    let currPosMsec = startMsec
-                    while(currPos + step < width)
-                    {
-                        let divisionHeight = 2
-
-                        if(!(currPosMsec % (10 * stepMsec)))
-                            divisionHeight = 6
-
-                        else if(!(currPosMsec % (5 * stepMsec)))
-                            divisionHeight = 4
-
-                        ctx.moveTo(currPos, height)
-                        ctx.lineTo(currPos, height - divisionHeight)
-                        currPos += step
-                        currPosMsec += stepMsec
-
-                        if(divisionHeight === 6) // создаем текстовый маркер
-                        {
-                            let marker = textMarker.createObject(mainBackground)
-                            timeScale.textMarkers.push(marker)
-
-                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
-                            marker.y = 2
-                            marker.x = currPos - step - marker.width / 2
-                        }
-                    }
-
-                    ctx.stroke()
+                    stepMsec = 500
                 }
 
 // малое деление будет равно 0.1 сек
                 else
                 {
-                    // шаг делений в мсек
-                    let stepMsec = 100
-                    // стартовая позиция в мсек
-                    let startMsec = Math.ceil(min / stepMsec) * stepMsec
-
-                    // стартовая позиция в пикселях
-                    let start = (startMsec - min) / msecPerPx
-
-                    // шаг делений в пикселях
-                    let step = stepMsec / msecPerPx
-
-                    ctx.miterLimit = 0.1
-                    ctx.strokeStyle = "#888888"
-
-                    let currPos = start;
-                    let currPosMsec = startMsec
-                    while(currPos + step < width)
-                    {
-                        let divisionHeight = 2
-
-                        if(!(currPosMsec % (10 * stepMsec)))
-                            divisionHeight = 6
-
-                        else if(!(currPosMsec % (5 * stepMsec)))
-                            divisionHeight = 4
-
-                        ctx.moveTo(currPos, height)
-                        ctx.lineTo(currPos, height - divisionHeight)
-                        currPos += step
-                        currPosMsec += stepMsec
-
-                        if(divisionHeight === 6) // создаем текстовый маркер
-                        {
-                            let marker = textMarker.createObject(mainBackground)
-                            timeScale.textMarkers.push(marker)
-
-                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
-                            marker.y = 2
-                            marker.x = currPos - step - marker.width / 2
-                        }
-                    }
-
-                    ctx.stroke()
+                    stepMsec = 100
                 }
+
+                // стартовая позиция в мсек
+                var startMsec = Math.ceil(min / stepMsec) * stepMsec
+
+                // стартовая позиция в пикселях
+                var start = (startMsec - min) / msecPerPx
+
+                // шаг делений в пикселях
+                var step = stepMsec / msecPerPx
+
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = "#888888"
+
+                var currPos = start;
+                var currPosMsec = startMsec
+                while(currPos + step < width)
+                {
+                    let divisionHeight = 2
+
+                    if(!(currPosMsec % (10 * stepMsec)))
+                        divisionHeight = 6
+
+                    else if(!(currPosMsec % (5 * stepMsec)))
+                        divisionHeight = 4
+
+                    ctx.moveTo(currPos, height)
+                    ctx.lineTo(currPos, height - divisionHeight)
+                    currPos += step
+                    currPosMsec += stepMsec
+
+                    if(divisionHeight === 6) // создаем текстовый маркер
+                    {
+                        let marker = textMarker.createObject(mainBackground)
+                        timeScale.textMarkers.push(marker)
+
+                        marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                        marker.y = 2
+                        marker.x = currPos - step - marker.width / 2
+                    }
+                }
+
+                ctx.stroke()
             }
         }
 
