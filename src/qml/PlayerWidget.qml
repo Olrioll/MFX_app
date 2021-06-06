@@ -20,6 +20,210 @@ Item
 
     Rectangle
     {
+        id: timeScaleBackground
+        height: 8
+        anchors.topMargin: waveformBackground.anchors.topMargin - height
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        color: "#222222"
+    }
+
+    Item
+    {
+        id: timeScale
+//        anchors.topMargin: -6
+        anchors.fill: timeScaleBackground
+
+        property var textMarkers: []
+
+        Component
+        {
+            id: textMarker
+            Text
+            {
+                id: posTimeText
+                color: "#eeeeee"
+                padding: 0
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+                font.family: "Roboto"
+                font.pixelSize: 8
+            }
+        }
+
+        Canvas
+        {
+            id: timeScaleCanvas
+            anchors.fill: parent
+
+            onPaint:
+            {
+                // Вычисляем кол-во миллисекунд на пиксель
+
+                let max = waveformWidget.max()
+                let min = waveformWidget.min()
+                let msecPerPx = (max - min) / waveformWidget.width
+
+                for (let txt of timeScale.textMarkers)
+                {
+                  txt.destroy()
+                }
+                timeScale.textMarkers = []
+                var ctx = getContext("2d")
+                ctx.reset()
+
+ // малое деление будет равно 1 сек
+                if(msecPerPx >= 50)
+                {
+                    // шаг делений в мсек
+                    let stepMsec = 1000
+                    // стартовая позиция в мсек
+                    let startMsec = Math.ceil(min / stepMsec) * stepMsec
+
+                    // стартовая позиция в пикселях
+                    let start = (startMsec - min) / msecPerPx
+
+                    // шаг делений в пикселях
+                    let step = stepMsec / msecPerPx
+
+                    ctx.miterLimit = 0.1
+                    ctx.strokeStyle = "#888888"
+
+                    let currPos = start;
+                    let currPosMsec = startMsec
+                    while(currPos + step < width)
+                    {
+                        let divisionHeight = 2
+
+                        if(!(currPosMsec % (10 * stepMsec)))
+                            divisionHeight = 6
+
+                        else if(!(currPosMsec % (5 * stepMsec)))
+                            divisionHeight = 4
+
+                        ctx.moveTo(currPos, height)
+                        ctx.lineTo(currPos, height - divisionHeight)
+                        currPos += step
+                        currPosMsec += stepMsec
+
+                        if(divisionHeight === 6) // создаем текстовый маркер
+                        {
+                            let marker = textMarker.createObject(mainBackground)
+                            timeScale.textMarkers.push(marker)
+
+                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                            marker.y = 2
+                            marker.x = currPos - step - marker.width / 2
+                        }
+                    }
+
+                    ctx.stroke()
+                }
+
+// малое деление будет равно 0.5 сек
+                else if(msecPerPx >= 25)
+                {
+                    // шаг делений в мсек
+                    let stepMsec = 500
+                    // стартовая позиция в мсек
+                    let startMsec = Math.ceil(min / stepMsec) * stepMsec
+
+                    // стартовая позиция в пикселях
+                    let start = (startMsec - min) / msecPerPx
+
+                    // шаг делений в пикселях
+                    let step = stepMsec / msecPerPx
+
+                    ctx.miterLimit = 0.1
+                    ctx.strokeStyle = "#888888"
+
+                    let currPos = start;
+                    let currPosMsec = startMsec
+                    while(currPos + step < width)
+                    {
+                        let divisionHeight = 2
+
+                        if(!(currPosMsec % (10 * stepMsec)))
+                            divisionHeight = 6
+
+                        else if(!(currPosMsec % (5 * stepMsec)))
+                            divisionHeight = 4
+
+                        ctx.moveTo(currPos, height)
+                        ctx.lineTo(currPos, height - divisionHeight)
+                        currPos += step
+                        currPosMsec += stepMsec
+
+                        if(divisionHeight === 6) // создаем текстовый маркер
+                        {
+                            let marker = textMarker.createObject(mainBackground)
+                            timeScale.textMarkers.push(marker)
+
+                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                            marker.y = 2
+                            marker.x = currPos - step - marker.width / 2
+                        }
+                    }
+
+                    ctx.stroke()
+                }
+
+// малое деление будет равно 0.1 сек
+                else
+                {
+                    // шаг делений в мсек
+                    let stepMsec = 100
+                    // стартовая позиция в мсек
+                    let startMsec = Math.ceil(min / stepMsec) * stepMsec
+
+                    // стартовая позиция в пикселях
+                    let start = (startMsec - min) / msecPerPx
+
+                    // шаг делений в пикселях
+                    let step = stepMsec / msecPerPx
+
+                    ctx.miterLimit = 0.1
+                    ctx.strokeStyle = "#888888"
+
+                    let currPos = start;
+                    let currPosMsec = startMsec
+                    while(currPos + step < width)
+                    {
+                        let divisionHeight = 2
+
+                        if(!(currPosMsec % (10 * stepMsec)))
+                            divisionHeight = 6
+
+                        else if(!(currPosMsec % (5 * stepMsec)))
+                            divisionHeight = 4
+
+                        ctx.moveTo(currPos, height)
+                        ctx.lineTo(currPos, height - divisionHeight)
+                        currPos += step
+                        currPosMsec += stepMsec
+
+                        if(divisionHeight === 6) // создаем текстовый маркер
+                        {
+                            let marker = textMarker.createObject(mainBackground)
+                            timeScale.textMarkers.push(marker)
+
+                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                            marker.y = 2
+                            marker.x = currPos - step - marker.width / 2
+                        }
+                    }
+
+                    ctx.stroke()
+                }
+            }
+        }
+
+    }
+
+    Rectangle
+    {
         id: waveformBackground
         anchors.topMargin: 24
         anchors.bottomMargin: 24
@@ -40,8 +244,12 @@ Item
             id: mainMouseArea
             anchors.fill: parent
             hoverEnabled: true
-            onWheel: (wheel.angleDelta.y > 0) ? scrollBar.zoomIn(mouseX / mainMouseArea.width)
+            onWheel:
+            {
+                (wheel.angleDelta.y > 0) ? scrollBar.zoomIn(mouseX / mainMouseArea.width)
                                               : scrollBar.zoomOut(mouseX / mainMouseArea.width)
+                timeScaleCanvas.requestPaint()
+            }
         }
 
         Connections
@@ -121,51 +329,51 @@ Item
         }
     }
 
-    Text
-    {
-        id: minValue
-        text: waveformWidget.minString()
-        anchors.left: parent.left
-        anchors.top:parent.top
-        color: "#eeeeee"
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        elide: Text.ElideRight
-        font.family: "Roboto"
-        font.pixelSize: 8
+//    Text
+//    {
+//        id: minValue
+//        text: waveformWidget.minString()
+//        anchors.left: parent.left
+//        anchors.top:parent.top
+//        color: "#eeeeee"
+//        horizontalAlignment: Text.AlignHCenter
+//        verticalAlignment: Text.AlignVCenter
+//        elide: Text.ElideRight
+//        font.family: "Roboto"
+//        font.pixelSize: 8
 
-        Connections
-        {
-            target: waveformWidget
-            function onMinChanged()
-            {
-                minValue.text = waveformWidget.minString()
-            }
-        }
-    }
+//        Connections
+//        {
+//            target: waveformWidget
+//            function onMinChanged()
+//            {
+//                minValue.text = waveformWidget.minString()
+//            }
+//        }
+//    }
 
-    Text
-    {
-        id: maxValue
-        text: waveformWidget.maxString()
-        anchors.right: parent.right
-        anchors.top:parent.top
-        color: "#eeeeee"
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        elide: Text.ElideRight
-        font.family: "Roboto"
-        font.pixelSize: 8
+//    Text
+//    {
+//        id: maxValue
+//        text: waveformWidget.maxString()
+//        anchors.right: parent.right
+//        anchors.top:parent.top
+//        color: "#eeeeee"
+//        horizontalAlignment: Text.AlignHCenter
+//        verticalAlignment: Text.AlignVCenter
+//        elide: Text.ElideRight
+//        font.family: "Roboto"
+//        font.pixelSize: 8
 
-        Connections
-        {
-            target: waveformWidget
-            function onMaxChanged()
-            {
-                maxValue.text = waveformWidget.maxString()
-            }
-        }
-    }
+//        Connections
+//        {
+//            target: waveformWidget
+//            function onMaxChanged()
+//            {
+//                maxValue.text = waveformWidget.maxString()
+//            }
+//        }
+//    }
 
     MfxButton
     {
@@ -475,7 +683,6 @@ Item
                     let rightShift = (1 - zoomCenter) * dWidth
                     if(newWidth >= 10)
                     {
-//                        x += (width -newWidth) / 2
                         x += leftShift
                         width = newWidth
                     }
@@ -507,19 +714,6 @@ Item
 
                     drag.minimumX: 0
                     drag.maximumX: scrollBackgroundWaveform.width - scrollBar.width
-
-//                    onPressed:
-//                    {
-//                        scrollBar.prevX = scrollBar.x
-//                    }
-
-//                    onMouseXChanged:
-//                    {
-//                        let dt = waveformWidget.duration() / scrollBackgroundWaveform.width * (mouseX - pressedX)
-//                        waveformWidget.moveVisibleRange(dt)
-    //                    waveformWidget.setMin(scrollBar.x / scrollBackgroundWaveform.width * waveformWidget.duration())
-    //                    waveformWidget.setMax((scrollBar.x + scrollBar.width) / scrollBackgroundWaveform.width * waveformWidget.duration())
-//                    }
                 }
             }
 

@@ -68,6 +68,11 @@ QString WaveformWidget::minString() const
     return QTime(0, 0).addMSecs(m_min / _ratio).toString("mm:ss");
 }
 
+QString WaveformWidget::positionString(qint64 pos, QString format) const
+{
+    return QTime(0, 0).addMSecs(pos).toString(format);
+}
+
 float WaveformWidget::scaleFactor() const
 {
     return m_scaleFactor;

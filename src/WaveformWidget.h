@@ -28,6 +28,7 @@ public slots:
     void setMin(qint64 minMsec);
     QString maxString() const;
     QString minString() const;
+    QString positionString(qint64 pos, QString format) const;
     qint64 max() const;
     qint64 min() const;
     void moveVisibleRange(qint64 pos);
