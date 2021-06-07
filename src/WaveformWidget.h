@@ -27,6 +27,7 @@ public slots:
     void setMax(qint64 maxMsec);
     void setMin(qint64 minMsec);
     void setPlayerPosition(qint64 pos);
+    void setVolume(int value);
     QString maxString() const;
     QString minString() const;
     QString positionString(qint64 pos, QString format) const;

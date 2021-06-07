@@ -32,7 +32,6 @@ Item
     Item
     {
         id: timeScale
-//        anchors.topMargin: -6
         anchors.fill: timeScaleBackground
 
         property var textMarkers: []
@@ -440,6 +439,80 @@ Item
         {
             source: repeatButton.checked ? "qrc:/repeatButtonChecked" : "qrc:/repeatButton"
             anchors.centerIn: parent
+        }
+    }
+
+
+    Item
+    {
+        id: volumeRegulator
+        width: 104
+        height: 8
+
+        anchors.rightMargin: 100
+        anchors.right: scrollArea.left
+        anchors.bottomMargin: 2
+        anchors.bottom: scrollArea.bottom
+
+        Text
+        {
+            id: volumeCaption
+            text: qsTr("Volume")
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.rightMargin: 8
+            anchors.right: parent.left
+
+            color: "#eeeeee"
+            padding: 0
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            font.family: "Roboto"
+            font.pixelSize: 12
+        }
+
+        Canvas
+        {
+            anchors.fill: parent
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.fillStyle = "#222222"
+                ctx.lineTo(width, height)
+                ctx.lineTo(width, 0)
+                ctx.lineTo(0, height)
+                ctx.fill()
+            }
+        }
+
+        Rectangle
+        {
+            id: volumeLevelBar
+            width: 4
+            height: 12
+            radius: 2
+            color: "#ffffff"
+            anchors.verticalCenter: volumeRegulator.verticalCenter
+            x: 100
+
+            MouseArea
+            {
+                id: barMovingArea
+                anchors.fill: parent
+
+                drag.target: volumeLevelBar
+                drag.axis: Drag.XAxis
+
+                drag.minimumX: 0
+                drag.maximumX: volumeRegulator.width - volumeLevelBar.width
+            }
+
+            onXChanged:
+            {
+                waveformWidget.setVolume(x);
+            }
         }
     }
 
