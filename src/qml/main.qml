@@ -25,10 +25,17 @@ ApplicationWindow
     property int previousGeometryHeight: 960
 
     property bool isPatchEditorOpened: false
+    property bool isMouseCursorVisible: true
 
     function childWidgetsArea()
     {
         return {x:0, width:width, y:mainMenu.height, height:height}
+    }
+
+    MouseAreaWithHidingCursor
+    {
+        id: overallArea
+        anchors.fill: parent
     }
 
     MouseArea
@@ -620,13 +627,4 @@ ApplicationWindow
             }
         }
     }
-
-//    Connections
-//    {
-//        target: slider
-//        function onMoved()
-//        {
-//            waveformWidget.moveVisibleRange(slider.position);
-//        }
-//    }
 }
