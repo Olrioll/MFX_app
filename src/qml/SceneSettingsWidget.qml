@@ -6,10 +6,11 @@ Item
 {
     id: sceneSettingsWidget
     width: 174
-    height: 276
+    height: 330
 
     property string caption: "Scene settings"
     property string choosenImageFile: project.property("backgroundImageFile") === "" ? "" : settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
+    property string choosenAudioFile
 
     Rectangle
     {
@@ -230,13 +231,13 @@ Item
         {
             id: workArea2
 
+            height: 140
             anchors.margins: 8
             anchors
             {
                 top: workArea1.bottom
                 left: parent.left
                 right: parent.right
-                bottom: setButton.top
             }
 
             radius: 2
@@ -312,6 +313,31 @@ Item
 
         MfxButton
         {
+            id: setAudioTrackButton
+            color: "#222222"
+            anchors.margins: 8
+            anchors
+            {
+                left: parent.left
+                right: parent.right
+                top: workArea2.bottom
+            }
+
+            text: project.property("audioTrackFile") === "" ? qsTr("Click to choose audio") : project.property("audioTrackFile")
+
+            onClicked:
+            {
+                let trackFileName = project.selectAudioTrackDialog()
+                if(trackFileName)
+                {
+                    choosenAudioFile = trackFileName
+                    text = choosenAudioFile
+                }
+            }
+        }
+
+        MfxButton
+        {
             id: setButton
 
             color: "#2F80ED"
@@ -356,6 +382,9 @@ Item
 
                 let yPos = ((backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * backgroundImage.height) / 2) / backgroundImage.height
                 project.setProperty("sceneFrameY", yPos)
+
+                if(choosenAudioFile !== "")
+                    project.setAudioTrack(choosenAudioFile)
 
                 sceneFrameItem.restorePreviousGeometry()
                 sceneFrameItem.visible = true

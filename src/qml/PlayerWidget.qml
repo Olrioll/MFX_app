@@ -10,6 +10,9 @@ Item
     id: playerWidget
     clip: true
 
+    property int minHeight: 200
+    property int maxHeight: 600
+
     Rectangle
     {
         id: mainBackground
@@ -601,17 +604,6 @@ Item
             source: "qrc:/settingsButton"
             anchors.centerIn: parent
         }
-
-        onClicked:
-        {
-            let trackFileName = project.selectAudioTrackDialog()
-            if(trackFileName)
-            {
-                project.setAudioTrack(trackFileName)
-                waveformWidget.setAudioTrackFile(trackFileName)
-                scrollBackgroundWaveform.setAudioTrackFile(trackFileName)
-            }
-        }
     }
 
     MfxButton
@@ -881,4 +873,5 @@ Item
             }
         }
     }
+
 }

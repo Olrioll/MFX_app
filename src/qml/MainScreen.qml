@@ -28,7 +28,7 @@ Item
     PlayerWidget
     {
         id: playerWidget
-        height: 200
+        height: minHeight
         anchors.margins: 2
         anchors.left: parent.left
         anchors.right: parent.right
@@ -62,8 +62,11 @@ Item
 
                 if((playerWidget.height - dy) < playerWidget.minHeight)
                     playerWidget.height = playerWidget.minHeight
-                else
+
+                else if ((playerWidget.height - dy) <= mainScreen.height - 100)
                     playerWidget.height = playerWidget.height - dy
+//                else
+//                    playerWidget.height = playerWidget.height - dy
             }
         }
     }

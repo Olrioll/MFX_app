@@ -227,6 +227,8 @@ void ProjectManager::setAudioTrack(QString fileName)
         QString shortName = info.completeBaseName();
         QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
         setProperty("audioTrackFile", info.completeBaseName() + "." + info.completeSuffix());
+
+        emit audioTrackFileChanged();
     }
 }
 
