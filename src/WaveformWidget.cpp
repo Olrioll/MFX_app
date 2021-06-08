@@ -184,7 +184,7 @@ void WaveformWidget::paint(QPainter *painter)
                 }
 
                 float average = acc / FPP;
-                float height =   average / maxAmplitude * maxHeight;
+                float height = average / maxAmplitude * maxHeight;
 
                 float y1 = (maxHeight - height) / 2;
                 float y2 = y1 + height;
