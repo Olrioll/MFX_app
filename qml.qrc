@@ -60,5 +60,6 @@
         <file alias="repeatButtonChecked">src/img/player_repeatButtonChecked.png</file>
         <file>src/qml/MfxHilightedButton.qml</file>
         <file>src/qml/MouseAreaWithHidingCursor.qml</file>
+        <file>src/qml/CuePlate.qml</file>
     </qresource>
 </RCC>

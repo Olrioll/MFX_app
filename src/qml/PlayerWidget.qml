@@ -13,6 +13,17 @@ Item
     property int minHeight: 200
     property int maxHeight: 600
 
+    property var cues: []
+    function updateCuesGeometry()
+    {
+        for(let i = 0; i < cues.length; i++)
+        {
+            let currCue = cues[i]
+            currCue.x = waveformBackground.width * (currCue.position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            currCue.width = waveformBackground.width * (currCue.position + currCue.duration - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min()) - currCue.x
+        }
+    }
+
     Rectangle
     {
         id: mainBackground
@@ -874,4 +885,18 @@ Item
         }
     }
 
+    Component.onCompleted:
+    {
+        let currCue = Qt.createComponent("CuePlate.qml").createObject(waveformWidget, {position: 1000, duration: 10000});
+        cues.push(currCue)
+    }
+
+    Connections
+    {
+        target: waveformWidget
+        function onMaxChanged()
+        {
+            updateCuesGeometry()
+        }
+    }
 }
