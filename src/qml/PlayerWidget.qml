@@ -88,9 +88,15 @@ Item
                 }
 
 // малое деление будет равно 0.1 сек
-                else
+                else if (msecPerPx >= 3)
                 {
                     stepMsec = 100
+                }
+
+// малое деление будет равно 0.01 сек
+                else
+                {
+                    stepMsec = 10
                 }
 
                 // стартовая позиция в мсек
@@ -127,7 +133,16 @@ Item
                         let marker = textMarker.createObject(mainBackground)
                         timeScale.textMarkers.push(marker)
 
-                        marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                        if(msecPerPx >= 3)
+                        {
+                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                        }
+
+                        else
+                        {
+                            let timeString = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss.zzz")
+                            marker.text = timeString.slice(0, timeString.length - 2)
+                        }
                         marker.y = 2
                         marker.x = currPos - step - marker.width / 2
                     }
@@ -264,7 +279,6 @@ Item
                     }
                 }
             }
-
         }
     }
 
@@ -749,6 +763,32 @@ Item
                 border.width: 2
                 border.color: "#507FE6"
                 radius: 2
+
+                function refresh()
+                {
+                    x = waveformWidget.min() / waveformWidget.duration() * scrollBackgroundWaveform.width
+                    width = (waveformWidget.max() - waveformWidget.min()) / waveformWidget.duration() * scrollBackgroundWaveform.width
+                    if(width < 5)
+                        width = 5
+                }
+
+                Connections
+                {
+                    target: waveformWidget
+                    function onMinChanged()
+                    {
+                        scrollBar.refresh()
+                    }
+                }
+
+                Connections
+                {
+                    target: waveformWidget
+                    function onMaxChanged()
+                    {
+                        scrollBar.refresh()
+                    }
+                }
 
                 function zoomOut(zoomCenter)
                 {
