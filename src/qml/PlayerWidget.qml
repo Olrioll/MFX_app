@@ -184,45 +184,9 @@ Item
             property int pressedX
             property int pressedY
             property int prevX
+            property int prevY
 
-            onPressed:
-            {
-                pressedX = mouseX
-                pressedY = mouseY
-                prevX = mouseX
-            }
-
-            onMouseXChanged:
-            {
-                if(mouse.buttons === Qt.LeftButton)
-                {
-                    let dx = mouseX - prevX
-                    let currInterval = waveformWidget.max() - waveformWidget.min()
-                    let dX = currInterval / width * Math.abs(dx)
-
-                    if(dx < 0)
-                    {
-                        if(waveformWidget.max() + dX <= waveformWidget.duration())
-                        {
-                            waveformWidget.setMax(waveformWidget.max() + dX)
-                            waveformWidget.setMin(waveformWidget.min() + dX)
-                        }
-                    }
-
-                    else
-                    {
-                        if(waveformWidget.min() - dX >= 0)
-                        {
-                            waveformWidget.setMax(waveformWidget.max() - dX)
-                            waveformWidget.setMin(waveformWidget.min() - dX)
-                        }
-                    }
-
-                    prevX = mouseX
-                }
-            }
-
-            onWheel:
+            function zoom(delta)
             {
                 let currInterval = waveformWidget.max() - waveformWidget.min()
                 let dWidth = currInterval * 0.05
@@ -230,7 +194,7 @@ Item
                 let leftShift = zoomCenter * dWidth
                 let rightShift = (1 - zoomCenter) * dWidth
 
-                if(wheel.angleDelta.y > 0)
+                if(delta > 0)
                 {
                     waveformWidget.setMin(waveformWidget.min() + leftShift)
                     waveformWidget.setMax(waveformWidget.max() - rightShift)
@@ -278,6 +242,60 @@ Item
                         }
                     }
                 }
+            }
+
+            onPressed:
+            {
+                pressedX = mouseX
+                pressedY = mouseY
+                prevX = mouseX
+                prevY = mouseY
+            }
+
+            onMouseXChanged:
+            {
+                if(mouse.buttons === Qt.LeftButton)
+                {
+                    let dx = mouseX - prevX
+                    let currInterval = waveformWidget.max() - waveformWidget.min()
+                    let dX = currInterval / width * Math.abs(dx)
+
+                    if(dx < 0)
+                    {
+                        if(waveformWidget.max() + dX <= waveformWidget.duration())
+                        {
+                            waveformWidget.setMax(waveformWidget.max() + dX)
+                            waveformWidget.setMin(waveformWidget.min() + dX)
+                        }
+                    }
+
+                    else
+                    {
+                        if(waveformWidget.min() - dX >= 0)
+                        {
+                            waveformWidget.setMax(waveformWidget.max() - dX)
+                            waveformWidget.setMin(waveformWidget.min() - dX)
+                        }
+                    }
+
+                    prevX = mouseX
+                }
+            }
+
+
+            onMouseYChanged:
+            {
+                if(mouse.buttons === Qt.LeftButton)
+                {
+                    let dy = mouseY - prevY
+                    zoom(-dy)
+                    prevY = mouseY
+                }
+            }
+
+            onWheel:
+            {
+                zoom(wheel.angleDelta.y)
             }
         }
     }
@@ -788,94 +806,6 @@ Item
                     {
                         scrollBar.refresh()
                     }
-                }
-
-                function zoomOut(zoomCenter)
-                {
-//                    let newWidth = width + width * 0.05
-//                    let dWidth = newWidth - width
-//                    let leftShift = zoomCenter * dWidth
-//                    let rightShift = (1 - zoomCenter) * dWidth
-
-//                    if((x - leftShift) >= 0 && (x + width + rightShift) <= scrollBackgroundWaveform.width)
-//                    {
-//                        x -= leftShift
-//                        width = newWidth
-//                        return
-//                    }
-
-//                    let leftDist = x
-//                    let rightDist = scrollBackgroundWaveform.width - x - width
-
-//                    if(leftDist < rightDist)
-//                    {
-//                        dWidth -= x
-//                        x = 0
-
-//                        if((x + width + dWidth / 2) <= scrollBackgroundWaveform.width)
-//                        {
-//                            width = newWidth
-//                        }
-
-//                        else
-//                            width = scrollBackgroundWaveform.width
-//                    }
-
-//                    else
-//                    {
-//                        if(newWidth < scrollBackgroundWaveform.width)
-//                        {
-//                            width = newWidth
-//                            x = scrollBackgroundWaveform.width - width
-//                        }
-
-//                        else
-//                        {
-//                            x = 0
-//                            width = scrollBackgroundWaveform.width
-//                        }
-//                    }
-                }
-
-                function zoomIn(zoomCenter)
-                {
-//                    let newWidth = width - width * 0.05
-//                    let dWidth = width - newWidth
-//                    let leftShift = zoomCenter * dWidth
-//                    let rightShift = (1 - zoomCenter) * dWidth
-//                    if(newWidth >= 10)
-//                    {
-//                        x += leftShift
-//                        width = newWidth
-//                    }
-                }
-
-                onXChanged:
-                {
-//                    let minPos = waveformWidget.duration() / scrollBackgroundWaveform.width * x
-//                    let maxPos = waveformWidget.duration() / scrollBackgroundWaveform.width * (x + scrollBar.width)
-//                    waveformWidget.setMin(minPos)
-//                    waveformWidget.setMax(maxPos)
-                }
-
-                onWidthChanged:
-                {
-//                    let minPos = waveformWidget.duration() / scrollBackgroundWaveform.width * x
-//                    let maxPos = waveformWidget.duration() / scrollBackgroundWaveform.width * (x + scrollBar.width)
-//                    waveformWidget.setMin(minPos)
-//                    waveformWidget.setMax(maxPos)
-                }
-
-                MouseArea
-                {
-//                    id: movingArea
-//                    anchors.fill: parent
-
-//                    drag.target: scrollBar
-//                    drag.axis: Drag.XAxis
-
-//                    drag.minimumX: 0
-//                    drag.maximumX: scrollBackgroundWaveform.width - scrollBar.width
                 }
             }
 
