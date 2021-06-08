@@ -28,6 +28,7 @@ public slots:
     void setMin(qint64 minMsec);
     void setPlayerPosition(qint64 pos);
     void setVolume(int value);
+    void setStereoMode(bool state);
     QString maxString() const;
     QString minString() const;
     QString positionString(qint64 pos, QString format) const;
@@ -38,6 +39,7 @@ public slots:
     void zoomIn();
     void zoomOut();
     void setscaleFactor(float scaleFactor);
+    float framesPerPixel() const;
 
     void play();
     void pause();
@@ -58,10 +60,13 @@ private:
     QMediaPlayer _player;
     QTimer _valueForPositionTimer;
     QVector<float> _currentSamples;
+    QVector<float> _currentSamplesLeft;
+    QVector<float> _currentSamplesRight;
     int m_max = 1100000;
     int m_min = 0;
     float _ratio = 1.f; // Количество фреймов в миллисекунде
     float m_scaleFactor = 1.f;
+    bool _isStereoMode = false;
 };
 
 #endif // WAVEFORMWIDGET_H

@@ -339,6 +339,64 @@ Item
         }
     }
 
+    Rectangle
+    {
+        id: leftChannelMarker
+        width: 10
+        height: 10
+        radius: 2
+        color: "#444444"
+        x: waveformBackground.x + 4
+        y: waveformBackground.y + 4
+        visible: stereoModeButton.checked
+
+        Text
+        {
+            text: "L"
+            color: "#ffffff"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            anchors.centerIn: parent
+            font.family: "Roboto"
+            font.pixelSize: 8
+        }
+    }
+
+    Rectangle
+    {
+        id: rightChannelMarker
+        width: 10
+        height: 10
+        radius: 2
+        color: "#444444"
+        x: waveformBackground.x + 4
+        y: waveformBackground.y + waveformBackground.height / 2 + 4
+        visible: stereoModeButton.checked
+
+        Text
+        {
+            text: "R"
+            color: "#ffffff"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            anchors.centerIn: parent
+            font.family: "Roboto"
+            font.pixelSize: 8
+        }
+    }
+
+    Rectangle
+    {
+        id: cnannelsSeparetor
+        width: waveformBackground.width
+        height: 2
+        y: waveformBackground.y + waveformBackground.height / 2
+        color: "#444444"
+        visible: stereoModeButton.checked
+    }
+
     Item
     {
         id: positionCursor
@@ -671,6 +729,8 @@ Item
     {
         id: modeButtons
         checkedButton: monoModeButton
+
+        onClicked: button == stereoModeButton ? waveformWidget.setStereoMode(true) : waveformWidget.setStereoMode(false)
     }
 
     MfxButton

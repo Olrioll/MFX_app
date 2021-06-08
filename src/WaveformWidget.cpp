@@ -29,23 +29,240 @@ void WaveformWidget::paint(QPainter *painter)
     painter->setRenderHints(QPainter::Antialiasing, true);
     painter->setBrush(brush);
 
-    float maxAmplitude = 0.f;
-    for(auto & i : _currentSamples)
+    float maxAmplitude = abs(_track.maxAmplitude());
+    int maxHeight = boundingRect().height();
+
+    if(_isStereoMode)
     {
-        if (i > maxAmplitude)
-           maxAmplitude = i;
+        // Левый канал
+        if(framesPerPixel() > 100.f)
+        {
+            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+            int frameCounter = 0;
+            float acc = 0.f;
+            for(int i = 0; i < _currentSamplesLeft.size(); i++)
+            {
+                frameCounter++;
+                if(frameCounter < FPP)
+                {
+                    if(_currentSamplesLeft.at(i) > 1.9f)
+                        acc += _track.maxAmplitude();
+                    else if(_currentSamplesLeft.at(i) > 1.8f)
+                        acc += _currentSamplesLeft.at(i);
+                    continue;
+                }
+
+                float average = acc / FPP;
+                float height =   average / maxAmplitude * (maxHeight / 2 - 10);
+
+                float y1 = ((maxHeight / 2 - 10) - height) / 2;
+                float y2 = y1 + height;
+
+                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+                frameCounter = 0;
+                acc = 0.f;
+            }
+        }
+
+        else if(framesPerPixel() > 10.f)
+        {
+            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+            int frameCounter = 0;
+            float acc = 0.f;
+            for(int i = 0; i < _currentSamplesLeft.size(); i++)
+            {
+                frameCounter++;
+                if(frameCounter < FPP)
+                {
+                    if(_currentSamplesLeft.at(i) > 1.9f)
+                        acc += _track.maxAmplitude();
+                    else if(_currentSamplesLeft.at(i) > 1.8f)
+                        acc += _currentSamplesLeft.at(i);
+                    else if(_currentSamplesLeft.at(i) > 0.8f)
+                        acc += _currentSamplesLeft.at(i) - _currentSamplesLeft.at(i) * 0.5f;
+                    else
+                        acc += _currentSamplesLeft.at(i) - _currentSamplesLeft.at(i) * 0.3f;
+                    continue;
+                }
+
+                float average = acc / FPP;
+                float height =   average / maxAmplitude * maxHeight / 2;
+
+                float y1 = (maxHeight / 2 - height) / 2;
+                float y2 = y1 + height;
+
+                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+                frameCounter = 0;
+                acc = 0.f;
+            }
+        }
+
+        // Правый канал
+        if(framesPerPixel() > 100.f)
+        {
+            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+            int frameCounter = 0;
+            float acc = 0.f;
+            for(int i = 0; i < _currentSamplesRight.size(); i++)
+            {
+                frameCounter++;
+                if(frameCounter < FPP)
+                {
+                    if(_currentSamplesRight.at(i) > 1.9f)
+                        acc += _track.maxAmplitude();
+                    else if(_currentSamplesRight.at(i) > 1.8f)
+                        acc += _currentSamplesRight.at(i);
+                    continue;
+                }
+
+                float average = acc / FPP;
+                float height =   average / maxAmplitude * (maxHeight / 2 - 10);
+
+                float y1 = ((maxHeight / 2 - 10) - height) / 2 + maxHeight / 2;
+                float y2 = y1 + height;
+
+                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+                frameCounter = 0;
+                acc = 0.f;
+            }
+        }
+
+        else if(framesPerPixel() > 10.f)
+        {
+            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+            int frameCounter = 0;
+            float acc = 0.f;
+            for(int i = 0; i < _currentSamplesRight.size(); i++)
+            {
+                frameCounter++;
+                if(frameCounter < FPP)
+                {
+                    if(_currentSamplesRight.at(i) > 1.9f)
+                        acc += _track.maxAmplitude();
+                    else if(_currentSamplesRight.at(i) > 1.8f)
+                        acc += _currentSamplesRight.at(i);
+                    else if(_currentSamplesRight.at(i) > 0.8f)
+                        acc += _currentSamplesRight.at(i) - _currentSamplesRight.at(i) * 0.5f;
+                    else
+                        acc += _currentSamplesRight.at(i) - _currentSamplesRight.at(i) * 0.3f;
+                    continue;
+                }
+
+                float average = acc / FPP;
+                float height =   average / maxAmplitude * maxHeight / 2;
+
+                float y1 = (maxHeight / 2 - height) / 2 + maxHeight / 2;
+                float y2 = y1 + height;
+
+                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+                frameCounter = 0;
+                acc = 0.f;
+            }
+        }
+    }
+    else
+    {
+        if(framesPerPixel() > 100.f)
+        {
+            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+            int frameCounter = 0;
+            float acc = 0.f;
+            for(int i = 0; i < _currentSamples.size(); i++)
+            {
+                frameCounter++;
+                if(frameCounter < FPP)
+                {
+                    if(_currentSamples.at(i) > 1.9f)
+                        acc += _track.maxAmplitude();
+                    else if(_currentSamples.at(i) > 1.8f)
+                        acc += _currentSamples.at(i);
+                    continue;
+                }
+
+                float average = acc / FPP;
+                float height =   average / maxAmplitude * maxHeight;
+
+                float y1 = (maxHeight - height) / 2;
+                float y2 = y1 + height;
+
+                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+                frameCounter = 0;
+                acc = 0.f;
+            }
+        }
+
+        else if(framesPerPixel() > 10.f)
+        {
+            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+            int frameCounter = 0;
+            float acc = 0.f;
+            for(int i = 0; i < _currentSamples.size(); i++)
+            {
+                frameCounter++;
+                if(frameCounter < FPP)
+                {
+                    if(_currentSamples.at(i) > 1.9f)
+                        acc += _track.maxAmplitude();
+                    else if(_currentSamples.at(i) > 1.8f)
+                        acc += _currentSamples.at(i);
+                    else if(_currentSamples.at(i) > 0.8f)
+                        acc += _currentSamples.at(i) - _currentSamples.at(i) * 0.5f;
+                    else
+                        acc += _currentSamples.at(i) - _currentSamples.at(i) * 0.3f;
+                    continue;
+                }
+
+                float average = acc / FPP;
+                float height =   average / maxAmplitude * maxHeight;
+
+                float y1 = (maxHeight - height) / 2;
+                float y2 = y1 + height;
+
+                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+                frameCounter = 0;
+                acc = 0.f;
+            }
+        }
     }
 
-    maxAmplitude = 0.5f;
+//    else if(framesPerPixel() > 1.f)
+//    {
+//        int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
+//        int frameCounter = 0;
+//        float max = 0.f;
+//        float min = 0.f;
+//        for(int i = 0; i < _currentSamples.size(); i++)
+//        {
+//            frameCounter++;
+//            if(frameCounter < FPP)
+//            {
+//                if(_currentSamples.at(i) > max)
+//                    max = _currentSamples.at(i);
+//                else if (_currentSamples.at(i) < min)
+//                    min = _currentSamples.at(i);
 
-    for(int i = 0; i < _currentSamples.size(); i++)
-    {
-        float amplitudeInPixels = boundingRect().height() - boundingRect().height() * _currentSamples[i] / maxAmplitude;
-        amplitudeInPixels -= amplitudeInPixels * 0.1;
-        float y1 = (boundingRect().height() - amplitudeInPixels) / 2;
-        float y2 = y1 + amplitudeInPixels;
-        painter->drawLine(i + 1 , y1,  i + 1, y2);
-    }
+//                continue;
+//            }
+
+
+//            float height =  (maxHeight - min / maxAmplitude * maxHeight) - (maxHeight - max / maxAmplitude * maxHeight);
+
+//            float y1 = (maxHeight - height) / 2;
+//            float y2 = y1 + height;
+
+//            painter->drawLine(i / FPP, y1,  i / FPP, y2);
+
+//            frameCounter = 0;
+//            max = 0.f;
+//            min = 0.f;
+//        }
+//    }
 }
 
 qint64 WaveformWidget::max() const
@@ -87,7 +304,7 @@ void WaveformWidget::setAudioTrackFile(QString fileName)
 
 void WaveformWidget::refresh()
 {
-    _currentSamples = _track.getSamples(m_min, m_max, boundingRect().width(), 1.85f);
+    _track.getSamples(m_min, m_max, _currentSamples, _currentSamplesLeft, _currentSamplesRight);
     update();
 }
 
@@ -132,6 +349,12 @@ void WaveformWidget::setPlayerPosition(qint64 pos)
 void WaveformWidget::setVolume(int value)
 {
     _player.setVolume(value);
+}
+
+void WaveformWidget::setStereoMode(bool state)
+{
+    _isStereoMode = state;
+    refresh();
 }
 
 void WaveformWidget::moveVisibleRange(qint64 pos)
@@ -200,6 +423,11 @@ void WaveformWidget::setscaleFactor(float scaleFactor)
     m_scaleFactor = scaleFactor;
     refresh();
     emit scaleFactorChanged(m_scaleFactor);
+}
+
+float WaveformWidget::framesPerPixel() const
+{
+    return static_cast<float>(_currentSamples.size()) / static_cast<float>(boundingRect().width());
 }
 
 void WaveformWidget::play()
