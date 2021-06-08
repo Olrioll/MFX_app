@@ -288,8 +288,11 @@ Item
                 if(mouse.buttons === Qt.LeftButton)
                 {
                     let dy = mouseY - prevY
-                    zoom(-dy)
-                    prevY = mouseY
+                    if(Math.abs(dy) > 3)
+                    {
+                        zoom(-dy)
+                        prevY = mouseY
+                    }
                 }
             }
 
