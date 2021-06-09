@@ -35,7 +35,7 @@ void WaveformWidget::paint(QPainter *painter)
     if(_isStereoMode)
     {
         // Левый канал
-        if(framesPerPixel() > 100.f)
+        if(framesPerPixel() > 1.f)
         {
             int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
             int frameCounter = 0;
@@ -45,15 +45,12 @@ void WaveformWidget::paint(QPainter *painter)
                 frameCounter++;
                 if(frameCounter < FPP)
                 {
-                    if(_currentSamplesLeft.at(i) > 1.9f)
-                        acc += _track.maxAmplitude();
-                    else if(_currentSamplesLeft.at(i) > 1.8f)
-                        acc += _currentSamplesLeft.at(i);
+                    acc += _currentSamplesLeft.at(i) * _currentSamplesLeft.at(i);
                     continue;
                 }
 
-                float average = acc / FPP;
-                float height =   average / maxAmplitude * (maxHeight / 2 - 10);
+                float average = sqrtf(acc / FPP);
+                float height = average / maxAmplitude * (maxHeight / 2 - 10);
 
                 float y1 = ((maxHeight / 2 - 10) - height) / 2;
                 float y2 = y1 + height;
@@ -65,42 +62,8 @@ void WaveformWidget::paint(QPainter *painter)
             }
         }
 
-        else if(framesPerPixel() > 10.f)
-        {
-            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
-            int frameCounter = 0;
-            float acc = 0.f;
-            for(int i = 0; i < _currentSamplesLeft.size(); i++)
-            {
-                frameCounter++;
-                if(frameCounter < FPP)
-                {
-                    if(_currentSamplesLeft.at(i) > 1.9f)
-                        acc += _track.maxAmplitude();
-                    else if(_currentSamplesLeft.at(i) > 1.8f)
-                        acc += _currentSamplesLeft.at(i);
-                    else if(_currentSamplesLeft.at(i) > 0.8f)
-                        acc += _currentSamplesLeft.at(i) - _currentSamplesLeft.at(i) * 0.5f;
-                    else
-                        acc += _currentSamplesLeft.at(i) - _currentSamplesLeft.at(i) * 0.3f;
-                    continue;
-                }
-
-                float average = acc / FPP;
-                float height =   average / maxAmplitude * maxHeight / 2;
-
-                float y1 = (maxHeight / 2 - height) / 2;
-                float y2 = y1 + height;
-
-                painter->drawLine(i / FPP, y1,  i / FPP, y2);
-
-                frameCounter = 0;
-                acc = 0.f;
-            }
-        }
-
         // Правый канал
-        if(framesPerPixel() > 100.f)
+        if(framesPerPixel() > 1.f)
         {
             int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
             int frameCounter = 0;
@@ -110,14 +73,11 @@ void WaveformWidget::paint(QPainter *painter)
                 frameCounter++;
                 if(frameCounter < FPP)
                 {
-                    if(_currentSamplesRight.at(i) > 1.9f)
-                        acc += _track.maxAmplitude();
-                    else if(_currentSamplesRight.at(i) > 1.8f)
-                        acc += _currentSamplesRight.at(i);
+                    acc += _currentSamplesRight.at(i) * _currentSamplesRight.at(i);
                     continue;
                 }
 
-                float average = acc / FPP;
+                float average = sqrtf(acc / FPP);
                 float height =   average / maxAmplitude * (maxHeight / 2 - 10);
 
                 float y1 = ((maxHeight / 2 - 10) - height) / 2 + maxHeight / 2;
@@ -129,44 +89,10 @@ void WaveformWidget::paint(QPainter *painter)
                 acc = 0.f;
             }
         }
-
-        else if(framesPerPixel() > 10.f)
-        {
-            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
-            int frameCounter = 0;
-            float acc = 0.f;
-            for(int i = 0; i < _currentSamplesRight.size(); i++)
-            {
-                frameCounter++;
-                if(frameCounter < FPP)
-                {
-                    if(_currentSamplesRight.at(i) > 1.9f)
-                        acc += _track.maxAmplitude();
-                    else if(_currentSamplesRight.at(i) > 1.8f)
-                        acc += _currentSamplesRight.at(i);
-                    else if(_currentSamplesRight.at(i) > 0.8f)
-                        acc += _currentSamplesRight.at(i) - _currentSamplesRight.at(i) * 0.5f;
-                    else
-                        acc += _currentSamplesRight.at(i) - _currentSamplesRight.at(i) * 0.3f;
-                    continue;
-                }
-
-                float average = acc / FPP;
-                float height =   average / maxAmplitude * maxHeight / 2;
-
-                float y1 = (maxHeight / 2 - height) / 2 + maxHeight / 2;
-                float y2 = y1 + height;
-
-                painter->drawLine(i / FPP, y1,  i / FPP, y2);
-
-                frameCounter = 0;
-                acc = 0.f;
-            }
-        }
     }
     else
     {
-        if(framesPerPixel() > 100.f)
+        if(framesPerPixel() > 1.f)
         {
             int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
             int frameCounter = 0;
@@ -176,14 +102,11 @@ void WaveformWidget::paint(QPainter *painter)
                 frameCounter++;
                 if(frameCounter < FPP)
                 {
-                    if(_currentSamples.at(i) > 1.9f)
-                        acc += _track.maxAmplitude();
-                    else if(_currentSamples.at(i) > 1.8f)
-                        acc += _currentSamples.at(i);
+                    acc += _currentSamples.at(i) * _currentSamples.at(i);
                     continue;
                 }
 
-                float average = acc / FPP;
+                float average = sqrtf(acc / FPP);
                 float height = average / maxAmplitude * maxHeight;
 
                 float y1 = (maxHeight - height) / 2;
@@ -195,74 +118,7 @@ void WaveformWidget::paint(QPainter *painter)
                 acc = 0.f;
             }
         }
-
-        else if(framesPerPixel() > 10.f)
-        {
-            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
-            int frameCounter = 0;
-            float acc = 0.f;
-            for(int i = 0; i < _currentSamples.size(); i++)
-            {
-                frameCounter++;
-                if(frameCounter < FPP)
-                {
-                    if(_currentSamples.at(i) > 1.9f)
-                        acc += _track.maxAmplitude();
-                    else if(_currentSamples.at(i) > 1.8f)
-                        acc += _currentSamples.at(i);
-                    else if(_currentSamples.at(i) > 0.8f)
-                        acc += _currentSamples.at(i) - _currentSamples.at(i) * 0.5f;
-                    else
-                        acc += _currentSamples.at(i) - _currentSamples.at(i) * 0.3f;
-                    continue;
-                }
-
-                float average = acc / FPP;
-                float height =   average / maxAmplitude * maxHeight;
-
-                float y1 = (maxHeight - height) / 2;
-                float y2 = y1 + height;
-
-                painter->drawLine(i / FPP, y1,  i / FPP, y2);
-
-                frameCounter = 0;
-                acc = 0.f;
-            }
-        }
     }
-
-//    else if(framesPerPixel() > 1.f)
-//    {
-//        int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
-//        int frameCounter = 0;
-//        float max = 0.f;
-//        float min = 0.f;
-//        for(int i = 0; i < _currentSamples.size(); i++)
-//        {
-//            frameCounter++;
-//            if(frameCounter < FPP)
-//            {
-//                if(_currentSamples.at(i) > max)
-//                    max = _currentSamples.at(i);
-//                else if (_currentSamples.at(i) < min)
-//                    min = _currentSamples.at(i);
-
-//                continue;
-//            }
-
-
-//            float height =  (maxHeight - min / maxAmplitude * maxHeight) - (maxHeight - max / maxAmplitude * maxHeight);
-
-//            float y1 = (maxHeight - height) / 2;
-//            float y2 = y1 + height;
-
-//            painter->drawLine(i / FPP, y1,  i / FPP, y2);
-
-//            frameCounter = 0;
-//            max = 0.f;
-//            min = 0.f;
-//        }
-//    }
 }
 
 qint64 WaveformWidget::max() const

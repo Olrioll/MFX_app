@@ -31,14 +31,15 @@ void AudioTrackRepresentation::createBuffer()
     QAudioBuffer::S16U *data = _buffer.data<QAudioBuffer::S16U>();
     for (int i = 0; i < _buffer.frameCount(); i++)
     {
-        float val = data[i].average() / peak;
+        float val = pow(10, data[i].average() / peak);
+//        float val = data[i].average() / peak;
         if(val > _maxAmplitude)
         {
             _maxAmplitude = val;
         }
         _samples.append(val);
-        _samplesLeft.append(data[i].left / peak);
-        _samplesRight.append(data[i].right / peak);
+        _samplesLeft.append(pow(10, data[i].left / peak));
+        _samplesRight.append(pow(10, data[i].right / peak));
     }
 }
 
