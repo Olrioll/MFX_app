@@ -13,17 +13,6 @@ Item
     property int minHeight: 200
     property int maxHeight: 600
 
-    property var cues: []
-    function updateCuesGeometry()
-    {
-        for(let i = 0; i < cues.length; i++)
-        {
-            let currCue = cues[i]
-            currCue.x = waveformBackground.width * (currCue.position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
-            currCue.width = waveformBackground.width * (currCue.position + currCue.duration - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min()) - currCue.x
-        }
-    }
-
     Rectangle
     {
         id: mainBackground
@@ -349,6 +338,238 @@ Item
             if(project.property("audioTrackFile") !== "")
             {
                 setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+            }
+        }
+    }
+
+    Item
+    {
+        id: cueView
+        anchors.fill: waveformWidget
+
+        property var cues: []
+
+        function msecToPixels(value)
+        {
+            return cueView.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+        }
+
+        function setActiveCue(name)
+        {
+            for(let i = 0; i < cues.length; i++)
+            {
+                let currCue = cues[i]
+                if(currCue.name === name)
+                    currCue.isExpanded = true
+                else
+                    currCue.isExpanded = false
+            }
+
+            refresh()
+        }
+
+        function refresh()
+        {
+            // определяем кол-во строк
+            let maxRow = -1
+            for(var i = 0; i < cues.length; i++)
+            {
+                if(cues[i].row > maxRow)
+                    maxRow = cues[i].row
+            }
+
+            let prevRowsHeight = 0
+            let currHeight = 10
+            for(var j = 0; j < maxRow + 1; j++)
+            {
+                for(i = 0; i < cues.length; i++)
+                {
+                    let currCue = cues[i]
+                    if(currCue.row === j)
+                    {
+                        if(currCue.isExpanded)
+                        {
+                            currHeight = currCue.expandedHeight
+                        }
+
+                        currCue.y = prevRowsHeight + 2
+                        currCue.x = cueView.msecToPixels(currCue.position)
+                        currCue.width = cueView.msecToPixels(currCue.position + currCue.duration) - currCue.x
+                    }
+                }
+
+                prevRowsHeight += currHeight + 2
+                currHeight = 10
+            }
+        }
+
+        MouseArea
+        {
+            id: mouseArea
+            anchors.fill: parent
+
+            property int pressedX
+            property int pressedY
+            property var pressedCuePlate: null
+            property bool isDraggingCuePlate
+
+            property var draggingPlatesList: []
+            property var draggingPlatesX: []
+            property var draggingPlatesY: []
+            property bool wasDragging: false
+
+            onPressed:
+            {
+                pressedX = mouseX
+                pressedY = mouseY
+                pressedCuePlate = null
+
+                for(var i = 0; i < cueView.cues.length; i++)
+                {
+                    let currCoord = cueView.cues[i].mapToItem(cueView, 0, 0);
+                    let currWidth = cueView.cues[i].width
+                    let currHeight = cueView.cues[i].height
+
+                    if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
+                    {
+                        if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
+                        {
+                            isDraggingCuePlate = true
+                            pressedCuePlate = cueView.cues[i]
+
+                            draggingPlatesList = []
+                            draggingPlatesX = []
+                            draggingPlatesY = []
+                            draggingPlatesList.push(cueView.cues[i])
+                            draggingPlatesX.push(cueView.cues[i].x)
+                            draggingPlatesY.push(cueView.cues[i].y)
+
+
+                            break
+                        }
+                    }
+                }
+
+                if(!pressedCuePlate)
+                {
+                    cueView.setActiveCue("")
+                }
+            }
+
+            onReleased:
+            {
+                if(isDraggingCuePlate)
+                {
+
+                }
+
+                isDraggingCuePlate = false
+            }
+
+            onDoubleClicked:
+            {
+                if(pressedCuePlate)
+                    cueView.setActiveCue(pressedCuePlate.name)
+            }
+
+            onPositionChanged:
+            {
+                let dx = mouseX - pressedX
+                let dy = mouseY - pressedY
+
+                if(isDraggingCuePlate)
+                {
+                    for(var i = 0; i < cueView.cues.length; i++)
+                    {
+                        cueView.cues[i].x = draggingPlatesX[i] + dx
+                        cueView.cues[i].y = draggingPlatesY[i] + dy
+                    }
+                }
+            }
+
+        }
+
+        Component
+        {
+            id: cuePlate
+            Item
+            {
+                height: isExpanded ? expandedHeight : collapsedHeight
+
+                property string name: ""
+                property bool isExpanded: false
+                property int collapsedHeight: 10
+                property int expandedHeight: 36
+                property int row
+                property int position // в мсек
+                property int duration  // в мсек
+
+                Rectangle
+                {
+                    id: frame
+                    anchors.fill: parent
+
+                    radius: 4
+                    color: "#7F27AE60"
+                    border.width: 2
+                    border.color: "#27AE60"
+
+                }
+
+//                MouseArea
+//                {
+//                    id: mouseArea
+//                    anchors.fill: parent
+
+//                    onDoubleClicked:
+//                    {
+//                        cueView.setActiveCue(name)
+//                    }
+//                }
+            }
+        }
+
+        Component.onCompleted:
+        {
+            cues.push(cuePlate.createObject(cueView, {name: "cue1", row: 0, position: 1000, duration: 10000}))
+            cues.push(cuePlate.createObject(cueView, {name: "cue2",  row: 1, position: 2000, duration: 10000}))
+            cues.push(cuePlate.createObject(cueView, {name: "cue3", row: 3, position: 10000, duration: 8000}))
+            cues.push(cuePlate.createObject(cueView, {name: "cue4", row: 6, position: 12000, duration: 18000}))
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                cueView.refresh()
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                cueView.refresh()
+            }
+        }
+
+        Connections
+        {
+            target: cueView
+            function onWidthChanged()
+            {
+                cueView.refresh()
+            }
+        }
+
+        Connections
+        {
+            target: cueView
+            function onHeightChanged()
+            {
+                cueView.refresh()
             }
         }
     }
@@ -882,21 +1103,6 @@ Item
                     setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
                 }
             }
-        }
-    }
-
-    Component.onCompleted:
-    {
-        let currCue = Qt.createComponent("CuePlate.qml").createObject(waveformWidget, {position: 1000, duration: 10000});
-        cues.push(currCue)
-    }
-
-    Connections
-    {
-        target: waveformWidget
-        function onMaxChanged()
-        {
-            updateCuesGeometry()
         }
     }
 }
