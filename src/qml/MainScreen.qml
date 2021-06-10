@@ -37,7 +37,7 @@ Item
         property int minHeight: 200
         property int previousY
 
-        MouseArea
+        MouseAreaWithHidingCursor
         {
             id: playerResizeArea
             height: 4
@@ -65,8 +65,6 @@ Item
 
                 else if ((playerWidget.height - dy) <= mainScreen.height - 100)
                     playerWidget.height = playerWidget.height - dy
-//                else
-//                    playerWidget.height = playerWidget.height - dy
             }
         }
     }

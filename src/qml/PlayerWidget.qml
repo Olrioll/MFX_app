@@ -188,6 +188,9 @@ Item
             property int pressedY
             property int prevX
             property int prevY
+            property bool oddEvent
+            property bool isScaleMoving
+            property bool isScaleZooming
 
             function zoom(delta)
             {
@@ -247,55 +250,95 @@ Item
                 }
             }
 
+            Image
+            {
+                id: zoomCursor
+                source: "qrc:/zoom"
+                visible: false
+            }
+
             onPressed:
             {
                 pressedX = mouseX
                 pressedY = mouseY
                 prevX = mouseX
                 prevY = mouseY
+                oddEvent = true
+                isScaleMoving = false
+                isScaleZooming = false
+                zoomCursor.x = pressedX
+                zoomCursor.y = 0
             }
 
             onMouseXChanged:
             {
                 if(mouse.buttons === Qt.LeftButton)
                 {
-                    let dx = mouseX - prevX
-                    let currInterval = waveformWidget.max() - waveformWidget.min()
-                    let dX = currInterval / width * Math.abs(dx)
-
-                    if(dx < 0)
+                    if(!isScaleZooming)
                     {
-                        if(waveformWidget.max() + dX <= waveformWidget.duration())
+                        let dx = mouseX - pressedX
+                        if(Math.abs(dx) > 3)
                         {
-                            waveformWidget.setMax(waveformWidget.max() + dX)
-                            waveformWidget.setMin(waveformWidget.min() + dX)
+                            isScaleMoving = true
+                            zoomCursor.visible = true
                         }
-                    }
 
-                    else
-                    {
-                        if(waveformWidget.min() - dX >= 0)
+                        if(oddEvent)
                         {
-                            waveformWidget.setMax(waveformWidget.max() - dX)
-                            waveformWidget.setMin(waveformWidget.min() - dX)
-                        }
-                    }
+                            let currInterval = waveformWidget.max() - waveformWidget.min()
+                            let dX = currInterval / width * Math.abs(dx)
 
-                    prevX = mouseX
-//                    cursorManager.moveCursor(-dx, 0)
+                            if(dx < 0)
+                            {
+                                if(waveformWidget.max() + dX <= waveformWidget.duration())
+                                {
+                                    waveformWidget.setMax(waveformWidget.max() + dX)
+                                    waveformWidget.setMin(waveformWidget.min() + dX)
+                                }
+                            }
+
+                            else
+                            {
+                                if(waveformWidget.min() - dX >= 0)
+                                {
+                                    waveformWidget.setMax(waveformWidget.max() - dX)
+                                    waveformWidget.setMin(waveformWidget.min() - dX)
+                                }
+                            }
+
+                            oddEvent = false
+                            cursorManager.moveCursor(-dx, 0)
+                        }
+
+                        else
+                            oddEvent = true
+                    }
                 }
             }
 
 
             onMouseYChanged:
             {
-                if(mouse.buttons === Qt.LeftButton)
+                if(!isScaleMoving)
                 {
-                    let dy = mouseY - prevY
-                    if(Math.abs(dy) > 3)
+                    if(mouse.buttons === Qt.LeftButton)
                     {
-                        zoom(-dy)
-                        prevY = mouseY
+                        let dy = mouseY - prevY
+                        if(Math.abs(dy) > 3)
+                        {
+                            isScaleZooming = true
+                            zoomCursor.visible = true
+                        }
+
+                        if(oddEvent)
+                        {
+                            zoom(-dy)
+                            oddEvent = false
+                            cursorManager.moveCursor(0, -dy)
+                        }
+
+                        else
+                            oddEvent = true
                     }
                 }
             }
@@ -303,6 +346,11 @@ Item
             onWheel:
             {
                 zoom(wheel.angleDelta.y)
+            }
+
+            onReleased:
+            {
+                zoomCursor.visible = false
             }
         }
     }
@@ -404,7 +452,7 @@ Item
             }
         }
 
-        MouseArea
+        MouseAreaWithHidingCursor
         {
             id: mouseArea
             anchors.fill: parent
@@ -417,7 +465,7 @@ Item
             property var draggingPlatesList: []
             property var draggingPlatesX: []
             property var draggingPlatesY: []
-            property bool wasDragging: false
+            property bool wasDragging: false         
 
             onPressed:
             {

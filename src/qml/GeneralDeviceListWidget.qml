@@ -201,7 +201,7 @@ Item
                 }
             }
 
-            MouseArea
+            MouseAreaWithHidingCursor
             {
                 id: mouseArea
                 anchors.fill: parent

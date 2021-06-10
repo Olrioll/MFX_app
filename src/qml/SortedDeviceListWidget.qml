@@ -141,7 +141,7 @@ ListView
         }
     }
 
-    MouseArea
+    MouseAreaWithHidingCursor
     {
         id: mouseArea
         anchors.fill: parent

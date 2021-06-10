@@ -135,7 +135,7 @@ Item
                     "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
     }
 
-    MouseArea
+    MouseAreaWithHidingCursor
     {
         id: mainMouseArea
         anchors.fill: parent
@@ -327,7 +327,6 @@ Item
             {
 
                 if(backgroundImage.width <= sceneWidget.width)
-//                    backgroundImage.x = 0
                 {
                     backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
                     sceneFrameItem.x = currentSceneFrameX * backgroundImage.width + backgroundImage.x
@@ -354,7 +353,6 @@ Item
                 }
 
                 if(backgroundImage.height <= sceneWidget.height)
-//                    backgroundImage.y = 0
                 {
                     backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
                     sceneFrameItem.y = currentSceneFrameY * backgroundImage.height + backgroundImage.y
@@ -380,9 +378,6 @@ Item
                         }
                     }
                 }
-
-//                sceneFrameItem.x = sceneFrameItem.currentSceneFrameX * backgroundImage.width + backgroundImage.x
-//                sceneFrameItem.y = sceneFrameItem.currentSceneFrameY * backgroundImage.height + backgroundImage.y
             }
 
             else if(isSelectingIcons)
