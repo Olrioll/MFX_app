@@ -14,12 +14,18 @@ float AudioTrackRepresentation::maxAmplitude() const
     return _maxAmplitude;
 }
 
+float AudioTrackRepresentation::minAmplitude() const
+{
+    return _minAmplitude;
+}
+
 void AudioTrackRepresentation::loadFile(const QString &fileName)
 {
     _samples.clear();
     _samplesLeft.clear();
     _samplesRight.clear();
     _maxAmplitude = 0.f;
+    _minAmplitude = 0.f;
     _decoder.setSourceFilename(fileName);
     _decoder.start();
 }
@@ -27,19 +33,24 @@ void AudioTrackRepresentation::loadFile(const QString &fileName)
 void AudioTrackRepresentation::createBuffer()
 {
     _buffer = _decoder.read();
-    qreal peak = getPeakValue(_buffer.format());
-    QAudioBuffer::S16U *data = _buffer.data<QAudioBuffer::S16U>();
+//    qreal peak = getPeakValue(_buffer.format());
+    QAudioBuffer::S16S *data = _buffer.data<QAudioBuffer::S16S>();
     for (int i = 0; i < _buffer.frameCount(); i++)
     {
-        float val = pow(10, data[i].average() / peak);
-//        float val = data[i].average() / peak;
+        float val = data[i].average();
         if(val > _maxAmplitude)
         {
             _maxAmplitude = val;
         }
+
+        else if(val < _minAmplitude)
+        {
+            _minAmplitude = val;
+        }
+
         _samples.append(val);
-        _samplesLeft.append(pow(10, data[i].left / peak));
-        _samplesRight.append(pow(10, data[i].right / peak));
+        _samplesLeft.append(data[i].left);
+        _samplesRight.append(data[i].right);
     }
 }
 

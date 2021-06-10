@@ -21,15 +21,16 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
 
 void WaveformWidget::paint(QPainter *painter)
 {
-    QBrush  brush(QColor("#646464"));
+    QBrush  brush1(QColor("#646464"));
+    QBrush  brush2(QColor("#bbbbbb"));
     QPen pen;
-    pen.setBrush(brush);
-
+    pen.setBrush(brush1);
     painter->setPen(pen);
-    painter->setRenderHints(QPainter::Antialiasing, true);
-    painter->setBrush(brush);
+    painter->setBrush(brush1);
 
-    float maxAmplitude = abs(_track.maxAmplitude());
+    painter->setRenderHints(QPainter::Antialiasing, true);
+
+    float maxAmplitude = _track.maxAmplitude() - _track.minAmplitude();
     int maxHeight = boundingRect().height();
 
     if(_isStereoMode)
@@ -37,56 +38,114 @@ void WaveformWidget::paint(QPainter *painter)
         // Левый канал
         if(framesPerPixel() > 1.f)
         {
-            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
             int frameCounter = 0;
             float acc = 0.f;
+            float max = 0.f;
+            float min = 0.f;
+
             for(int i = 0; i < _currentSamplesLeft.size(); i++)
             {
                 frameCounter++;
-                if(frameCounter < FPP)
+                if(frameCounter < framesPerPixel())
                 {
                     acc += _currentSamplesLeft.at(i) * _currentSamplesLeft.at(i);
+
+                    if(_currentSamplesLeft.at(i) > max)
+                        max = _currentSamplesLeft.at(i);
+                    else if(_currentSamplesLeft.at(i) < min)
+                        min = _currentSamplesLeft.at(i);
+
                     continue;
                 }
 
-                float average = sqrtf(acc / FPP);
-                float height = average / maxAmplitude * (maxHeight / 2 - 10);
+                float y1 = maxHeight * (_track.maxAmplitude() - min) / maxAmplitude;
+                float y2 = maxHeight * (_track.maxAmplitude() - max) / maxAmplitude;
 
-                float y1 = ((maxHeight / 2 - 10) - height) / 2;
-                float y2 = y1 + height;
+                float scaleFactor = 0.6f;
 
-                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+                y1 += (maxHeight / 2 - y1) * scaleFactor - maxHeight / 4;
+                y2 += (maxHeight / 2 - y2) * scaleFactor - maxHeight / 4;
+
+                pen.setBrush(brush1);
+                painter->setPen(pen);
+                painter->setBrush(brush1);
+                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+
+                float average = sqrtf(acc / framesPerPixel());
+                float height = average / maxAmplitude * maxHeight;
+
+                y1 = (maxHeight - height) / 2;
+                y2 = y1 + height;
+
+                y1 += (maxHeight / 2 - y1) * scaleFactor - maxHeight / 4;
+                y2 += (maxHeight / 2 - y2) * scaleFactor - maxHeight / 4;
+
+                pen.setBrush(brush2);
+                painter->setPen(pen);
+                painter->setBrush(brush2);
+                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
 
                 frameCounter = 0;
                 acc = 0.f;
+                max = 0.f;
+                min = 0.f;
             }
         }
 
         // Правый канал
         if(framesPerPixel() > 1.f)
         {
-            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
             int frameCounter = 0;
             float acc = 0.f;
+            float max = 0.f;
+            float min = 0.f;
+
             for(int i = 0; i < _currentSamplesRight.size(); i++)
             {
                 frameCounter++;
-                if(frameCounter < FPP)
+                if(frameCounter < framesPerPixel())
                 {
                     acc += _currentSamplesRight.at(i) * _currentSamplesRight.at(i);
+
+                    if(_currentSamplesRight.at(i) > max)
+                        max = _currentSamplesRight.at(i);
+                    else if(_currentSamplesRight.at(i) < min)
+                        min = _currentSamplesRight.at(i);
+
                     continue;
                 }
 
-                float average = sqrtf(acc / FPP);
-                float height =   average / maxAmplitude * (maxHeight / 2 - 10);
+                float y1 = maxHeight * (_track.maxAmplitude() - min) / maxAmplitude;
+                float y2 = maxHeight * (_track.maxAmplitude() - max) / maxAmplitude;
 
-                float y1 = ((maxHeight / 2 - 10) - height) / 2 + maxHeight / 2;
-                float y2 = y1 + height;
+                float scaleFactor = 0.6f;
 
-                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+                y1 += (maxHeight / 2 - y1) * scaleFactor + maxHeight / 4;
+                y2 += (maxHeight / 2 - y2) * scaleFactor + maxHeight / 4;
+
+                pen.setBrush(brush1);
+                painter->setPen(pen);
+                painter->setBrush(brush1);
+                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+
+                float average = sqrtf(acc / framesPerPixel());
+                float height = average / maxAmplitude * maxHeight;
+
+                y1 = (maxHeight - height) / 2;
+                y2 = y1 + height;
+
+                y1 += (maxHeight / 2 - y1) * scaleFactor + maxHeight / 4;
+                y2 += (maxHeight / 2 - y2) * scaleFactor + maxHeight / 4;
+
+                pen.setBrush(brush2);
+                painter->setPen(pen);
+                painter->setBrush(brush2);
+                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
 
                 frameCounter = 0;
                 acc = 0.f;
+                max = 0.f;
+                min = 0.f;
             }
         }
     }
@@ -94,29 +153,67 @@ void WaveformWidget::paint(QPainter *painter)
     {
         if(framesPerPixel() > 1.f)
         {
-            int FPP = static_cast<int>(framesPerPixel() + 0.5f); // Округленное до целого количество фреймов на пиксель
             int frameCounter = 0;
             float acc = 0.f;
+            float max = 0.f;
+            float min = 0.f;
+
             for(int i = 0; i < _currentSamples.size(); i++)
             {
                 frameCounter++;
-                if(frameCounter < FPP)
+                if(frameCounter < framesPerPixel())
                 {
                     acc += _currentSamples.at(i) * _currentSamples.at(i);
+
+                    if(_currentSamples.at(i) > max)
+                        max = _currentSamples.at(i);
+                    else if(_currentSamples.at(i) < min)
+                        min = _currentSamples.at(i);
+
                     continue;
                 }
 
-                float average = sqrtf(acc / FPP);
+
+                float y1 = maxHeight * (_track.maxAmplitude() - min) / maxAmplitude;
+                float y2 = maxHeight * (_track.maxAmplitude() - max) / maxAmplitude;
+
+                pen.setBrush(brush1);
+                painter->setPen(pen);
+                painter->setBrush(brush1);
+                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+
+                float average = sqrtf(acc / framesPerPixel());
                 float height = average / maxAmplitude * maxHeight;
 
-                float y1 = (maxHeight - height) / 2;
-                float y2 = y1 + height;
+                y1 = (maxHeight - height) / 2;
+                y2 = y1 + height;
 
-                painter->drawLine(i / FPP, y1,  i / FPP, y2);
+                pen.setBrush(brush2);
+                painter->setPen(pen);
+                painter->setBrush(brush2);
+                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
 
                 frameCounter = 0;
                 acc = 0.f;
+                max = 0.f;
+                min = 0.f;
             }
+        }
+
+        else // Рисуем по точкам
+        {
+//            float prevX = 0.f;
+//            float prevY = 0.f;
+
+//            for(int i = 0; i < _currentSamples.size(); i++)
+//            {
+//                float currX = i / framesPerPixel();
+//                float currY = maxHeight * (1 - _currentSamples.at(i) / maxAmplitude);
+
+//                painter->drawLine(prevX, prevY, currX, currY);
+//                prevX = currX;
+//                prevY = currY;
+//            }
         }
     }
 }

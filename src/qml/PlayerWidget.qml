@@ -192,10 +192,10 @@ Item
             function zoom(delta)
             {
                 let currInterval = waveformWidget.max() - waveformWidget.min()
-                let dWidth = currInterval * 0.05
+                let dWidth = currInterval * 0.1
                 let zoomCenter = mouseX / width
                 let leftShift = zoomCenter * dWidth
-                let rightShift = (1 - zoomCenter) * dWidth
+                let rightShift = dWidth - leftShift
 
                 if(delta > 0)
                 {
@@ -282,6 +282,7 @@ Item
                     }
 
                     prevX = mouseX
+//                    cursorManager.moveCursor(-dx, 0)
                 }
             }
 
@@ -486,7 +487,6 @@ Item
                     }
                 }
             }
-
         }
 
         Component

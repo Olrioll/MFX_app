@@ -12,6 +12,7 @@ class AudioTrackRepresentation : public QObject
 public:
     explicit AudioTrackRepresentation(QObject *parent = nullptr);
     float maxAmplitude() const;
+    float minAmplitude() const;
 
 public slots:
 
@@ -37,6 +38,7 @@ private:
     QVector<float> _samplesLeft;
     QVector<float> _samplesRight;
     float _maxAmplitude = 0.f;
+    float _minAmplitude = 0.f;
 
 };
 
