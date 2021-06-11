@@ -27,6 +27,7 @@ public slots:
     void setMax(qint64 maxMsec);
     void setMin(qint64 minMsec);
     void setPlayerPosition(qint64 pos);
+    qint64 playerPosition() const;
     void setVolume(int value);
     void setStereoMode(bool state);
     QString maxString() const;

@@ -299,6 +299,11 @@ void WaveformWidget::setPlayerPosition(qint64 pos)
     _player.setPosition(pos);
 }
 
+qint64 WaveformWidget::playerPosition() const
+{
+   return _player.position();
+}
+
 void WaveformWidget::setVolume(int value)
 {
     _player.setVolume(value);

@@ -795,6 +795,44 @@ Item
                 }
             }
         }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                let pos = waveformWidget.playerPosition()
+                if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
+                {
+                    positionCursor.visible = true
+                    positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+                }
+
+                else
+                {
+                    positionCursor.visible = false
+                }
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                let pos = waveformWidget.playerPosition()
+                if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
+                {
+                    positionCursor.visible = true
+                    positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+                }
+
+                else
+                {
+                    positionCursor.visible = false
+                }
+            }
+        }
     }
 
     MfxButton
