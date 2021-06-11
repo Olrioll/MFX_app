@@ -61,5 +61,6 @@
         <file>src/qml/MfxHilightedButton.qml</file>
         <file>src/qml/MouseAreaWithHidingCursor.qml</file>
         <file alias="zoom">src/img/zoom.png</file>
+        <file>src/qml/ZoomingMouseArea.qml</file>
     </qresource>
 </RCC>

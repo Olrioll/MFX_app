@@ -6,11 +6,6 @@ MouseArea
 
     cursorShape: applicationWindow.isMouseCursorVisible ? cursor : Qt.BlankCursor
 
-    onPressed:
-    {
-
-    }
-
     onPositionChanged:
     {
         if(mouse.buttons)

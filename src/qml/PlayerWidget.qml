@@ -175,7 +175,194 @@ Item
             }
         }
 
-        MouseAreaWithHidingCursor
+//        MouseAreaWithHidingCursor
+//        {
+//            id: timeScaleMouseArea
+//            anchors.topMargin: -parent.y
+//            anchors.top: parent.top
+//            anchors.bottom: parent.bottom
+//            anchors.left: parent.left
+//            anchors.right: parent.right
+//            hoverEnabled: true
+
+//            property int pressedX
+//            property int pressedY
+//            property int prevX
+//            property int prevY
+//            property bool oddEvent
+//            property bool isScaleMoving: false
+//            property bool isScaleZooming: false
+
+//            function zoom(delta)
+//            {
+//                let currInterval = waveformWidget.max() - waveformWidget.min()
+//                let dWidth = currInterval * 0.1
+//                let zoomCenter = mouseX / width
+//                let leftShift = zoomCenter * dWidth
+//                let rightShift = dWidth - leftShift
+
+//                if(delta > 0)
+//                {
+//                    waveformWidget.setMin(waveformWidget.min() + leftShift)
+//                    waveformWidget.setMax(waveformWidget.max() - rightShift)
+//                }
+
+//                else
+//                {
+//                    if((waveformWidget.min() - leftShift) >= 0 && (waveformWidget.max() + rightShift) <= waveformWidget.duration())
+//                    {
+//                        waveformWidget.setMin(waveformWidget.min() - leftShift)
+//                        waveformWidget.setMax(waveformWidget.max() + rightShift)
+//                    }
+
+//                    else
+//                    {
+//                        let leftDist = waveformWidget.min()
+//                        let rightDist = waveformWidget.duration() - waveformWidget.max()
+
+//                        if(leftDist < rightDist)
+//                        {
+//                            dWidth -= waveformWidget.min()
+//                            waveformWidget.setMin(0)
+
+//                            if((waveformWidget.max() + dWidth) <= waveformWidget.duration())
+//                            {
+//                                waveformWidget.setMax(waveformWidget.max() + dWidth)
+//                            }
+
+//                            else
+//                                waveformWidget.setMax(waveformWidget.duration())
+//                        }
+
+//                        else
+//                        {
+//                            dWidth -= waveformWidget.duration() - waveformWidget.max()
+//                            waveformWidget.setMax(waveformWidget.duration())
+
+//                            if((waveformWidget.min() - dWidth) >= 0)
+//                            {
+//                                waveformWidget.setMin(waveformWidget.min() - dWidth)
+//                            }
+
+//                            else
+//                                waveformWidget.setMin(0)
+//                        }
+//                    }
+//                }
+//            }
+
+//            Image
+//            {
+//                id: zoomCursor
+//                source: "qrc:/zoom"
+//                visible: false
+//            }
+
+//            onPressed:
+//            {
+//                pressedX = mouseX
+//                pressedY = mouseY
+//                prevX = mouseX
+//                prevY = mouseY
+//                oddEvent = true
+//                isScaleMoving = false
+//                isScaleZooming = false
+//                playerResizeArea.enabled = false
+//                playerResizeArea.cursorShape = Qt.BlankCursor
+//                mainScreen.sceneWidget.enabled = false
+////                playerResizeArea.cursorShape = Qt.BlankCursor
+//                zoomCursor.x = pressedX
+//                zoomCursor.y = 0
+//            }
+
+//            onMouseXChanged:
+//            {
+//                if(mouse.buttons === Qt.LeftButton)
+//                {
+//                    if(!isScaleZooming)
+//                    {
+//                        let dx = mouseX - pressedX
+//                        if(Math.abs(dx) > 3)
+//                        {
+//                            isScaleMoving = true
+//                            zoomCursor.visible = true
+//                        }
+
+//                        if(oddEvent)
+//                        {
+//                            let currInterval = waveformWidget.max() - waveformWidget.min()
+//                            let dX = currInterval / width * Math.abs(dx)
+
+//                            if(dx < 0)
+//                            {
+//                                if(waveformWidget.max() + dX <= waveformWidget.duration())
+//                                {
+//                                    waveformWidget.setMax(waveformWidget.max() + dX)
+//                                    waveformWidget.setMin(waveformWidget.min() + dX)
+//                                }
+//                            }
+
+//                            else
+//                            {
+//                                if(waveformWidget.min() - dX >= 0)
+//                                {
+//                                    waveformWidget.setMax(waveformWidget.max() - dX)
+//                                    waveformWidget.setMin(waveformWidget.min() - dX)
+//                                }
+//                            }
+
+//                            oddEvent = false
+//                            cursorManager.moveCursor(-dx, 0)
+//                        }
+
+//                        else
+//                            oddEvent = true
+//                    }
+//                }
+//            }
+
+
+//            onMouseYChanged:
+//            {
+//                if(!isScaleMoving)
+//                {
+//                    if(mouse.buttons === Qt.LeftButton)
+//                    {
+//                        let dy = mouseY - prevY
+//                        if(Math.abs(dy) > 3)
+//                        {
+//                            isScaleZooming = true
+//                            zoomCursor.visible = true
+//                        }
+
+//                        if(oddEvent)
+//                        {
+//                            zoom(-dy)
+//                            oddEvent = false
+//                            cursorManager.moveCursor(0, -dy)
+//                        }
+
+//                        else
+//                            oddEvent = true
+//                    }
+//                }
+//            }
+
+//            onWheel:
+//            {
+//                zoom(wheel.angleDelta.y)
+//            }
+
+//            onReleased:
+//            {
+//                zoomCursor.visible = false
+//                playerResizeArea.enabled = true
+//                playerResizeArea.cursorShape = Qt.SizeVerCursor
+//                mainScreen.sceneWidget.enabled = true
+//            }
+//        }
+
+        ZoomingMouseArea
         {
             id: timeScaleMouseArea
             anchors.topMargin: -parent.y
@@ -184,14 +371,6 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
             hoverEnabled: true
-
-            property int pressedX
-            property int pressedY
-            property int prevX
-            property int prevY
-            property bool oddEvent
-            property bool isScaleMoving: false
-            property bool isScaleZooming: false
 
             function zoom(delta)
             {
@@ -251,101 +430,43 @@ Item
                 }
             }
 
-            Image
-            {
-                id: zoomCursor
-                source: "qrc:/zoom"
-                visible: false
-            }
-
             onPressed:
             {
-                pressedX = mouseX
-                pressedY = mouseY
-                prevX = mouseX
-                prevY = mouseY
-                oddEvent = true
-                isScaleMoving = false
-                isScaleZooming = false
                 playerResizeArea.enabled = false
                 playerResizeArea.cursorShape = Qt.BlankCursor
                 mainScreen.sceneWidget.enabled = false
-//                playerResizeArea.cursorShape = Qt.BlankCursor
-                zoomCursor.x = pressedX
-                zoomCursor.y = 0
+                timeScaleMouseArea.cursorImage.x = pressedX
+                timeScaleMouseArea.cursorImage.y = 0
             }
 
-            onMouseXChanged:
+            onMovedOnX:
             {
-                if(mouse.buttons === Qt.LeftButton)
+                let currInterval = waveformWidget.max() - waveformWidget.min()
+                let dX = currInterval / width * Math.abs(dx)
+
+                if(dx < 0)
                 {
-                    if(!isScaleZooming)
+                    if(waveformWidget.max() + dX <= waveformWidget.duration())
                     {
-                        let dx = mouseX - pressedX
-                        if(Math.abs(dx) > 3)
-                        {
-                            isScaleMoving = true
-                            zoomCursor.visible = true
-                        }
+                        waveformWidget.setMax(waveformWidget.max() + dX)
+                        waveformWidget.setMin(waveformWidget.min() + dX)
+                    }
+                }
 
-                        if(oddEvent)
-                        {
-                            let currInterval = waveformWidget.max() - waveformWidget.min()
-                            let dX = currInterval / width * Math.abs(dx)
-
-                            if(dx < 0)
-                            {
-                                if(waveformWidget.max() + dX <= waveformWidget.duration())
-                                {
-                                    waveformWidget.setMax(waveformWidget.max() + dX)
-                                    waveformWidget.setMin(waveformWidget.min() + dX)
-                                }
-                            }
-
-                            else
-                            {
-                                if(waveformWidget.min() - dX >= 0)
-                                {
-                                    waveformWidget.setMax(waveformWidget.max() - dX)
-                                    waveformWidget.setMin(waveformWidget.min() - dX)
-                                }
-                            }
-
-                            oddEvent = false
-                            cursorManager.moveCursor(-dx, 0)
-                        }
-
-                        else
-                            oddEvent = true
+                else
+                {
+                    if(waveformWidget.min() - dX >= 0)
+                    {
+                        waveformWidget.setMax(waveformWidget.max() - dX)
+                        waveformWidget.setMin(waveformWidget.min() - dX)
                     }
                 }
             }
 
-
-            onMouseYChanged:
+            onMovedOnY:
             {
-                if(!isScaleMoving)
-                {
-                    if(mouse.buttons === Qt.LeftButton)
-                    {
-                        let dy = mouseY - prevY
-                        if(Math.abs(dy) > 3)
-                        {
-                            isScaleZooming = true
-                            zoomCursor.visible = true
-                        }
-
-                        if(oddEvent)
-                        {
-                            zoom(-dy)
-                            oddEvent = false
-                            cursorManager.moveCursor(0, -dy)
-                        }
-
-                        else
-                            oddEvent = true
-                    }
-                }
+                if(Math.abs(dy) > 3)
+                    zoom(-dy)
             }
 
             onWheel:
@@ -355,7 +476,6 @@ Item
 
             onReleased:
             {
-                zoomCursor.visible = false
                 playerResizeArea.enabled = true
                 playerResizeArea.cursorShape = Qt.SizeVerCursor
                 mainScreen.sceneWidget.enabled = true
@@ -726,6 +846,20 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
+        function updatePosition(pos)
+        {
+            if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
+            {
+                positionCursor.visible = true
+                positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            }
+
+            else
+            {
+                positionCursor.visible = false
+            }
+        }
+
         Canvas
         {
             width: 12
@@ -783,16 +917,7 @@ Item
             target: waveformWidget
             function onPositionChanged(pos)
             {
-                if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
-                {
-                    positionCursor.visible = true
-                    positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
-                }
-
-                else
-                {
-                    positionCursor.visible = false
-                }
+                positionCursor.updatePosition(pos)
             }
         }
 
@@ -801,17 +926,7 @@ Item
             target: waveformWidget
             function onMaxChanged()
             {
-                let pos = waveformWidget.playerPosition()
-                if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
-                {
-                    positionCursor.visible = true
-                    positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
-                }
-
-                else
-                {
-                    positionCursor.visible = false
-                }
+                positionCursor.updatePosition(waveformWidget.playerPosition())
             }
         }
 
@@ -820,17 +935,7 @@ Item
             target: waveformWidget
             function onMinChanged()
             {
-                let pos = waveformWidget.playerPosition()
-                if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
-                {
-                    positionCursor.visible = true
-                    positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
-                }
-
-                else
-                {
-                    positionCursor.visible = false
-                }
+                positionCursor.updatePosition(waveformWidget.playerPosition())
             }
         }
     }
