@@ -33,39 +33,5 @@ Item
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-
-        property int minHeight: 200
-        property int previousY
-
-        MouseAreaWithHidingCursor
-        {
-            id: playerResizeArea
-            height: 4
-
-            anchors.topMargin: -2
-            anchors
-            {
-                top: parent.top
-                left: parent.left
-                right: parent.right
-            }
-            cursorShape: Qt.SizeVerCursor
-
-            onPressed:
-            {
-                playerWidget.previousY = mouseY
-            }
-
-            onMouseYChanged:
-            {
-                var dy= mouseY - playerWidget.previousY
-
-                if((playerWidget.height - dy) < playerWidget.minHeight)
-                    playerWidget.height = playerWidget.minHeight
-
-                else if ((playerWidget.height - dy) <= mainScreen.height - 100)
-                    playerWidget.height = playerWidget.height - dy
-            }
-        }
     }
 }
