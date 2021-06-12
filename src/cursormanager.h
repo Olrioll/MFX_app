@@ -14,12 +14,13 @@ public:
 public slots:
 
     void moveCursor(int dx, int dy);
+    void hideCursor();
+    void showCursor();
 
 signals:
 
 private:
 
-//    QCursor _cursor;
 
 };
 

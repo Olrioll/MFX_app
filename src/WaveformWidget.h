@@ -36,8 +36,6 @@ public slots:
     qint64 min() const;
     void moveVisibleRange(qint64 pos);
     void showAll();
-    void zoomIn();
-    void zoomOut();
     void setscaleFactor(float scaleFactor);
 
     void play();
@@ -58,9 +56,6 @@ private:
     AudioTrackRepresentation _track;
     QMediaPlayer _player;
     QTimer _valueForPositionTimer;
-//    QVector<float> _currentSamples;
-//    QVector<float> _currentSamplesLeft;
-//    QVector<float> _currentSamplesRight;
     int m_max = 0;
     int m_min = 0;
     float _ratio = 1.f; // Количество фреймов в миллисекунде

@@ -339,43 +339,6 @@ void WaveformWidget::showAll()
     update();
 }
 
-void WaveformWidget::zoomIn()
-{
-    float range = m_max - m_min;
-    float newRange = range - range * 0.2;
-
-    if((m_max - (range - newRange) / 2) / _ratio - (m_min + (range - newRange) / 2) / _ratio > 1000) // Разница в 1000 мс
-    {
-        m_max -= (range - newRange) / 2;
-        m_min += (range - newRange) / 2;
-        emit minChanged(m_min);
-        emit maxChanged(m_max);
-        update();
-    }
-}
-
-void WaveformWidget::zoomOut()
-{
-    float range = m_max - m_min;
-    float newRange = range + range * 0.2;
-
-    if(m_max + (newRange - range) / 2 <= _track.samplesCount() && m_min - (newRange - range) / 2 >= 0)
-    {
-        m_max += (newRange - range) / 2;
-        m_min -= (newRange - range) / 2;
-    }
-
-    else
-    {
-        m_max = _track.samplesCount();
-        m_min = 0;
-    }
-
-    emit minChanged(m_min);
-    emit maxChanged(m_max);
-    update();
-}
-
 void WaveformWidget::setscaleFactor(float scaleFactor)
 {
     m_scaleFactor = scaleFactor;

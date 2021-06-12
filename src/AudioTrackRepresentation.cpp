@@ -33,7 +33,6 @@ void AudioTrackRepresentation::loadFile(const QString &fileName)
 void AudioTrackRepresentation::createBuffer()
 {
     _buffer = _decoder.read();
-//    qreal peak = getPeakValue(_buffer.format());
     QAudioBuffer::S16S *data = _buffer.data<QAudioBuffer::S16S>();
     for (int i = 0; i < _buffer.frameCount(); i++)
     {
@@ -72,47 +71,4 @@ const QVector<float> &AudioTrackRepresentation::getSamplesRight() const
 qint64 AudioTrackRepresentation::duration() const
 {
     return _buffer.duration() / 1000;
-}
-
-qreal AudioTrackRepresentation::getPeakValue(const QAudioFormat &format)
-{
-    qreal ret(0);
-    if (format.isValid())
-    {
-        switch (format.sampleType())
-        {
-        case QAudioFormat::Unknown:
-            break;
-        case QAudioFormat::Float:
-            if (format.sampleSize() != 32) // other sample formats are not supported
-                ret = 0;
-            else
-                ret = 1.00003;
-            break;
-        case QAudioFormat::SignedInt:
-            if (format.sampleSize() == 32)
-#ifdef Q_OS_WIN
-                ret = INT_MAX;
-#endif
-#ifdef Q_OS_UNIX
-            ret = SHRT_MAX;
-#endif
-            else if (format.sampleSize() == 16)
-                ret = SHRT_MAX;
-            else if (format.sampleSize() == 8)
-                ret = CHAR_MAX;
-            break;
-        case QAudioFormat::UnSignedInt:
-            if (format.sampleSize() == 32)
-                ret = UINT_MAX;
-            else if (format.sampleSize() == 16)
-                ret = USHRT_MAX;
-            else if (format.sampleSize() == 8)
-                ret = UCHAR_MAX;
-            break;
-        default:
-            break;
-        }
-    }
-    return ret;
 }

@@ -30,8 +30,6 @@ signals:
 
 private:
 
-    qreal getPeakValue(const QAudioFormat& format);
-
     QAudioDecoder _decoder;
     QAudioBuffer _buffer;
     QVector<float> _samples;

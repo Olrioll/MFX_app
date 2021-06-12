@@ -9,11 +9,13 @@ MouseArea
     onPositionChanged:
     {
         if(mouse.buttons)
+//            cursorManager.hideCursor()
             applicationWindow.isMouseCursorVisible = false
     }
 
     onReleased:
     {
+//        cursorManager.showCursor()
         applicationWindow.isMouseCursorVisible = true
     }
 }

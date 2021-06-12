@@ -617,6 +617,7 @@ Item
 
             onWheel:
             {
+                resizingCenterMarker.x = mouseX
                 zoom(wheel.angleDelta.y > 0 ? 2 : -2)
             }
 

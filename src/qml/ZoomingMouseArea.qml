@@ -55,6 +55,7 @@ MouseArea
         if(mouse.buttons)
         {
             applicationWindow.isMouseCursorVisible = false
+//            cursorManager.hideCursor();
 
             if(mouse.buttons === Qt.LeftButton)
             {
@@ -89,5 +90,6 @@ MouseArea
     {
         isPressed = false
         applicationWindow.isMouseCursorVisible = true
+//        cursorManager.showCursor();
     }
 }
