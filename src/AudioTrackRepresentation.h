@@ -19,9 +19,9 @@ public slots:
     void loadFile(const QString& fileName);
     void createBuffer();
     int samplesCount() const {return _samples.size();}
-    QVector<float> getSamples() const;
-    QVector<float> getSamples(int min, int max, int samplesCount, float gain) const;
-    void getSamples(int min, int max, QVector<float>& average, QVector<float>& left, QVector<float>& right) const;
+    const QVector<float>& getSamples() const;
+    const QVector<float>& getSamplesLeft() const;
+    const QVector<float>& getSamplesRight() const;
     qint64 duration() const;
 
 signals:

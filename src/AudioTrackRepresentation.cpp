@@ -54,44 +54,19 @@ void AudioTrackRepresentation::createBuffer()
     }
 }
 
-QVector<float> AudioTrackRepresentation::getSamples() const
+const QVector<float> &AudioTrackRepresentation::getSamples() const
 {
     return _samples;
 }
 
-QVector<float> AudioTrackRepresentation::getSamples(int min, int max, int samplesCount, float gain) const
+const QVector<float> &AudioTrackRepresentation::getSamplesLeft() const
 {
-    QVector<float> samples;
-    int step = 1;
-    if( (max - min) > samplesCount )
-        step = (max - min) / samplesCount;
-
-    int counter = 0;
-    float acc = 0.f;
-    for(int i = min; i < max; i ++)
-    {
-        counter++;
-        float curr = abs(_samples[i]);
-        if(curr > gain)
-            acc += curr;
-
-        if(counter == step)
-        {
-            counter = 0;
-            samples.append(acc / step);
-            acc = 0.f;
-//            qDebug() << acc / step;
-        }
-    }
-
-    return samples;
+    return _samplesLeft;
 }
 
-void AudioTrackRepresentation::getSamples(int min, int max, QVector<float> &average, QVector<float> &left, QVector<float> &right) const
+const QVector<float> &AudioTrackRepresentation::getSamplesRight() const
 {
-    average = _samples.mid(min, max - min + 1);
-    left = _samplesLeft.mid(min, max - min + 1);
-    right = _samplesRight.mid(min, max - min + 1);
+    return _samplesRight;
 }
 
 qint64 AudioTrackRepresentation::duration() const

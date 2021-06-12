@@ -21,6 +21,9 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
 
 void WaveformWidget::paint(QPainter *painter)
 {
+    if(m_max - m_min == 0)
+        return;
+
     QBrush  brush1(QColor("#646464"));
     QBrush  brush2(QColor("#bbbbbb"));
     QPen pen;
@@ -32,28 +35,29 @@ void WaveformWidget::paint(QPainter *painter)
 
     float maxAmplitude = _track.maxAmplitude() - _track.minAmplitude();
     int maxHeight = boundingRect().height();
+    float framesPerPixel = static_cast<float>(m_max - m_min + 1) / static_cast<float>(boundingRect().width());
 
     if(_isStereoMode)
     {
         // Левый канал
-        if(framesPerPixel() > 1.f)
+        if(framesPerPixel > 1.f)
         {
             int frameCounter = 0;
             float acc = 0.f;
             float max = 0.f;
             float min = 0.f;
 
-            for(int i = 0; i < _currentSamplesLeft.size(); i++)
+            for(int i = m_min; i <= m_max; i++)
             {
                 frameCounter++;
-                if(frameCounter < framesPerPixel())
+                if(frameCounter < framesPerPixel)
                 {
-                    acc += _currentSamplesLeft.at(i) * _currentSamplesLeft.at(i);
+                    acc += _track.getSamplesLeft().at(i) * _track.getSamplesLeft().at(i);
 
-                    if(_currentSamplesLeft.at(i) > max)
-                        max = _currentSamplesLeft.at(i);
-                    else if(_currentSamplesLeft.at(i) < min)
-                        min = _currentSamplesLeft.at(i);
+                    if(_track.getSamplesLeft().at(i) > max)
+                        max = _track.getSamplesLeft().at(i);
+                    else if(_track.getSamplesLeft().at(i) < min)
+                        min = _track.getSamplesLeft().at(i);
 
                     continue;
                 }
@@ -65,13 +69,14 @@ void WaveformWidget::paint(QPainter *painter)
 
                 y1 += (maxHeight / 2 - y1) * scaleFactor - maxHeight / 4;
                 y2 += (maxHeight / 2 - y2) * scaleFactor - maxHeight / 4;
+                float x = (i - m_min) / framesPerPixel;
 
                 pen.setBrush(brush1);
                 painter->setPen(pen);
                 painter->setBrush(brush1);
-                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+                painter->drawLine(x, y1,  x, y2);
 
-                float average = sqrtf(acc / framesPerPixel());
+                float average = sqrtf(acc / framesPerPixel);
                 float height = average / maxAmplitude * maxHeight;
 
                 y1 = (maxHeight - height) / 2;
@@ -83,7 +88,7 @@ void WaveformWidget::paint(QPainter *painter)
                 pen.setBrush(brush2);
                 painter->setPen(pen);
                 painter->setBrush(brush2);
-                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+                painter->drawLine(x, y1,  x, y2);
 
                 frameCounter = 0;
                 acc = 0.f;
@@ -93,24 +98,24 @@ void WaveformWidget::paint(QPainter *painter)
         }
 
         // Правый канал
-        if(framesPerPixel() > 1.f)
+        if(framesPerPixel > 1.f)
         {
             int frameCounter = 0;
             float acc = 0.f;
             float max = 0.f;
             float min = 0.f;
 
-            for(int i = 0; i < _currentSamplesRight.size(); i++)
+            for(int i = m_min; i <= m_max; i++)
             {
                 frameCounter++;
-                if(frameCounter < framesPerPixel())
+                if(frameCounter < framesPerPixel)
                 {
-                    acc += _currentSamplesRight.at(i) * _currentSamplesRight.at(i);
+                    acc += _track.getSamplesRight().at(i) * _track.getSamplesRight().at(i);
 
-                    if(_currentSamplesRight.at(i) > max)
-                        max = _currentSamplesRight.at(i);
-                    else if(_currentSamplesRight.at(i) < min)
-                        min = _currentSamplesRight.at(i);
+                    if(_track.getSamplesRight().at(i) > max)
+                        max = _track.getSamplesRight().at(i);
+                    else if(_track.getSamplesRight().at(i) < min)
+                        min = _track.getSamplesRight().at(i);
 
                     continue;
                 }
@@ -122,13 +127,14 @@ void WaveformWidget::paint(QPainter *painter)
 
                 y1 += (maxHeight / 2 - y1) * scaleFactor + maxHeight / 4;
                 y2 += (maxHeight / 2 - y2) * scaleFactor + maxHeight / 4;
+                float x = (i - m_min) / framesPerPixel;
 
                 pen.setBrush(brush1);
                 painter->setPen(pen);
                 painter->setBrush(brush1);
-                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+                painter->drawLine(x, y1,  x, y2);
 
-                float average = sqrtf(acc / framesPerPixel());
+                float average = sqrtf(acc / framesPerPixel);
                 float height = average / maxAmplitude * maxHeight;
 
                 y1 = (maxHeight - height) / 2;
@@ -140,7 +146,7 @@ void WaveformWidget::paint(QPainter *painter)
                 pen.setBrush(brush2);
                 painter->setPen(pen);
                 painter->setBrush(brush2);
-                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+                painter->drawLine(x, y1,  x, y2);
 
                 frameCounter = 0;
                 acc = 0.f;
@@ -151,38 +157,38 @@ void WaveformWidget::paint(QPainter *painter)
     }
     else
     {
-        if(framesPerPixel() > 1.f)
+        if(framesPerPixel > 1.f)
         {
             int frameCounter = 0;
             float acc = 0.f;
             float max = 0.f;
             float min = 0.f;
 
-            for(int i = 0; i < _currentSamples.size(); i++)
+            for(int i = m_min; i <= m_max; i++)
             {
                 frameCounter++;
-                if(frameCounter < framesPerPixel())
+                if(frameCounter < framesPerPixel)
                 {
-                    acc += _currentSamples.at(i) * _currentSamples.at(i);
+                    acc += _track.getSamples().at(i) * _track.getSamples().at(i);
 
-                    if(_currentSamples.at(i) > max)
-                        max = _currentSamples.at(i);
-                    else if(_currentSamples.at(i) < min)
-                        min = _currentSamples.at(i);
+                    if(_track.getSamples().at(i) > max)
+                        max = _track.getSamples().at(i);
+                    else if(_track.getSamples().at(i) < min)
+                        min = _track.getSamples().at(i);
 
                     continue;
                 }
 
-
                 float y1 = maxHeight * (_track.maxAmplitude() - min) / maxAmplitude;
                 float y2 = maxHeight * (_track.maxAmplitude() - max) / maxAmplitude;
+                float x = (i - m_min) / framesPerPixel;
 
                 pen.setBrush(brush1);
                 painter->setPen(pen);
                 painter->setBrush(brush1);
-                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+                painter->drawLine(x, y1,  x, y2);
 
-                float average = sqrtf(acc / framesPerPixel());
+                float average = sqrtf(acc / framesPerPixel);
                 float height = average / maxAmplitude * maxHeight;
 
                 y1 = (maxHeight - height) / 2;
@@ -191,7 +197,7 @@ void WaveformWidget::paint(QPainter *painter)
                 pen.setBrush(brush2);
                 painter->setPen(pen);
                 painter->setBrush(brush2);
-                painter->drawLine(i / framesPerPixel(), y1,  i / framesPerPixel(), y2);
+                painter->drawLine(x, y1,  x, y2);
 
                 frameCounter = 0;
                 acc = 0.f;
@@ -255,12 +261,6 @@ void WaveformWidget::setAudioTrackFile(QString fileName)
     _track.loadFile(_audioTrackFile);
 }
 
-void WaveformWidget::refresh()
-{
-    _track.getSamples(m_min, m_max, _currentSamples, _currentSamplesLeft, _currentSamplesRight);
-    update();
-}
-
 qint64 WaveformWidget::duration() const
 {
     return _player.duration();
@@ -276,7 +276,7 @@ void WaveformWidget::setMax(qint64 maxMsec)
     else
         m_max = _track.samplesCount();
 
-    refresh();
+    update();
     emit maxChanged(m_max);
 }
 
@@ -290,7 +290,7 @@ void WaveformWidget::setMin(qint64 minMsec)
     else
         m_min = 0;
 
-    refresh();
+    update();
     emit minChanged(m_min);
 }
 
@@ -312,7 +312,7 @@ void WaveformWidget::setVolume(int value)
 void WaveformWidget::setStereoMode(bool state)
 {
     _isStereoMode = state;
-    refresh();
+    update();
 }
 
 void WaveformWidget::moveVisibleRange(qint64 pos)
@@ -324,9 +324,9 @@ void WaveformWidget::moveVisibleRange(qint64 pos)
     {
         m_min = tempMin;
         m_max = tempMax;
-        refresh();
         emit minChanged(m_min);
         emit maxChanged(m_max);
+        update();
     }
 }
 
@@ -334,30 +334,30 @@ void WaveformWidget::showAll()
 {
     m_min = 0;
     m_max = _track.samplesCount();
-    refresh();
     emit minChanged(m_min);
     emit maxChanged(m_max);
+    update();
 }
 
 void WaveformWidget::zoomIn()
 {
     float range = m_max - m_min;
-    float newRange = range - range * 0.05;
+    float newRange = range - range * 0.2;
 
     if((m_max - (range - newRange) / 2) / _ratio - (m_min + (range - newRange) / 2) / _ratio > 1000) // Разница в 1000 мс
     {
         m_max -= (range - newRange) / 2;
         m_min += (range - newRange) / 2;
-        refresh();
         emit minChanged(m_min);
         emit maxChanged(m_max);
+        update();
     }
 }
 
 void WaveformWidget::zoomOut()
 {
     float range = m_max - m_min;
-    float newRange = range + range * 0.05;
+    float newRange = range + range * 0.2;
 
     if(m_max + (newRange - range) / 2 <= _track.samplesCount() && m_min - (newRange - range) / 2 >= 0)
     {
@@ -371,21 +371,16 @@ void WaveformWidget::zoomOut()
         m_min = 0;
     }
 
-    refresh();
     emit minChanged(m_min);
     emit maxChanged(m_max);
+    update();
 }
 
 void WaveformWidget::setscaleFactor(float scaleFactor)
 {
     m_scaleFactor = scaleFactor;
-    refresh();
+    update();
     emit scaleFactorChanged(m_scaleFactor);
-}
-
-float WaveformWidget::framesPerPixel() const
-{
-    return static_cast<float>(_currentSamples.size()) / static_cast<float>(boundingRect().width());
 }
 
 void WaveformWidget::play()

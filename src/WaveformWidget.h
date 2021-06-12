@@ -22,7 +22,6 @@ public slots:
 
     void setAudioTrackFile(QString fileName);
 
-    void refresh();
     qint64 duration() const;
     void setMax(qint64 maxMsec);
     void setMin(qint64 minMsec);
@@ -40,7 +39,6 @@ public slots:
     void zoomIn();
     void zoomOut();
     void setscaleFactor(float scaleFactor);
-    float framesPerPixel() const;
 
     void play();
     void pause();
@@ -60,10 +58,10 @@ private:
     AudioTrackRepresentation _track;
     QMediaPlayer _player;
     QTimer _valueForPositionTimer;
-    QVector<float> _currentSamples;
-    QVector<float> _currentSamplesLeft;
-    QVector<float> _currentSamplesRight;
-    int m_max = 1100000;
+//    QVector<float> _currentSamples;
+//    QVector<float> _currentSamplesLeft;
+//    QVector<float> _currentSamplesRight;
+    int m_max = 0;
     int m_min = 0;
     float _ratio = 1.f; // Количество фреймов в миллисекунде
     float m_scaleFactor = 1.f;
