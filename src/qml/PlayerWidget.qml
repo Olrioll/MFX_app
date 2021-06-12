@@ -33,456 +33,6 @@ Item
         color: "#222222"
     }
 
-    Item
-    {
-        id: timeScale
-        anchors.fill: timeScaleBackground
-
-        property var textMarkers: []
-
-        Component
-        {
-            id: textMarker
-            Text
-            {
-                id: posTimeText
-                color: "#eeeeee"
-                padding: 0
-                horizontalAlignment: Text.AlignLeft
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideRight
-                font.family: "Roboto"
-                font.pixelSize: 8
-            }
-        }
-
-        Canvas
-        {
-            id: timeScaleCanvas
-            anchors.fill: parent
-
-            onPaint:
-            {
-                // Вычисляем кол-во миллисекунд на пиксель
-
-                let max = waveformWidget.max()
-                let min = waveformWidget.min()
-                let msecPerPx = (max - min) / waveformWidget.width
-
-                for (let txt of timeScale.textMarkers)
-                {
-                  txt.destroy()
-                }
-                timeScale.textMarkers = []
-                var ctx = getContext("2d")
-                ctx.reset()
-
-                var stepMsec = 0 // шаг делений в мсек
-
- // малое деление будет равно 1 сек
-                if(msecPerPx >= 50)
-                {
-                    stepMsec = 1000
-                }
-
-// малое деление будет равно 0.5 сек
-                else if(msecPerPx >= 25)
-                {
-                    stepMsec = 500
-                }
-
-// малое деление будет равно 0.1 сек
-                else if (msecPerPx >= 3)
-                {
-                    stepMsec = 100
-                }
-
-// малое деление будет равно 0.01 сек
-                else
-                {
-                    stepMsec = 10
-                }
-
-                // стартовая позиция в мсек
-                var startMsec = Math.ceil(min / stepMsec) * stepMsec
-
-                // стартовая позиция в пикселях
-                var start = (startMsec - min) / msecPerPx
-
-                // шаг делений в пикселях
-                var step = stepMsec / msecPerPx
-
-                ctx.miterLimit = 0.1
-                ctx.strokeStyle = "#888888"
-
-                var currPos = start;
-                var currPosMsec = startMsec
-                while(currPos + step < width)
-                {
-                    let divisionHeight = 2
-
-                    if(!(currPosMsec % (10 * stepMsec)))
-                        divisionHeight = 6
-
-                    else if(!(currPosMsec % (5 * stepMsec)))
-                        divisionHeight = 4
-
-                    ctx.moveTo(currPos, height)
-                    ctx.lineTo(currPos, height - divisionHeight)
-                    currPos += step
-                    currPosMsec += stepMsec
-
-                    if(divisionHeight === 6) // создаем текстовый маркер
-                    {
-                        let marker = textMarker.createObject(mainBackground)
-                        timeScale.textMarkers.push(marker)
-
-                        if(msecPerPx >= 3)
-                        {
-                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
-                        }
-
-                        else
-                        {
-                            let timeString = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss.zzz")
-                            marker.text = timeString.slice(0, timeString.length - 2)
-                        }
-                        marker.y = 2
-                        marker.x = currPos - step - marker.width / 2
-                    }
-                }
-
-                ctx.stroke()
-            }
-        }
-
-
-        Connections
-        {
-            target: waveformWidget
-            function onMaxChanged()
-            {
-                timeScaleCanvas.requestPaint()
-            }
-        }
-
-        Connections
-        {
-            target: waveformWidget
-            function onMinChanged()
-            {
-                timeScaleCanvas.requestPaint()
-            }
-        }
-
-//        MouseAreaWithHidingCursor
-//        {
-//            id: timeScaleMouseArea
-//            anchors.topMargin: -parent.y
-//            anchors.top: parent.top
-//            anchors.bottom: parent.bottom
-//            anchors.left: parent.left
-//            anchors.right: parent.right
-//            hoverEnabled: true
-
-//            property int pressedX
-//            property int pressedY
-//            property int prevX
-//            property int prevY
-//            property bool oddEvent
-//            property bool isScaleMoving: false
-//            property bool isScaleZooming: false
-
-//            function zoom(delta)
-//            {
-//                let currInterval = waveformWidget.max() - waveformWidget.min()
-//                let dWidth = currInterval * 0.1
-//                let zoomCenter = mouseX / width
-//                let leftShift = zoomCenter * dWidth
-//                let rightShift = dWidth - leftShift
-
-//                if(delta > 0)
-//                {
-//                    waveformWidget.setMin(waveformWidget.min() + leftShift)
-//                    waveformWidget.setMax(waveformWidget.max() - rightShift)
-//                }
-
-//                else
-//                {
-//                    if((waveformWidget.min() - leftShift) >= 0 && (waveformWidget.max() + rightShift) <= waveformWidget.duration())
-//                    {
-//                        waveformWidget.setMin(waveformWidget.min() - leftShift)
-//                        waveformWidget.setMax(waveformWidget.max() + rightShift)
-//                    }
-
-//                    else
-//                    {
-//                        let leftDist = waveformWidget.min()
-//                        let rightDist = waveformWidget.duration() - waveformWidget.max()
-
-//                        if(leftDist < rightDist)
-//                        {
-//                            dWidth -= waveformWidget.min()
-//                            waveformWidget.setMin(0)
-
-//                            if((waveformWidget.max() + dWidth) <= waveformWidget.duration())
-//                            {
-//                                waveformWidget.setMax(waveformWidget.max() + dWidth)
-//                            }
-
-//                            else
-//                                waveformWidget.setMax(waveformWidget.duration())
-//                        }
-
-//                        else
-//                        {
-//                            dWidth -= waveformWidget.duration() - waveformWidget.max()
-//                            waveformWidget.setMax(waveformWidget.duration())
-
-//                            if((waveformWidget.min() - dWidth) >= 0)
-//                            {
-//                                waveformWidget.setMin(waveformWidget.min() - dWidth)
-//                            }
-
-//                            else
-//                                waveformWidget.setMin(0)
-//                        }
-//                    }
-//                }
-//            }
-
-//            Image
-//            {
-//                id: zoomCursor
-//                source: "qrc:/zoom"
-//                visible: false
-//            }
-
-//            onPressed:
-//            {
-//                pressedX = mouseX
-//                pressedY = mouseY
-//                prevX = mouseX
-//                prevY = mouseY
-//                oddEvent = true
-//                isScaleMoving = false
-//                isScaleZooming = false
-//                playerResizeArea.enabled = false
-//                playerResizeArea.cursorShape = Qt.BlankCursor
-//                mainScreen.sceneWidget.enabled = false
-////                playerResizeArea.cursorShape = Qt.BlankCursor
-//                zoomCursor.x = pressedX
-//                zoomCursor.y = 0
-//            }
-
-//            onMouseXChanged:
-//            {
-//                if(mouse.buttons === Qt.LeftButton)
-//                {
-//                    if(!isScaleZooming)
-//                    {
-//                        let dx = mouseX - pressedX
-//                        if(Math.abs(dx) > 3)
-//                        {
-//                            isScaleMoving = true
-//                            zoomCursor.visible = true
-//                        }
-
-//                        if(oddEvent)
-//                        {
-//                            let currInterval = waveformWidget.max() - waveformWidget.min()
-//                            let dX = currInterval / width * Math.abs(dx)
-
-//                            if(dx < 0)
-//                            {
-//                                if(waveformWidget.max() + dX <= waveformWidget.duration())
-//                                {
-//                                    waveformWidget.setMax(waveformWidget.max() + dX)
-//                                    waveformWidget.setMin(waveformWidget.min() + dX)
-//                                }
-//                            }
-
-//                            else
-//                            {
-//                                if(waveformWidget.min() - dX >= 0)
-//                                {
-//                                    waveformWidget.setMax(waveformWidget.max() - dX)
-//                                    waveformWidget.setMin(waveformWidget.min() - dX)
-//                                }
-//                            }
-
-//                            oddEvent = false
-//                            cursorManager.moveCursor(-dx, 0)
-//                        }
-
-//                        else
-//                            oddEvent = true
-//                    }
-//                }
-//            }
-
-
-//            onMouseYChanged:
-//            {
-//                if(!isScaleMoving)
-//                {
-//                    if(mouse.buttons === Qt.LeftButton)
-//                    {
-//                        let dy = mouseY - prevY
-//                        if(Math.abs(dy) > 3)
-//                        {
-//                            isScaleZooming = true
-//                            zoomCursor.visible = true
-//                        }
-
-//                        if(oddEvent)
-//                        {
-//                            zoom(-dy)
-//                            oddEvent = false
-//                            cursorManager.moveCursor(0, -dy)
-//                        }
-
-//                        else
-//                            oddEvent = true
-//                    }
-//                }
-//            }
-
-//            onWheel:
-//            {
-//                zoom(wheel.angleDelta.y)
-//            }
-
-//            onReleased:
-//            {
-//                zoomCursor.visible = false
-//                playerResizeArea.enabled = true
-//                playerResizeArea.cursorShape = Qt.SizeVerCursor
-//                mainScreen.sceneWidget.enabled = true
-//            }
-//        }
-
-        ZoomingMouseArea
-        {
-            id: timeScaleMouseArea
-            anchors.topMargin: -parent.y
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            hoverEnabled: true
-
-            function zoom(delta)
-            {
-                let currInterval = waveformWidget.max() - waveformWidget.min()
-                let dWidth = currInterval * 0.1
-                let zoomCenter = mouseX / width
-                let leftShift = zoomCenter * dWidth
-                let rightShift = dWidth - leftShift
-
-                if(delta > 0)
-                {
-                    waveformWidget.setMin(waveformWidget.min() + leftShift)
-                    waveformWidget.setMax(waveformWidget.max() - rightShift)
-                }
-
-                else
-                {
-                    if((waveformWidget.min() - leftShift) >= 0 && (waveformWidget.max() + rightShift) <= waveformWidget.duration())
-                    {
-                        waveformWidget.setMin(waveformWidget.min() - leftShift)
-                        waveformWidget.setMax(waveformWidget.max() + rightShift)
-                    }
-
-                    else
-                    {
-                        let leftDist = waveformWidget.min()
-                        let rightDist = waveformWidget.duration() - waveformWidget.max()
-
-                        if(leftDist < rightDist)
-                        {
-                            dWidth -= waveformWidget.min()
-                            waveformWidget.setMin(0)
-
-                            if((waveformWidget.max() + dWidth) <= waveformWidget.duration())
-                            {
-                                waveformWidget.setMax(waveformWidget.max() + dWidth)
-                            }
-
-                            else
-                                waveformWidget.setMax(waveformWidget.duration())
-                        }
-
-                        else
-                        {
-                            dWidth -= waveformWidget.duration() - waveformWidget.max()
-                            waveformWidget.setMax(waveformWidget.duration())
-
-                            if((waveformWidget.min() - dWidth) >= 0)
-                            {
-                                waveformWidget.setMin(waveformWidget.min() - dWidth)
-                            }
-
-                            else
-                                waveformWidget.setMin(0)
-                        }
-                    }
-                }
-            }
-
-            onPressed:
-            {
-                playerResizeArea.enabled = false
-                playerResizeArea.cursorShape = Qt.BlankCursor
-                mainScreen.sceneWidget.enabled = false
-                timeScaleMouseArea.cursorImage.x = pressedX
-                timeScaleMouseArea.cursorImage.y = 0
-            }
-
-            onMovedOnX:
-            {
-                let currInterval = waveformWidget.max() - waveformWidget.min()
-                let dX = currInterval / width * Math.abs(dx)
-
-                if(dx < 0)
-                {
-                    if(waveformWidget.max() + dX <= waveformWidget.duration())
-                    {
-                        waveformWidget.setMax(waveformWidget.max() + dX)
-                        waveformWidget.setMin(waveformWidget.min() + dX)
-                    }
-                }
-
-                else
-                {
-                    if(waveformWidget.min() - dX >= 0)
-                    {
-                        waveformWidget.setMax(waveformWidget.max() - dX)
-                        waveformWidget.setMin(waveformWidget.min() - dX)
-                    }
-                }
-            }
-
-            onMovedOnY:
-            {
-                if(Math.abs(dy) > 3)
-                    zoom(-dy)
-            }
-
-            onWheel:
-            {
-                zoom(wheel.angleDelta.y)
-            }
-
-            onReleased:
-            {
-                playerResizeArea.enabled = true
-                playerResizeArea.cursorShape = Qt.SizeVerCursor
-                mainScreen.sceneWidget.enabled = true
-            }
-        }
-    }
-
     MouseAreaWithHidingCursor
     {
         id: playerResizeArea
@@ -777,6 +327,306 @@ Item
             function onHeightChanged()
             {
                 cueView.refresh()
+            }
+        }
+    }
+
+    Item
+    {
+        id: timeScale
+        anchors.fill: timeScaleBackground
+
+        property var textMarkers: []
+
+        Component
+        {
+            id: textMarker
+            Text
+            {
+                id: posTimeText
+                color: "#eeeeee"
+                padding: 0
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideRight
+                font.family: "Roboto"
+                font.pixelSize: 8
+            }
+        }
+
+        Canvas
+        {
+            id: timeScaleCanvas
+            anchors.fill: parent
+
+            onPaint:
+            {
+                // Вычисляем кол-во миллисекунд на пиксель
+
+                let max = waveformWidget.max()
+                let min = waveformWidget.min()
+                let msecPerPx = (max - min) / waveformWidget.width
+
+                for (let txt of timeScale.textMarkers)
+                {
+                  txt.destroy()
+                }
+                timeScale.textMarkers = []
+                var ctx = getContext("2d")
+                ctx.reset()
+
+                var stepMsec = 0 // шаг делений в мсек
+
+ // малое деление будет равно 1 сек
+                if(msecPerPx >= 50)
+                {
+                    stepMsec = 1000
+                }
+
+// малое деление будет равно 0.5 сек
+                else if(msecPerPx >= 25)
+                {
+                    stepMsec = 500
+                }
+
+// малое деление будет равно 0.1 сек
+                else if (msecPerPx >= 3)
+                {
+                    stepMsec = 100
+                }
+
+// малое деление будет равно 0.01 сек
+                else
+                {
+                    stepMsec = 10
+                }
+
+                // стартовая позиция в мсек
+                var startMsec = Math.ceil(min / stepMsec) * stepMsec
+
+                // стартовая позиция в пикселях
+                var start = (startMsec - min) / msecPerPx
+
+                // шаг делений в пикселях
+                var step = stepMsec / msecPerPx
+
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = "#888888"
+
+                var currPos = start;
+                var currPosMsec = startMsec
+                while(currPos + step < width)
+                {
+                    let divisionHeight = 2
+
+                    if(!(currPosMsec % (10 * stepMsec)))
+                        divisionHeight = 6
+
+                    else if(!(currPosMsec % (5 * stepMsec)))
+                        divisionHeight = 4
+
+                    ctx.moveTo(currPos, height)
+                    ctx.lineTo(currPos, height - divisionHeight)
+                    currPos += step
+                    currPosMsec += stepMsec
+
+                    if(divisionHeight === 6) // создаем текстовый маркер
+                    {
+                        let marker = textMarker.createObject(mainBackground)
+                        timeScale.textMarkers.push(marker)
+
+                        if(msecPerPx >= 3)
+                        {
+                            marker.text = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss")
+                        }
+
+                        else
+                        {
+                            let timeString = waveformWidget.positionString(currPosMsec - stepMsec, "mm:ss.zzz")
+                            marker.text = timeString.slice(0, timeString.length - 2)
+                        }
+                        marker.y = 2
+                        marker.x = currPos - step - marker.width / 2
+                    }
+                }
+
+                ctx.stroke()
+            }
+        }
+
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                timeScaleCanvas.requestPaint()
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                timeScaleCanvas.requestPaint()
+            }
+        }
+
+        ZoomingMouseArea
+        {
+            id: timeScaleMouseArea
+            height: 22
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            hoverEnabled: true
+
+            function zoom(delta)
+            {
+                let scaleFactor = 0.05
+                if(Math.abs(delta) < 5)
+                    scaleFactor = 0.08
+                else if(Math.abs(delta) < 9)
+                    scaleFactor = 0.1
+                else if(Math.abs(delta) < 14)
+                    scaleFactor = 0.15
+                else
+                    scaleFactor = 0.20
+
+                let currInterval = waveformWidget.max() - waveformWidget.min()
+                let dWidth = currInterval * scaleFactor
+                let zoomCenter = resizingCenterMarker.x / width
+                let leftShift = zoomCenter * dWidth
+                let rightShift = dWidth - leftShift
+
+                if(delta > 0)
+                {
+                    waveformWidget.setMin(waveformWidget.min() + leftShift)
+                    waveformWidget.setMax(waveformWidget.max() - rightShift)
+                }
+
+                else
+                {
+                    if((waveformWidget.min() - leftShift) >= 0 && (waveformWidget.max() + rightShift) <= waveformWidget.duration())
+                    {
+                        waveformWidget.setMin(waveformWidget.min() - leftShift)
+                        waveformWidget.setMax(waveformWidget.max() + rightShift)
+                    }
+
+                    else
+                    {
+                        let leftDist = waveformWidget.min()
+                        let rightDist = waveformWidget.duration() - waveformWidget.max()
+
+                        if(leftDist < rightDist)
+                        {
+                            dWidth -= waveformWidget.min()
+                            waveformWidget.setMin(0)
+
+                            if((waveformWidget.max() + dWidth) <= waveformWidget.duration())
+                            {
+                                waveformWidget.setMax(waveformWidget.max() + dWidth)
+                            }
+
+                            else
+                                waveformWidget.setMax(waveformWidget.duration())
+                        }
+
+                        else
+                        {
+                            dWidth -= waveformWidget.duration() - waveformWidget.max()
+                            waveformWidget.setMax(waveformWidget.duration())
+
+                            if((waveformWidget.min() - dWidth) >= 0)
+                            {
+                                waveformWidget.setMin(waveformWidget.min() - dWidth)
+                            }
+
+                            else
+                                waveformWidget.setMin(0)
+                        }
+                    }
+                }
+            }
+
+            Rectangle
+            {
+                id: resizingCenterMarker
+                color: "#27AE60"
+                width: 1
+                anchors.top: parent.bottom
+                height: waveformWidget.height
+                visible: false
+            }
+
+            onPressed:
+            {
+                playerResizeArea.enabled = false
+                playerResizeArea.cursorShape = Qt.BlankCursor
+                mainScreen.sceneWidget.enabled = false
+                timeScaleMouseArea.cursorImage.visible = false
+                resizingCenterMarker.x = mouseX
+                resizingCenterMarker.visible = true
+            }
+
+            onMoved:
+            {
+
+                if(Math.abs(dx) > Math.abs(dy)) // Скроллим
+                {
+                    let coeff = 1
+                    if(Math.abs(dx) < 3)
+                        coeff = 1
+                    else if (Math.abs(dx) < 7)
+                        coeff = 2
+                    else if (Math.abs(dx) < 16)
+                        coeff = 3
+                    else
+                        coeff = 4
+
+                    let currInterval = waveformWidget.max() - waveformWidget.min()
+                    let dX = currInterval / width * Math.abs(dx) * coeff
+
+                    if(dx < 0)
+                    {
+                        if(waveformWidget.max() + dX <= waveformWidget.duration())
+                        {
+                            waveformWidget.setMax(waveformWidget.max() + dX)
+                            waveformWidget.setMin(waveformWidget.min() + dX)
+                            resizingCenterMarker.x -= Math.abs(dx) * coeff
+                        }
+                    }
+
+                    else
+                    {
+                        if(waveformWidget.min() - dX >= 0)
+                        {
+                            waveformWidget.setMax(waveformWidget.max() - dX)
+                            waveformWidget.setMin(waveformWidget.min() - dX)
+                            resizingCenterMarker.x += Math.abs(dx) * coeff
+                        }
+                    }
+                }
+
+                else // Работаем с зумом
+                {
+                    zoom(-dy)
+                }
+            }
+
+            onWheel:
+            {
+                zoom(wheel.angleDelta.y > 0 ? 2 : -2)
+            }
+
+            onReleased:
+            {
+                playerResizeArea.enabled = true
+                playerResizeArea.cursorShape = Qt.SizeVerCursor
+                mainScreen.sceneWidget.enabled = true
+                resizingCenterMarker.visible = false
+                timeScaleMouseArea.cursorImage.visible = true
             }
         }
     }

@@ -11,6 +11,7 @@ MouseArea
 
     signal movedOnX(int dx)
     signal movedOnY(int dy)
+    signal moved(int dx, int dy)
 
     Image
     {
@@ -23,8 +24,13 @@ MouseArea
 
     onEntered:
     {
-        cursorShape = Qt.BlankCursor
-        cursorImage.visible = true
+        if(!isPressed)
+        {
+            cursorShape = Qt.BlankCursor
+            cursorImage.x = mouseX
+            cursorImage.y = mouseY
+            cursorImage.visible = true
+        }
     }
 
     onExited:
@@ -58,6 +64,9 @@ MouseArea
                 {
                     oddEvent = false
                     cursorManager.moveCursor(-dx, -dy)
+
+                    moved(dx, dy)
+
                     if(dx)
                         movedOnX(dx)
                     if(dy)
