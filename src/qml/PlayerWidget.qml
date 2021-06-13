@@ -494,7 +494,7 @@ Item
                 else
                     scaleFactor = 0.20
 
-                let currInterval = waveformWidget.max() - waveformWidget.min()
+                let currInterval = waveformWidget.maxSample() - waveformWidget.minSample()
                 let dWidth = currInterval * scaleFactor
                 let zoomCenter = resizingCenterMarker.x / width
                 let leftShift = zoomCenter * dWidth
@@ -502,49 +502,52 @@ Item
 
                 if(delta > 0)
                 {
-                    waveformWidget.setMin(waveformWidget.min() + leftShift)
-                    waveformWidget.setMax(waveformWidget.max() - rightShift)
+                    if((waveformWidget.maxSample() - waveformWidget.minSample()) / width > 4) // максимальный масштаб - 4 сэмпла на пиксель
+                    {
+                        waveformWidget.setMinSample(waveformWidget.minSample() + Math.round(leftShift))
+                        waveformWidget.setMaxSample(waveformWidget.maxSample() - Math.round(rightShift))
+                    }
                 }
 
                 else
                 {
-                    if((waveformWidget.min() - leftShift) >= 0 && (waveformWidget.max() + rightShift) <= waveformWidget.duration())
+                    if((waveformWidget.minSample() - leftShift) >= 0 && (waveformWidget.maxSample() + rightShift) < waveformWidget.sampleCount())
                     {
-                        waveformWidget.setMin(waveformWidget.min() - leftShift)
-                        waveformWidget.setMax(waveformWidget.max() + rightShift)
+                        waveformWidget.setMinSample(waveformWidget.minSample() - leftShift)
+                        waveformWidget.setMaxSample(waveformWidget.maxSample() + rightShift)
                     }
 
                     else
                     {
-                        let leftDist = waveformWidget.min()
-                        let rightDist = waveformWidget.duration() - waveformWidget.max()
+                        let leftDist = waveformWidget.minSample()
+                        let rightDist = waveformWidget.sampleCount() - 1 - waveformWidget.maxSample()
 
                         if(leftDist < rightDist)
                         {
-                            dWidth -= waveformWidget.min()
-                            waveformWidget.setMin(0)
+                            dWidth -= waveformWidget.minSample()
+                            waveformWidget.setMinSample(0)
 
-                            if((waveformWidget.max() + dWidth) <= waveformWidget.duration())
+                            if((waveformWidget.maxSample() + dWidth) < waveformWidget.sampleCount())
                             {
-                                waveformWidget.setMax(waveformWidget.max() + dWidth)
+                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dWidth)
                             }
 
                             else
-                                waveformWidget.setMax(waveformWidget.duration())
+                                waveformWidget.setMaxSample(waveformWidget.sampleCount() - 1)
                         }
 
                         else
                         {
-                            dWidth -= waveformWidget.duration() - waveformWidget.max()
-                            waveformWidget.setMax(waveformWidget.duration())
+                            dWidth -= waveformWidget.sampleCount() - 1 - waveformWidget.maxSample()
+                            waveformWidget.setMaxSample(waveformWidget.sampleCount() - 1)
 
-                            if((waveformWidget.min() - dWidth) >= 0)
+                            if((waveformWidget.minSample() - dWidth) >= 0)
                             {
-                                waveformWidget.setMin(waveformWidget.min() - dWidth)
+                                waveformWidget.setMinSample(waveformWidget.minSample() - dWidth)
                             }
 
                             else
-                                waveformWidget.setMin(0)
+                                waveformWidget.setMinSample(0)
                         }
                     }
                 }
@@ -585,25 +588,25 @@ Item
                     else
                         coeff = 4
 
-                    let currInterval = waveformWidget.max() - waveformWidget.min()
+                    let currInterval = waveformWidget.maxSample() - waveformWidget.minSample()
                     let dX = currInterval / width * Math.abs(dx) * coeff
 
                     if(dx < 0)
                     {
-                        if(waveformWidget.max() + dX <= waveformWidget.duration())
+                        if(waveformWidget.maxSample() + dX < waveformWidget.sampleCount())
                         {
-                            waveformWidget.setMax(waveformWidget.max() + dX)
-                            waveformWidget.setMin(waveformWidget.min() + dX)
+                            waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
+                            waveformWidget.setMinSample(waveformWidget.minSample() + dX)
                             resizingCenterMarker.x -= Math.abs(dx) * coeff
                         }
                     }
 
                     else
                     {
-                        if(waveformWidget.min() - dX >= 0)
+                        if(waveformWidget.minSample() - dX >= 0)
                         {
-                            waveformWidget.setMax(waveformWidget.max() - dX)
-                            waveformWidget.setMin(waveformWidget.min() - dX)
+                            waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
+                            waveformWidget.setMinSample(waveformWidget.minSample() - dX)
                             resizingCenterMarker.x += Math.abs(dx) * coeff
                         }
                     }

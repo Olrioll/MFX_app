@@ -23,8 +23,11 @@ public slots:
     void setAudioTrackFile(QString fileName);
 
     qint64 duration() const;
+    qint64 sampleCount() const;
     void setMax(qint64 maxMsec);
     void setMin(qint64 minMsec);
+    void setMaxSample(qint64 max);
+    void setMinSample(qint64 min);
     void setPlayerPosition(qint64 pos);
     qint64 playerPosition() const;
     void setVolume(int value);
@@ -34,6 +37,9 @@ public slots:
     QString positionString(qint64 pos, QString format) const;
     qint64 max() const;
     qint64 min() const;
+    qint64 maxSample() const;
+    qint64 minSample() const;
+    float ratio() const;
     void moveVisibleRange(qint64 pos);
     void showAll();
     void setscaleFactor(float scaleFactor);

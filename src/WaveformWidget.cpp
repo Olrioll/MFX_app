@@ -234,6 +234,21 @@ qint64 WaveformWidget::min() const
     return m_min / _ratio;
 }
 
+qint64 WaveformWidget::maxSample() const
+{
+    return m_max;
+}
+
+qint64 WaveformWidget::minSample() const
+{
+    return m_min;
+}
+
+float WaveformWidget::ratio() const
+{
+    return _ratio;
+}
+
 QString WaveformWidget::maxString() const
 {
     return QTime(0, 0).addMSecs(m_max / _ratio).toString("mm:ss");
@@ -266,6 +281,11 @@ qint64 WaveformWidget::duration() const
     return _player.duration();
 }
 
+qint64 WaveformWidget::sampleCount() const
+{
+    return _track.samplesCount();
+}
+
 void WaveformWidget::setMax(qint64 maxMsec)
 {
     if (m_max == maxMsec * _ratio)
@@ -287,6 +307,34 @@ void WaveformWidget::setMin(qint64 minMsec)
 
     if(minMsec * _ratio > 0)
         m_min = minMsec * _ratio;
+    else
+        m_min = 0;
+
+    update();
+    emit minChanged(m_min);
+}
+
+void WaveformWidget::setMaxSample(qint64 max)
+{
+    if (m_max == max)
+        return;
+
+    if(max <= _track.samplesCount())
+        m_max = max;
+    else
+        m_max = _track.samplesCount() - 1;
+
+    update();
+    emit maxChanged(m_max);
+}
+
+void WaveformWidget::setMinSample(qint64 min)
+{
+    if (m_min == min)
+        return;
+
+    if(min > 0)
+        m_min = min;
     else
         m_min = 0;
 
