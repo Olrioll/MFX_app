@@ -1023,6 +1023,8 @@ Item
         MouseAreaWithHidingCursor
         {
             id: barMovingArea
+            anchors.topMargin: -10
+            anchors.bottomMargin: -10
             anchors.fill: parent
 
             drag.target: volumeLevelBar
@@ -1030,6 +1032,30 @@ Item
 
             drag.minimumX: 0
             drag.maximumX: volumeRegulator.width - volumeLevelBar.width
+
+            onClicked:
+            {
+                volumeLevelBar.x = mouseX
+            }
+
+            onWheel:
+            {
+                if(wheel.angleDelta.y > 0)
+                {
+                    if(volumeLevelBar.x + 5 <= 100)
+                        volumeLevelBar.x += 5
+                    else
+                        volumeLevelBar.x = 100
+                }
+
+                else
+                {
+                    if(volumeLevelBar.x - 5 >= 0)
+                        volumeLevelBar.x -= 5
+                    else
+                        volumeLevelBar.x = 0
+                }
+            }
         }
     }
 
