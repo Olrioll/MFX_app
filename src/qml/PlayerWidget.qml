@@ -578,7 +578,6 @@ Item
 
             onMoved:
             {
-
                 if(Math.abs(dx) > Math.abs(dy)) // Скроллим
                 {
                     let coeff = 1
@@ -598,9 +597,17 @@ Item
                     {
                         if(waveformWidget.maxSample() + dX < waveformWidget.sampleCount())
                         {
-                            waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
-                            waveformWidget.setMinSample(waveformWidget.minSample() + dX)
-                            resizingCenterMarker.x -= Math.abs(dx) * coeff
+                            if(resizingCenterMarker.x - Math.abs(dx) * coeff > 0)
+                            {
+                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
+                                waveformWidget.setMinSample(waveformWidget.minSample() + dX)
+                                resizingCenterMarker.x -= Math.abs(dx) * coeff
+                            }
+
+                            else
+                            {
+                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
+                            }
                         }
                     }
 
@@ -608,9 +615,17 @@ Item
                     {
                         if(waveformWidget.minSample() - dX >= 0)
                         {
-                            waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
-                            waveformWidget.setMinSample(waveformWidget.minSample() - dX)
-                            resizingCenterMarker.x += Math.abs(dx) * coeff
+                            if(resizingCenterMarker.x + Math.abs(dx) * coeff < width)
+                            {
+                                waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
+                                waveformWidget.setMinSample(waveformWidget.minSample() - dX)
+                                resizingCenterMarker.x += Math.abs(dx) * coeff
+                            }
+
+                            else
+                            {
+                                waveformWidget.setMinSample(waveformWidget.minSample() - dX)
+                            }
                         }
                     }
                 }
@@ -961,7 +976,6 @@ Item
             anchors.centerIn: parent
         }
     }
-
 
     Item
     {
