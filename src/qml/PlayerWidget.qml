@@ -336,6 +336,7 @@ Item
         id: timeScale
         anchors.fill: timeScaleBackground
 
+        property alias timeScaleMouseArea: timeScaleMouseArea
         property var textMarkers: []
 
         Component
@@ -482,6 +483,8 @@ Item
             anchors.right: parent.right
             hoverEnabled: true
 
+            property alias resizingCenterMarker: resizingCenterMarker
+
             function zoom(delta)
             {
                 let scaleFactor = 0.05
@@ -502,7 +505,7 @@ Item
 
                 if(delta > 0)
                 {
-                    if((waveformWidget.maxSample() - waveformWidget.minSample()) / width > 4) // максимальный масштаб - 4 сэмпла на пиксель
+                    if((waveformWidget.maxSample() - waveformWidget.minSample()) / waveformWidget.width > 4) // максимальный масштаб - 4 сэмпла на пиксель
                     {
                         waveformWidget.setMinSample(waveformWidget.minSample() + Math.round(leftShift))
                         waveformWidget.setMaxSample(waveformWidget.maxSample() - Math.round(rightShift))
@@ -1203,6 +1206,63 @@ Item
                     {
                         scrollBar.refresh()
                     }
+                }
+            }
+
+            ZoomingMouseArea
+            {
+                image: ""
+                anchors.fill: parent
+
+                onMoved:
+                {
+
+                    if(Math.abs(dx) > Math.abs(dy)) // Скроллим
+                    {
+                        let coeff = 1
+                        if(Math.abs(dx) < 3)
+                            coeff = 1
+                        else if (Math.abs(dx) < 7)
+                            coeff = 2
+                        else if (Math.abs(dx) < 16)
+                            coeff = 3
+                        else
+                            coeff = 4
+
+                        let currInterval = waveformWidget.maxSample() - waveformWidget.minSample()
+                        let dX = currInterval / width * Math.abs(dx) * coeff
+
+                        if(dx > 0)
+                        {
+                            if(waveformWidget.maxSample() + dX < waveformWidget.sampleCount())
+                            {
+                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
+                                waveformWidget.setMinSample(waveformWidget.minSample() + dX)
+                                resizingCenterMarker.x -= Math.abs(dx) * coeff
+                            }
+                        }
+
+                        else
+                        {
+                            if(waveformWidget.minSample() - dX >= 0)
+                            {
+                                waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
+                                waveformWidget.setMinSample(waveformWidget.minSample() - dX)
+                                resizingCenterMarker.x += Math.abs(dx) * coeff
+                            }
+                        }
+                    }
+
+                    else // Работаем с зумом
+                    {
+
+                    }
+                }
+
+                onWheel:
+                {
+                    timeScaleMouseArea.resizingCenterMarker.x = timeScaleMouseArea.width / 2
+                    timeScaleMouseArea.zoom(wheel.angleDelta.y > 0 ? 2 : -2)
                 }
             }
 
