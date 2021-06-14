@@ -50,6 +50,7 @@ public slots:
 
 signals:
 
+    void trackDownloaded();
     void maxChanged(qint64 max);
     void minChanged(qint64 min);
     void scaleFactorChanged(float scaleFactor);

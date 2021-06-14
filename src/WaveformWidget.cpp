@@ -6,10 +6,11 @@
 
 WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), _track(this)
 {
-    connect(&_track, &AudioTrackRepresentation::bufferCreated, [this]()
+    connect(&_track, &AudioTrackRepresentation::trackDownloaded, [this]()
     {
         _ratio = static_cast<float>(_track.samplesCount()) / static_cast<float>(_player.duration());
         showAll();
+        emit trackDownloaded();
     });
 
     connect(&_valueForPositionTimer, &QTimer::timeout, [this]()

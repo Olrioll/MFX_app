@@ -4,9 +4,12 @@
 
 AudioTrackRepresentation::AudioTrackRepresentation(QObject *parent) : QObject(parent)
 {
+    _trackDownloadingTimer.setSingleShot(true);
+    _trackDownloadingTimer.setInterval(1000);
     connect(&_decoder, SIGNAL(bufferReady()), this, SLOT(createBuffer()));
+    connect(&_decoder, SIGNAL(bufferReady()), &_trackDownloadingTimer, SLOT(start()));
+    connect(&_trackDownloadingTimer, SIGNAL(timeout()), this, SIGNAL(trackDownloaded()));
     connect(&_decoder, &QAudioDecoder::finished, this, &AudioTrackRepresentation::bufferCreated);
-
 }
 
 float AudioTrackRepresentation::maxAmplitude() const
@@ -28,6 +31,7 @@ void AudioTrackRepresentation::loadFile(const QString &fileName)
     _minAmplitude = 0.f;
     _decoder.setSourceFilename(fileName);
     _decoder.start();
+    _trackDownloadingTimer.start(1000);
 }
 
 void AudioTrackRepresentation::createBuffer()

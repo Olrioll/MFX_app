@@ -100,6 +100,28 @@ Item
         }
     }
 
+    Rectangle
+    {
+        id: leftShadingRect
+        anchors.top: waveformWidget.top
+        anchors.bottom: waveformWidget.bottom
+        anchors.left: waveformWidget.left
+        anchors.right: startPositionMarker.left
+        color: "black"
+        opacity: 0.5
+    }
+
+    Rectangle
+    {
+        id: rightShadingRect
+        anchors.top: waveformWidget.top
+        anchors.bottom: waveformWidget.bottom
+        anchors.right: waveformWidget.right
+        anchors.left: stopPositionMarker.right
+        color: "black"
+        opacity: 0.5
+    }
+
     Flickable
     {
         id: cueViewFlickable
@@ -110,7 +132,17 @@ Item
 
         ScrollBar.vertical: ScrollBar
         {
+            id: cueViewScrollBar
             policy: cueView.height > waveformWidget.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
+            contentItem:
+                Rectangle
+                {
+                    implicitWidth: 10
+                    radius: 2
+                    color: "#c4c4c4"
+                    opacity: parent.pressed ? 0.25 : 0.5
+                }
         }
 
         Item
@@ -189,7 +221,6 @@ Item
                 property var draggingPlatesList: []
                 property var draggingPlatesX: []
                 property var draggingPlatesY: []
-                property bool wasDragging: false
 
                 onPressed:
                 {
@@ -208,7 +239,6 @@ Item
                         {
                             if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
                             {
-                                isDraggingCuePlate = true
                                 pressedCuePlate = cueView.cues[i]
 
                                 draggingPlatesList = []
@@ -218,6 +248,15 @@ Item
                                 draggingPlatesX.push(cueView.cues[i].x)
                                 draggingPlatesY.push(cueView.cues[i].y)
 
+                                for(let j = 0; j < cueView.cues.length; j++)
+                                {
+                                    if(cueView.cues[j].checked && cueView.cues[j] !== pressedCuePlate)
+                                    {
+                                        draggingPlatesList.push(cueView.cues[j])
+                                        draggingPlatesX.push(cueView.cues[j].x)
+                                        draggingPlatesY.push(cueView.cues[j].y)
+                                    }
+                                }
 
                                 break
                             }
@@ -227,6 +266,10 @@ Item
                     if(!pressedCuePlate)
                     {
                         cueView.setActiveCue("")
+                        for(let i = 0; i < cueView.cues.length; i++)
+                        {
+                            cueView.cues[i].checked = false
+                        }
                     }
                 }
 
@@ -237,7 +280,15 @@ Item
 
                     }
 
+                    else
+                    {
+                        if(pressedCuePlate)
+                            pressedCuePlate.checked = !pressedCuePlate.checked
+                    }
+
+                    pressedCuePlate = null
                     isDraggingCuePlate = false
+                    draggingPlatesList = []
                     cueViewFlickable.interactive = true
                 }
 
@@ -252,12 +303,14 @@ Item
                     let dx = mouseX - pressedX
                     let dy = mouseY - pressedY
 
-                    if(isDraggingCuePlate)
+                    if(pressedCuePlate)
                     {
-                        for(var i = 0; i < cueView.cues.length; i++)
+                        isDraggingCuePlate = true
+
+                        for(var i = 0; i < draggingPlatesList.length; i++)
                         {
-                            cueView.cues[i].x = draggingPlatesX[i] + dx
-                            cueView.cues[i].y = draggingPlatesY[i] + dy
+                            draggingPlatesList[i].x = draggingPlatesX[i] + dx
+                            draggingPlatesList[i].y = draggingPlatesY[i] + dy
                         }
                     }
                 }
@@ -272,6 +325,7 @@ Item
 
                     property string name: ""
                     property bool isExpanded: false
+                    property bool checked: false
                     property int collapsedHeight: 10
                     property int expandedHeight: 36
                     property int row
@@ -286,7 +340,7 @@ Item
                         radius: 4
                         color: "#7F27AE60"
                         border.width: 2
-                        border.color: "#27AE60"
+                        border.color: parent.checked ? "#2F80ED" : "#27AE60"
 
                     }
                 }
@@ -489,6 +543,8 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
             hoverEnabled: true
+            image: cursorMovingArea.containsMouse || startPositionMarkerMovingArea.containsMouse || stopPositionMarkerMovingArea.containsMouse ?
+                       "" : "qrc:/zoom"
 
             property alias resizingCenterMarker: resizingCenterMarker
 
@@ -722,6 +778,173 @@ Item
 
     Item
     {
+        id: startPositionMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property int position: 0
+
+        function updatePosition()
+        {
+            startPositionMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+        }
+
+        Canvas
+        {
+            width: 12
+            height: parent.height
+            x: -1
+            y: 12
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.fillStyle = "#ffffff"
+                ctx.lineTo(0, 12)
+                ctx.lineTo(width / 2, 6)
+                ctx.lineTo(0, 0)
+                ctx.closePath()
+                ctx.fill()
+            }
+
+            MouseArea
+            {
+                id: startPositionMarkerMovingArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                drag.target: startPositionMarker
+                drag.axis: Drag.XAxis
+
+                drag.minimumX: 0
+                drag.maximumX: stopPositionMarker.x - 12
+
+                onMouseXChanged:
+                {
+                    let max = waveformWidget.max()
+                    let min = waveformWidget.min()
+                    let msecPerPx = (max - min) / waveformWidget.width
+                    startPositionMarker.position = min + startPositionMarker.x * msecPerPx
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height
+            color: "#ffffff"
+            x: -1
+            y: 24
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                startPositionMarker.updatePosition()
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                startPositionMarker.updatePosition()
+            }
+        }
+    }
+
+    Item
+    {
+        id: stopPositionMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property int position: 0
+
+        function updatePosition()
+        {
+            stopPositionMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+        }
+
+        Canvas
+        {
+            width: 12
+            height: parent.height
+            x: -6
+            y: 12
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.fillStyle = "#ffffff"
+                ctx.moveTo(0, 6)
+                ctx.lineTo(width / 2, 12)
+                ctx.lineTo(width / 2, 0)
+                ctx.lineTo(0, 6)
+                ctx.closePath()
+                ctx.fill()
+            }
+
+            MouseArea
+            {
+                id: stopPositionMarkerMovingArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                drag.target: stopPositionMarker
+                drag.axis: Drag.XAxis
+
+                drag.minimumX: startPositionMarker.x + 12
+                drag.maximumX: mainBackground.width - stopPositionMarker.width
+
+                onMouseXChanged:
+                {
+                    let max = waveformWidget.max()
+                    let min = waveformWidget.min()
+                    let msecPerPx = (max - min) / waveformWidget.width
+                    stopPositionMarker.position = min + stopPositionMarker.x * msecPerPx
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height
+            color: "#ffffff"
+            x: -1
+            y: 24
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                stopPositionMarker.updatePosition()
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                stopPositionMarker.updatePosition()
+            }
+        }
+    }
+
+    Item
+    {
         id: positionCursor
         width: 2
         height: mainBackground.height + 12
@@ -767,6 +990,7 @@ Item
             {
                 id: cursorMovingArea
                 anchors.fill: parent
+                hoverEnabled: true
 
                 drag.target: positionCursor
                 drag.axis: Drag.XAxis
@@ -798,7 +1022,19 @@ Item
             target: waveformWidget
             function onPositionChanged(pos)
             {
-                positionCursor.updatePosition(pos)
+                if(pos < stopPositionMarker.position)
+                {
+                    positionCursor.updatePosition(pos)
+                }
+
+                else
+                {
+                    waveformWidget.pause()
+                    playButton.checked = false
+                    waveformWidget.setPlayerPosition(stopPositionMarker.position)
+                    positionCursor.updatePosition(stopPositionMarker.position)
+                    timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz")
+                }
             }
         }
 
@@ -842,7 +1078,10 @@ Item
 
         onClicked:
         {
-            waveformWidget.stop()
+            waveformWidget.pause()
+            waveformWidget.setPlayerPosition(startPositionMarker.position)
+            positionCursor.updatePosition(startPositionMarker.position)
+            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
             playButton.checked = false
         }
     }
@@ -1296,6 +1535,22 @@ Item
                     setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
                 }
             }
+        }
+    }
+
+    Connections
+    {
+        target: waveformWidget
+        function onTrackDownloaded()
+        {
+            startPositionMarker.position = 60000
+            startPositionMarker.updatePosition()
+            waveformWidget.setPlayerPosition(startPositionMarker.position)
+            positionCursor.updatePosition(startPositionMarker.position)
+            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
+
+            stopPositionMarker.position = 85000
+            stopPositionMarker.updatePosition()
         }
     }
 }

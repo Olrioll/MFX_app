@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QAudioBuffer>
 #include <QAudioDecoder>
+#include <QTimer>
 
 class AudioTrackRepresentation : public QObject
 {
@@ -27,6 +28,7 @@ public slots:
 signals:
 
     void bufferCreated();
+    void trackDownloaded();
 
 private:
 
@@ -38,6 +40,7 @@ private:
     float _maxAmplitude = 0.f;
     float _minAmplitude = 0.f;
 
+    QTimer _trackDownloadingTimer;
 };
 
 #endif // AUDIOTRACKREPRESENTATION_H
