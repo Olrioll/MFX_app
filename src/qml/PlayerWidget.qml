@@ -1716,18 +1716,25 @@ Item
         target: waveformWidget
         function onTrackDownloaded()
         {
+            if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
+            {
+                project.setProperty("startPosition", 0)
+                project.setProperty("stopPosition", waveformWidget.duration() - 1)
+                project.setProperty("startLoop", 1)
+                project.setProperty("stopLoop", waveformWidget.duration() - 2)
+            }
+
             startPositionMarker.position = project.property("startPosition")
+            stopPositionMarker.position = project.property("stopPosition")
+            startLoopMarker.position = project.property("startLoop")
+            stopLoopMarker.position = project.property("stopLoop")
+
             startPositionMarker.updatePosition()
             waveformWidget.setPlayerPosition(startPositionMarker.position)
             positionCursor.updatePosition(startPositionMarker.position)
             timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
-
-            stopPositionMarker.position = project.property("stopPosition")
             stopPositionMarker.updatePosition()
-
-            startLoopMarker.position = project.property("startLoop")
             startLoopMarker.updatePosition()
-            stopLoopMarker.position = project.property("stopLoop")
             stopLoopMarker.updatePosition()
         }
     }
@@ -1737,7 +1744,7 @@ Item
         target: waveformWidget
         function onPositionChanged(pos)
         {
-            if(pos >= stopLoopMarker.position && repeatButton.checked)
+            if(repeatButton.checked && pos >= stopLoopMarker.position)
             {
                 waveformWidget.setPlayerPosition(startLoopMarker.position)
             }

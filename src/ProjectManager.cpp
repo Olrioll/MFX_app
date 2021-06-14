@@ -120,10 +120,7 @@ void ProjectManager::newProject()
     setProperty("sceneFrameY", 0.1);
     setProperty("sceneImageWidth", 0);
     setProperty("sceneScaleFactor", 1.0);
-    setProperty("startPosition", 1);
-    setProperty("stopPosition", 1000);
-    setProperty("startLoop", 300);
-    setProperty("stopLoop", 600);
+    setProperty("startPosition", -1);
 
     emit groupCountChanged();
     emit patchListChanged();
