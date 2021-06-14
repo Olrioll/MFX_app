@@ -827,6 +827,7 @@ Item
                     let min = waveformWidget.min()
                     let msecPerPx = (max - min) / waveformWidget.width
                     startPositionMarker.position = min + startPositionMarker.x * msecPerPx
+                    project.setProperty("startPosition", startPositionMarker.position)
                 }
             }
         }
@@ -911,6 +912,7 @@ Item
                     let min = waveformWidget.min()
                     let msecPerPx = (max - min) / waveformWidget.width
                     stopPositionMarker.position = min + stopPositionMarker.x * msecPerPx
+                    project.setProperty("stopPosition", stopPositionMarker.position)
                 }
             }
         }
@@ -939,6 +941,198 @@ Item
             function onMinChanged()
             {
                 stopPositionMarker.updatePosition()
+            }
+        }
+    }
+
+    Item
+    {
+        id: startLoopMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property int position: 0
+
+        function updatePosition()
+        {
+            startLoopMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+        }
+
+        Canvas
+        {
+            id: startLoopMarkerCanvas
+            width: 12
+            height: parent.height
+            x: -1
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = repeatButton.checked ? "#F2994A" : "#999999"
+                ctx.lineWidth = 2
+                ctx.moveTo(1, 1)
+                ctx.lineTo(6, 1)
+                ctx.moveTo(1, 1)
+                ctx.lineTo(1, 12)
+                ctx.lineTo(6, 12)
+                ctx.stroke()
+            }
+
+            Connections
+            {
+                target: repeatButton
+                function onCheckedChanged()
+                {
+                    startLoopMarkerCanvas.requestPaint()
+                }
+            }
+
+            MouseArea
+            {
+                id: startLoopMarkerMovingArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                drag.target: startLoopMarker
+                drag.axis: Drag.XAxis
+
+                drag.minimumX: startPositionMarker.x
+                drag.maximumX: stopLoopMarker.x - 12
+
+                onMouseXChanged:
+                {
+                    let max = waveformWidget.max()
+                    let min = waveformWidget.min()
+                    let msecPerPx = (max - min) / waveformWidget.width
+                    startLoopMarker.position = min + startLoopMarker.x * msecPerPx
+                    project.setProperty("startLoop", startLoopMarker.position)
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height + 12
+            color: "#F2994A"
+            visible: repeatButton.checked
+            x: -1
+            y: 12
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                startLoopMarker.updatePosition()
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                startLoopMarker.updatePosition()
+            }
+        }
+    }
+
+    Item
+    {
+        id: stopLoopMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property int position: 0
+
+        function updatePosition()
+        {
+            stopLoopMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+        }
+
+        Canvas
+        {
+            id: stopLoopMarkerCanvas
+            width: 12
+            height: parent.height
+            x: -7
+            y: 0
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = repeatButton.checked ? "#F2994A" : "#999999"
+                ctx.lineWidth = 2
+                ctx.moveTo(1, 1)
+                ctx.lineTo(6, 1)
+                ctx.lineTo(6, 12)
+                ctx.lineTo(1, 12)
+                ctx.stroke()
+            }
+
+            Connections
+            {
+                target: repeatButton
+                function onCheckedChanged()
+                {
+                    stopLoopMarkerCanvas.requestPaint()
+                }
+            }
+
+            MouseArea
+            {
+                id: stopLoopMarkerMovingArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                drag.target: stopLoopMarker
+                drag.axis: Drag.XAxis
+
+                drag.minimumX: startLoopMarker.x + 12
+                drag.maximumX: stopPositionMarker.x
+
+                onMouseXChanged:
+                {
+                    let max = waveformWidget.max()
+                    let min = waveformWidget.min()
+                    let msecPerPx = (max - min) / waveformWidget.width
+                    stopLoopMarker.position = min + stopLoopMarker.x * msecPerPx
+                    project.setProperty("stopLoop", stopLoopMarker.position)
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height + 12
+            color: "#F2994A"
+            visible: repeatButton.checked
+            x: -1
+            y: 12
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                stopLoopMarker.updatePosition()
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                stopLoopMarker.updatePosition()
             }
         }
     }
@@ -1015,27 +1209,6 @@ Item
             color: "#99006DFF"
             x: -1
             y: 24
-        }
-
-        Connections
-        {
-            target: waveformWidget
-            function onPositionChanged(pos)
-            {
-                if(pos < stopPositionMarker.position)
-                {
-                    positionCursor.updatePosition(pos)
-                }
-
-                else
-                {
-                    waveformWidget.pause()
-                    playButton.checked = false
-                    waveformWidget.setPlayerPosition(stopPositionMarker.position)
-                    positionCursor.updatePosition(stopPositionMarker.position)
-                    timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz")
-                }
-            }
         }
 
         Connections
@@ -1543,14 +1716,45 @@ Item
         target: waveformWidget
         function onTrackDownloaded()
         {
-            startPositionMarker.position = 60000
+            startPositionMarker.position = project.property("startPosition")
             startPositionMarker.updatePosition()
             waveformWidget.setPlayerPosition(startPositionMarker.position)
             positionCursor.updatePosition(startPositionMarker.position)
             timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
 
-            stopPositionMarker.position = 85000
+            stopPositionMarker.position = project.property("stopPosition")
             stopPositionMarker.updatePosition()
+
+            startLoopMarker.position = project.property("startLoop")
+            startLoopMarker.updatePosition()
+            stopLoopMarker.position = project.property("stopLoop")
+            stopLoopMarker.updatePosition()
+        }
+    }
+
+    Connections
+    {
+        target: waveformWidget
+        function onPositionChanged(pos)
+        {
+            if(pos >= stopLoopMarker.position && repeatButton.checked)
+            {
+                waveformWidget.setPlayerPosition(startLoopMarker.position)
+            }
+
+            if(pos < stopPositionMarker.position)
+            {
+                positionCursor.updatePosition(pos)
+            }
+
+            else
+            {
+                waveformWidget.pause()
+                playButton.checked = false
+                waveformWidget.setPlayerPosition(stopPositionMarker.position)
+                positionCursor.updatePosition(stopPositionMarker.position)
+                timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz")
+            }
         }
     }
 }
