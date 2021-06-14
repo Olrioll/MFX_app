@@ -100,233 +100,240 @@ Item
         }
     }
 
-    Item
+    Flickable
     {
-        id: cueView
+        id: cueViewFlickable
         anchors.fill: waveformWidget
+        contentHeight: cueView.height
+        clip: true
 
-        property var cues: []
 
-        function msecToPixels(value)
+        ScrollBar.vertical: ScrollBar
         {
-            return cueView.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            policy: cueView.height > waveformWidget.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
         }
 
-        function setActiveCue(name)
+        Item
         {
-            for(let i = 0; i < cues.length; i++)
+            id: cueView
+            width: waveformWidget.width
+            property var cues: []
+
+            function msecToPixels(value)
             {
-                let currCue = cues[i]
-                if(currCue.name === name)
-                    currCue.isExpanded = true
-                else
-                    currCue.isExpanded = false
+                return cueView.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
             }
 
-            refresh()
-        }
-
-        function refresh()
-        {
-            // определяем кол-во строк
-            let maxRow = -1
-            for(var i = 0; i < cues.length; i++)
+            function setActiveCue(name)
             {
-                if(cues[i].row > maxRow)
-                    maxRow = cues[i].row
-            }
-
-            let prevRowsHeight = 0
-            let currHeight = 10
-            for(var j = 0; j < maxRow + 1; j++)
-            {
-                for(i = 0; i < cues.length; i++)
+                for(let i = 0; i < cues.length; i++)
                 {
                     let currCue = cues[i]
-                    if(currCue.row === j)
-                    {
-                        if(currCue.isExpanded)
-                        {
-                            currHeight = currCue.expandedHeight
-                        }
-
-                        currCue.y = prevRowsHeight + 2
-                        currCue.x = cueView.msecToPixels(currCue.position)
-                        currCue.width = cueView.msecToPixels(currCue.position + currCue.duration) - currCue.x
-                    }
+                    if(currCue.name === name)
+                        currCue.isExpanded = true
+                    else
+                        currCue.isExpanded = false
                 }
 
-                prevRowsHeight += currHeight + 2
-                currHeight = 10
+                refresh()
             }
-        }
 
-        MouseAreaWithHidingCursor
-        {
-            id: mouseArea
-            anchors.fill: parent
-
-            property int pressedX
-            property int pressedY
-            property var pressedCuePlate: null
-            property bool isDraggingCuePlate
-
-            property var draggingPlatesList: []
-            property var draggingPlatesX: []
-            property var draggingPlatesY: []
-            property bool wasDragging: false         
-
-            onPressed:
+            function refresh()
             {
-                pressedX = mouseX
-                pressedY = mouseY
-                pressedCuePlate = null
-
-                for(var i = 0; i < cueView.cues.length; i++)
+                // определяем кол-во строк
+                let maxRow = -1
+                for(var i = 0; i < cues.length; i++)
                 {
-                    let currCoord = cueView.cues[i].mapToItem(cueView, 0, 0);
-                    let currWidth = cueView.cues[i].width
-                    let currHeight = cueView.cues[i].height
+                    if(cues[i].row > maxRow)
+                        maxRow = cues[i].row
+                }
 
-                    if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
+                let prevRowsHeight = 0
+                let currHeight = 10
+                for(var j = 0; j < maxRow + 1; j++)
+                {
+                    for(i = 0; i < cues.length; i++)
                     {
-                        if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
+                        let currCue = cues[i]
+                        if(currCue.row === j)
                         {
-                            isDraggingCuePlate = true
-                            pressedCuePlate = cueView.cues[i]
+                            if(currCue.isExpanded)
+                            {
+                                currHeight = currCue.expandedHeight
+                            }
 
-                            draggingPlatesList = []
-                            draggingPlatesX = []
-                            draggingPlatesY = []
-                            draggingPlatesList.push(cueView.cues[i])
-                            draggingPlatesX.push(cueView.cues[i].x)
-                            draggingPlatesY.push(cueView.cues[i].y)
-
-
-                            break
+                            currCue.y = prevRowsHeight + 2
+                            currCue.x = cueView.msecToPixels(currCue.position)
+                            currCue.width = cueView.msecToPixels(currCue.position + currCue.duration) - currCue.x
                         }
                     }
+
+                    prevRowsHeight += currHeight + 2
+                    currHeight = 10
                 }
 
-                if(!pressedCuePlate)
-                {
-                    cueView.setActiveCue("")
-                }
+                cueView.height = prevRowsHeight
             }
 
-            onReleased:
+            MouseAreaWithHidingCursor
             {
-                if(isDraggingCuePlate)
+                id: mouseArea
+                anchors.fill: parent
+                propagateComposedEvents: false
+
+                property int pressedX
+                property int pressedY
+                property var pressedCuePlate: null
+                property bool isDraggingCuePlate
+
+                property var draggingPlatesList: []
+                property var draggingPlatesX: []
+                property var draggingPlatesY: []
+                property bool wasDragging: false
+
+                onPressed:
                 {
+                    cueViewFlickable.interactive = false
+                    pressedX = mouseX
+                    pressedY = mouseY
+                    pressedCuePlate = null
 
-                }
-
-                isDraggingCuePlate = false
-            }
-
-            onDoubleClicked:
-            {
-                if(pressedCuePlate)
-                    cueView.setActiveCue(pressedCuePlate.name)
-            }
-
-            onPositionChanged:
-            {
-                let dx = mouseX - pressedX
-                let dy = mouseY - pressedY
-
-                if(isDraggingCuePlate)
-                {
                     for(var i = 0; i < cueView.cues.length; i++)
                     {
-                        cueView.cues[i].x = draggingPlatesX[i] + dx
-                        cueView.cues[i].y = draggingPlatesY[i] + dy
+                        let currCoord = cueView.cues[i].mapToItem(cueView, 0, 0);
+                        let currWidth = cueView.cues[i].width
+                        let currHeight = cueView.cues[i].height
+
+                        if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
+                        {
+                            if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
+                            {
+                                isDraggingCuePlate = true
+                                pressedCuePlate = cueView.cues[i]
+
+                                draggingPlatesList = []
+                                draggingPlatesX = []
+                                draggingPlatesY = []
+                                draggingPlatesList.push(cueView.cues[i])
+                                draggingPlatesX.push(cueView.cues[i].x)
+                                draggingPlatesY.push(cueView.cues[i].y)
+
+
+                                break
+                            }
+                        }
+                    }
+
+                    if(!pressedCuePlate)
+                    {
+                        cueView.setActiveCue("")
+                    }
+                }
+
+                onReleased:
+                {
+                    if(isDraggingCuePlate)
+                    {
+
+                    }
+
+                    isDraggingCuePlate = false
+                    cueViewFlickable.interactive = true
+                }
+
+                onDoubleClicked:
+                {
+                    if(pressedCuePlate)
+                        cueView.setActiveCue(pressedCuePlate.name)
+                }
+
+                onPositionChanged:
+                {
+                    let dx = mouseX - pressedX
+                    let dy = mouseY - pressedY
+
+                    if(isDraggingCuePlate)
+                    {
+                        for(var i = 0; i < cueView.cues.length; i++)
+                        {
+                            cueView.cues[i].x = draggingPlatesX[i] + dx
+                            cueView.cues[i].y = draggingPlatesY[i] + dy
+                        }
                     }
                 }
             }
-        }
 
-        Component
-        {
-            id: cuePlate
-            Item
+            Component
             {
-                height: isExpanded ? expandedHeight : collapsedHeight
-
-                property string name: ""
-                property bool isExpanded: false
-                property int collapsedHeight: 10
-                property int expandedHeight: 36
-                property int row
-                property int position // в мсек
-                property int duration  // в мсек
-
-                Rectangle
+                id: cuePlate
+                Item
                 {
-                    id: frame
-                    anchors.fill: parent
+                    height: isExpanded ? expandedHeight : collapsedHeight
 
-                    radius: 4
-                    color: "#7F27AE60"
-                    border.width: 2
-                    border.color: "#27AE60"
+                    property string name: ""
+                    property bool isExpanded: false
+                    property int collapsedHeight: 10
+                    property int expandedHeight: 36
+                    property int row
+                    property int position // в мсек
+                    property int duration  // в мсек
 
+                    Rectangle
+                    {
+                        id: frame
+                        anchors.fill: parent
+
+                        radius: 4
+                        color: "#7F27AE60"
+                        border.width: 2
+                        border.color: "#27AE60"
+
+                    }
                 }
-
-//                MouseArea
-//                {
-//                    id: mouseArea
-//                    anchors.fill: parent
-
-//                    onDoubleClicked:
-//                    {
-//                        cueView.setActiveCue(name)
-//                    }
-//                }
             }
-        }
 
-        Component.onCompleted:
-        {
-            cues.push(cuePlate.createObject(cueView, {name: "cue1", row: 0, position: 1000, duration: 10000}))
-            cues.push(cuePlate.createObject(cueView, {name: "cue2",  row: 1, position: 2000, duration: 10000}))
-            cues.push(cuePlate.createObject(cueView, {name: "cue3", row: 3, position: 10000, duration: 8000}))
-            cues.push(cuePlate.createObject(cueView, {name: "cue4", row: 6, position: 12000, duration: 18000}))
-        }
-
-        Connections
-        {
-            target: waveformWidget
-            function onMaxChanged()
+            Component.onCompleted:
             {
-                cueView.refresh()
+                cues.push(cuePlate.createObject(cueView, {name: "cue1", row: 0, position: 1000, duration: 10000}))
+                cues.push(cuePlate.createObject(cueView, {name: "cue2",  row: 1, position: 2000, duration: 10000}))
+                cues.push(cuePlate.createObject(cueView, {name: "cue3", row: 8, position: 10000, duration: 8000}))
+                cues.push(cuePlate.createObject(cueView, {name: "cue4", row: 15, position: 12000, duration: 18000}))
             }
-        }
 
-        Connections
-        {
-            target: waveformWidget
-            function onMinChanged()
+            Connections
             {
-                cueView.refresh()
+                target: waveformWidget
+                function onMaxChanged()
+                {
+                    cueView.refresh()
+                }
             }
-        }
 
-        Connections
-        {
-            target: cueView
-            function onWidthChanged()
+            Connections
             {
-                cueView.refresh()
+                target: waveformWidget
+                function onMinChanged()
+                {
+                    cueView.refresh()
+                }
             }
-        }
 
-        Connections
-        {
-            target: cueView
-            function onHeightChanged()
+            Connections
             {
-                cueView.refresh()
+                target: cueView
+                function onWidthChanged()
+                {
+                    cueView.refresh()
+                }
+            }
+
+            Connections
+            {
+                target: cueView
+                function onHeightChanged()
+                {
+                    cueView.refresh()
+                }
             }
         }
     }
@@ -607,6 +614,7 @@ Item
                             else
                             {
                                 waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
+                                resizingCenterMarker.x = 1
                             }
                         }
                     }
@@ -615,7 +623,7 @@ Item
                     {
                         if(waveformWidget.minSample() - dX >= 0)
                         {
-                            if(resizingCenterMarker.x + Math.abs(dx) * coeff < width)
+                            if(resizingCenterMarker.x + Math.abs(dx) * coeff < width - 9)
                             {
                                 waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
                                 waveformWidget.setMinSample(waveformWidget.minSample() - dX)
@@ -625,6 +633,7 @@ Item
                             else
                             {
                                 waveformWidget.setMinSample(waveformWidget.minSample() - dX)
+                                resizingCenterMarker.x = width - 9
                             }
                         }
                     }
