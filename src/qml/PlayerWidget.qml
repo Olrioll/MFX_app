@@ -1724,6 +1724,7 @@ Item
                 project.setProperty("stopLoop", waveformWidget.duration() - 2)
             }
 
+            waveformWidget.showAll();
             startPositionMarker.position = project.property("startPosition")
             stopPositionMarker.position = project.property("stopPosition")
             startLoopMarker.position = project.property("startLoop")
@@ -1736,6 +1737,15 @@ Item
             stopPositionMarker.updatePosition()
             startLoopMarker.updatePosition()
             stopLoopMarker.updatePosition()
+        }
+    }
+
+    Connections
+    {
+        target: scrollBackgroundWaveform
+        function onTrackDownloaded()
+        {
+            scrollBackgroundWaveform.showAll()
         }
     }
 

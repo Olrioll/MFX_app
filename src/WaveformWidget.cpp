@@ -9,7 +9,6 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
     connect(&_track, &AudioTrackRepresentation::trackDownloaded, [this]()
     {
         _ratio = static_cast<float>(_track.samplesCount()) / static_cast<float>(_player.duration());
-        showAll();
         emit trackDownloaded();
     });
 
