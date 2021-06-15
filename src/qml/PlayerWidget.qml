@@ -1194,10 +1194,13 @@ Item
 
                 onMouseXChanged:
                 {
-                    let max = waveformWidget.max()
-                    let min = waveformWidget.min()
-                    let msecPerPx = (max - min) / waveformWidget.width
-                    waveformWidget.setPlayerPosition(min + positionCursor.x * msecPerPx)
+                    if(mouse.buttons === Qt.LeftButton)
+                    {
+                        let max = waveformWidget.max()
+                        let min = waveformWidget.min()
+                        let msecPerPx = (max - min) / waveformWidget.width
+                        waveformWidget.setPlayerPosition(min + positionCursor.x * msecPerPx)
+                    }
                 }
             }
         }
