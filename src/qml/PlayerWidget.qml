@@ -697,7 +697,7 @@ Item
 
                 else // Работаем с зумом
                 {
-                    zoom(-dy)
+                    zoom(dy)
                 }
             }
 
@@ -809,11 +809,12 @@ Item
                 ctx.fill()
             }
 
-            MouseArea
+            MouseAreaWithHidingCursor
             {
                 id: startPositionMarkerMovingArea
                 anchors.fill: parent
                 hoverEnabled: true
+                cursor: Qt.SizeHorCursor
 
                 drag.target: startPositionMarker
                 drag.axis: Drag.XAxis
@@ -894,11 +895,12 @@ Item
                 ctx.fill()
             }
 
-            MouseArea
+            MouseAreaWithHidingCursor
             {
                 id: stopPositionMarkerMovingArea
                 anchors.fill: parent
                 hoverEnabled: true
+                cursor: Qt.SizeHorCursor
 
                 drag.target: stopPositionMarker
                 drag.axis: Drag.XAxis
@@ -952,7 +954,7 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        property int position: 0
+        property real position: 0
 
         function updatePosition()
         {
@@ -989,17 +991,28 @@ Item
                 }
             }
 
-            MouseArea
+            MouseAreaWithHidingCursor
             {
                 id: startLoopMarkerMovingArea
                 anchors.fill: parent
                 hoverEnabled: true
+                cursor: Qt.SizeHorCursor
 
                 drag.target: startLoopMarker
                 drag.axis: Drag.XAxis
 
                 drag.minimumX: startPositionMarker.x
                 drag.maximumX: stopLoopMarker.x - 12
+
+                onEntered:
+                {
+                    cursorShape = Qt.SizeHorCursor
+                }
+
+                onExited:
+                {
+                    cursorShape = Qt.ArrowCursor
+                }
 
                 onMouseXChanged:
                 {
@@ -1048,7 +1061,7 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        property int position: 0
+        property real position: 0
 
         function updatePosition()
         {
@@ -1085,11 +1098,12 @@ Item
                 }
             }
 
-            MouseArea
+            MouseAreaWithHidingCursor
             {
                 id: stopLoopMarkerMovingArea
                 anchors.fill: parent
                 hoverEnabled: true
+                cursor: Qt.SizeHorCursor
 
                 drag.target: stopLoopMarker
                 drag.axis: Drag.XAxis
@@ -1180,11 +1194,12 @@ Item
                 ctx.fill()
             }
 
-            MouseArea
+            MouseAreaWithHidingCursor
             {
                 id: cursorMovingArea
                 anchors.fill: parent
                 hoverEnabled: true
+                cursor: Qt.SizeHorCursor
 
                 drag.target: positionCursor
                 drag.axis: Drag.XAxis
