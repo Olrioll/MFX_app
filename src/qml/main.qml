@@ -135,8 +135,6 @@ ApplicationWindow
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-
-            Component.onCompleted: setupSceneWidget(sceneWidget)
         }
 
         MainScreen
@@ -145,6 +143,8 @@ ApplicationWindow
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+            Component.onCompleted: setupSceneWidget(sceneWidget)
         }
 
         OutputScreen
@@ -154,6 +154,8 @@ ApplicationWindow
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
+
+        Component.onCompleted: currentIndex = 1
     }
 
     Item
@@ -327,7 +329,6 @@ ApplicationWindow
                 anchors.left: fileMenuButton.right
                 layer.enabled: false
                 checkable: true
-                checked: true
 
                 bottomPadding: 2
                 topPadding: 2
@@ -368,6 +369,7 @@ ApplicationWindow
                 anchors.left: patchMenuButton.right
                 layer.enabled: false
                 checkable: true
+                checked: true
 
                 bottomPadding: 2
                 topPadding: 2

@@ -812,7 +812,12 @@ Item
             MouseAreaWithHidingCursor
             {
                 id: startPositionMarkerMovingArea
-                anchors.fill: parent
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -6
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
@@ -898,7 +903,12 @@ Item
             MouseAreaWithHidingCursor
             {
                 id: stopPositionMarkerMovingArea
-                anchors.fill: parent
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -4
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
@@ -994,7 +1004,12 @@ Item
             MouseAreaWithHidingCursor
             {
                 id: startLoopMarkerMovingArea
-                anchors.fill: parent
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -4
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
@@ -1101,7 +1116,12 @@ Item
             MouseAreaWithHidingCursor
             {
                 id: stopLoopMarkerMovingArea
-                anchors.fill: parent
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -4
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
@@ -1197,7 +1217,11 @@ Item
             MouseAreaWithHidingCursor
             {
                 id: cursorMovingArea
-                anchors.fill: parent
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
