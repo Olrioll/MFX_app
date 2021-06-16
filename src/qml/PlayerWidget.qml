@@ -660,16 +660,16 @@ Item
                     {
                         if(waveformWidget.maxSample() + dX < waveformWidget.sampleCount())
                         {
+                            waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
+                            waveformWidget.setMinSample(waveformWidget.minSample() + dX)
+
                             if(resizingCenterMarker.x - Math.abs(dx) * coeff > 0)
                             {
-                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
-                                waveformWidget.setMinSample(waveformWidget.minSample() + dX)
                                 resizingCenterMarker.x -= Math.abs(dx) * coeff
                             }
 
                             else
                             {
-                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
                                 resizingCenterMarker.x = 1
                             }
                         }
@@ -679,17 +679,17 @@ Item
                     {
                         if(waveformWidget.minSample() - dX >= 0)
                         {
+                            waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
+                            waveformWidget.setMinSample(waveformWidget.minSample() - dX)
+
                             if(resizingCenterMarker.x + Math.abs(dx) * coeff < width - 9)
                             {
-                                waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
-                                waveformWidget.setMinSample(waveformWidget.minSample() - dX)
                                 resizingCenterMarker.x += Math.abs(dx) * coeff
                             }
 
                             else
                             {
-                                waveformWidget.setMinSample(waveformWidget.minSample() - dX)
-                                resizingCenterMarker.x = width - 9
+                                resizingCenterMarker.x = width - 12
                             }
                         }
                     }
