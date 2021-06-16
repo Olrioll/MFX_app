@@ -9,6 +9,7 @@ Item
     id: mainScreen
 
     property var sceneWidget: null
+    property alias playerWidget: playerWidget
 
     function setupSceneWidget(widget)
     {

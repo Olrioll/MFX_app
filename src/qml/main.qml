@@ -275,6 +275,7 @@ ApplicationWindow
                         text: qsTr("New")
                         onTriggered:
                         {
+                            mainScreen.playerWidget.hidePlayerElements()
                             project.newProject()
                         }
                     }

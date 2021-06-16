@@ -14,6 +14,38 @@ Item
     property int maxHeight: 600
     property int previousY
 
+    function hidePlayerElements()
+    {
+        timeScale.visible = false
+        waveformWidget.visible = false
+        startPositionMarker.visible = false
+        startLoopMarker.visible = false
+        stopPositionMarker.visible = false
+        stopLoopMarker.visible = false
+        positionCursor.visible = false
+
+        waitingText.visible = true
+
+        for (let txt of timeScale.textMarkers)
+        {
+          txt.destroy()
+        }
+        timeScale.textMarkers = []
+
+        timer.text = "00:00:00.000"
+    }
+
+    function showPlayerElements()
+    {
+        timeScale.visible = true
+        waveformWidget.visible = true
+        startPositionMarker.visible = true
+        startLoopMarker.visible = true
+        stopPositionMarker.visible = true
+        stopLoopMarker.visible = true
+        positionCursor.visible = true
+    }
+
     Rectangle
     {
         id: mainBackground
@@ -1753,11 +1785,29 @@ Item
         }
     }
 
+    Text
+    {
+        id: waitingText
+        color: "#eeeeee"
+        padding: 0
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        elide: Text.ElideRight
+        font.family: "Roboto"
+        font.pixelSize: 14
+        text: qsTr("Downloading...")
+
+        anchors.centerIn: waveformBackground
+    }
+
     Connections
     {
         target: waveformWidget
         function onTrackDownloaded()
         {
+            waitingText.visible = false
+            showPlayerElements()
+
             if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
             {
                 project.setProperty("startPosition", 0)
@@ -1816,4 +1866,6 @@ Item
             }
         }
     }
+
+    Component.onCompleted: hidePlayerElements()
 }
