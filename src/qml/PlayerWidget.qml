@@ -857,7 +857,7 @@ Item
                 drag.axis: Drag.XAxis
 
                 drag.minimumX: 0
-                drag.maximumX: stopPositionMarker.x - 12
+                drag.maximumX: stopLoopMarker.x - 12
 
                 onMouseXChanged:
                 {
@@ -866,6 +866,14 @@ Item
                     let msecPerPx = (max - min) / waveformWidget.width
                     startPositionMarker.position = min + startPositionMarker.x * msecPerPx
                     project.setProperty("startPosition", startPositionMarker.position)
+
+                    if(startLoopMarker.position < startPositionMarker.position)
+                    {
+                        startLoopMarker.x = startPositionMarker.x
+                        startLoopMarker.position = startPositionMarker.position
+                        project.setProperty("startLoop", startLoopMarker.position)
+                    }
+
                 }
             }
         }
@@ -947,7 +955,7 @@ Item
                 drag.target: stopPositionMarker
                 drag.axis: Drag.XAxis
 
-                drag.minimumX: startPositionMarker.x + 12
+                drag.minimumX: startLoopMarker.x + 12
                 drag.maximumX: mainBackground.width - stopPositionMarker.width
 
                 onMouseXChanged:
@@ -957,6 +965,13 @@ Item
                     let msecPerPx = (max - min) / waveformWidget.width
                     stopPositionMarker.position = min + stopPositionMarker.x * msecPerPx
                     project.setProperty("stopPosition", stopPositionMarker.position)
+
+                    if(stopLoopMarker.position > stopPositionMarker.position)
+                    {
+                        stopLoopMarker.x = stopPositionMarker.x
+                        stopLoopMarker.position = stopPositionMarker.position
+                        project.setProperty("stopLoop", stopLoopMarker.position)
+                    }
                 }
             }
         }
@@ -1014,7 +1029,7 @@ Item
             {
                 var ctx = getContext("2d")
                 ctx.miterLimit = 0.1
-                ctx.strokeStyle = repeatButton.checked ? "#F2994A" : "#999999"
+                ctx.strokeStyle = "#F2994A"
                 ctx.lineWidth = 2
                 ctx.moveTo(1, 1)
                 ctx.lineTo(6, 1)
@@ -1048,7 +1063,8 @@ Item
                 drag.target: startLoopMarker
                 drag.axis: Drag.XAxis
 
-                drag.minimumX: startPositionMarker.x
+//                drag.minimumX: startPositionMarker.x
+                drag.minimumX: 0
                 drag.maximumX: stopLoopMarker.x - 12
 
                 onEntered:
@@ -1068,6 +1084,13 @@ Item
                     let msecPerPx = (max - min) / waveformWidget.width
                     startLoopMarker.position = min + startLoopMarker.x * msecPerPx
                     project.setProperty("startLoop", startLoopMarker.position)
+
+                    if(startPositionMarker.position > startLoopMarker.position)
+                    {
+                        startPositionMarker.x = startLoopMarker.x
+                        startPositionMarker.position = startLoopMarker.position
+                        project.setProperty("startPosition", startPositionMarker.position)
+                    }
                 }
             }
         }
@@ -1127,7 +1150,7 @@ Item
             {
                 var ctx = getContext("2d")
                 ctx.miterLimit = 0.1
-                ctx.strokeStyle = repeatButton.checked ? "#F2994A" : "#999999"
+                ctx.strokeStyle = "#F2994A"
                 ctx.lineWidth = 2
                 ctx.moveTo(1, 1)
                 ctx.lineTo(6, 1)
@@ -1161,7 +1184,8 @@ Item
                 drag.axis: Drag.XAxis
 
                 drag.minimumX: startLoopMarker.x + 12
-                drag.maximumX: stopPositionMarker.x
+//                drag.maximumX: stopPositionMarker.x
+                drag.maximumX: waveformWidget.width
 
                 onMouseXChanged:
                 {
@@ -1170,6 +1194,13 @@ Item
                     let msecPerPx = (max - min) / waveformWidget.width
                     stopLoopMarker.position = min + stopLoopMarker.x * msecPerPx
                     project.setProperty("stopLoop", stopLoopMarker.position)
+
+                    if(stopPositionMarker.position < stopLoopMarker.position)
+                    {
+                        stopPositionMarker.x = stopLoopMarker.x
+                        stopPositionMarker.position = stopLoopMarker.position
+                        project.setProperty("stopPosition", stopPositionMarker.position)
+                    }
                 }
             }
         }
