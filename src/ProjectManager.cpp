@@ -91,6 +91,16 @@ void ProjectManager::loadProject(QString fileName)
             _patches.push_back(Patch(patch.toObject()));
         }
 
+        // Загружаем список кьюшек
+
+        _cues.clear();
+
+        auto cuesArray = _project["cues"].toArray();
+        foreach(auto cue, cuesArray)
+        {
+            _cues.push_back(Cue(cue.toObject()));
+        }
+
         // Загружаем свойства
 
         _properties.clear();
@@ -111,6 +121,7 @@ void ProjectManager::newProject()
 
     _groups.clear();
     _patches.clear();
+    _cues.clear();
     _properties.clear();
 
     _currentProjectFile = "";
@@ -158,6 +169,16 @@ void ProjectManager::saveProject()
     }
 
     _project.insert("patches", patchesArray);
+
+    // Сохраняем список кьюшек
+
+    QJsonArray cuesArray;
+    foreach(auto cue, _cues)
+    {
+        cuesArray.append(cue.toJsonObject());
+    }
+
+    _project.insert("cues", cuesArray);
 
     // Сохраняем свойства
 
@@ -590,6 +611,79 @@ QList<int> ProjectManager::patchesIdList(QString groupName) const
     }
 
     return QList<int> {};
+}
+
+void ProjectManager::addCue(QVariantList properties)
+{
+    Cue cue;
+
+    foreach(auto prop, properties)
+    {
+        cue.properties.push_back({prop.toMap().first().toString(), prop.toMap().last()});
+    }
+    _cues.push_back(cue);
+}
+
+int ProjectManager::CueCount() const
+{
+    return _cues.size();
+}
+
+int ProjectManager::maxCueRow() const
+{
+    int count = 0;
+    for(auto & cue : _cues)
+    {
+        if(cue.property("row").toInt() > count)
+            count = cue.property("row").toInt();
+    }
+
+    return count;
+}
+
+QVariant ProjectManager::getCueProperties(QString name) const
+{
+    QVariantMap cueProperties;
+    for(auto & cue : _cues)
+    {
+        if(cue.property(name).toString() == name)
+        {
+            for(auto & prop : cue.properties)
+            {
+                cueProperties.insert(prop.first, prop.second);
+            }
+        }
+    }
+
+    return cueProperties;
+}
+
+QVariantList ProjectManager::getCues() const
+{
+    QVariantList cuesList;
+    for(auto & cue : _cues)
+    {
+        QVariantMap cueProperties;
+        for(auto & prop : cue.properties)
+        {
+            cueProperties.insert(prop.first, prop.second);
+        }
+
+        cuesList.push_back(cueProperties);
+    }
+
+    return cuesList;
+}
+
+void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVariant value)
+{
+    for(auto & cue : _cues)
+    {
+        if(cue.property("name") == cueName)
+        {
+            cue.setProperty(propertyName, value);
+        }
+    }
 }
 
 QString ProjectManager::patchType(int index) const

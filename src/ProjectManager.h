@@ -114,6 +114,65 @@ public:
         }
     };
 
+    struct Cue
+    {
+        QList<QPair<QString, QVariant>> properties;
+
+        Cue() {}
+
+        Cue(const QJsonObject& cueObject)
+        {
+            foreach(auto property, cueObject["properties"].toArray())
+            {
+                auto propObject = property.toObject();
+                auto key = propObject.keys().first();
+                properties.push_back({key, propObject.value(key).toVariant()});
+            }
+
+        }
+
+        QJsonObject toJsonObject() const
+        {
+            QJsonObject cueObject;
+
+            QJsonArray propertiesArray;
+            foreach(auto prop, properties)
+            {
+                QJsonObject propObject;
+                propObject.insert(prop.first, prop.second.toJsonValue());
+                propertiesArray.append(propObject);
+            }
+
+            cueObject.insert("properties", propertiesArray);
+            return cueObject;
+        }
+
+        QVariant property(QString name) const
+        {
+            foreach(auto prop, properties)
+            {
+                if(prop.first == name)
+                    return prop.second;
+            }
+
+            return 0;
+        }
+
+        void setProperty(QString name, QVariant value)
+        {
+            for(auto & prop : properties)
+            {
+                if(prop.first == name)
+                {
+                    prop.second = value;
+                    return;
+                }
+            }
+
+            properties.push_back({name, value});
+        }
+    };
+
     ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
     ~ProjectManager();
 
@@ -167,6 +226,13 @@ public slots:
     int patchIndexForId(int id) const;
     QList<int> patchesIdList(QString groupName) const;
 
+    void addCue(QVariantList properties);
+    int CueCount() const;
+    int maxCueRow() const;
+    QVariant getCueProperties(QString name) const;
+    QVariantList getCues() const;
+    void setCueProperty(QString cueName, QString propertyName, QVariant value);
+
     QString patchType(int index) const;
     QStringList patchPropertiesNames(int index) const;
     QList<QVariant> patchPropertiesValues(int index) const;
@@ -199,6 +265,7 @@ private:
     QJsonObject _project;
     QList<Group> _groups;
     QList<Patch> _patches;
+    QList<Cue> _cues;
 
     QVariantMap _properties;
 

@@ -181,22 +181,65 @@ Item
         {
             id: cueView
             width: waveformWidget.width
-            property var cues: []
+            property var rows: []
 
             function msecToPixels(value)
             {
                 return cueView.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
             }
 
+            function clearRows()
+            {
+                for(var j = 0; j < rows.length; j++)
+                {
+                    let currRow = rows[j]
+                    for(var i = 0; i < currRow.length; i++)
+                    {
+                        currRow[i].destroy()
+                    }
+                }
+
+                rows = []
+            }
+
+            function loadCues()
+            {
+                clearRows()
+
+                for(var i = 0; i < project.maxCueRow() + 1; i++)
+                {
+                    rows.push([])
+                }
+
+                let cuesList = project.getCues();
+
+                for(i = 0; i < cuesList.length; i++)
+                {
+                    let currCueProperties = cuesList[i];
+                    rows[currCueProperties["row"]].push(
+                                                        cuePlate.createObject(cueView,
+                                                          {
+                                                              name: currCueProperties["name"],
+                                                              row: currCueProperties["row"],
+                                                              position: currCueProperties["position"],
+                                                              duration: currCueProperties["duration"]
+                                                          }))
+                    }
+            }
+
             function setActiveCue(name)
             {
-                for(let i = 0; i < cues.length; i++)
+                for(var j = 0; j < cueView.rows.length; j++)
                 {
-                    let currCue = cues[i]
-                    if(currCue.name === name)
-                        currCue.isExpanded = true
-                    else
-                        currCue.isExpanded = false
+                    let currRow = cueView.rows[j]
+                    for(var i = 0; i < currRow.length; i++)
+                    {
+                        let currCue = currRow[i]
+                        if(currCue.name === name)
+                            currCue.isExpanded = true
+                        else
+                            currCue.isExpanded = false
+                    }
                 }
 
                 refresh()
@@ -204,32 +247,22 @@ Item
 
             function refresh()
             {
-                // определяем кол-во строк
-                let maxRow = -1
-                for(var i = 0; i < cues.length; i++)
-                {
-                    if(cues[i].row > maxRow)
-                        maxRow = cues[i].row
-                }
-
                 let prevRowsHeight = 0
                 let currHeight = 10
-                for(var j = 0; j < maxRow + 1; j++)
+                for(var j = 0; j < rows.length; j++)
                 {
-                    for(i = 0; i < cues.length; i++)
+                    let currRow = rows[j]
+                    for(var i = 0; i < currRow.length; i++)
                     {
-                        let currCue = cues[i]
-                        if(currCue.row === j)
+                        let currCue = currRow[i]
+                        if(currCue.isExpanded)
                         {
-                            if(currCue.isExpanded)
-                            {
-                                currHeight = currCue.expandedHeight
-                            }
-
-                            currCue.y = prevRowsHeight + 2
-                            currCue.x = cueView.msecToPixels(currCue.position)
-                            currCue.width = cueView.msecToPixels(currCue.position + currCue.duration) - currCue.x
+                            currHeight = currCue.expandedHeight
                         }
+
+                        currCue.y = prevRowsHeight + 2
+                        currCue.x = cueView.msecToPixels(currCue.position)
+                        currCue.width = cueView.msecToPixels(currCue.position + currCue.duration) - currCue.x
                     }
 
                     prevRowsHeight += currHeight + 2
@@ -261,36 +294,48 @@ Item
                     pressedY = mouseY
                     pressedCuePlate = null
 
-                    for(var i = 0; i < cueView.cues.length; i++)
+                    for(var j = 0; j < cueView.rows.length; j++)
                     {
-                        let currCoord = cueView.cues[i].mapToItem(cueView, 0, 0);
-                        let currWidth = cueView.cues[i].width
-                        let currHeight = cueView.cues[i].height
+                        let currRow = cueView.rows[j]
 
-                        if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
+                        for(var i = 0; i < currRow.length; i++)
                         {
-                            if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
+                            var currCoord = currRow[i].mapToItem(cueView, 0, 0);
+                            var currWidth = currRow[i].width
+                            var currHeight = currRow[i].height
+
+                            if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
                             {
-                                pressedCuePlate = cueView.cues[i]
-
-                                draggingPlatesList = []
-                                draggingPlatesX = []
-                                draggingPlatesY = []
-                                draggingPlatesList.push(cueView.cues[i])
-                                draggingPlatesX.push(cueView.cues[i].x)
-                                draggingPlatesY.push(cueView.cues[i].y)
-
-                                for(let j = 0; j < cueView.cues.length; j++)
+                                if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
                                 {
-                                    if(cueView.cues[j].checked && cueView.cues[j] !== pressedCuePlate)
-                                    {
-                                        draggingPlatesList.push(cueView.cues[j])
-                                        draggingPlatesX.push(cueView.cues[j].x)
-                                        draggingPlatesY.push(cueView.cues[j].y)
-                                    }
-                                }
+                                    pressedCuePlate = currRow[i]
 
-                                break
+                                    draggingPlatesList = []
+                                    draggingPlatesX = []
+                                    draggingPlatesY = []
+                                    draggingPlatesList.push(currRow[i])
+                                    draggingPlatesX.push(currRow[i].x)
+                                    draggingPlatesY.push(currRow[i].y)
+
+                                    for(var k = 0; k < cueView.rows.length; k++)
+                                    {
+                                        let currRow2 = cueView.rows[k]
+
+                                        for(var l = 0; l < currRow2.length; l++)
+                                        {
+                                            if(currRow2[l].checked && currRow2[l] !== pressedCuePlate)
+                                            {
+                                                draggingPlatesList.push(currRow2[l])
+                                                draggingPlatesX.push(currRow2[l].x)
+                                                draggingPlatesY.push(currRow2[l].y)
+                                            }
+                                        }
+
+                                    }
+
+                                    j = cueView.rows.length
+                                    break
+                                }
                             }
                         }
                     }
@@ -298,9 +343,14 @@ Item
                     if(!pressedCuePlate)
                     {
                         cueView.setActiveCue("")
-                        for(let i = 0; i < cueView.cues.length; i++)
+                        for(j = 0; j < cueView.rows.length; j++)
                         {
-                            cueView.cues[i].checked = false
+                            let currRow = cueView.rows[j]
+
+                            for(i = 0; i < currRow.length; i++)
+                            {
+                                currRow[i].checked = false
+                            }
                         }
                     }
                 }
@@ -309,7 +359,35 @@ Item
                 {
                     if(isDraggingCuePlate)
                     {
+                        // перетаскивали одну плашку
+                        if(draggingPlatesList.length === 1)
+                        {
+                            let shiftNeeded = false
+                            for(let i = 0; i < cueView.cues.length; i++)
+                            {
+                                let currPlate = cueView.cues[i]
 
+                                if(shiftNeeded)
+                                {
+                                    if(currPlate.row >= pressedCuePlate.row)
+                                        currPlate.row += 1
+                                }
+
+                                if(pressedCuePlate.name !== currPlate.name)
+                                {
+                                    if(pressedCuePlate.x >= currPlate.x && pressedCuePlate.x <= currPlate.x + currPlate.width)
+                                    {
+                                        if(pressedCuePlate.y >= currPlate.y && pressedCuePlate.y <= currPlate.y + currPlate.height + 2) // попали на другую плашку
+                                        {
+                                            pressedCuePlate.row = currPlate.row + 1
+                                            shiftNeeded = true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        cueView.refresh();
                     }
 
                     else
@@ -380,10 +458,47 @@ Item
 
             Component.onCompleted:
             {
-                cues.push(cuePlate.createObject(cueView, {name: "cue1", row: 0, position: 1000, duration: 10000}))
-                cues.push(cuePlate.createObject(cueView, {name: "cue2",  row: 1, position: 2000, duration: 10000}))
-                cues.push(cuePlate.createObject(cueView, {name: "cue3", row: 8, position: 10000, duration: 8000}))
-                cues.push(cuePlate.createObject(cueView, {name: "cue4", row: 15, position: 12000, duration: 18000}))
+                loadCues();
+
+//                project.addCue(
+//                            [
+//                                {propName: "name", propValue: "cue1"},
+//                                {propName: "row", propValue: 0},
+//                                {propName: "position", propValue: 1000},
+//                                {propName: "duration", propValue: 10000}
+//                            ])
+
+//                project.addCue(
+//                            [
+//                                {propName: "name", propValue: "cue2"},
+//                                {propName: "row", propValue: 1},
+//                                {propName: "position", propValue: 2000},
+//                                {propName: "duration", propValue: 10000}
+//                            ])
+
+//                project.addCue(
+//                            [
+//                                {propName: "name", propValue: "cue3"},
+//                                {propName: "row", propValue: 2},
+//                                {propName: "position", propValue: 10000},
+//                                {propName: "duration", propValue: 8000}
+//                            ])
+
+//                project.addCue(
+//                            [
+//                                {propName: "name", propValue: "cue4"},
+//                                {propName: "row", propValue: 10},
+//                                {propName: "position", propValue: 12000},
+//                                {propName: "duration", propValue: 18000}
+//                            ])
+
+//                project.addCue(
+//                            [
+//                                {propName: "name", propValue: "cue5"},
+//                                {propName: "row", propValue: 12},
+//                                {propName: "position", propValue: 16000},
+//                                {propName: "duration", propValue: 12000}
+//                            ])
             }
 
             Connections
