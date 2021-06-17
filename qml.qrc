@@ -62,5 +62,6 @@
         <file>src/qml/MouseAreaWithHidingCursor.qml</file>
         <file alias="zoom">src/img/zoom.png</file>
         <file>src/qml/ZoomingMouseArea.qml</file>
+        <file alias="resize">src/img/resize.png</file>
     </qresource>
 </RCC>

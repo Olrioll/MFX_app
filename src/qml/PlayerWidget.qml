@@ -1751,8 +1751,20 @@ Item
 
             ZoomingMouseArea
             {
-                image: ""
+                id: bottomScrollArea
+                image: "qrc:/resize"
                 anchors.fill: parent
+                hoverEnabled: true
+
+                onPressed:
+                {
+                    bottomScrollArea.cursorImage.visible = false
+                }
+
+                onReleased:
+                {
+                    bottomScrollArea.cursorImage.visible = true
+                }
 
                 onMoved:
                 {

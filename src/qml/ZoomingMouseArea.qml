@@ -38,7 +38,6 @@ MouseAreaWithHidingCursor
         if(!isPressed)
         {
             cursorImage.visible = false
-//            cursorShape = Qt.ArrowCursor
         }
     }
 
