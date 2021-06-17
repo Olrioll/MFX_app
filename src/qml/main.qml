@@ -277,6 +277,14 @@ ApplicationWindow
                         {
                             mainScreen.playerWidget.hidePlayerElements()
                             project.newProject()
+
+                            var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
+                            sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
+                            sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
+
+                            patchScreen.deviceLibWidget.setActive(false)
+                            patchScreen.deviceListWidget.setActive(false)
+                            patchScreen.groupListWidget.setActive(false)
                         }
                     }
                     Action

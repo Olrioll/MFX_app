@@ -10,6 +10,7 @@ Item
     clip: true
 
     property alias backgroundImage: backgroundImage
+     property alias sceneFrameItem: sceneFrameItem
     property var patchIcons: []
     property real scaleFactor: project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
     property real maxScaleFactor: 3.0
@@ -848,7 +849,6 @@ Item
             restorePreviousGeometry()
         }
     }
-
 
     Button
     {

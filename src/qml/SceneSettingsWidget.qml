@@ -377,17 +377,17 @@ Item
                 }
 
                 // Центруем рамку по фоновой картинке
-                let xPos = ((backgroundImage.width - project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width) / 2) / backgroundImage.width
+                let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneFrameWidth") / project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
                 project.setProperty("sceneFrameX", xPos)
 
-                let yPos = ((backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * backgroundImage.height) / 2) / backgroundImage.height
+                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
                 project.setProperty("sceneFrameY", yPos)
 
                 if(choosenAudioFile !== "")
                     project.setAudioTrack(choosenAudioFile)
 
-                sceneFrameItem.restorePreviousGeometry()
-                sceneFrameItem.visible = true
+                sceneWidget.sceneFrameItem.restorePreviousGeometry()
+                sceneWidget.sceneFrameItem.visible = true
                 applicationWindow.isPatchEditorOpened = false
                 sceneSettingsWidget.destroy();
             }
