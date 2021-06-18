@@ -221,6 +221,22 @@ Item
                 rowsHeights = []
             }
 
+            function insertRow(position)
+            {
+                rows.splice(position, 0, [])
+                rowsY.splice(position, 0, 0)
+                rowsHeights.splice(position, 0, 0)
+
+                getCueList().forEach(function(item)
+                {
+                    if(item.row >= position)
+                    {
+                        item.row++
+                        project.setCueProperty(item.name, "row", item.row)
+                    }
+                })
+            }
+
             function loadCues()
             {
                 clearRows()
@@ -244,6 +260,17 @@ Item
                                                               duration: currCueProperties["duration"]
                                                           }))
                     }
+            }
+
+            function getCueList()
+            {
+                let cueList = []
+                rows.forEach(function(item)
+                {
+                    item.forEach(function(item){cueList.push(item)})
+                })
+
+                return cueList
             }
 
             function setActiveCue(name)
@@ -409,7 +436,7 @@ Item
                                         oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
 
                                         let hasIntersection = false
-                                        currRow.forEach(function(item, index, array)
+                                        currRow.forEach(function(item)
                                         {
                                             if(isCuePlatesIntersect(item, draggingPlatesList[0]))
                                                 hasIntersection = true
@@ -417,7 +444,12 @@ Item
 
                                         if(hasIntersection)
                                         {
-
+                                            cueView.insertRow(index + 1)
+                                            cueView.rows[index + 1].push(draggingPlatesList[0])
+                                            draggingPlatesList[0].row = index + 1
+                                            draggingPlatesList[0].position = pixelsToMsec(draggingPlatesList[0].x)
+                                            project.setCueProperty(draggingPlatesList[0].name, "row", draggingPlatesList[0].row)
+                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
                                         }
 
                                         else
@@ -498,6 +530,20 @@ Item
                         border.width: 2
                         border.color: parent.checked ? "#2F80ED" : "#27AE60"
 
+                    }
+
+                    Text
+                    {
+                        id: caption
+                        color: "#ffffff"
+                        text: parent.name
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideMiddle
+                        anchors.centerIn: parent
+                        font.family: "Roboto"
+                        font.pixelSize: 8
+                        visible: parent.width > 0
                     }
                 }
             }
