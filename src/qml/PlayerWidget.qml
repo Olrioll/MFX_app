@@ -56,6 +56,16 @@ Item
         return pixels * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.width + waveformWidget.min()
     }
 
+    function isCuePlatesIntersect(plate1, plate2)
+    {
+        let aLeftOfB = plate1.x + plate1.width < plate2.x;
+        let aRightOfB = plate1.x > plate2.x + plate2.width;
+        let aAboveB = plate1.y > plate2.y + plate2.height;
+        let aBelowB = plate1.y + plate1.height < plate2.y;
+
+        return !( aLeftOfB || aRightOfB || aAboveB || aBelowB );
+    }
+
     Rectangle
     {
         id: mainBackground
@@ -373,13 +383,54 @@ Item
                         // перетаскивали одну плашку
                         if(draggingPlatesList.length === 1)
                         {
-                            for(let i = 0; i < cueView.rows.length; i++)
+                            cueView.rows.forEach(function(item, index, array)
                             {
-                                if(mouseY >= cueView.rowsY[i] && mouseY <= cueView.rowsY[i] + cueView.rowsHeights[i])
+                                if(mouseY >= cueView.rowsY[index] && mouseY <= cueView.rowsY[index] + cueView.rowsHeights[index])
                                 {
-                                    console.log(i)
+                                    let oldRow = cueView.rows[draggingPlatesList[0].row]
+
+                                    if(item.length === 0) // Строка пустая
+                                    {
+                                        // удалем иконку кьюшки из старой строки
+                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
+
+                                        draggingPlatesList[0].row = index
+                                        draggingPlatesList[0].position = pixelsToMsec(draggingPlatesList[0].x)
+                                        item.push(draggingPlatesList[0])
+                                        project.setCueProperty(draggingPlatesList[0].name, "row", index)
+                                        project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
+                                    }
+
+                                    else // проверяем пересечение с другими плашками
+                                    {
+                                        let currRow = cueView.rows[index]
+
+                                        // удалем иконку кьюшки из старой строки
+                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
+
+                                        let hasIntersection = false
+                                        currRow.forEach(function(item, index, array)
+                                        {
+                                            if(isCuePlatesIntersect(item, draggingPlatesList[0]))
+                                                hasIntersection = true
+                                        })
+
+                                        if(hasIntersection)
+                                        {
+
+                                        }
+
+                                        else
+                                        {
+                                            draggingPlatesList[0].row = index
+                                            draggingPlatesList[0].position = pixelsToMsec(draggingPlatesList[0].x)
+                                            item.push(draggingPlatesList[0])
+                                            project.setCueProperty(draggingPlatesList[0].name, "row", index)
+                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
+                                        }
+                                    }
                                 }
-                            }
+                            })
                         }
 
                         cueView.refresh();
