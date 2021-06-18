@@ -46,6 +46,16 @@ Item
         positionCursor.visible = true
     }
 
+    function msecToPixels(value)
+    {
+        return waveformWidget.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+    }
+
+    function pixelsToMsec(pixels)
+    {
+        return pixels * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.width + waveformWidget.min()
+    }
+
     Rectangle
     {
         id: mainBackground
@@ -149,7 +159,7 @@ Item
         anchors.top: waveformWidget.top
         anchors.bottom: waveformWidget.bottom
         anchors.right: waveformWidget.right
-        anchors.left: stopPositionMarker.right
+        anchors.left: repeatButton.checked ? stopLoopMarker.right : stopPositionMarker.right
         color: "black"
         opacity: 0.5
     }
@@ -186,6 +196,11 @@ Item
             function msecToPixels(value)
             {
                 return cueView.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            }
+
+            function pixelsToMsec(pixels)
+            {
+                return pixels * (waveformWidget.max() - waveformWidget.min()) / cueView.width + waveformWidget.min()
             }
 
             function clearRows()
@@ -296,7 +311,7 @@ Item
 
                     for(var j = 0; j < cueView.rows.length; j++)
                     {
-                        let currRow = cueView.rows[j]
+                        var currRow = cueView.rows[j]
 
                         for(var i = 0; i < currRow.length; i++)
                         {
@@ -486,17 +501,17 @@ Item
 
 //                project.addCue(
 //                            [
-//                                {propName: "name", propValue: "cue4"},
-//                                {propName: "row", propValue: 10},
-//                                {propName: "position", propValue: 12000},
+//                                {propName: "name", propValue: "cue5"},
+//                                {propName: "row", propValue: 14},
+//                                {propName: "position", propValue: 25000},
 //                                {propName: "duration", propValue: 18000}
 //                            ])
 
 //                project.addCue(
 //                            [
-//                                {propName: "name", propValue: "cue5"},
-//                                {propName: "row", propValue: 12},
-//                                {propName: "position", propValue: 16000},
+//                                {propName: "name", propValue: "cue6"},
+//                                {propName: "row", propValue: 15},
+//                                {propName: "position", propValue: 7000},
 //                                {propName: "duration", propValue: 12000}
 //                            ])
             }
@@ -934,7 +949,7 @@ Item
 
         function updatePosition()
         {
-            startPositionMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            startPositionMarker.x = msecToPixels(position)
         }
 
         Canvas
@@ -972,14 +987,11 @@ Item
                 drag.axis: Drag.XAxis
 
                 drag.minimumX: 0
-                drag.maximumX: stopLoopMarker.x - 12
 
                 onMouseXChanged:
                 {
-                    let max = waveformWidget.max()
-                    let min = waveformWidget.min()
-                    let msecPerPx = (max - min) / waveformWidget.width
-                    startPositionMarker.position = min + startPositionMarker.x * msecPerPx
+                    drag.maximumX = msecToPixels(stopLoopMarker.position - 1000)
+                    startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
                     project.setProperty("startPosition", startPositionMarker.position)
 
                     if(startLoopMarker.position < startPositionMarker.position)
@@ -1032,7 +1044,7 @@ Item
 
         function updatePosition()
         {
-            stopPositionMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            stopPositionMarker.x = msecToPixels(position)
         }
 
         Canvas
@@ -1070,15 +1082,12 @@ Item
                 drag.target: stopPositionMarker
                 drag.axis: Drag.XAxis
 
-                drag.minimumX: startLoopMarker.x + 12
                 drag.maximumX: mainBackground.width - stopPositionMarker.width
 
                 onMouseXChanged:
                 {
-                    let max = waveformWidget.max()
-                    let min = waveformWidget.min()
-                    let msecPerPx = (max - min) / waveformWidget.width
-                    stopPositionMarker.position = min + stopPositionMarker.x * msecPerPx
+                    drag.minimumX = msecToPixels(startLoopMarker.position + 1000)
+                    stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
                     project.setProperty("stopPosition", stopPositionMarker.position)
 
                     if(stopLoopMarker.position > stopPositionMarker.position)
@@ -1130,7 +1139,7 @@ Item
 
         function updatePosition()
         {
-            startLoopMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            startLoopMarker.x = msecToPixels(position)
         }
 
         Canvas
@@ -1180,7 +1189,6 @@ Item
 
 //                drag.minimumX: startPositionMarker.x
                 drag.minimumX: 0
-                drag.maximumX: stopLoopMarker.x - 12
 
                 onEntered:
                 {
@@ -1194,10 +1202,8 @@ Item
 
                 onMouseXChanged:
                 {
-                    let max = waveformWidget.max()
-                    let min = waveformWidget.min()
-                    let msecPerPx = (max - min) / waveformWidget.width
-                    startLoopMarker.position = min + startLoopMarker.x * msecPerPx
+                    drag.maximumX = msecToPixels(stopLoopMarker.position - 1000)
+                    startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
                     project.setProperty("startLoop", startLoopMarker.position)
 
                     if(startPositionMarker.position > startLoopMarker.position)
@@ -1250,7 +1256,7 @@ Item
 
         function updatePosition()
         {
-            stopLoopMarker.x = waveformBackground.width * (position - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            stopLoopMarker.x = msecToPixels(position)
         }
 
         Canvas
@@ -1298,16 +1304,12 @@ Item
                 drag.target: stopLoopMarker
                 drag.axis: Drag.XAxis
 
-                drag.minimumX: startLoopMarker.x + 12
-//                drag.maximumX: stopPositionMarker.x
                 drag.maximumX: waveformWidget.width
 
                 onMouseXChanged:
                 {
-                    let max = waveformWidget.max()
-                    let min = waveformWidget.min()
-                    let msecPerPx = (max - min) / waveformWidget.width
-                    stopLoopMarker.position = min + stopLoopMarker.x * msecPerPx
+                    drag.minimumX = msecToPixels(startLoopMarker.position + 1000)
+                    stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
                     project.setProperty("stopLoop", stopLoopMarker.position)
 
                     if(stopPositionMarker.position < stopLoopMarker.position)
