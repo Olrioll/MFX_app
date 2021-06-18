@@ -192,16 +192,8 @@ Item
             id: cueView
             width: waveformWidget.width
             property var rows: []
-
-            function msecToPixels(value)
-            {
-                return cueView.width * (value - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
-            }
-
-            function pixelsToMsec(pixels)
-            {
-                return pixels * (waveformWidget.max() - waveformWidget.min()) / cueView.width + waveformWidget.min()
-            }
+            property var rowsY: []
+            property var rowsHeights: []
 
             function clearRows()
             {
@@ -215,6 +207,8 @@ Item
                 }
 
                 rows = []
+                rowsY = []
+                rowsHeights = []
             }
 
             function loadCues()
@@ -276,10 +270,12 @@ Item
                         }
 
                         currCue.y = prevRowsHeight + 2
-                        currCue.x = cueView.msecToPixels(currCue.position)
-                        currCue.width = cueView.msecToPixels(currCue.position + currCue.duration) - currCue.x
+                        currCue.x = msecToPixels(currCue.position)
+                        currCue.width = msecToPixels(currCue.position + currCue.duration) - currCue.x
                     }
 
+                    rowsY[j] = prevRowsHeight + 2
+                    rowsHeights[j] = currHeight
                     prevRowsHeight += currHeight + 2
                     currHeight = 10
                 }
@@ -377,27 +373,11 @@ Item
                         // перетаскивали одну плашку
                         if(draggingPlatesList.length === 1)
                         {
-                            let shiftNeeded = false
-                            for(let i = 0; i < cueView.cues.length; i++)
+                            for(let i = 0; i < cueView.rows.length; i++)
                             {
-                                let currPlate = cueView.cues[i]
-
-                                if(shiftNeeded)
+                                if(mouseY >= cueView.rowsY[i] && mouseY <= cueView.rowsY[i] + cueView.rowsHeights[i])
                                 {
-                                    if(currPlate.row >= pressedCuePlate.row)
-                                        currPlate.row += 1
-                                }
-
-                                if(pressedCuePlate.name !== currPlate.name)
-                                {
-                                    if(pressedCuePlate.x >= currPlate.x && pressedCuePlate.x <= currPlate.x + currPlate.width)
-                                    {
-                                        if(pressedCuePlate.y >= currPlate.y && pressedCuePlate.y <= currPlate.y + currPlate.height + 2) // попали на другую плашку
-                                        {
-                                            pressedCuePlate.row = currPlate.row + 1
-                                            shiftNeeded = true
-                                        }
-                                    }
+                                    console.log(i)
                                 }
                             }
                         }
