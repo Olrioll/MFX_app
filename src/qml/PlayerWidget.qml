@@ -53,7 +53,7 @@ Item
 
     function pixelsToMsec(pixels)
     {
-        return pixels * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.width + waveformWidget.min()
+        return Math.round(pixels * (waveformWidget.max() - waveformWidget.min()) / waveformWidget.width + waveformWidget.min())
     }
 
     function isCuePlatesIntersect(plate1, plate2)
@@ -422,7 +422,7 @@ Item
                                         oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
 
                                         draggingPlatesList[0].row = index
-                                        draggingPlatesList[0].position = pixelsToMsec(draggingPlatesList[0].x)
+                                        draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
                                         item.push(draggingPlatesList[0])
                                         project.setCueProperty(draggingPlatesList[0].name, "row", index)
                                         project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
@@ -447,7 +447,7 @@ Item
                                             cueView.insertRow(index + 1)
                                             cueView.rows[index + 1].push(draggingPlatesList[0])
                                             draggingPlatesList[0].row = index + 1
-                                            draggingPlatesList[0].position = pixelsToMsec(draggingPlatesList[0].x)
+                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
                                             project.setCueProperty(draggingPlatesList[0].name, "row", draggingPlatesList[0].row)
                                             project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
                                         }
@@ -455,7 +455,7 @@ Item
                                         else
                                         {
                                             draggingPlatesList[0].row = index
-                                            draggingPlatesList[0].position = pixelsToMsec(draggingPlatesList[0].x)
+                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
                                             item.push(draggingPlatesList[0])
                                             project.setCueProperty(draggingPlatesList[0].name, "row", index)
                                             project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
