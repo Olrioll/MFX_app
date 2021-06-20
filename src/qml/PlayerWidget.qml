@@ -23,6 +23,7 @@ Item
         stopPositionMarker.visible = false
         stopLoopMarker.visible = false
         positionCursor.visible = false
+        cueViewFlickable.visible = false
 
         waitingText.visible = true
 
@@ -44,6 +45,7 @@ Item
         stopPositionMarker.visible = true
         stopLoopMarker.visible = true
         positionCursor.visible = true
+        cueViewFlickable.visible = true
     }
 
     function msecToPixels(value)
@@ -550,7 +552,7 @@ Item
 
             Component.onCompleted:
             {
-                loadCues();
+//                loadCues();
 
 //                project.addCue(
 //                            [
@@ -2066,6 +2068,9 @@ Item
             stopPositionMarker.updatePosition()
             startLoopMarker.updatePosition()
             stopLoopMarker.updatePosition()
+
+            cueView.loadCues()
+            cueView.refresh()
         }
     }
 

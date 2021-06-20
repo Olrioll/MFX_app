@@ -32,6 +32,20 @@ ApplicationWindow
         return {x:0, width:width, y:mainMenu.height, height:height}
     }
 
+    function createNewProject()
+    {
+        mainScreen.playerWidget.hidePlayerElements()
+        project.newProject()
+
+        var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
+        sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
+        sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
+
+        patchScreen.deviceLibWidget.setActive(false)
+        patchScreen.deviceListWidget.setActive(false)
+        patchScreen.groupListWidget.setActive(false)
+    }
+
     MouseAreaWithHidingCursor
     {
         id: overallArea
@@ -129,6 +143,14 @@ ApplicationWindow
             left: leftResizeArea.right
         }
 
+        StartScreen
+        {
+            id: startScreen
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+        }
+
         PatchScreen
         {
             id: patchScreen
@@ -155,7 +177,14 @@ ApplicationWindow
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
 
-        Component.onCompleted: currentIndex = 1
+//        Component.onCompleted: currentIndex = 1
+    }
+
+    ProjectSettingsWidget
+    {
+        id: projectSettingsWidget
+        x: applicationWindow.width / 2 - projectSettingsWidget.width / 2
+        y: applicationWindow.height / 2 - projectSettingsWidget.height / 2
     }
 
     Item
@@ -270,23 +299,16 @@ ApplicationWindow
                 {
                     id: fileMenu
                     y: fileMenuButton.height
+
                     Action
                     {
                         text: qsTr("New")
                         onTriggered:
                         {
-                            mainScreen.playerWidget.hidePlayerElements()
-                            project.newProject()
-
-                            var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
-                            sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
-                            sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
-
-                            patchScreen.deviceLibWidget.setActive(false)
-                            patchScreen.deviceListWidget.setActive(false)
-                            patchScreen.groupListWidget.setActive(false)
+                            applicationWindow.createNewProject()
                         }
                     }
+
                     Action
                     {
                         text: qsTr("Open")
@@ -363,7 +385,7 @@ ApplicationWindow
                 {
                     if(checked)
                     {
-                        screensLayout.currentIndex = 0
+                        screensLayout.currentIndex = 1
                         patchScreen.setupSceneWidget(sceneWidget)
                     }
                 }
@@ -378,7 +400,6 @@ ApplicationWindow
                 anchors.left: patchMenuButton.right
                 layer.enabled: false
                 checkable: true
-                checked: true
 
                 bottomPadding: 2
                 topPadding: 2
@@ -402,7 +423,7 @@ ApplicationWindow
                 {
                     if(checked)
                     {
-                        screensLayout.currentIndex = 1
+                        screensLayout.currentIndex = 2
                         mainScreen.setupSceneWidget(sceneWidget)
                     }
                 }

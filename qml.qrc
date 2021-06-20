@@ -63,5 +63,9 @@
         <file alias="zoom">src/img/zoom.png</file>
         <file>src/qml/ZoomingMouseArea.qml</file>
         <file alias="resize">src/img/resize.png</file>
+        <file alias="startScreenLogo">src/img/startScreenLogo.png</file>
+        <file>src/qml/StartScreen.qml</file>
+        <file>src/qml/ProjectSettingsWidget.qml</file>
+        <file alias="trackPlaceholder">src/img/trackPlaceholder.png</file>
     </qresource>
 </RCC>

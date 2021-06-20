@@ -318,6 +318,11 @@ QString ProjectManager::saveProjectDialog()
     return fileName;
 }
 
+QString ProjectManager::currentProjectFileName() const
+{
+    return _currentProjectFile;
+}
+
 bool ProjectManager::addGroup(QString name)
 {
     foreach(auto group, _groups)
