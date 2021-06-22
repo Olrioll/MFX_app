@@ -1282,7 +1282,7 @@ Item
 
                 onMouseXChanged:
                 {
-                    drag.maximumX = msecToPixels(stopLoopMarker.position - 1000)
+                    drag.maximumX = msecToPixels(stopLoopMarker.position)
                     startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
                     project.setProperty("startLoop", startLoopMarker.position)
 
@@ -1388,7 +1388,7 @@ Item
 
                 onMouseXChanged:
                 {
-                    drag.minimumX = msecToPixels(startLoopMarker.position + 1000)
+                    drag.minimumX = msecToPixels(startLoopMarker.position)
                     stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
                     project.setProperty("stopLoop", stopLoopMarker.position)
 
@@ -1488,17 +1488,21 @@ Item
                 drag.target: positionCursor
                 drag.axis: Drag.XAxis
 
-                drag.minimumX: 0
-                drag.maximumX: mainBackground.width - positionCursor.width
+//                drag.minimumX: 0
+//                drag.maximumX: mainBackground.width - positionCursor.width
+
+                onPressed:
+                {
+                    drag.minimumX = startPositionMarker.position <= waveformWidget.min() ? 0 : msecToPixels(startPositionMarker.position)
+                    drag.maximumX = stopPositionMarker.position >= waveformWidget.max() ? (mainBackground.width) : msecToPixels(stopPositionMarker.position)
+                }
+
 
                 onMouseXChanged:
                 {
                     if(mouse.buttons === Qt.LeftButton)
                     {
-                        let max = waveformWidget.max()
-                        let min = waveformWidget.min()
-                        let msecPerPx = (max - min) / waveformWidget.width
-                        waveformWidget.setPlayerPosition(min + positionCursor.x * msecPerPx)
+                        waveformWidget.setPlayerPosition(pixelsToMsec(positionCursor.x))
                         timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
                     }
                 }
@@ -1679,6 +1683,31 @@ Item
 
         text: qsTr("reset")
         textSize: 10
+
+        onClicked:
+        {
+            project.setProperty("startPosition", 0)
+            project.setProperty("stopPosition", waveformWidget.duration() - 1)
+            project.setProperty("startLoop", 1)
+            project.setProperty("stopLoop", waveformWidget.duration() - 2)
+
+            waveformWidget.showAll();
+            startPositionMarker.position = project.property("startPosition")
+            stopPositionMarker.position = project.property("stopPosition")
+            startLoopMarker.position = project.property("startLoop")
+            stopLoopMarker.position = project.property("stopLoop")
+
+            startPositionMarker.updatePosition()
+            waveformWidget.setPlayerPosition(startPositionMarker.position)
+            positionCursor.updatePosition(startPositionMarker.position)
+            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
+            stopPositionMarker.updatePosition()
+            startLoopMarker.updatePosition()
+            stopLoopMarker.updatePosition()
+
+//            cueView.loadCues()
+            cueView.refresh()
+        }
     }
 
     MfxButton
