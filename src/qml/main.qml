@@ -250,6 +250,7 @@ ApplicationWindow
             anchors.top: topResizeArea.bottom
             anchors.left: parent.left
             anchors.right: parent.right
+            visible: !fullButton.maximized
 
             onPressed:
             {

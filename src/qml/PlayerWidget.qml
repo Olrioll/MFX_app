@@ -1070,7 +1070,7 @@ Item
 
                 onMouseXChanged:
                 {
-                    drag.maximumX = msecToPixels(stopLoopMarker.position - 1000)
+                    drag.maximumX = msecToPixels(stopLoopMarker.position)
                     startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
                     project.setProperty("startPosition", startPositionMarker.position)
 
@@ -1166,7 +1166,7 @@ Item
 
                 onMouseXChanged:
                 {
-                    drag.minimumX = msecToPixels(startLoopMarker.position + 1000)
+                    drag.minimumX = msecToPixels(startLoopMarker.position)
                     stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
                     project.setProperty("stopPosition", stopPositionMarker.position)
 
