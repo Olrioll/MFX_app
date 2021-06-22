@@ -13,6 +13,7 @@ Item
     property int minHeight: 200
     property int maxHeight: 600
     property int previousY
+    property alias waitingText: waitingText
 
     function hidePlayerElements()
     {
@@ -149,7 +150,7 @@ Item
         {
             if(project.property("audioTrackFile") !== "")
             {
-                setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+//                setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
             }
         }
     }
@@ -2018,7 +2019,7 @@ Item
             {
                 if(project.property("audioTrackFile") !== "")
                 {
-                    setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+//                    setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
                 }
             }
         }
@@ -2034,7 +2035,7 @@ Item
         elide: Text.ElideRight
         font.family: "Roboto"
         font.pixelSize: 14
-        text: qsTr("Downloading...")
+        text: qsTr("Not available")
 
         anchors.centerIn: waveformBackground
     }

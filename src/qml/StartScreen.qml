@@ -35,6 +35,8 @@ Item
         anchors.topMargin: 36
         anchors.top: logo.bottom
         anchors.horizontalCenter: logo.horizontalCenter
+
+        onClicked: applicationWindow.openProject()
     }
 
     MfxButton

@@ -199,7 +199,10 @@ public slots:
     QString openProjectDialog();
     QString saveProjectDialog();
 
+    bool hasUnsavedChanges() const;
     QString currentProjectFileName() const;
+    QString currentProjectName() const;
+    void setCurrentProjectName(QString name);
     QStringList groupNames() const;
     bool isGroupContainsPatch(QString groupName, int patchId) const;
     bool isPatchHasGroup(int patchId) const;
@@ -262,6 +265,7 @@ private:
 
     SettingsManager& _settings;
     QString _currentProjectFile = "";
+    QString _currentProjectName = "";
     bool _hasUnsavedChanges = false;
 
     QJsonObject _project;

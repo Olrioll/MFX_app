@@ -10,8 +10,10 @@ Item
 
     property bool isNewProject: true
     property string caption: qsTr("Project settings")
-    property string choosenImageFile: project.property("backgroundImageFile") === "" ? "" : settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
+    property string choosenImageFile
     property string choosenAudioFile
+
+    signal createButtonClicked
 
     Rectangle
     {
@@ -80,7 +82,7 @@ Item
                 patchScreen.deviceLibWidget.setActive(true)
                 patchScreen.deviceListWidget.setActive(true)
                 patchScreen.groupListWidget.setActive(true)
-                projectSettingsWidget.destroy()
+                projectSettingsWidget.visible = false
             }
         }
 
@@ -123,18 +125,12 @@ Item
                 y: 43
                 width: 50
                 height: 18
-                text: project.property("sceneFrameWidth")
+                text: isNewProject ? "" : project.property("sceneFrameWidth")
                 color: "#ffffff"
                 horizontalAlignment: Text.AlignHCenter
                 padding: 0
                 leftPadding: -2
                 font.pointSize: 8
-
-                //                property bool isActiveInput: true
-                //                property string lastSelectedText
-
-                //                validator: RegExpValidator { regExp: /[0-9]+/ }
-                //                maximumLength: 2
 
                 background: Rectangle
                 {
@@ -155,7 +151,7 @@ Item
                 width: 50
                 height: 18
                 color: "#ffffff"
-                text: project.property("sceneFrameHeight")
+                text: isNewProject ? "" : project.property("sceneFrameHeight")
                 horizontalAlignment: Text.AlignHCenter
                 leftPadding: -2
                 font.pointSize: 8
@@ -281,7 +277,7 @@ Item
                 y: 43
                 width: 140
                 height: 18
-                text: project.currentProjectFileName()
+                text: project.currentProjectName()
                 color: "#ffffff"
                 horizontalAlignment: Text.AlignHCenter
                 padding: 0
@@ -349,6 +345,24 @@ Item
                     id: trackButtonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    color: "#888888"
+                    text: choosenAudioFile
+                    elide: Text.ElideMiddle
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.family: "Roboto"
+                    font.pixelSize: 10
+
+                    visible: choosenAudioFile !== ""
+                }
+
+                Text {
+                    id: defaultTrackButtonText
+                    anchors.topMargin: 56
+                    anchors.top: parent.top
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     color: "#888888"
@@ -358,6 +372,8 @@ Item
                     verticalAlignment: Text.AlignVCenter
                     font.family: "Roboto"
                     font.pixelSize: 10
+
+                    visible: !trackButtonText.visible
                 }
 
                 MouseArea
@@ -460,31 +476,6 @@ Item
             }
         }
 
-//        MfxButton
-//        {
-//            id: setAudioTrackButton
-//            color: "#222222"
-//            anchors.margins: 8
-//            anchors
-//            {
-//                left: parent.left
-//                right: parent.right
-//                top: workArea4.bottom
-//            }
-
-//            text: project.property("audioTrackFile") === "" ? qsTr("Click to choose audio") : project.property("audioTrackFile")
-
-//            onClicked:
-//            {
-//                let trackFileName = project.selectAudioTrackDialog()
-//                if(trackFileName)
-//                {
-//                    choosenAudioFile = trackFileName
-//                    text = choosenAudioFile
-//                }
-//            }
-//        }
-
         MfxButton
         {
             id: setButton
@@ -506,15 +497,12 @@ Item
             {
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
-//                if(project.property("sceneImageWidth") === 0 || !project.property("sceneImageWidth"))
-//                {
-                    if(Number(widthField.text) >= Number(heightField.text))
-                        project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
-                    else
-                        project.setProperty("sceneImageWidth", Number(widthField.text) * 20)
 
+                if(Number(widthField.text) >= Number(heightField.text))
+                    project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
+                else
+                    project.setProperty("sceneImageWidth", Number(widthField.text) * 20)
 
-//                }
 
                 if(projectSettingsWidget.choosenImageFile !== "")
                 {
@@ -522,20 +510,29 @@ Item
                     sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
                 }
 
+                sceneWidget.centerBackgroundImage()
+
                 // Центруем рамку по фоновой картинке
                 let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneFrameWidth") / project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
                 project.setProperty("sceneFrameX", xPos)
 
-                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
-                project.setProperty("sceneFrameY", yPos)
+//                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
+                project.setProperty("sceneFrameY", 0.3)
 
                 if(choosenAudioFile !== "")
+                {
+                    mainScreen.playerWidget.waitingText.text = qsTr("Downloading...")
                     project.setAudioTrack(choosenAudioFile)
+                }
 
                 sceneWidget.sceneFrameItem.restorePreviousGeometry()
                 sceneWidget.sceneFrameItem.visible = true
                 applicationWindow.isPatchEditorOpened = false
-                projectSettingsWidget.destroy();
+                projectSettingsWidget.visible = false
+                if(isNewProject)
+                {
+                    projectSettingsWidget.createButtonClicked()
+                }
             }
         }
 

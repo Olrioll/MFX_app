@@ -27,6 +27,8 @@ ApplicationWindow
     property bool isPatchEditorOpened: false
     property bool isMouseCursorVisible: true
 
+    property alias projectSettingsWidget: projectSettingsWidget
+
     function childWidgetsArea()
     {
         return {x:0, width:width, y:mainMenu.height, height:height}
@@ -35,15 +37,29 @@ ApplicationWindow
     function createNewProject()
     {
         mainScreen.playerWidget.hidePlayerElements()
+        mainScreen.playerWidget.waitingText.text = qsTr("Not available")
         project.newProject()
-
-        var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
-        sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
-        sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
+        projectSettingsWidget.visible = true
 
         patchScreen.deviceLibWidget.setActive(false)
         patchScreen.deviceListWidget.setActive(false)
         patchScreen.groupListWidget.setActive(false)
+    }
+
+    function openProject()
+    {
+        let openingProject = project.openProjectDialog();
+        if(openingProject)
+        {
+            project.loadProject(openingProject);
+
+            if(project.property("audioTrackFile") !== "")
+                mainScreen.playerWidget.waitingText.text = qsTr("Downloading...")
+            else
+                mainScreen.playerWidget.waitingText.text = qsTr("Not available")
+
+            patchMenuButton.checked = true
+        }
     }
 
     MouseAreaWithHidingCursor
@@ -185,6 +201,7 @@ ApplicationWindow
         id: projectSettingsWidget
         x: applicationWindow.width / 2 - projectSettingsWidget.width / 2
         y: applicationWindow.height / 2 - projectSettingsWidget.height / 2
+        visible: false
     }
 
     Item
@@ -314,11 +331,32 @@ ApplicationWindow
                         text: qsTr("Open")
                         onTriggered:
                         {
-                            let openingProject = project.openProjectDialog();
-                            if(openingProject)
+                            if(project.hasUnsavedChanges())
                             {
-                                project.loadProject(openingProject);
+                                var confirmSaveDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                                confirmSaveDialog.x = applicationWindow.width / 2 - confirmSaveDialog.width / 2
+                                confirmSaveDialog.y = applicationWindow.height / 2 - confirmSaveDialog.height / 2
+                                confirmSaveDialog.caption = qsTr("Save project")
+                                confirmSaveDialog.dialogText = qsTr("Save changes for the current project?")
+                                confirmSaveDialog.acceptButtonText = qsTr("Save changes")
+                                confirmSaveDialog.cancelButtonText = qsTr("Do not save")
+                                confirmSaveDialog.acceptButtonColor = "#27AE60"
+                                confirmSaveDialog.cancelButtonColor = "#EB5757"
+
+                                confirmSaveDialog.accepted.connect(() =>
+                                {
+                                    project.saveProject()
+                                    applicationWindow.openProject()
+                                })
+
+                                confirmSaveDialog.declined.connect(() =>
+                                {
+                                    applicationWindow.openProject()
+                                })
                             }
+
+                            else
+                                applicationWindow.openProject()
                         }
                     }
 
@@ -655,8 +693,46 @@ ApplicationWindow
                     source: "qrc:/closeButton"
                 }
 
-                onClicked: Qt.quit()
+                onClicked:
+                {
+                    if(project.hasUnsavedChanges())
+                    {
+                        var confirmSaveDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                        confirmSaveDialog.x = applicationWindow.width / 2 - confirmSaveDialog.width / 2
+                        confirmSaveDialog.y = applicationWindow.height / 2 - confirmSaveDialog.height / 2
+                        confirmSaveDialog.caption = qsTr("Save project")
+                        confirmSaveDialog.dialogText = qsTr("Save changes before quitting?")
+                        confirmSaveDialog.acceptButtonText = qsTr("Save changes")
+                        confirmSaveDialog.cancelButtonText = qsTr("Do not save")
+                        confirmSaveDialog.acceptButtonColor = "#27AE60"
+                        confirmSaveDialog.cancelButtonColor = "#EB5757"
+
+                        confirmSaveDialog.declined.connect(() =>
+                        {
+                            Qt.quit()
+                        })
+
+                        confirmSaveDialog.accepted.connect(() =>
+                        {
+                            project.saveProject()
+                            Qt.quit()
+                        })
+                    }
+
+                    else
+                        Qt.quit()
+                }
             }
         }
     }
+
+    Connections
+    {
+        target: projectSettingsWidget
+        function onCreateButtonClicked()
+        {
+            patchMenuButton.checked = true
+        }
+    }
+
 }

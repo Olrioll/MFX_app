@@ -16,7 +16,7 @@ Item
     property string cancelButtonColor: "#4f4f4f"
 
     signal accepted
-    signal canceled
+    signal declined
 
     Rectangle
     {
@@ -153,7 +153,7 @@ Item
 
                 onClicked:
                 {
-                    canceled()
+                    declined()
                     dialog.destroy()
                 }
             }

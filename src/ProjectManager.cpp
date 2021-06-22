@@ -9,19 +9,19 @@
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
-    if(_settings.value("lastProject").toString() == "")
-    {
-        newProject();
-    }
-    else
-    {
-        loadProject(_settings.value("lastProject").toString());
-    }
+//    if(_settings.value("lastProject").toString() == "")
+//    {
+//        newProject();
+//    }
+//    else
+//    {
+//        loadProject(_settings.value("lastProject").toString());
+//    }
 }
 
 ProjectManager::~ProjectManager()
 {
-    saveProject();
+//    saveProject();
 }
 
 QVariant ProjectManager::property(QString name) const
@@ -67,6 +67,7 @@ void ProjectManager::loadProject(QString fileName)
     QFile file(_settings.workDirectory() + "/project.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
         _settings.setValue("lastProject", fileName);
         _currentProjectFile = fileName;
         _project = QJsonDocument::fromJson(file.readAll()).object();
@@ -133,6 +134,7 @@ void ProjectManager::newProject()
     setProperty("sceneScaleFactor", 1.0);
     setProperty("startPosition", -1);
 
+    _hasUnsavedChanges = true;
     emit groupCountChanged();
     emit patchListChanged();
     emit backgroundImageChanged();
@@ -318,9 +320,24 @@ QString ProjectManager::saveProjectDialog()
     return fileName;
 }
 
+bool ProjectManager::hasUnsavedChanges() const
+{
+    return _hasUnsavedChanges;
+}
+
 QString ProjectManager::currentProjectFileName() const
 {
     return _currentProjectFile;
+}
+
+QString ProjectManager::currentProjectName() const
+{
+    return _currentProjectName;
+}
+
+void ProjectManager::setCurrentProjectName(QString name)
+{
+    _currentProjectName = name;
 }
 
 bool ProjectManager::addGroup(QString name)

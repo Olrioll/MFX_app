@@ -61,8 +61,8 @@ Item
 
     function centerBackgroundImage()
     {
-        backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
-        backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
+        backgroundImage.x = (applicationWindow.width - backgroundImage.width) / 2
+        backgroundImage.y = (applicationWindow.height - backgroundImage.height) / 2
     }
 
     function adjustBackgroundImageOnX()
@@ -889,9 +889,11 @@ Item
 
         onClicked:
         {
-            var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
-            sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
-            sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
+            applicationWindow.projectSettingsWidget.isNewProject = false
+            applicationWindow.projectSettingsWidget.visible = true
+//            var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
+//            sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
+//            sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
 
             patchScreen.deviceLibWidget.setActive(false)
             patchScreen.deviceListWidget.setActive(false)
