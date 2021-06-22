@@ -14,7 +14,7 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
 
     connect(&_valueForPositionTimer, &QTimer::timeout, [this]()
     {
-        emit timerValueChanged(QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz"));
+        emit timerValueChanged((QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz")).chopped(1));
         emit positionChanged(_player.position());
     });
 }
@@ -410,6 +410,6 @@ void WaveformWidget::stop()
 {
     _valueForPositionTimer.stop();
     _player.stop();
-    emit timerValueChanged(QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz"));
+    emit timerValueChanged((QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz")).chopped(1));
     emit positionChanged(_player.position());
 }

@@ -34,7 +34,7 @@ Item
         }
         timeScale.textMarkers = []
 
-        timer.text = "00:00:00.000"
+        timer.text = "00:00:00.00"
     }
 
     function showPlayerElements()
@@ -1499,6 +1499,7 @@ Item
                         let min = waveformWidget.min()
                         let msecPerPx = (max - min) / waveformWidget.width
                         waveformWidget.setPlayerPosition(min + positionCursor.x * msecPerPx)
+                        timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
                     }
                 }
             }
@@ -1623,7 +1624,7 @@ Item
         Text
         {
             id: timer
-            text: "00:00:00.000"
+            text: "00:00:00.00"
             color: "#eeeeee"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -2014,14 +2015,6 @@ Item
                     timeScaleMouseArea.zoom(wheel.angleDelta.y > 0 ? 2 : -2)
                 }
             }
-
-            Component.onCompleted:
-            {
-                if(project.property("audioTrackFile") !== "")
-                {
-//                    setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
-                }
-            }
         }
     }
 
@@ -2065,7 +2058,7 @@ Item
             startPositionMarker.updatePosition()
             waveformWidget.setPlayerPosition(startPositionMarker.position)
             positionCursor.updatePosition(startPositionMarker.position)
-            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
+            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
             stopPositionMarker.updatePosition()
             startLoopMarker.updatePosition()
             stopLoopMarker.updatePosition()
@@ -2105,7 +2098,7 @@ Item
                 playButton.checked = false
                 waveformWidget.setPlayerPosition(stopPositionMarker.position)
                 positionCursor.updatePosition(stopPositionMarker.position)
-                timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz")
+//                timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zz")
             }
         }
     }
