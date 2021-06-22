@@ -80,6 +80,8 @@ ApplicationWindow
         }
         cursorShape: Qt.SizeVerCursor
 
+        visible: !fullButton.maximized
+
         onPressed:
         {
             applicationWindow.previousY = mouseY
@@ -103,6 +105,8 @@ ApplicationWindow
             left: parent.left
         }
         cursorShape: Qt.SizeHorCursor
+
+        visible: !fullButton.maximized
 
         onPressed:
         {
@@ -128,6 +132,8 @@ ApplicationWindow
             right: parent.right
         }
         cursorShape:  Qt.SizeHorCursor
+
+        visible: !fullButton.maximized
 
         onPressed:
         {
@@ -219,6 +225,8 @@ ApplicationWindow
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+
+            visible: !fullButton.maximized
 
             cursorShape: Qt.SizeVerCursor
 
