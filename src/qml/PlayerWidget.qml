@@ -1974,6 +1974,15 @@ Item
                         scrollBar.refresh()
                     }
                 }
+
+                Connections
+                {
+                    target: project
+                    function onAudioTrackFileChanged()
+                    {
+                        scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+                    }
+                }
             }
 
             ZoomingMouseArea
