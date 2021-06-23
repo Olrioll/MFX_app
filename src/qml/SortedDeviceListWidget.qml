@@ -155,6 +155,11 @@ ListView
         drag.target: deviceListView.held ? draggedPlate : undefined
         drag.axis: Drag.XAndYAxis
 
+        drag.minimumX: 0
+        drag.maximumX: patchScreen.width - draggedPlate.width
+        drag.minimumY: 0
+        drag.maximumY: patchScreen.height - draggedPlate.height
+
         onClicked:
         {
             pressedItem = deviceListView.itemAt(mouseX, mouseY)
