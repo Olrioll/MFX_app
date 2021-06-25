@@ -396,7 +396,7 @@ void WaveformWidget::setscaleFactor(float scaleFactor)
 
 void WaveformWidget::play()
 {
-    _valueForPositionTimer.start(20);
+    _valueForPositionTimer.start(10);
     _player.play();
 }
 

@@ -498,10 +498,27 @@ Item
                     {
                         isDraggingCuePlate = true
 
-                        for(var i = 0; i < draggingPlatesList.length; i++)
+                        let currY = -1;
+                        for(var i = 0; i < cueView.rowsY.length; i++)
+                        {
+                            if(mouseY < cueView.rowsY[i])
+                            {
+                                if(i === 0)
+                                    currY = cueView.rowsY[0]
+                                else
+                                    currY = cueView.rowsY[i - 1]
+                                break
+                            }
+                        }
+
+                        if(currY === -1)
+                            currY = cueView.rowsY[cueView.rowsY.length - 1]
+
+                        for(i = 0; i < draggingPlatesList.length; i++)
                         {
                             draggingPlatesList[i].x = draggingPlatesX[i] + dx
-                            draggingPlatesList[i].y = draggingPlatesY[i] + dy
+//                            draggingPlatesList[i].y = draggingPlatesY[i] + dy
+                            draggingPlatesList[i].y = currY
                         }
                     }
                 }

@@ -95,5 +95,11 @@ ListView
                 deviceLibView.held = false
             }
         }
+
+//        onPositionChanged:
+//        {
+//            draggedPlate.x = mouseX
+//            draggedPlate.y = mouseY
+//        }
     }
 }
