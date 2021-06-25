@@ -1080,22 +1080,34 @@ Item
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
-                drag.target: startPositionMarker
-                drag.axis: Drag.XAxis
+//                drag.target: startPositionMarker
+//                drag.axis: Drag.XAxis
 
-                drag.minimumX: 0
+//                drag.minimumX: 0
 
                 onMouseXChanged:
                 {
-                    drag.maximumX = msecToPixels(stopLoopMarker.position)
-                    startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
-                    project.setProperty("startPosition", startPositionMarker.position)
-
-                    if(startLoopMarker.position < startPositionMarker.position)
+                    if(mouse.buttons === Qt.LeftButton)
                     {
-                        startLoopMarker.x = startPositionMarker.x
-                        startLoopMarker.position = startPositionMarker.position
-                        project.setProperty("startLoop", startLoopMarker.position)
+                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
+//                        drag.maximumX = msecToPixels(stopLoopMarker.position)
+
+                        if(mappedX < 0)
+                            startPositionMarker.x = 0
+                        else if(mappedX > msecToPixels(stopLoopMarker.position))
+                            startPositionMarker.x = msecToPixels(stopLoopMarker.position)
+                        else
+                            startPositionMarker.x = mappedX
+
+                        startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
+                        project.setProperty("startPosition", startPositionMarker.position)
+
+                        if(startLoopMarker.position < startPositionMarker.position)
+                        {
+                            startLoopMarker.x = startPositionMarker.x
+                            startLoopMarker.position = startPositionMarker.position
+                            project.setProperty("startLoop", startLoopMarker.position)
+                        }
                     }
 
                 }
@@ -1176,22 +1188,34 @@ Item
                 hoverEnabled: true
                 cursor: Qt.SizeHorCursor
 
-                drag.target: stopPositionMarker
-                drag.axis: Drag.XAxis
+//                drag.target: stopPositionMarker
+//                drag.axis: Drag.XAxis
 
-                drag.maximumX: mainBackground.width - stopPositionMarker.width
+//                drag.maximumX: mainBackground.width - stopPositionMarker.width
 
                 onMouseXChanged:
                 {
-                    drag.minimumX = msecToPixels(startLoopMarker.position)
-                    stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
-                    project.setProperty("stopPosition", stopPositionMarker.position)
-
-                    if(stopLoopMarker.position > stopPositionMarker.position)
+                    if(mouse.buttons === Qt.LeftButton)
                     {
-                        stopLoopMarker.x = stopPositionMarker.x
-                        stopLoopMarker.position = stopPositionMarker.position
-                        project.setProperty("stopLoop", stopLoopMarker.position)
+                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
+
+                        if(mappedX < msecToPixels(startLoopMarker.position))
+                            stopPositionMarker.x = msecToPixels(startLoopMarker.position)
+                        else if(mappedX > msecToPixels(waveformWidget.max()))
+                            stopPositionMarker.x = msecToPixels(waveformWidget.max())
+                        else
+                            stopPositionMarker.x = mappedX
+
+//                        drag.minimumX = msecToPixels(startLoopMarker.position)
+                        stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
+                        project.setProperty("stopPosition", stopPositionMarker.position)
+
+                        if(stopLoopMarker.position > stopPositionMarker.position)
+                        {
+                            stopLoopMarker.x = stopPositionMarker.x
+                            stopLoopMarker.position = stopPositionMarker.position
+                            project.setProperty("stopLoop", stopLoopMarker.position)
+                        }
                     }
                 }
             }
