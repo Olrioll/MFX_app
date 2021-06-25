@@ -60,23 +60,31 @@ ListView
         }
     }
 
-    MouseAreaWithHidingCursor
+    MouseArea
     {
         id: mouseArea
         anchors.fill: parent
 
         drag.target: deviceLibView.held ? draggedPlate : undefined
         drag.axis: Drag.XAndYAxis
-        drag.minimumX: 0
-        drag.maximumX: patchScreen.width - draggedPlate.width
-        drag.minimumY: 0
-        drag.maximumY: patchScreen.height - draggedPlate.height
+//        drag.minimumX: 0
+//        drag.maximumX: patchScreen.width - draggedPlate.width
+//        drag.minimumY: 0
+//        drag.maximumY: patchScreen.height - draggedPlate.height
+
+        property int mappedPressedX
+        property int mappedPressedY
 
         onPressed:
         {
             var pressedItem = deviceLibView.itemAt(mouseX, mouseY)
             if(pressedItem)
             {
+                mappedPressedX = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
+                mappedPressedY = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
+                draggedPlate.Drag.hotSpot.x = mappedPressedX
+                draggedPlate.Drag.hotSpot.y = mappedPressedY
+
                 deviceLibView.held = true
                 draggedPlate.x = pressedItem.mapToItem(patchScreen, 0, 0).x
                 draggedPlate.y = pressedItem.mapToItem(patchScreen, 0, 0).y
@@ -96,10 +104,24 @@ ListView
             }
         }
 
-//        onPositionChanged:
-//        {
-//            draggedPlate.x = mouseX
-//            draggedPlate.y = mouseY
-//        }
+        onPositionChanged:
+        {
+            let currX = mouseArea.mapToItem(patchScreen, mouseX, mouseY).x - mappedPressedX
+            let currY = mouseArea.mapToItem(patchScreen, mouseX, mouseY).y - mappedPressedY
+
+            if(currX < 0)
+                draggedPlate.x = 0
+            else if(currX > patchScreen.width - draggedPlate.width)
+                draggedPlate.x = patchScreen.width - draggedPlate.width
+            else
+                draggedPlate.x = currX
+
+            if(currY < 0)
+                draggedPlate.y = 0
+            else if(currY > patchScreen.height - draggedPlate.height)
+                draggedPlate.y = patchScreen.height - draggedPlate.height
+            else
+                draggedPlate.y = currY
+        }
     }
 }

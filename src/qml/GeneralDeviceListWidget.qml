@@ -201,7 +201,7 @@ Item
                 }
             }
 
-            MouseAreaWithHidingCursor
+            MouseArea
             {
                 id: mouseArea
                 anchors.fill: parent
@@ -212,15 +212,12 @@ Item
                 property int pressedY
                 property int draggingStartX
                 property int draggingStartY
+                property int mappedPressedX
+                property int mappedPressedY
                 property bool wasDragging: false
 
                 drag.target: deviceListView.held ? draggedPlate : undefined
                 drag.axis: Drag.XAndYAxis
-
-                drag.minimumX: 0
-                drag.maximumX: patchScreen.width - draggedPlate.width
-                drag.minimumY: 0
-                drag.maximumY: patchScreen.height - draggedPlate.height
 
                 onClicked:
                 {
@@ -243,6 +240,11 @@ Item
                     pressedItem = deviceListView.itemAt(mouseX, mouseY + deviceListView.contentY)
                     if(pressedItem)
                     {
+                        mappedPressedX = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
+                        mappedPressedY = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
+                        draggedPlate.Drag.hotSpot.x = mappedPressedX
+                        draggedPlate.Drag.hotSpot.y = mappedPressedY
+
                         draggedPlate.checkedIDs = []
                         for(let i = 0; i < project.patchCount(); i++)
                         {
@@ -279,6 +281,26 @@ Item
                             wasDragging = true
                             draggingStartX = mouseX
                             draggingStartY = mouseY
+                        }
+
+                        else
+                        {
+                            let currX = mouseArea.mapToItem(patchScreen, mouseX, mouseY).x - mappedPressedX
+                            let currY = mouseArea.mapToItem(patchScreen, mouseX, mouseY).y - mappedPressedY
+
+                            if(currX < 0)
+                                draggedPlate.x = 0
+                            else if(currX > patchScreen.width - draggedPlate.width)
+                                draggedPlate.x = patchScreen.width - draggedPlate.width
+                            else
+                                draggedPlate.x = currX
+
+                            if(currY < 0)
+                                draggedPlate.y = 0
+                            else if(currY > patchScreen.height - draggedPlate.height)
+                                draggedPlate.y = patchScreen.height - draggedPlate.height
+                            else
+                                draggedPlate.y = currY
                         }
 
                     }
