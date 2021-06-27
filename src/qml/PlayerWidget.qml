@@ -92,7 +92,6 @@ Item
     {
         id: playerResizeArea
         height: 4
-        hoverEnabled: true
 
         anchors.topMargin: -2
         anchors
@@ -1120,6 +1119,13 @@ Item
                             startLoopMarker.position = startPositionMarker.position
                             project.setProperty("startLoop", startLoopMarker.position)
                         }
+
+                        if(waveformWidget.playerPosition() < startPositionMarker.position)
+                        {
+                            positionCursor.x = startPositionMarker.x
+                            waveformWidget.setPlayerPosition(startPositionMarker.position)
+                            timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
+                        }
                     }
 
                 }
@@ -1216,6 +1222,13 @@ Item
                             stopLoopMarker.x = stopPositionMarker.x
                             stopLoopMarker.position = stopPositionMarker.position
                             project.setProperty("stopLoop", stopLoopMarker.position)
+                        }
+
+                        if(waveformWidget.playerPosition() > stopPositionMarker.position)
+                        {
+                            positionCursor.x = stopPositionMarker.x - 2
+                            waveformWidget.setPlayerPosition(stopPositionMarker.position)
+                            timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
                         }
                     }
                 }
