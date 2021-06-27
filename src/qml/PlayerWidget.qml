@@ -1100,19 +1100,15 @@ Item
                 height: 12
                 hoverEnabled: true
 
+                dragOnX: true
+                draggedItem: startPositionMarker
+                draggedItemMinX: 0
+                draggedItemMaxX: stopLoopMarker.x
+
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
                     {
-                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
-
-                        if(mappedX < 0)
-                            startPositionMarker.x = 0
-                        else if(mappedX > msecToPixels(stopLoopMarker.position))
-                            startPositionMarker.x = msecToPixels(stopLoopMarker.position)
-                        else
-                            startPositionMarker.x = mappedX
-
                         startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
                         project.setProperty("startPosition", startPositionMarker.position)
 
@@ -1201,19 +1197,15 @@ Item
                 height: 12
                 hoverEnabled: true
 
+                dragOnX: true
+                draggedItem: stopPositionMarker
+                draggedItemMinX: startLoopMarker.x
+                draggedItemMaxX: waveformWidget.width
+
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
                     {
-                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
-
-                        if(mappedX < msecToPixels(startLoopMarker.position))
-                            stopPositionMarker.x = msecToPixels(startLoopMarker.position)
-                        else if(mappedX > msecToPixels(waveformWidget.max()))
-                            stopPositionMarker.x = msecToPixels(waveformWidget.max())
-                        else
-                            stopPositionMarker.x = mappedX
-
                         stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
                         project.setProperty("stopPosition", stopPositionMarker.position)
 
@@ -1311,19 +1303,15 @@ Item
                 height: 12
                 hoverEnabled: true
 
+                dragOnX: true
+                draggedItem: startLoopMarker
+                draggedItemMinX: 0
+                draggedItemMaxX: stopLoopMarker.x
+
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
                     {
-                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
-
-                        if(mappedX < 0)
-                            startLoopMarker.x = 0
-                        else if(mappedX > msecToPixels(stopLoopMarker.position))
-                            startLoopMarker.x = msecToPixels(stopLoopMarker.position)
-                        else
-                            startLoopMarker.x = mappedX
-
                         startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
                         project.setProperty("startLoop", startLoopMarker.position)
 
@@ -1422,24 +1410,15 @@ Item
                 height: 12
                 hoverEnabled: true
 
-                drag.target: stopLoopMarker
-                drag.axis: Drag.XAxis
-
-                drag.maximumX: waveformWidget.width
+                dragOnX: true
+                draggedItem: stopLoopMarker
+                draggedItemMinX: startLoopMarker.x
+                draggedItemMaxX: waveformWidget.width
 
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
                     {
-                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
-
-                        if(mappedX < msecToPixels(startLoopMarker.position))
-                            stopLoopMarker.x = msecToPixels(startLoopMarker.position)
-                        else if(mappedX > msecToPixels(waveformWidget.max()))
-                            stopLoopMarker.x = msecToPixels(waveformWidget.max())
-                        else
-                            stopLoopMarker.x = mappedX
-
                         stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
                         project.setProperty("stopLoop", stopLoopMarker.position)
 
@@ -1508,7 +1487,7 @@ Item
         {
             width: 12
             height: parent.height
-            x: - width / 2
+            x: - width / 2 + 1
             y: 12
 
             onPaint:
@@ -1526,8 +1505,7 @@ Item
                 ctx.fill()
             }
 
-//            MouseAreaWithHidingCursor
-            MouseArea
+            MfxMouseArea
             {
                 id: cursorMovingArea
                 anchors.topMargin: -4
@@ -1536,20 +1514,11 @@ Item
                 anchors.right: parent.right
                 height: 12
                 hoverEnabled: true
-//                cursor: Qt.SizeHorCursor
 
-                drag.target: positionCursor
-                drag.axis: Drag.XAxis
-
-//                drag.minimumX: 0
-//                drag.maximumX: mainBackground.width - positionCursor.width
-
-                onPressed:
-                {
-                    drag.minimumX = startPositionMarker.position <= waveformWidget.min() ? 0 : msecToPixels(startPositionMarker.position)
-                    drag.maximumX = stopPositionMarker.position >= waveformWidget.max() ? (mainBackground.width) : msecToPixels(stopPositionMarker.position)
-                }
-
+                dragOnX: true
+                draggedItem: positionCursor
+                draggedItemMinX: startPositionMarker.x
+                draggedItemMaxX: stopPositionMarker.x
 
                 onMouseXChanged:
                 {
@@ -1557,6 +1526,20 @@ Item
                     {
                         waveformWidget.setPlayerPosition(pixelsToMsec(positionCursor.x))
                         timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
+                    }
+
+                    if(positionCursor.x + positionCursor.width + 1 === Math.round(stopPositionMarker.x))
+                    {
+                        waveformWidget.setPlayerPosition(stopPositionMarker.position)
+                        timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
+                        positionCursor.updatePosition(waveformWidget.playerPosition())
+                    }
+
+                    else if(positionCursor.x === Math.round(startPositionMarker.x))
+                    {
+                        waveformWidget.setPlayerPosition(startPositionMarker.position)
+                        timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
+                        positionCursor.updatePosition(waveformWidget.playerPosition())
                     }
                 }
             }
@@ -1567,7 +1550,7 @@ Item
             width: 2
             height: waveformBackground.height
             color: "#99006DFF"
-            x: -1
+            x: 0
             y: 24
         }
 
