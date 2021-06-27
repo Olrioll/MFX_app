@@ -62,6 +62,20 @@ ApplicationWindow
         }
     }
 
+
+    SceneWidget
+    {
+        id: sceneWidget
+    }
+
+    MfxMouseArea
+    {
+        id: overallArea
+        anchors.fill: parent
+        propagateComposedEvents: true
+        acceptedButtons: Qt.NoButton
+    }
+
     MouseArea
     {
         id: bottomResizeArea
@@ -141,10 +155,6 @@ ApplicationWindow
         }
     }
 
-    SceneWidget
-    {
-        id: sceneWidget
-    }
 
     StackLayout
     {
@@ -727,14 +737,6 @@ ApplicationWindow
                 }
             }
         }
-    }
-
-    MfxMouseArea
-    {
-        id: overallArea
-        anchors.fill: parent
-        propagateComposedEvents: true
-        acceptedButtons: Qt.NoButton
     }
 
     Connections

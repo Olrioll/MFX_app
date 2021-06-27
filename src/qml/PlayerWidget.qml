@@ -88,10 +88,11 @@ Item
         color: "#222222"
     }
 
-    MouseAreaWithHidingCursor
+    MfxMouseArea
     {
         id: playerResizeArea
         height: 4
+        hoverEnabled: true
 
         anchors.topMargin: -2
         anchors
@@ -100,7 +101,8 @@ Item
             left: parent.left
             right: parent.right
         }
-        cursorShape: Qt.SizeVerCursor
+
+        cursor: Qt.SizeVerCursor
 
         onPressed:
         {
@@ -109,7 +111,7 @@ Item
 
         onMouseYChanged:
         {
-            var dy= mouseY - playerWidget.previousY
+            var dy = mouseY - playerWidget.previousY
 
             if((playerWidget.height - dy) < playerWidget.minHeight)
                 playerWidget.height = playerWidget.minHeight
