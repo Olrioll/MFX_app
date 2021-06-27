@@ -802,8 +802,7 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
             hoverEnabled: true
-            image: cursorMovingArea.containsMouse || startPositionMarkerMovingArea.containsMouse || stopPositionMarkerMovingArea.containsMouse ?
-                       "" : "qrc:/zoom"
+            image: ""
 
             property alias resizingCenterMarker: resizingCenterMarker
 
@@ -888,14 +887,35 @@ Item
                 visible: false
             }
 
+            onEntered:
+            {
+                if(!isPressed)
+                    cursorImageForTimeScale.visible = true
+
+                cursorImageForTimeScale.x = mouseX
+                cursorImageForTimeScale.y = mouseY
+            }
+
+            onExited:
+            {
+                cursorImageForTimeScale.visible = false
+            }
+
             onPressed:
             {
                 playerResizeArea.enabled = false
                 playerResizeArea.cursorShape = Qt.BlankCursor
                 mainScreen.sceneWidget.enabled = false
-                timeScaleMouseArea.cursorImage.visible = false
+//                timeScaleMouseArea.cursorImage.visible = false
+                cursorImageForTimeScale.visible = false
                 resizingCenterMarker.x = mouseX
                 resizingCenterMarker.visible = true
+            }
+
+            onPositionChanged:
+            {
+                cursorImageForTimeScale.x = mouseX
+                cursorImageForTimeScale.y = mouseY
             }
 
             onMoved:
@@ -972,7 +992,8 @@ Item
                 playerResizeArea.cursorShape = Qt.SizeVerCursor
                 mainScreen.sceneWidget.enabled = true
                 resizingCenterMarker.visible = false
-                timeScaleMouseArea.cursorImage.visible = true
+//                timeScaleMouseArea.cursorImage.visible = true
+                cursorImageForTimeScale.visible = true
             }
         }
     }
@@ -1068,7 +1089,7 @@ Item
                 ctx.fill()
             }
 
-            MouseAreaWithHidingCursor
+            MfxMouseArea
             {
                 id: startPositionMarkerMovingArea
                 anchors.topMargin: -4
@@ -1078,19 +1099,12 @@ Item
                 anchors.right: parent.right
                 height: 12
                 hoverEnabled: true
-                cursor: Qt.SizeHorCursor
-
-//                drag.target: startPositionMarker
-//                drag.axis: Drag.XAxis
-
-//                drag.minimumX: 0
 
                 onMouseXChanged:
                 {
-                    if(mouse.buttons === Qt.LeftButton)
+                    if(wasPressedAndMoved)
                     {
                         let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
-//                        drag.maximumX = msecToPixels(stopLoopMarker.position)
 
                         if(mappedX < 0)
                             startPositionMarker.x = 0
@@ -1176,7 +1190,7 @@ Item
                 ctx.fill()
             }
 
-            MouseAreaWithHidingCursor
+            MfxMouseArea
             {
                 id: stopPositionMarkerMovingArea
                 anchors.topMargin: -4
@@ -1186,16 +1200,10 @@ Item
                 anchors.right: parent.right
                 height: 12
                 hoverEnabled: true
-                cursor: Qt.SizeHorCursor
-
-//                drag.target: stopPositionMarker
-//                drag.axis: Drag.XAxis
-
-//                drag.maximumX: mainBackground.width - stopPositionMarker.width
 
                 onMouseXChanged:
                 {
-                    if(mouse.buttons === Qt.LeftButton)
+                    if(wasPressedAndMoved)
                     {
                         let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
 
@@ -1206,7 +1214,6 @@ Item
                         else
                             stopPositionMarker.x = mappedX
 
-//                        drag.minimumX = msecToPixels(startLoopMarker.position)
                         stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
                         project.setProperty("stopPosition", stopPositionMarker.position)
 
@@ -1293,7 +1300,7 @@ Item
                 }
             }
 
-            MouseAreaWithHidingCursor
+            MfxMouseArea
             {
                 id: startLoopMarkerMovingArea
                 anchors.topMargin: -4
@@ -1303,35 +1310,29 @@ Item
                 anchors.right: parent.right
                 height: 12
                 hoverEnabled: true
-                cursor: Qt.SizeHorCursor
-
-                drag.target: startLoopMarker
-                drag.axis: Drag.XAxis
-
-//                drag.minimumX: startPositionMarker.x
-                drag.minimumX: 0
-
-                onEntered:
-                {
-                    cursorShape = Qt.SizeHorCursor
-                }
-
-                onExited:
-                {
-                    cursorShape = Qt.ArrowCursor
-                }
 
                 onMouseXChanged:
                 {
-                    drag.maximumX = msecToPixels(stopLoopMarker.position)
-                    startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
-                    project.setProperty("startLoop", startLoopMarker.position)
-
-                    if(startPositionMarker.position > startLoopMarker.position)
+                    if(wasPressedAndMoved)
                     {
-                        startPositionMarker.x = startLoopMarker.x
-                        startPositionMarker.position = startLoopMarker.position
-                        project.setProperty("startPosition", startPositionMarker.position)
+                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
+
+                        if(mappedX < 0)
+                            startLoopMarker.x = 0
+                        else if(mappedX > msecToPixels(stopLoopMarker.position))
+                            startLoopMarker.x = msecToPixels(stopLoopMarker.position)
+                        else
+                            startLoopMarker.x = mappedX
+
+                        startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
+                        project.setProperty("startLoop", startLoopMarker.position)
+
+                        if(startLoopMarker.position < startPositionMarker.position)
+                        {
+                            startPositionMarker.x = startLoopMarker.x
+                            startPositionMarker.position = startLoopMarker.position
+                            project.setProperty("startPosition", startPositionMarker.position)
+                        }
                     }
                 }
             }
@@ -1410,7 +1411,7 @@ Item
                 }
             }
 
-            MouseAreaWithHidingCursor
+            MfxMouseArea
             {
                 id: stopLoopMarkerMovingArea
                 anchors.topMargin: -4
@@ -1420,7 +1421,6 @@ Item
                 anchors.right: parent.right
                 height: 12
                 hoverEnabled: true
-                cursor: Qt.SizeHorCursor
 
                 drag.target: stopLoopMarker
                 drag.axis: Drag.XAxis
@@ -1429,15 +1429,26 @@ Item
 
                 onMouseXChanged:
                 {
-                    drag.minimumX = msecToPixels(startLoopMarker.position)
-                    stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
-                    project.setProperty("stopLoop", stopLoopMarker.position)
-
-                    if(stopPositionMarker.position < stopLoopMarker.position)
+                    if(wasPressedAndMoved)
                     {
-                        stopPositionMarker.x = stopLoopMarker.x
-                        stopPositionMarker.position = stopLoopMarker.position
-                        project.setProperty("stopPosition", stopPositionMarker.position)
+                        let mappedX = mapToItem(waveformWidget, mouseX, mouseY).x
+
+                        if(mappedX < msecToPixels(startLoopMarker.position))
+                            stopLoopMarker.x = msecToPixels(startLoopMarker.position)
+                        else if(mappedX > msecToPixels(waveformWidget.max()))
+                            stopLoopMarker.x = msecToPixels(waveformWidget.max())
+                        else
+                            stopLoopMarker.x = mappedX
+
+                        stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
+                        project.setProperty("stopLoop", stopLoopMarker.position)
+
+                        if(stopLoopMarker.position > stopPositionMarker.position)
+                        {
+                            stopPositionMarker.x = stopLoopMarker.x
+                            stopPositionMarker.position = stopLoopMarker.position
+                            project.setProperty("stopPosition", stopPositionMarker.position)
+                        }
                     }
                 }
             }
@@ -1515,7 +1526,8 @@ Item
                 ctx.fill()
             }
 
-            MouseAreaWithHidingCursor
+//            MouseAreaWithHidingCursor
+            MouseArea
             {
                 id: cursorMovingArea
                 anchors.topMargin: -4
@@ -1524,7 +1536,7 @@ Item
                 anchors.right: parent.right
                 height: 12
                 hoverEnabled: true
-                cursor: Qt.SizeHorCursor
+//                cursor: Qt.SizeHorCursor
 
                 drag.target: positionCursor
                 drag.axis: Drag.XAxis
@@ -1576,6 +1588,13 @@ Item
                 positionCursor.updatePosition(waveformWidget.playerPosition())
             }
         }
+    }
+
+    Image
+    {
+        id: cursorImageForTimeScale
+        source: "qrc:/zoom"
+        visible: false
     }
 
     MfxButton

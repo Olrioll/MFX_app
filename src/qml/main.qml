@@ -62,12 +62,6 @@ ApplicationWindow
         }
     }
 
-    MouseAreaWithHidingCursor
-    {
-        id: overallArea
-        anchors.fill: parent
-    }
-
     MouseArea
     {
         id: bottomResizeArea
@@ -733,6 +727,14 @@ ApplicationWindow
                 }
             }
         }
+    }
+
+    MfxMouseArea
+    {
+        id: overallArea
+        anchors.fill: parent
+        propagateComposedEvents: true
+        acceptedButtons: Qt.NoButton
     }
 
     Connections

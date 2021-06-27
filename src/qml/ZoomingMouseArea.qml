@@ -1,6 +1,6 @@
 import QtQuick 2.0
 
-MouseAreaWithHidingCursor
+MouseArea
 {
     property string image: "qrc:/zoom"
     property alias cursorImage: cursorImage
@@ -26,6 +26,7 @@ MouseAreaWithHidingCursor
     {
         if(!isPressed)
         {
+            applicationWindow.isMouseCursorVisible = false
             cursorShape = Qt.BlankCursor
             cursorImage.x = mouseX
             cursorImage.y = mouseY
@@ -38,6 +39,7 @@ MouseAreaWithHidingCursor
         if(!isPressed)
         {
             cursorImage.visible = false
+            applicationWindow.isMouseCursorVisible = true
         }
     }
 
@@ -54,8 +56,8 @@ MouseAreaWithHidingCursor
         if(mouse.buttons)
         {
             applicationWindow.isMouseCursorVisible = false
-//            cursorManager.hideCursor();
 
+            cursorShape = Qt.BlankCursor
             if(mouse.buttons === Qt.LeftButton)
             {
                 let dx = mouseX - pressedX
@@ -89,6 +91,5 @@ MouseAreaWithHidingCursor
     {
         isPressed = false
         applicationWindow.isMouseCursorVisible = true
-//        cursorManager.showCursor();
     }
 }
