@@ -211,8 +211,6 @@ Item
             property int expandedPlateHeight: 36
 
             property var rows: []
-            property var rowsY: []
-            property var rowsHeights: []
 
             function clearRows()
             {
@@ -325,6 +323,8 @@ Item
 
                 property int pressedX
                 property int pressedY
+                property int prevMouseX
+                property int prevMouseY
                 property var pressedCuePlate: null
                 property bool isDraggingCuePlate
 
@@ -337,6 +337,8 @@ Item
                     cueViewFlickable.interactive = false
                     pressedX = mouseX
                     pressedY = mouseY
+                    prevMouseX = pressedX
+                    prevMouseY = prevMouseY
                     draggingPlatesList = []
                     pressedCuePlate = null
 
@@ -377,65 +379,65 @@ Item
                 {
                     if(isDraggingCuePlate)
                     {
-                        // перетаскивали одну плашку
-                        if(draggingPlatesList.length === 1)
-                        {
-                            cueView.rows.forEach(function(item, index, array)
-                            {
-                                if(mouseY >= cueView.rowsY[index] && mouseY <= cueView.rowsY[index] + cueView.rowsHeights[index])
-                                {
-                                    let oldRow = cueView.rows[draggingPlatesList[0].row]
+//                        // перетаскивали одну плашку
+//                        if(draggingPlatesList.length === 1)
+//                        {
+//                            cueView.rows.forEach(function(item, index, array)
+//                            {
+//                                if(mouseY >= cueView.rowsY[index] && mouseY <= cueView.rowsY[index] + cueView.rowsHeights[index])
+//                                {
+//                                    let oldRow = cueView.rows[draggingPlatesList[0].row]
 
-                                    if(item.length === 0) // Строка пустая
-                                    {
-                                        // удалем иконку кьюшки из старой строки
-                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
+//                                    if(item.length === 0) // Строка пустая
+//                                    {
+//                                        // удалем иконку кьюшки из старой строки
+//                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
 
-                                        draggingPlatesList[0].row = index
-                                        draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
-                                        item.push(draggingPlatesList[0])
-                                        project.setCueProperty(draggingPlatesList[0].name, "row", index)
-                                        project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
-                                    }
+//                                        draggingPlatesList[0].row = index
+//                                        draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
+//                                        item.push(draggingPlatesList[0])
+//                                        project.setCueProperty(draggingPlatesList[0].name, "row", index)
+//                                        project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
+//                                    }
 
-                                    else // проверяем пересечение с другими плашками
-                                    {
-                                        let currRow = cueView.rows[index]
+//                                    else // проверяем пересечение с другими плашками
+//                                    {
+//                                        let currRow = cueView.rows[index]
 
-                                        // удалем иконку кьюшки из старой строки
-                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
+//                                        // удалем иконку кьюшки из старой строки
+//                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
 
-                                        let hasIntersection = false
-                                        currRow.forEach(function(item)
-                                        {
-                                            if(isCuePlatesIntersect(item, draggingPlatesList[0]))
-                                                hasIntersection = true
-                                        })
+//                                        let hasIntersection = false
+//                                        currRow.forEach(function(item)
+//                                        {
+//                                            if(isCuePlatesIntersect(item, draggingPlatesList[0]))
+//                                                hasIntersection = true
+//                                        })
 
-                                        if(hasIntersection)
-                                        {
-                                            cueView.insertRow(index + 1)
-                                            cueView.rows[index + 1].push(draggingPlatesList[0])
-                                            draggingPlatesList[0].row = index + 1
-                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
-                                            project.setCueProperty(draggingPlatesList[0].name, "row", draggingPlatesList[0].row)
-                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
-                                        }
+//                                        if(hasIntersection)
+//                                        {
+//                                            cueView.insertRow(index + 1)
+//                                            cueView.rows[index + 1].push(draggingPlatesList[0])
+//                                            draggingPlatesList[0].row = index + 1
+//                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
+//                                            project.setCueProperty(draggingPlatesList[0].name, "row", draggingPlatesList[0].row)
+//                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
+//                                        }
 
-                                        else
-                                        {
-                                            draggingPlatesList[0].row = index
-                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
-                                            item.push(draggingPlatesList[0])
-                                            project.setCueProperty(draggingPlatesList[0].name, "row", index)
-                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
-                                        }
-                                    }
-                                }
-                            })
-                        }
+//                                        else
+//                                        {
+//                                            draggingPlatesList[0].row = index
+//                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
+//                                            item.push(draggingPlatesList[0])
+//                                            project.setCueProperty(draggingPlatesList[0].name, "row", index)
+//                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
+//                                        }
+//                                    }
+//                                }
+//                            })
+//                        }
 
-                        cueView.refresh();
+//                        cueView.refresh();
                     }
 
                     else
@@ -458,34 +460,32 @@ Item
 
                 onPositionChanged:
                 {
-                    let dx = mouseX - pressedX
-                    let dy = mouseY - pressedY
+                    let dx = mouseX - prevMouseX
+                    let dy = mouseY - prevMouseY
+
+                    prevMouseX = mouseX
+                    prevMouseY = mouseY
 
                     if(pressedCuePlate)
                     {
-                        isDraggingCuePlate = true
-
-                        let currY = -1;
-                        for(var i = 0; i < cueView.rowsY.length; i++)
+                        if(!isDraggingCuePlate)
                         {
-                            if(mouseY < cueView.rowsY[i])
+                            draggingPlatesList.forEach(function(cuePlate)
                             {
-                                if(i === 0)
-                                    currY = cueView.rowsY[0]
-                                else
-                                    currY = cueView.rowsY[i - 1]
-                                break
-                            }
+                                let currY = cuePlate.mapToItem(cueView, 0, 0).y
+                                cuePlate.parent = cueView
+                                cuePlate.y = currY
+                            })
+                            isDraggingCuePlate = true
                         }
 
-                        if(currY === -1)
-                            currY = cueView.rowsY[cueView.rowsY.length - 1]
-
-                        for(i = 0; i < draggingPlatesList.length; i++)
+                        else
                         {
-                            draggingPlatesList[i].x = draggingPlatesX[i] + dx
-//                            draggingPlatesList[i].y = draggingPlatesY[i] + dy
-                            draggingPlatesList[i].y = currY
+                            draggingPlatesList.forEach(function(cuePlate)
+                            {
+                                cuePlate.x += dx
+                                cuePlate.y += dy
+                            })
                         }
                     }
                 }
