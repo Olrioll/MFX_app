@@ -205,6 +205,7 @@ Item
         {
             id: cueView
             width: waveformWidget.width
+            property int rowMargin: 2
             property var rows: []
             property var rowsY: []
             property var rowsHeights: []
@@ -310,21 +311,21 @@ Item
                             currHeight = currCue.expandedHeight
                         }
 
-                        currCue.y = prevRowsHeight + 2
+                        currCue.y = prevRowsHeight + rowMargin
                         currCue.x = msecToPixels(currCue.position)
                         currCue.width = msecToPixels(currCue.position + currCue.duration) - currCue.x
                     }
 
-                    rowsY[j] = prevRowsHeight + 2
+                    rowsY[j] = prevRowsHeight + rowMargin
                     rowsHeights[j] = currHeight
-                    prevRowsHeight += currHeight + 2
+                    prevRowsHeight += currHeight + rowMargin
                     currHeight = 10
                 }
 
                 cueView.height = prevRowsHeight
             }
 
-            MouseAreaWithHidingCursor
+            MfxMouseArea
             {
                 id: mouseArea
                 anchors.fill: parent
@@ -1541,6 +1542,7 @@ Item
                     {
                         waveformWidget.setPlayerPosition(pixelsToMsec(positionCursor.x))
                         timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
+                        positionMarker.x = pixelsToMsec(positionCursor.x) / waveformWidget.duration() * scrollBackgroundWaveform.width
                     }
 
                     if(positionCursor.x + positionCursor.width + 1 === Math.round(stopPositionMarker.x))
@@ -1848,22 +1850,31 @@ Item
             }
         }
 
-        MouseAreaWithHidingCursor
+        MouseArea
         {
             id: barMovingArea
             anchors.topMargin: -10
             anchors.bottomMargin: -10
             anchors.fill: parent
 
-            drag.target: volumeLevelBar
-            drag.axis: Drag.XAxis
-
-            drag.minimumX: 0
-            drag.maximumX: volumeRegulator.width - volumeLevelBar.width
-
             onClicked:
             {
                 volumeLevelBar.x = mouseX
+            }
+
+            onPositionChanged:
+            {
+                if(mouse.buttons)
+                {
+                    if(mouseX < 0)
+                        volumeLevelBar.x = 0
+
+                    else if(mouseX > volumeRegulator.width)
+                        volumeLevelBar.x = 100
+
+                    else
+                        volumeLevelBar.x = mouseX
+                }
             }
 
             onWheel:
@@ -2039,6 +2050,24 @@ Item
                     function onAudioTrackFileChanged()
                     {
                         scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+                    }
+                }
+            }
+
+            Rectangle
+            {
+                id: positionMarker
+                width: 2
+                height: parent.height - 4
+                y: 2
+                color: "red"
+
+                Connections
+                {
+                    target: waveformWidget
+                    function onPositionChanged(pos)
+                    {
+                        positionMarker.x = pos / waveformWidget.duration() * scrollBackgroundWaveform.width
                     }
                 }
             }
