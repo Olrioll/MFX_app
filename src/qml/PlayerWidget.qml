@@ -205,25 +205,24 @@ Item
         {
             id: cueView
             width: waveformWidget.width
+
             property int rowMargin: 2
+            property int collapsedPlateHeight: 10
+            property int expandedPlateHeight: 36
+
             property var rows: []
             property var rowsY: []
             property var rowsHeights: []
 
             function clearRows()
             {
-                for(var j = 0; j < rows.length; j++)
+                for(var i = 0; i < rows.length; i++)
                 {
-                    let currRow = rows[j]
-                    for(var i = 0; i < currRow.length; i++)
-                    {
-                        currRow[i].destroy()
-                    }
+                    rows[i].clear()
+                    rows[i].destroy()
                 }
 
                 rows = []
-                rowsY = []
-                rowsHeights = []
             }
 
             function insertRow(position)
@@ -248,7 +247,7 @@ Item
 
                 for(var i = 0; i < project.maxCueRow() + 1; i++)
                 {
-                    rows.push([])
+                    rows.push(cueViewRow.createObject(cueView, {position: i }))
                 }
 
                 let cuesList = project.getCues();
@@ -256,8 +255,8 @@ Item
                 for(i = 0; i < cuesList.length; i++)
                 {
                     let currCueProperties = cuesList[i];
-                    rows[currCueProperties["row"]].push(
-                                                        cuePlate.createObject(cueView,
+                    rows[currCueProperties["row"]].cuePlates.push(
+                                                        cuePlate.createObject(rows[currCueProperties["row"]],
                                                           {
                                                               name: currCueProperties["name"],
                                                               row: currCueProperties["row"],
@@ -270,9 +269,9 @@ Item
             function getCueList()
             {
                 let cueList = []
-                rows.forEach(function(item)
+                rows.forEach(function(row)
                 {
-                    item.forEach(function(item){cueList.push(item)})
+                    row.cuePlates.forEach(function(cuePlate){cueList.push(cuePlate)})
                 })
 
                 return cueList
@@ -280,46 +279,39 @@ Item
 
             function setActiveCue(name)
             {
-                for(var j = 0; j < cueView.rows.length; j++)
+                let cueList = getCueList()
+                cueList.forEach(function(cuePlate)
                 {
-                    let currRow = cueView.rows[j]
-                    for(var i = 0; i < currRow.length; i++)
+                    if(cuePlate.name === name)
                     {
-                        let currCue = currRow[i]
-                        if(currCue.name === name)
-                            currCue.isExpanded = true
-                        else
-                            currCue.isExpanded = false
+                        cuePlate.isExpanded = true
+                        rows[cuePlate.row].isExpanded = true
                     }
-                }
-
+                    else
+                    {
+                        cuePlate.isExpanded = false
+                        rows[cuePlate.row].isExpanded = false
+                    }
+                })
                 refresh()
             }
 
             function refresh()
             {
                 let prevRowsHeight = 0
-                let currHeight = 10
+                let currHeight = cueView.collapsedPlateHeight
                 for(var j = 0; j < rows.length; j++)
                 {
                     let currRow = rows[j]
-                    for(var i = 0; i < currRow.length; i++)
-                    {
-                        let currCue = currRow[i]
-                        if(currCue.isExpanded)
-                        {
-                            currHeight = currCue.expandedHeight
-                        }
 
-                        currCue.y = prevRowsHeight + rowMargin
-                        currCue.x = msecToPixels(currCue.position)
-                        currCue.width = msecToPixels(currCue.position + currCue.duration) - currCue.x
-                    }
+                    if(currRow.isExpanded)
+                        currHeight = cueView.expandedPlateHeight
 
-                    rowsY[j] = prevRowsHeight + rowMargin
-                    rowsHeights[j] = currHeight
+                    currRow.y = prevRowsHeight + rowMargin
+                    currRow.refreshCuePlates()
+
                     prevRowsHeight += currHeight + rowMargin
-                    currHeight = 10
+                    currHeight = cueView.collapsedPlateHeight
                 }
 
                 cueView.height = prevRowsHeight
@@ -345,66 +337,39 @@ Item
                     cueViewFlickable.interactive = false
                     pressedX = mouseX
                     pressedY = mouseY
+                    draggingPlatesList = []
                     pressedCuePlate = null
 
-                    for(var j = 0; j < cueView.rows.length; j++)
+                    let cueList = cueView.getCueList()
+                    cueList.forEach(function(cuePlate)
                     {
-                        var currRow = cueView.rows[j]
-
-                        for(var i = 0; i < currRow.length; i++)
+                        if(cuePlate.contains(mouseArea.mapToItem(cuePlate, mouseX, mouseY)))
                         {
-                            var currCoord = currRow[i].mapToItem(cueView, 0, 0);
-                            var currWidth = currRow[i].width
-                            var currHeight = currRow[i].height
-
-                            if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
-                            {
-                                if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
-                                {
-                                    pressedCuePlate = currRow[i]
-
-                                    draggingPlatesList = []
-                                    draggingPlatesX = []
-                                    draggingPlatesY = []
-                                    draggingPlatesList.push(currRow[i])
-                                    draggingPlatesX.push(currRow[i].x)
-                                    draggingPlatesY.push(currRow[i].y)
-
-                                    for(var k = 0; k < cueView.rows.length; k++)
-                                    {
-                                        let currRow2 = cueView.rows[k]
-
-                                        for(var l = 0; l < currRow2.length; l++)
-                                        {
-                                            if(currRow2[l].checked && currRow2[l] !== pressedCuePlate)
-                                            {
-                                                draggingPlatesList.push(currRow2[l])
-                                                draggingPlatesX.push(currRow2[l].x)
-                                                draggingPlatesY.push(currRow2[l].y)
-                                            }
-                                        }
-
-                                    }
-
-                                    j = cueView.rows.length
-                                    break
-                                }
-                            }
+                            pressedCuePlate = cuePlate
+                            draggingPlatesList.push(cuePlate)
+                            return
                         }
+                    })
+
+                    if(pressedCuePlate)
+                    {
+                        cueList.forEach(function(cuePlate)
+                        {
+                            if(cuePlate.checked && cuePlate !== pressedCuePlate)
+                            {
+                                draggingPlatesList.push(cuePlate)
+                            }
+                        })
                     }
 
-                    if(!pressedCuePlate)
+                    else
                     {
                         cueView.setActiveCue("")
-                        for(j = 0; j < cueView.rows.length; j++)
-                        {
-                            let currRow = cueView.rows[j]
 
-                            for(i = 0; i < currRow.length; i++)
-                            {
-                                currRow[i].checked = false
-                            }
-                        }
+                        cueList.forEach(function(cuePlate)
+                        {
+                            cuePlate.checked = false
+                        })
                     }
                 }
 
@@ -528,6 +493,42 @@ Item
 
             Component
             {
+                id: cueViewRow
+                Item
+                {
+                    height: isExpanded ? expandedHeight : collapsedHeight
+
+                    property int pos
+                    property bool isExpanded: false
+                    property bool checked: false
+                    property int collapsedHeight: cueView.collapsedPlateHeight
+                    property int expandedHeight: cueView.expandedPlateHeight
+
+                    property var cuePlates: []
+
+                    function clear()
+                    {
+                        for(var i = 0; i < cuePlates.length; i++)
+                        {
+                            cuePlates[i].destroy()
+                        }
+
+                        cuePlates = []
+                    }
+
+                    function refreshCuePlates()
+                    {
+                        for(var i = 0; i < cuePlates.length; i++)
+                        {
+                            cuePlates[i].x = msecToPixels(cuePlates[i].position)
+                            cuePlates[i].width = msecToPixels(cuePlates[i].position + cuePlates[i].duration) - cuePlates[i].x
+                        }
+                    }
+                }
+            }
+
+            Component
+            {
                 id: cuePlate
                 Item
                 {
@@ -536,8 +537,8 @@ Item
                     property string name: ""
                     property bool isExpanded: false
                     property bool checked: false
-                    property int collapsedHeight: 10
-                    property int expandedHeight: 36
+                    property int collapsedHeight: cueView.collapsedPlateHeight
+                    property int expandedHeight: cueView.expandedPlateHeight
                     property int row
                     property int position // в мсек
                     property int duration  // в мсек
