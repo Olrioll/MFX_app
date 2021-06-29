@@ -507,7 +507,7 @@ Item
                         else
                         {
                             let canBeMovedVertically = true
-                            let shouldBeMovedHorizontally = false
+                            let shouldBeMovedHorizontally = true
 
                             draggingPlatesList.forEach(function(cuePlate)
                             {
@@ -530,7 +530,19 @@ Item
 
                             if(Math.abs(Math.round(pixelsToMsec(draggingPlatesList[0].x + dxAcc) / 10) * 10 - Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10) >= 10)
                             {
-                                shouldBeMovedHorizontally = true
+                                draggingPlatesList.forEach(function(cuePlate)
+                                {
+                                    let newPos = Math.round(pixelsToMsec(cuePlate.x + dxAcc) / 10) * 10
+
+                                    // если вылезем за края трека
+                                    if(!(newPos >=0 && (newPos + cuePlate.duration <= waveformWidget.duration())))
+                                    {
+                                        shouldBeMovedHorizontally = false
+                                        return
+                                    }
+
+
+                                })
                             }
 
                             draggingPlatesList.forEach(function(cuePlate)
@@ -550,7 +562,9 @@ Item
                             })
 
                             if(shouldBeMovedHorizontally)
+                            {
                                 dxAcc = 0
+                            }
                         }
                     }
                 }
@@ -585,8 +599,11 @@ Item
                     {
                         for(var i = 0; i < cuePlates.length; i++)
                         {
-                            cuePlates[i].x = msecToPixels(cuePlates[i].position)
-                            cuePlates[i].width = msecToPixels(cuePlates[i].position + cuePlates[i].duration) - cuePlates[i].x
+                            if(!(cuePlates[i].parent === cueView))
+                            {
+                                cuePlates[i].x = msecToPixels(cuePlates[i].position)
+                                cuePlates[i].width = msecToPixels(cuePlates[i].position + cuePlates[i].duration) - cuePlates[i].x
+                            }
                         }
                     }
                 }
