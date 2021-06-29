@@ -326,6 +326,7 @@ Item
                 property var pressedRow
                 property int prevMouseX
                 property int prevMouseY
+                property int dxAcc
                 property var pressedCuePlate: null
                 property bool isDraggingCuePlate
 
@@ -342,6 +343,7 @@ Item
                     prevMouseY = prevMouseY
                     draggingPlatesList = []
                     pressedCuePlate = null
+                    dxAcc = 0
 
                     cueView.rows.forEach(function(row)
                     {
@@ -487,6 +489,8 @@ Item
                     prevMouseX = mouseX
                     prevMouseY = mouseY
 
+                    dxAcc += dx
+
                     if(pressedCuePlate)
                     {
                         if(!isDraggingCuePlate)
@@ -503,6 +507,7 @@ Item
                         else
                         {
                             let canBeMovedVertically = true
+                            let shouldBeMovedHorizontally = false
 
                             draggingPlatesList.forEach(function(cuePlate)
                             {
@@ -523,15 +528,29 @@ Item
                                 }
                             })
 
-                            draggingPlatesList.forEach(function(cuePlate)
+                            if(Math.abs(Math.round(pixelsToMsec(draggingPlatesList[0].x + dxAcc) / 10) * 10 - Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10) >= 10)
                             {
-                                let newX = msecToPixels(Math.round(pixelsToMsec(cuePlate.x + dx) / 10) * 10)
-                                cuePlate.x  = newX
+                                shouldBeMovedHorizontally = true
+                            }
 
+                            draggingPlatesList.forEach(function(cuePlate)
+                            {  
+                                if(shouldBeMovedHorizontally)
+                                {
+                                    let newPos = Math.round(pixelsToMsec(cuePlate.x + dxAcc) / 10) * 10
+
+                                    if(Math.abs(newPos - Math.round(pixelsToMsec(cuePlate.x) / 10) * 10) >= 10)
+                                    {
+                                        cuePlate.x  = msecToPixels(newPos)
+                                    }
+                                }
 
                                 if(canBeMovedVertically)
                                     cuePlate.y = cueView.rows[currRow.index + (cuePlate.row - pressedRow.index)].y
                             })
+
+                            if(shouldBeMovedHorizontally)
+                                dxAcc = 0
                         }
                     }
                 }
