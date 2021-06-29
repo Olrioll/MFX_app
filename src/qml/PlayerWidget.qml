@@ -245,7 +245,7 @@ Item
 
                 for(var i = 0; i < project.maxCueRow() + 1; i++)
                 {
-                    rows.push(cueViewRow.createObject(cueView, {position: i }))
+                    rows.push(cueViewRow.createObject(cueView, {index: i }))
                 }
 
                 let cuesList = project.getCues();
@@ -323,6 +323,7 @@ Item
 
                 property int pressedX
                 property int pressedY
+                property var pressedRow
                 property int prevMouseX
                 property int prevMouseY
                 property var pressedCuePlate: null
@@ -341,6 +342,15 @@ Item
                     prevMouseY = prevMouseY
                     draggingPlatesList = []
                     pressedCuePlate = null
+
+                    cueView.rows.forEach(function(row)
+                    {
+                        if(row.contains(mouseArea.mapToItem(row, 0, mouseY)))
+                        {
+                            pressedRow = row
+                            return
+                        }
+                    })
 
                     let cueList = cueView.getCueList()
                     cueList.forEach(function(cuePlate)
@@ -460,6 +470,17 @@ Item
 
                 onPositionChanged:
                 {
+                    let currRow = null
+
+                    cueView.rows.forEach(function(row)
+                    {
+                        if(row.contains(mouseArea.mapToItem(row, 0, mouseY)))
+                        {
+                            currRow = row
+                            return
+                        }
+                    })
+
                     let dx = mouseX - prevMouseX
                     let dy = mouseY - prevMouseY
 
@@ -481,10 +502,35 @@ Item
 
                         else
                         {
+                            let canBeMovedVertically = true
+
                             draggingPlatesList.forEach(function(cuePlate)
                             {
-                                cuePlate.x += dx
-                                cuePlate.y += dy
+                                if(currRow)
+                                {
+                                    let newIndex = currRow.index + (cuePlate.row - pressedRow.index)
+                                    if(newIndex < 0 || newIndex >= cueView.rows.length)
+                                    {
+                                        canBeMovedVertically = false
+                                        return
+                                    }
+                                }
+
+                                else
+                                {
+                                    canBeMovedVertically = false
+                                    return
+                                }
+                            })
+
+                            draggingPlatesList.forEach(function(cuePlate)
+                            {
+                                let newX = msecToPixels(Math.round(pixelsToMsec(cuePlate.x + dx) / 10) * 10)
+                                cuePlate.x  = newX
+
+
+                                if(canBeMovedVertically)
+                                    cuePlate.y = cueView.rows[currRow.index + (cuePlate.row - pressedRow.index)].y
                             })
                         }
                     }
@@ -498,7 +544,7 @@ Item
                 {
                     height: isExpanded ? expandedHeight : collapsedHeight
 
-                    property int pos
+                    property int index
                     property bool isExpanded: false
                     property bool checked: false
                     property int collapsedHeight: cueView.collapsedPlateHeight
