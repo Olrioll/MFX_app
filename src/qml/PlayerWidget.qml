@@ -185,22 +185,6 @@ Item
         contentHeight: cueView.height
         clip: true
 
-
-        ScrollBar.vertical: ScrollBar
-        {
-            id: cueViewScrollBar
-            policy: cueView.height > waveformWidget.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
-
-            contentItem:
-                Rectangle
-                {
-                    implicitWidth: 10
-                    radius: 2
-                    color: "#c4c4c4"
-                    opacity: parent.pressed ? 0.25 : 0.5
-                }
-        }
-
         Item
         {
             id: cueView
@@ -491,6 +475,21 @@ Item
 
                     dxAcc += dx
 
+                    let leftScrollInterval = 0
+                    let rightScrollInterval = 0
+
+                    // скроллим видимую область вверх
+                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y < 0)
+                    {
+                        cueViewScrollBar.decrease()
+                    }
+
+                    // скроллим видимую область вниз
+                    else if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y > cueViewFlickable.height)
+                    {
+                        cueViewScrollBar.increase()
+                    }
+
                     if(pressedCuePlate)
                     {
                         if(!isDraggingCuePlate)
@@ -530,6 +529,7 @@ Item
 
                             if(Math.abs(Math.round(pixelsToMsec(draggingPlatesList[0].x + dxAcc) / 10) * 10 - Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10) >= 10)
                             {
+
                                 draggingPlatesList.forEach(function(cuePlate)
                                 {
                                     let newPos = Math.round(pixelsToMsec(cuePlate.x + dxAcc) / 10) * 10
@@ -541,13 +541,44 @@ Item
                                         return
                                     }
 
+                                    // если нужно проскроллить влево
+                                    if(newPos < waveformWidget.min())
+                                    {
+                                        if((waveformWidget.min() - newPos) > leftScrollInterval)
+                                        {
+                                            leftScrollInterval = waveformWidget.min() - newPos
+                                        }
+                                    }
+
+                                    // если нужно проскроллить вправо
+                                    else if((newPos + cuePlate.duration) > waveformWidget.max())
+                                    {
+                                        if((newPos + cuePlate.duration) - waveformWidget.max() > rightScrollInterval)
+                                        {
+                                            rightScrollInterval = (newPos + cuePlate.duration) - waveformWidget.max()
+                                        }
+                                    }
+
 
                                 })
+
+                                if(leftScrollInterval)
+                                {
+                                    waveformWidget.setMin(waveformWidget.min() - leftScrollInterval)
+                                    waveformWidget.setMax(waveformWidget.max() - leftScrollInterval)
+                                }
+
+                                else if(rightScrollInterval)
+                                {
+                                    waveformWidget.setMin(waveformWidget.min() + rightScrollInterval)
+                                    waveformWidget.setMax(waveformWidget.max() + rightScrollInterval)
+                                }
+
                             }
 
                             draggingPlatesList.forEach(function(cuePlate)
                             {  
-                                if(shouldBeMovedHorizontally)
+                                if(shouldBeMovedHorizontally && !leftScrollInterval && !rightScrollInterval)
                                 {
                                     let newPos = Math.round(pixelsToMsec(cuePlate.x + dxAcc) / 10) * 10
 
@@ -733,6 +764,21 @@ Item
                     cueView.refresh()
                 }
             }
+        }
+
+        ScrollBar.vertical: ScrollBar
+        {
+            id: cueViewScrollBar
+            policy: cueView.height > waveformWidget.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
+            contentItem:
+                Rectangle
+                {
+                    implicitWidth: 10
+                    radius: 2
+                    color: "#c4c4c4"
+                    opacity: parent.pressed ? 0.25 : 0.5
+                }
         }
     }
 
