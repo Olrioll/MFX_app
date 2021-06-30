@@ -321,8 +321,7 @@ Item
                 property var currRow: null
 
                 property var draggingPlatesList: []
-                property var draggingPlatesX: []
-                property var draggingPlatesY: []
+                property bool hasIntersection
 
                 onPressed:
                 {
@@ -350,6 +349,8 @@ Item
                         if(cuePlate.contains(mouseArea.mapToItem(cuePlate, mouseX, mouseY)))
                         {
                             pressedCuePlate = cuePlate
+                            pressedCuePlate.tempRow = pressedCuePlate.row
+                            pressedCuePlate.tempPosition = pressedCuePlate.position
                             draggingPlatesList.push(cuePlate)
                             return
                         }
@@ -361,6 +362,8 @@ Item
                         {
                             if(cuePlate.checked && cuePlate !== pressedCuePlate)
                             {
+                                cuePlate.tempRow = cuePlate.row
+                                cuePlate.tempPosition = cuePlate.position
                                 draggingPlatesList.push(cuePlate)
                             }
                         })
@@ -381,6 +384,40 @@ Item
                 {
                     if(isDraggingCuePlate)
                     {
+                        if(!hasIntersection) // Не накладываемся на другие плашки
+                        {
+                            draggingPlatesList.forEach(function(cuePlate)
+                            {
+                                if(cuePlate.tempRow !== cuePlate.row)
+                                {
+                                    // Удаляем плашку из старой строки
+
+                                    cueView.rows[cuePlate.row].cuePlates.splice(cueView.rows[cuePlate.row].cuePlates.indexOf(cuePlate), 1)
+
+                                    // Добавляем плашку в новую строку
+                                    cueView.rows[cuePlate.tempRow].cuePlates.push(cuePlate)
+                                    cuePlate.row = cuePlate.tempRow
+                                }
+
+                                cuePlate.parent = cueView.rows[cuePlate.tempRow]
+                                cuePlate.y = 0
+                                cuePlate.position = cuePlate.tempPosition
+
+                                project.setCueProperty(cuePlate.name, "row", cuePlate.row)
+                                project.setCueProperty(cuePlate.name, "position", cuePlate.position)
+                            })
+                        }
+
+                        else
+                        {
+                            draggingPlatesList.forEach(function(cuePlate)
+                            {
+                                cuePlate.parent = cueView.rows[cuePlate.row]
+                                cuePlate.y = 0
+                                cuePlate.state = ""
+                            })
+                        }
+
 //                        // перетаскивали одну плашку
 //                        if(draggingPlatesList.length === 1)
 //                        {
@@ -452,6 +489,7 @@ Item
                     isDraggingCuePlate = false
                     draggingPlatesList = []
                     cueViewFlickable.interactive = true
+                    cueView.refresh()
                 }
 
                 onDoubleClicked:
@@ -517,6 +555,7 @@ Item
                                 if(currRow)
                                 {
                                     let newIndex = currRow.index + (cuePlate.row - pressedRow.index)
+                                    cuePlate.tempRow = newIndex
                                     if(newIndex < 0 || newIndex >= cueView.rows.length)
                                     {
                                         canBeMovedVertically = false
@@ -580,7 +619,7 @@ Item
 
                             }
 
-                            let hasIntersection = false
+                            hasIntersection = false
 
                             draggingPlatesList.forEach(function(cuePlate)
                             {  
@@ -590,12 +629,13 @@ Item
 
                                     if(Math.abs(newPos - Math.round(pixelsToMsec(cuePlate.x) / 10) * 10) >= 10)
                                     {
+                                        cuePlate.tempPosition = newPos
                                         cuePlate.x  = msecToPixels(newPos)
                                     }
                                 }
 
                                 if(canBeMovedVertically)
-                                    cuePlate.y = cueView.rows[currRow.index + (cuePlate.row - pressedRow.index)].y
+                                    cuePlate.y = cueView.rows[cuePlate.tempRow].y
 
 
                                 // проверяем пересечение с другими плашками
@@ -605,9 +645,10 @@ Item
                                     let cueList = cueView.getCueList()
                                     cueList.forEach(function(otherCuePlate)
                                     {
-                                        if(otherCuePlate.parent !== cueView)
+                                        if(otherCuePlate.parent !== cueView && otherCuePlate.row === cuePlate.tempRow)
                                         {
-                                            if(isCuePlatesIntersect(cuePlate, otherCuePlate))
+                                            if( ! ((cuePlate.tempPosition + cuePlate.duration < otherCuePlate.position) ||
+                                                 (cuePlate.tempPosition > otherCuePlate.position + otherCuePlate.duration)))
                                             {
                                                 hasIntersection = true
                                                 return
@@ -685,6 +726,8 @@ Item
                     property int row
                     property int position // в мсек
                     property int duration  // в мсек
+                    property int tempRow
+                    property int tempPosition
 
                     states:
                         [
