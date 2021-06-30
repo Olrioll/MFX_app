@@ -61,10 +61,15 @@ Item
 
     function isCuePlatesIntersect(plate1, plate2)
     {
-        let aLeftOfB = plate1.x + plate1.width < plate2.x;
-        let aRightOfB = plate1.x > plate2.x + plate2.width;
-        let aAboveB = plate1.y > plate2.y + plate2.height;
-        let aBelowB = plate1.y + plate1.height < plate2.y;
+//        let aLeftOfB = plate1.mapToItem(cueView, plate1.x, plate1.y).x + plate1.width < plate2.mapToItem(cueView, plate2.x, plate2.y).x;
+//        let aRightOfB = plate1.mapToItem(cueView, plate1.x, plate1.y).x > plate2.mapToItem(cueView, plate2.x, plate2.y).x + plate2.width;
+//        let aAboveB = plate1.mapToItem(cueView, plate1.x, plate1.y).y > plate2.mapToItem(cueView, plate2.x, plate2.y).y + plate2.height;
+//        let aBelowB = plate1.mapToItem(cueView, plate1.x, plate1.y).y + plate1.height < plate2.mapToItem(cueView, plate2.x, plate2.y).y;
+
+        let aLeftOfB = plate1.mapToGlobal(plate1.x, plate1.y).x + plate1.width < plate2.mapToGlobal(plate2.x, plate2.y).x;
+        let aRightOfB = plate1.mapToGlobal(plate1.x, plate1.y).x > plate2.mapToGlobal( plate2.x, plate2.y).x + plate2.width;
+        let aAboveB = plate1.mapToGlobal(plate1.x, plate1.y).y > plate2.mapToGlobal(plate2.x, plate2.y).y + plate2.height;
+        let aBelowB = plate1.mapToGlobal(plate1.x, plate1.y).y + plate1.height < plate2.mapToGlobal(plate2.x, plate2.y).y;
 
         return !( aLeftOfB || aRightOfB || aAboveB || aBelowB );
     }
@@ -313,6 +318,7 @@ Item
                 property int dxAcc
                 property var pressedCuePlate: null
                 property bool isDraggingCuePlate
+                property var currRow: null
 
                 property var draggingPlatesList: []
                 property var draggingPlatesX: []
@@ -456,8 +462,6 @@ Item
 
                 onPositionChanged:
                 {
-                    let currRow = null
-
                     cueView.rows.forEach(function(row)
                     {
                         if(row.contains(mouseArea.mapToItem(row, 0, mouseY)))
@@ -576,6 +580,8 @@ Item
 
                             }
 
+                            let hasIntersection = false
+
                             draggingPlatesList.forEach(function(cuePlate)
                             {  
                                 if(shouldBeMovedHorizontally && !leftScrollInterval && !rightScrollInterval)
@@ -590,6 +596,30 @@ Item
 
                                 if(canBeMovedVertically)
                                     cuePlate.y = cueView.rows[currRow.index + (cuePlate.row - pressedRow.index)].y
+
+
+                                // проверяем пересечение с другими плашками
+
+                                if(!hasIntersection)
+                                {
+                                    let cueList = cueView.getCueList()
+                                    cueList.forEach(function(otherCuePlate)
+                                    {
+                                        if(otherCuePlate.parent !== cueView)
+                                        {
+                                            if(isCuePlatesIntersect(cuePlate, otherCuePlate))
+                                            {
+                                                hasIntersection = true
+                                                return
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+
+                            draggingPlatesList.forEach(function(cuePlate)
+                            {
+                                cuePlate.state = hasIntersection ? "intersected" : ""
                             })
 
                             if(shouldBeMovedHorizontally)
@@ -655,6 +685,25 @@ Item
                     property int row
                     property int position // в мсек
                     property int duration  // в мсек
+
+                    states:
+                        [
+                        State
+                        {
+                            name: "intersected"
+                            PropertyChanges
+                            {
+                                target: frame
+                                color: "#3FEB5757"
+                            }
+
+                            PropertyChanges
+                            {
+                                target: frame.border
+                                color: "#EB5757"
+                            }
+                        }
+                    ]
 
                     Rectangle
                     {
