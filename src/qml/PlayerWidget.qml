@@ -1328,6 +1328,10 @@ Item
                 draggedItemMinX: 0
                 draggedItemMaxX: stopLoopMarker.x
 
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
@@ -1431,6 +1435,10 @@ Item
                 draggedItem: stopPositionMarker
                 draggedItemMinX: startLoopMarker.x
                 draggedItemMaxX: waveformWidget.width
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
 
                 onMouseXChanged:
                 {
@@ -1545,6 +1553,10 @@ Item
                 draggedItemMinX: 0
                 draggedItemMaxX: stopLoopMarker.x
 
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
@@ -1652,6 +1664,10 @@ Item
                 draggedItemMinX: startLoopMarker.x
                 draggedItemMaxX: waveformWidget.width
 
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
                 onMouseXChanged:
                 {
                     if(wasPressedAndMoved)
@@ -1756,6 +1772,10 @@ Item
                 draggedItem: positionCursor
                 draggedItemMinX: startPositionMarker.x
                 draggedItemMaxX: stopPositionMarker.x
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
 
                 onMouseXChanged:
                 {
