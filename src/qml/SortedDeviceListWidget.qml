@@ -150,17 +150,20 @@ ListView
         property var pressedItem: null
         property int pressedX
         property int pressedY
-        property int mappedPressedX
-        property int mappedPressedY
+//        property int mappedPressedX
+//        property int mappedPressedY
         property bool wasDragging: false
 
         drag.target: deviceListView.held ? draggedPlate : undefined
         drag.axis: Drag.XAndYAxis
 
-//        drag.minimumX: 0
-//        drag.maximumX: patchScreen.width - draggedPlate.width
-//        drag.minimumY: 0
-//        drag.maximumY: patchScreen.height - draggedPlate.height
+        drag.minimumX: 0
+        drag.maximumX: patchScreen.width - draggedPlate.width
+        drag.minimumY: 0
+        drag.maximumY: patchScreen.height - draggedPlate.height
+
+        drag.threshold: 0
+        drag.smoothed: false
 
         onClicked:
         {
@@ -183,10 +186,10 @@ ListView
             pressedItem = deviceListView.itemAt(mouseX, mouseY)
             if(pressedItem)
             {
-                mappedPressedX = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
-                mappedPressedY = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
-                draggedPlate.Drag.hotSpot.x = mappedPressedX
-                draggedPlate.Drag.hotSpot.y = mappedPressedY
+//                mappedPressedX = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
+//                mappedPressedY = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
+                draggedPlate.Drag.hotSpot.x = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
+                draggedPlate.Drag.hotSpot.y = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
 
                 draggedPlate.checkedIDs = []
                 for(let i = 0; i < deviceListView.count; i++)
@@ -219,22 +222,22 @@ ListView
         {
             wasDragging = true
 
-            let currX = mouseArea.mapToItem(patchScreen, mouseX, mouseY).x - mappedPressedX
-            let currY = mouseArea.mapToItem(patchScreen, mouseX, mouseY).y - mappedPressedY
+//            let currX = mouseArea.mapToItem(patchScreen, mouseX, mouseY).x - mappedPressedX
+//            let currY = mouseArea.mapToItem(patchScreen, mouseX, mouseY).y - mappedPressedY
 
-            if(currX < 0)
-                draggedPlate.x = 0
-            else if(currX > patchScreen.width - draggedPlate.width)
-                draggedPlate.x = patchScreen.width - draggedPlate.width
-            else
-                draggedPlate.x = currX
+//            if(currX < 0)
+//                draggedPlate.x = 0
+//            else if(currX > patchScreen.width - draggedPlate.width)
+//                draggedPlate.x = patchScreen.width - draggedPlate.width
+//            else
+//                draggedPlate.x = currX
 
-            if(currY < 0)
-                draggedPlate.y = 0
-            else if(currY > patchScreen.height - draggedPlate.height)
-                draggedPlate.y = patchScreen.height - draggedPlate.height
-            else
-                draggedPlate.y = currY
+//            if(currY < 0)
+//                draggedPlate.y = 0
+//            else if(currY > patchScreen.height - draggedPlate.height)
+//                draggedPlate.y = patchScreen.height - draggedPlate.height
+//            else
+//                draggedPlate.y = currY
         }
 
         onReleased:
