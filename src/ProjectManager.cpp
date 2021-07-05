@@ -500,6 +500,8 @@ void ProjectManager::editPatch(QVariantList properties)
         {
             changedIndex = i;
             newPatch.type = _patches.at(i).type;
+            newPatch.setProperty("posXRatio", _patches.at(i).property("posXRatio"));
+            newPatch.setProperty("posYRatio", _patches.at(i).property("posYRatio"));
             break;
         }
     }
