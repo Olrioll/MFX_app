@@ -304,6 +304,56 @@ Item
                 cueView.height = prevRowsHeight
             }
 
+            Timer
+            {
+                id: leftScrollTimer
+                interval: 50
+                repeat: true
+
+                property int divider: 100
+
+                onTriggered:
+                {
+                    let step = (waveformWidget.max() - waveformWidget.min()) / divider
+                    if((waveformWidget.min() - step) > 0)
+                    {
+                        waveformWidget.setMin(waveformWidget.min() - step)
+                        waveformWidget.setMax(waveformWidget.max() - step)
+                    }
+
+                    else
+                    {
+                        waveformWidget.setMin(0)
+                        waveformWidget.setMax(step * divider)
+                    }
+                }
+            }
+
+            Timer
+            {
+                id: rightScrollTimer
+                interval: 50
+                repeat: true
+
+                property int divider: 100
+
+                onTriggered:
+                {
+                    let step = (waveformWidget.max() - waveformWidget.min()) / divider
+                    if((waveformWidget.max() + step) < waveformWidget.duration())
+                    {
+                        waveformWidget.setMin(waveformWidget.min() + step)
+                        waveformWidget.setMax(waveformWidget.max() + step)
+                    }
+
+                    else
+                    {
+                        waveformWidget.setMin(waveformWidget.duration() - step * divider)
+                        waveformWidget.setMax(waveformWidget.duration())
+                    }
+                }
+            }
+
             MfxMouseArea
             {
                 id: mouseArea
@@ -584,23 +634,43 @@ Item
                                         return
                                     }
 
-                                    // если нужно проскроллить влево
-                                    if(newPos < waveformWidget.min())
+                                    if(mouseX < 4)
                                     {
-                                        if((waveformWidget.min() - newPos) > leftScrollInterval)
-                                        {
-                                            leftScrollInterval = waveformWidget.min() - newPos
-                                        }
+                                        leftScrollTimer.start()
                                     }
 
-                                    // если нужно проскроллить вправо
-                                    else if((newPos + cuePlate.duration) > waveformWidget.max())
+                                    else
                                     {
-                                        if((newPos + cuePlate.duration) - waveformWidget.max() > rightScrollInterval)
-                                        {
-                                            rightScrollInterval = (newPos + cuePlate.duration) - waveformWidget.max()
-                                        }
+                                        leftScrollTimer.stop()
                                     }
+
+                                    if(mouseX > (mouseArea.width - 4))
+                                    {
+                                        rightScrollTimer.start()
+                                    }
+
+                                    else
+                                    {
+                                        rightScrollTimer.stop()
+                                    }
+
+//                                    // если нужно проскроллить влево
+//                                    if(newPos < waveformWidget.min())
+//                                    {
+//                                        if((waveformWidget.min() - newPos) > leftScrollInterval)
+//                                        {
+//                                            leftScrollInterval = waveformWidget.min() - newPos
+//                                        }
+//                                    }
+
+//                                    // если нужно проскроллить вправо
+//                                    else if((newPos + cuePlate.duration) > waveformWidget.max())
+//                                    {
+//                                        if((newPos + cuePlate.duration) - waveformWidget.max() > rightScrollInterval)
+//                                        {
+//                                            rightScrollInterval = (newPos + cuePlate.duration) - waveformWidget.max()
+//                                        }
+//                                    }
 
 
                                 })
