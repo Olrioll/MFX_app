@@ -1029,6 +1029,9 @@ Item
 
             property alias resizingCenterMarker: resizingCenterMarker
 
+            property int pressedX
+            property int pressedY
+
             function zoom(delta)
             {
                 let scaleFactor = 0.05
@@ -1126,6 +1129,8 @@ Item
 
             onPressed:
             {
+                pressedX = mouseX
+                pressedY = mouseY
                 playerResizeArea.enabled = false
                 playerResizeArea.cursorShape = Qt.BlankCursor
                 mainScreen.sceneWidget.enabled = false
@@ -1215,8 +1220,9 @@ Item
                 playerResizeArea.cursorShape = Qt.SizeVerCursor
                 mainScreen.sceneWidget.enabled = true
                 resizingCenterMarker.visible = false
-//                timeScaleMouseArea.cursorImage.visible = true
                 cursorImageForTimeScale.visible = true
+
+                cursorManager.moveCursor(resizingCenterMarker.x - pressedX, resizingCenterMarker.y - pressedY)
             }
         }
     }
