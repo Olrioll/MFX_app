@@ -434,6 +434,10 @@ Item
                 {
                     if(isDraggingCuePlate)
                     {
+
+                        leftScrollTimer.stop()
+                        rightScrollTimer.stop()
+
                         if(!hasIntersection) // Не накладываемся на другие плашки
                         {
                             draggingPlatesList.forEach(function(cuePlate)
@@ -467,66 +471,6 @@ Item
                                 cuePlate.state = ""
                             })
                         }
-
-//                        // перетаскивали одну плашку
-//                        if(draggingPlatesList.length === 1)
-//                        {
-//                            cueView.rows.forEach(function(item, index, array)
-//                            {
-//                                if(mouseY >= cueView.rowsY[index] && mouseY <= cueView.rowsY[index] + cueView.rowsHeights[index])
-//                                {
-//                                    let oldRow = cueView.rows[draggingPlatesList[0].row]
-
-//                                    if(item.length === 0) // Строка пустая
-//                                    {
-//                                        // удалем иконку кьюшки из старой строки
-//                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
-
-//                                        draggingPlatesList[0].row = index
-//                                        draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
-//                                        item.push(draggingPlatesList[0])
-//                                        project.setCueProperty(draggingPlatesList[0].name, "row", index)
-//                                        project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
-//                                    }
-
-//                                    else // проверяем пересечение с другими плашками
-//                                    {
-//                                        let currRow = cueView.rows[index]
-
-//                                        // удалем иконку кьюшки из старой строки
-//                                        oldRow.splice(oldRow.indexOf(draggingPlatesList[0]), 1)
-
-//                                        let hasIntersection = false
-//                                        currRow.forEach(function(item)
-//                                        {
-//                                            if(isCuePlatesIntersect(item, draggingPlatesList[0]))
-//                                                hasIntersection = true
-//                                        })
-
-//                                        if(hasIntersection)
-//                                        {
-//                                            cueView.insertRow(index + 1)
-//                                            cueView.rows[index + 1].push(draggingPlatesList[0])
-//                                            draggingPlatesList[0].row = index + 1
-//                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
-//                                            project.setCueProperty(draggingPlatesList[0].name, "row", draggingPlatesList[0].row)
-//                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
-//                                        }
-
-//                                        else
-//                                        {
-//                                            draggingPlatesList[0].row = index
-//                                            draggingPlatesList[0].position = Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10
-//                                            item.push(draggingPlatesList[0])
-//                                            project.setCueProperty(draggingPlatesList[0].name, "row", index)
-//                                            project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
-//                                        }
-//                                    }
-//                                }
-//                            })
-//                        }
-
-//                        cueView.refresh();
                     }
 
                     else
@@ -566,9 +510,6 @@ Item
                     prevMouseY = mouseY
 
                     dxAcc += dx
-
-                    let leftScrollInterval = 0
-                    let rightScrollInterval = 0
 
                     // скроллим видимую область вверх
                     if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y < 0)
@@ -653,47 +594,14 @@ Item
                                     {
                                         rightScrollTimer.stop()
                                     }
-
-//                                    // если нужно проскроллить влево
-//                                    if(newPos < waveformWidget.min())
-//                                    {
-//                                        if((waveformWidget.min() - newPos) > leftScrollInterval)
-//                                        {
-//                                            leftScrollInterval = waveformWidget.min() - newPos
-//                                        }
-//                                    }
-
-//                                    // если нужно проскроллить вправо
-//                                    else if((newPos + cuePlate.duration) > waveformWidget.max())
-//                                    {
-//                                        if((newPos + cuePlate.duration) - waveformWidget.max() > rightScrollInterval)
-//                                        {
-//                                            rightScrollInterval = (newPos + cuePlate.duration) - waveformWidget.max()
-//                                        }
-//                                    }
-
-
                                 })
-
-                                if(leftScrollInterval)
-                                {
-                                    waveformWidget.setMin(waveformWidget.min() - leftScrollInterval)
-                                    waveformWidget.setMax(waveformWidget.max() - leftScrollInterval)
-                                }
-
-                                else if(rightScrollInterval)
-                                {
-                                    waveformWidget.setMin(waveformWidget.min() + rightScrollInterval)
-                                    waveformWidget.setMax(waveformWidget.max() + rightScrollInterval)
-                                }
-
                             }
 
                             hasIntersection = false
 
                             draggingPlatesList.forEach(function(cuePlate)
                             {  
-                                if(shouldBeMovedHorizontally && !leftScrollInterval && !rightScrollInterval)
+                                if(shouldBeMovedHorizontally)
                                 {
                                     let newPos = Math.round(pixelsToMsec(cuePlate.x + dxAcc) / 10) * 10
 
