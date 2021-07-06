@@ -214,16 +214,22 @@ Item
 
             function insertRow(position)
             {
-                rows.splice(position, 0, [])
-                rowsY.splice(position, 0, 0)
-                rowsHeights.splice(position, 0, 0)
-
-                getCueList().forEach(function(item)
+                let newRow = cueViewRow.createObject(cueView, {index: position})
+                rows.splice(position, 0, newRow)
+                rows.forEach(function(currRow)
                 {
-                    if(item.row >= position)
+                    if(currRow !== newRow && currRow.index >= position)
                     {
-                        item.row++
-                        project.setCueProperty(item.name, "row", item.row)
+                        currRow.index++
+                    }
+                })
+
+                getCueList().forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.row >= position)
+                    {
+                        currCuePlate.row++
+                        project.setCueProperty(currCuePlate.name, "row", currCuePlate.row)
                     }
                 })
             }
@@ -464,12 +470,29 @@ Item
 
                         else
                         {
-                            draggingPlatesList.forEach(function(cuePlate)
+                            if(draggingPlatesList.length === 1) // Перетаскивали одну плашку
                             {
-                                cuePlate.parent = cueView.rows[cuePlate.row]
-                                cuePlate.y = 0
-                                cuePlate.state = ""
-                            })
+                                cueView.insertRow(currRow.index)
+
+                                draggingPlatesList[0].parent = cueView.rows[currRow.index - 1]
+                                draggingPlatesList[0].row = currRow.index - 1
+                                draggingPlatesList[0].y = 0
+                                draggingPlatesList[0].position = draggingPlatesList[0].tempPosition
+                                draggingPlatesList[0].state = ""
+
+                                project.setCueProperty(draggingPlatesList[0].name, "row", draggingPlatesList[0].row)
+                                project.setCueProperty(draggingPlatesList[0].name, "position", draggingPlatesList[0].position)
+                            }
+
+                            else
+                            {
+                                draggingPlatesList.forEach(function(cuePlate)
+                                {
+                                    cuePlate.parent = cueView.rows[cuePlate.row]
+                                    cuePlate.y = 0
+                                    cuePlate.state = ""
+                                })
+                            }
                         }
                     }
 
@@ -502,6 +525,13 @@ Item
                             return
                         }
                     })
+
+                    // Добавляем новую строчку сверху, если утащили плашку на нулевую строку
+                    if(currRow.index === 0)
+                    {
+                        cueView.insertRow(0)
+//                        cueView.refresh()
+                    }
 
                     let dx = mouseX - prevMouseX
                     let dy = mouseY - prevMouseY
