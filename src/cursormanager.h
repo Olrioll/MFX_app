@@ -17,10 +17,15 @@ public slots:
     void hideCursor();
     void showCursor();
 
+    QPoint cursorPos() const;
+    void saveLastPos();
+    void moveToLastPos();
+
 signals:
 
 private:
 
+    QPoint _lastPos;
 
 };
 

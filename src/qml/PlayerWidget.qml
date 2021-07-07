@@ -472,10 +472,18 @@ Item
                         {
                             if(draggingPlatesList.length === 1) // Перетаскивали одну плашку
                             {
-                                cueView.insertRow(currRow.index)
 
-                                draggingPlatesList[0].parent = cueView.rows[currRow.index - 1]
-                                draggingPlatesList[0].row = currRow.index - 1
+
+                                // Удаляем плашку из старой строки
+                                cueView.rows[draggingPlatesList[0].row].cuePlates.splice(cueView.rows[draggingPlatesList[0].row].cuePlates.indexOf(draggingPlatesList[0]), 1)
+
+                                cueView.insertRow(currRow.index + 1)
+
+                                // Добавляем плашку в новую строку
+                                cueView.rows[currRow.index + 1].cuePlates.push(draggingPlatesList[0])
+
+                                draggingPlatesList[0].parent = cueView.rows[currRow.index + 1]
+                                draggingPlatesList[0].row = currRow.index + 1
                                 draggingPlatesList[0].y = 0
                                 draggingPlatesList[0].position = draggingPlatesList[0].tempPosition
                                 draggingPlatesList[0].state = ""
@@ -512,7 +520,16 @@ Item
                 onDoubleClicked:
                 {
                     if(pressedCuePlate)
-                        cueView.setActiveCue(pressedCuePlate.name)
+                    {
+                        if(pressedCuePlate.isExpanded)
+                        {
+                            pressedCuePlate.isExpanded = false
+                            cueView.rows[pressedCuePlate.row].isExpanded = false
+                        }
+
+                        else
+                            cueView.setActiveCue(pressedCuePlate.name)
+                    }
                 }
 
                 onPositionChanged:
@@ -1137,6 +1154,7 @@ Item
 
             onPressed:
             {
+                cursorManager.saveLastPos()
                 pressedX = mouseX
                 pressedY = mouseY
                 playerResizeArea.enabled = false
@@ -1230,7 +1248,8 @@ Item
                 resizingCenterMarker.visible = false
                 cursorImageForTimeScale.visible = true
 
-                cursorManager.moveCursor(resizingCenterMarker.x - pressedX, resizingCenterMarker.y - pressedY)
+                cursorManager.moveToLastPos()
+                cursorManager.moveCursor(resizingCenterMarker.x - pressedX, 0)
             }
         }
     }

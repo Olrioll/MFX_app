@@ -23,3 +23,18 @@ void CursorManager::showCursor()
 {
     qApp->restoreOverrideCursor();
 }
+
+QPoint CursorManager::cursorPos() const
+{
+    return QCursor::pos();
+}
+
+void CursorManager::saveLastPos()
+{
+    _lastPos = QCursor::pos();
+}
+
+void CursorManager::moveToLastPos()
+{
+    QCursor::setPos(_lastPos);
+}
