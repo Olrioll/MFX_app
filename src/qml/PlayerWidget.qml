@@ -362,6 +362,18 @@ Item
                 }
             }
 
+            Timer
+            {
+                id: upScrollTimer
+                interval: 100
+                repeat: true
+
+                onTriggered:
+                {
+                    cueViewScrollBar.decrease(0.005)
+                }
+            }
+
             MfxMouseArea
             {
                 id: mouseArea
@@ -561,15 +573,19 @@ Item
                     dxAcc += dx
 
                     // скроллим видимую область вверх
-                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y < 0)
+                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y < 2)
                     {
-                        cueViewScrollBar.decrease()
+//                        cueViewScrollBar.decrease(0.01)
+                        upScrollTimer.start()
                     }
 
+                    else
+                        upScrollTimer.stop()
+
                     // скроллим видимую область вниз
-                    else if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y > cueViewFlickable.height)
+                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y > cueViewFlickable.height)
                     {
-                        cueViewScrollBar.increase()
+                        cueViewScrollBar.increase(0.01)
                     }
 
                     if(pressedCuePlate)
