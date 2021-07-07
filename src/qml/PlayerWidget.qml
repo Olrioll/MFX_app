@@ -277,11 +277,13 @@ Item
                 {
                     if(cuePlate.name === name)
                     {
+                        cuePlate.checked = true
                         cuePlate.isExpanded = true
                         rows[cuePlate.row].isExpanded = true
                     }
                     else
                     {
+                        cuePlate.checked = false
                         cuePlate.isExpanded = false
                         rows[cuePlate.row].isExpanded = false
                     }
@@ -506,7 +508,7 @@ Item
 
                     else
                     {
-                        if(pressedCuePlate)
+                        if(pressedCuePlate && !pressedCuePlate.isExpanded)
                             pressedCuePlate.checked = !pressedCuePlate.checked
                     }
 
@@ -576,11 +578,14 @@ Item
                         {
                             draggingPlatesList.forEach(function(cuePlate)
                             {
+                                cuePlate.isExpanded = false
+                                cueView.rows[cuePlate.row].isExpanded = false
                                 let currY = cuePlate.mapToItem(cueView, 0, 0).y
                                 cuePlate.parent = cueView
                                 cuePlate.y = currY
                             })
                             isDraggingCuePlate = true
+                            cueView.refresh()
                         }
 
                         else
