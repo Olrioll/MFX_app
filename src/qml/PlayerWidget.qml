@@ -592,6 +592,7 @@ Item
                         {
                             let canBeMovedVertically = true
                             let shouldBeMovedHorizontally = true
+                            let wasMovedHorizontally = false
 
                             draggingPlatesList.forEach(function(cuePlate)
                             {
@@ -615,7 +616,6 @@ Item
 
                             if(Math.abs(Math.round(pixelsToMsec(draggingPlatesList[0].x + dxAcc) / 10) * 10 - Math.round(pixelsToMsec(draggingPlatesList[0].x) / 10) * 10) >= 10)
                             {
-
                                 draggingPlatesList.forEach(function(cuePlate)
                                 {
                                     let newPos = Math.round(pixelsToMsec(cuePlate.x + dxAcc) / 10) * 10
@@ -661,6 +661,7 @@ Item
                                     {
                                         cuePlate.tempPosition = newPos
                                         cuePlate.x  = msecToPixels(newPos)
+                                        wasMovedHorizontally = true
                                     }
                                 }
 
@@ -693,7 +694,7 @@ Item
                                 cuePlate.state = hasIntersection ? "intersected" : ""
                             })
 
-                            if(shouldBeMovedHorizontally)
+                            if(wasMovedHorizontally)
                             {
                                 dxAcc = 0
                             }
