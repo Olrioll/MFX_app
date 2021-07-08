@@ -232,6 +232,7 @@ public slots:
 
     void addCue(QVariantList properties);
     int CueCount() const;
+    void minimizeCueRowCount();
     int maxCueRow() const;
     QVariant getCueProperties(QString name) const;
     QVariantList getCues() const;

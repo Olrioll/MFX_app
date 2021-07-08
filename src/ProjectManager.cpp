@@ -653,6 +653,24 @@ int ProjectManager::CueCount() const
     return _cues.size();
 }
 
+void ProjectManager::minimizeCueRowCount()
+{
+    int minRow = _cues.at(0).property("row").toInt();
+    for(auto & cue : _cues)
+    {
+        if(cue.property("row").toInt() < minRow)
+            minRow = cue.property("row").toInt();
+    }
+
+    if(minRow <= 1)
+        return;
+
+    for(auto & cue : _cues)
+    {
+        cue.setProperty("row", cue.property("row").toInt() - minRow + 1);
+    }
+}
+
 int ProjectManager::maxCueRow() const
 {
     int count = 0;

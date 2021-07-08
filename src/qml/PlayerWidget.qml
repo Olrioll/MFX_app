@@ -212,6 +212,46 @@ Item
                 rows = []
             }
 
+            function deleteEmptyRows()
+            {
+                if(getCueList().length === 0)
+                    return
+
+                if(cueView.rows.length < 2)
+                    return
+
+                let emptyRowsCount = 0
+                for(var i = 1; i < cueView.rows.length; i++)
+                {
+                    if(cueView.rows[i].cuePlates.length === 0)
+                        emptyRowsCount++
+                    else
+                        break
+                }
+
+                if(!emptyRowsCount)
+                    return
+
+                let deletedRows = cueView.rows.splice(1, emptyRowsCount)
+                deletedRows.forEach(function(delRow)
+                {
+                    delRow.destroy()
+                })
+
+                for(i = 1; i < cueView.rows.length; i++)
+                {
+                    let currRow = cueView.rows[i]
+                    currRow.index = i
+
+                    currRow.cuePlates.forEach(function(currPlate)
+                    {
+                        currPlate.row = i
+                    })
+                }
+
+                refresh()
+            }
+
             function insertRow(position)
             {
                 let newRow = cueViewRow.createObject(cueView, {index: position})
@@ -236,6 +276,7 @@ Item
 
             function loadCues()
             {
+                project.minimizeCueRowCount()
                 clearRows()
 
                 for(var i = 0; i < project.maxCueRow() + 1; i++)
@@ -370,7 +411,45 @@ Item
 
                 onTriggered:
                 {
-                    cueViewScrollBar.decrease(0.005)
+                    cueViewScrollBar.decrease()
+                }
+            }
+
+            Timer
+            {
+                id: downScrollTimer
+                interval: 100
+                repeat: true
+
+                onTriggered:
+                {
+                    cueViewScrollBar.increase()
+                }
+            }
+
+            Timer
+            {
+                id: prependRowTimer
+                interval: 300
+                repeat: true
+
+                onTriggered:
+                {
+                    cueView.insertRow(0)
+                    cueView.refresh()
+                }
+            }
+
+            Timer
+            {
+                id: apppendRowTimer
+                interval: 100
+                repeat: true
+
+                onTriggered:
+                {
+                    cueView.insertRow(cueView.rows.length)
+                    cueView.refresh()
                 }
             }
 
@@ -452,12 +531,15 @@ Item
 
                 onReleased:
                 {
+                    leftScrollTimer.stop()
+                    rightScrollTimer.stop()
+                    upScrollTimer.stop()
+                    downScrollTimer.stop()
+                    prependRowTimer.stop()
+                    apppendRowTimer.stop()
+
                     if(isDraggingCuePlate)
                     {
-
-                        leftScrollTimer.stop()
-                        rightScrollTimer.stop()
-
                         if(!hasIntersection) // Не накладываемся на другие плашки
                         {
                             draggingPlatesList.forEach(function(cuePlate)
@@ -524,6 +606,9 @@ Item
                             pressedCuePlate.checked = !pressedCuePlate.checked
                     }
 
+                    if(isDraggingCuePlate)
+                        cueView.loadCues()
+
                     pressedCuePlate = null
                     isDraggingCuePlate = false
                     draggingPlatesList = []
@@ -560,8 +645,23 @@ Item
                     // Добавляем новую строчку сверху, если утащили плашку на нулевую строку
                     if(currRow.index === 0)
                     {
-                        cueView.insertRow(0)
-//                        cueView.refresh()
+                        prependRowTimer.start()
+                    }
+
+                    else
+                    {
+                        prependRowTimer.stop()
+                    }
+
+                    // Добавляем новую строчку снизу, если утащили плашку на последнюю строку
+                    if(currRow.index === cueView.rows.length - 1)
+                    {
+                        apppendRowTimer.start()
+                    }
+
+                    else
+                    {
+                        apppendRowTimer.stop()
                     }
 
                     let dx = mouseX - prevMouseX
@@ -573,19 +673,25 @@ Item
                     dxAcc += dx
 
                     // скроллим видимую область вверх
-                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y < 2)
+                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y < cueView.collapsedPlateHeight)
                     {
-//                        cueViewScrollBar.decrease(0.01)
                         upScrollTimer.start()
                     }
 
                     else
+                    {
                         upScrollTimer.stop()
+                    }
 
                     // скроллим видимую область вниз
-                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y > cueViewFlickable.height)
+                    if(mouseArea.mapToItem(cueViewFlickable, mouseX, mouseY).y > cueViewFlickable.height - cueView.collapsedPlateHeight)
                     {
-                        cueViewScrollBar.increase(0.01)
+                        downScrollTimer.start()
+                    }
+
+                    else
+                    {
+                        downScrollTimer.stop()
                     }
 
                     if(pressedCuePlate)
