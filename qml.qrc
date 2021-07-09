@@ -68,5 +68,6 @@
         <file>src/qml/ProjectSettingsWidget.qml</file>
         <file alias="trackPlaceholder">src/img/trackPlaceholder.png</file>
         <file>src/qml/MfxMouseArea.qml</file>
+        <file>src/qml/Player.qml</file>
     </qresource>
 </RCC>

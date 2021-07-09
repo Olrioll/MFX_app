@@ -26,7 +26,7 @@ Item
         sceneWidget.anchors.bottom = playerWidget.top
     }
 
-    PlayerWidget
+    Player
     {
         id: playerWidget
         height: minHeight
