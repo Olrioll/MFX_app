@@ -23,12 +23,12 @@ Item
 
     function msecToPixels(value)
     {
-        return playerWidget.width * (value - playerWidget.min) / (playerWidget.max - playerWidget.min)
+        return playerWidget.width * value / (playerWidget.max - playerWidget.min)
     }
 
     function pixelsToMsec(pixels)
     {
-        return Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width + playerWidget.min)
+        return Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width)
     }
 
     function hidePlayerElements()
@@ -63,6 +63,140 @@ Item
 //        stopLoopMarker.visible = true
 //        positionCursor.visible = true
 //        cueViewFlickable.visible = true
+    }
+
+    function zoom(delta)
+    {
+        let scaleFactor = 0.05
+
+        if(Math.abs(delta) < 5)
+            scaleFactor = 0.08
+        else if(Math.abs(delta) < 9)
+            scaleFactor = 0.1
+        else if(Math.abs(delta) < 14)
+            scaleFactor = 0.15
+        else
+            scaleFactor = 0.20
+
+        let currInterval = playerWidget.max - playerWidget.min
+        let dWidth = currInterval * scaleFactor
+        let zoomCenter = resizingCenterMarker.x / width
+        let leftShift = zoomCenter * dWidth
+        let rightShift = dWidth - leftShift
+
+        if(delta > 0)
+        {
+            if((waveformWidget.maxSample() - waveformWidget.minSample()) / waveformWidget.width > 4) // максимальный масштаб - 4 сэмпла на пиксель
+            {
+                playerWidget.min += Math.round(leftShift)
+                playerWidget.max -= Math.round(rightShift)
+            }
+        }
+
+        else
+        {
+            if((playerWidget.min - leftShift) >= 0 && (playerWidget.max + rightShift) <= playerWidget.projectDuration())
+            {
+                playerWidget.min -= Math.round(leftShift)
+                playerWidget.max += Math.round(rightShift)
+            }
+
+            else
+            {
+                let leftDist = playerWidget.min
+                let rightDist = playerWidget.projectDuration() - playerWidget.max
+
+                if(leftDist < rightDist)
+                {
+                    dWidth -= leftDist
+                    playerWidget.min = 0
+
+                    if((playerWidget.max + dWidth) < playerWidget.projectDuration())
+                    {
+                        playerWidget.max += dWidth
+                    }
+
+                    else
+                        playerWidget.max = playerWidget.projectDuration()
+                }
+
+                else
+                {
+                    dWidth -= rightDist
+                    playerWidget.max = playerWidget.projectDuration()
+
+                    if((playerWidget.min - dWidth) >= 0)
+                    {
+                        playerWidget.min -= dWidth
+                    }
+
+                    else
+                        playerWidget.min = 0
+                }
+            }
+        }
+    }
+
+    function move(dx, dy)
+    {
+        if(Math.abs(dx) > Math.abs(dy)) // Скроллим
+        {
+            let coeff = 1
+            if(Math.abs(dx) < 3)
+                coeff = 1
+            else if (Math.abs(dx) < 7)
+                coeff = 2
+            else if (Math.abs(dx) < 16)
+                coeff = 3
+            else
+                coeff = 4
+
+            let currInterval = playerWidget.max - playerWidget.min
+            let dX = currInterval / playerWidget.width * Math.abs(dx) * coeff
+
+            if(dx < 0)
+            {
+                if(playerWidget.max + dX <= playerWidget.projectDuration())
+                {
+                    playerWidget.max += dX
+                    playerWidget.min += dX
+
+                    if(resizingCenterMarker.x - Math.abs(dx) * coeff > 0)
+                    {
+                        resizingCenterMarker.x -= Math.abs(dx) * coeff
+                    }
+
+                    else
+                    {
+                        resizingCenterMarker.x = 1
+                    }
+                }
+            }
+
+            else
+            {
+                if(playerWidget.min - dX >= 0)
+                {
+                    playerWidget.max -= dX
+                    playerWidget.min -= dX
+
+                    if(resizingCenterMarker.x + Math.abs(dx) * coeff < width - 9)
+                    {
+                        resizingCenterMarker.x += Math.abs(dx) * coeff
+                    }
+
+                    else
+                    {
+                        resizingCenterMarker.x = width - 12
+                    }
+                }
+            }
+        }
+
+        else // Работаем с зумом
+        {
+            playerWidget.zoom(dy)
+        }
     }
 
     Rectangle
@@ -285,78 +419,6 @@ Item
             property int pressedX
             property int pressedY
 
-            function zoom(delta)
-            {
-                let scaleFactor = 0.05
-
-                if(Math.abs(delta) < 5)
-                    scaleFactor = 0.08
-                else if(Math.abs(delta) < 9)
-                    scaleFactor = 0.1
-                else if(Math.abs(delta) < 14)
-                    scaleFactor = 0.15
-                else
-                    scaleFactor = 0.20
-
-                let currInterval = waveformWidget.maxSample() - waveformWidget.minSample()
-                let dWidth = currInterval * scaleFactor
-                let zoomCenter = resizingCenterMarker.x / width
-                let leftShift = zoomCenter * dWidth
-                let rightShift = dWidth - leftShift
-
-                if(delta > 0)
-                {
-                    if((waveformWidget.maxSample() - waveformWidget.minSample()) / waveformWidget.width > 4) // максимальный масштаб - 4 сэмпла на пиксель
-                    {
-                        waveformWidget.setMinSample(waveformWidget.minSample() + Math.round(leftShift))
-                        waveformWidget.setMaxSample(waveformWidget.maxSample() - Math.round(rightShift))
-                    }
-                }
-
-                else
-                {
-                    if((waveformWidget.minSample() - leftShift) >= 0 && (waveformWidget.maxSample() + rightShift) < waveformWidget.sampleCount())
-                    {
-                        waveformWidget.setMinSample(waveformWidget.minSample() - leftShift)
-                        waveformWidget.setMaxSample(waveformWidget.maxSample() + rightShift)
-                    }
-
-                    else
-                    {
-                        let leftDist = waveformWidget.minSample()
-                        let rightDist = waveformWidget.sampleCount() - 1 - waveformWidget.maxSample()
-
-                        if(leftDist < rightDist)
-                        {
-                            dWidth -= waveformWidget.minSample()
-                            waveformWidget.setMinSample(0)
-
-                            if((waveformWidget.maxSample() + dWidth) < waveformWidget.sampleCount())
-                            {
-                                waveformWidget.setMaxSample(waveformWidget.maxSample() + dWidth)
-                            }
-
-                            else
-                                waveformWidget.setMaxSample(waveformWidget.sampleCount() - 1)
-                        }
-
-                        else
-                        {
-                            dWidth -= waveformWidget.sampleCount() - 1 - waveformWidget.maxSample()
-                            waveformWidget.setMaxSample(waveformWidget.sampleCount() - 1)
-
-                            if((waveformWidget.minSample() - dWidth) >= 0)
-                            {
-                                waveformWidget.setMinSample(waveformWidget.minSample() - dWidth)
-                            }
-
-                            else
-                                waveformWidget.setMinSample(0)
-                        }
-                    }
-                }
-            }
-
             Rectangle
             {
                 id: resizingCenterMarker
@@ -389,7 +451,6 @@ Item
                 playerResizeArea.enabled = false
                 playerResizeArea.cursorShape = Qt.BlankCursor
                 mainScreen.sceneWidget.enabled = false
-//                timeScaleMouseArea.cursorImage.visible = false
                 cursorImageForTimeScale.visible = false
                 resizingCenterMarker.x = mouseX
                 resizingCenterMarker.visible = true
@@ -403,70 +464,13 @@ Item
 
             onMoved:
             {
-                if(Math.abs(dx) > Math.abs(dy)) // Скроллим
-                {
-                    let coeff = 1
-                    if(Math.abs(dx) < 3)
-                        coeff = 1
-                    else if (Math.abs(dx) < 7)
-                        coeff = 2
-                    else if (Math.abs(dx) < 16)
-                        coeff = 3
-                    else
-                        coeff = 4
-
-                    let currInterval = waveformWidget.maxSample() - waveformWidget.minSample()
-                    let dX = currInterval / width * Math.abs(dx) * coeff
-
-                    if(dx < 0)
-                    {
-                        if(waveformWidget.maxSample() + dX < waveformWidget.sampleCount())
-                        {
-                            waveformWidget.setMaxSample(waveformWidget.maxSample() + dX)
-                            waveformWidget.setMinSample(waveformWidget.minSample() + dX)
-
-                            if(resizingCenterMarker.x - Math.abs(dx) * coeff > 0)
-                            {
-                                resizingCenterMarker.x -= Math.abs(dx) * coeff
-                            }
-
-                            else
-                            {
-                                resizingCenterMarker.x = 1
-                            }
-                        }
-                    }
-
-                    else
-                    {
-                        if(waveformWidget.minSample() - dX >= 0)
-                        {
-                            waveformWidget.setMaxSample(waveformWidget.maxSample() - dX)
-                            waveformWidget.setMinSample(waveformWidget.minSample() - dX)
-
-                            if(resizingCenterMarker.x + Math.abs(dx) * coeff < width - 9)
-                            {
-                                resizingCenterMarker.x += Math.abs(dx) * coeff
-                            }
-
-                            else
-                            {
-                                resizingCenterMarker.x = width - 12
-                            }
-                        }
-                    }
-                }
-
-                else // Работаем с зумом
-                {
-                    zoom(dy)
-                }
+                playerWidget.move(dx, dy)
             }
 
             onWheel:
             {
                 resizingCenterMarker.x = mouseX
-                zoom(wheel.angleDelta.y > 0 ? 2 : -2)
+                playerWidget.zoom(wheel.angleDelta.y > 0 ? 2 : -2)
             }
 
             onReleased:
@@ -490,6 +494,37 @@ Item
         anchors.bottomMargin: 24
         anchors.fill: parent
 
+        anchors.leftMargin: playerWidget.min >= project.property("prePlayInterval") ?
+                                0 :
+                                msecToPixels(project.property("prePlayInterval") - playerWidget.min)
+
+        anchors.rightMargin: playerWidget.max <= project.property("prePlayInterval") + waveformWidget.duration() ?
+                                 0 :
+                                 msecToPixels(playerWidget.max - (project.property("prePlayInterval") + waveformWidget.duration()))
+
+        function adjust()
+        {
+            if(playerWidget.min >= project.property("prePlayInterval"))
+            {
+                waveformWidget.setMin(playerWidget.min - project.property("prePlayInterval"))
+            }
+
+            else
+            {
+                waveformWidget.setMin(0)
+            }
+
+            if(playerWidget.max <= project.property("prePlayInterval") + waveformWidget.duration())
+            {
+                waveformWidget.setMax(playerWidget.max - project.property("prePlayInterval"))
+            }
+
+            else
+            {
+                waveformWidget.setMax(waveformWidget.duration())
+            }
+        }
+
         Connections
         {
             target: project
@@ -499,6 +534,82 @@ Item
                 waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
             }
         }
+
+        Connections
+        {
+            target: playerWidget
+            function onMinChanged()
+            {
+               waveformWidget.adjust()
+            }
+        }
+
+        Connections
+        {
+            target: playerWidget
+            function onMaxChanged()
+            {
+               waveformWidget.adjust()
+            }
+        }
+    }
+
+    Rectangle
+    {
+        id: leftChannelMarker
+        width: 10
+        height: 10
+        radius: 2
+        color: "#444444"
+        x: waveformBackground.x + 4
+        y: waveformBackground.y + 4
+        visible: stereoModeButton.checked
+
+        Text
+        {
+            text: "L"
+            color: "#ffffff"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            anchors.centerIn: parent
+            font.family: "Roboto"
+            font.pixelSize: 8
+        }
+    }
+
+    Rectangle
+    {
+        id: rightChannelMarker
+        width: 10
+        height: 10
+        radius: 2
+        color: "#444444"
+        x: waveformBackground.x + 4
+        y: waveformBackground.y + waveformBackground.height / 2 + 4
+        visible: stereoModeButton.checked
+
+        Text
+        {
+            text: "R"
+            color: "#ffffff"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            anchors.centerIn: parent
+            font.family: "Roboto"
+            font.pixelSize: 8
+        }
+    }
+
+    Rectangle
+    {
+        id: cnannelsSeparetor
+        width: waveformBackground.width
+        height: 2
+        y: waveformBackground.y + waveformBackground.height / 2
+        color: "#444444"
+        visible: stereoModeButton.checked
     }
 
     Image
@@ -506,6 +617,513 @@ Item
         id: cursorImageForTimeScale
         source: "qrc:/zoom"
         visible: false
+    }
+
+    MfxButton
+    {
+        id: stopButton
+        width: 16
+        height: 16
+        color:  "#222222"
+        pressedColor:  "#111111"
+
+        anchors.leftMargin: 4
+        anchors.bottomMargin: 4
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+
+        Image
+        {
+            source: "qrc:/stopButton"
+            anchors.centerIn: parent
+        }
+
+        onClicked:
+        {
+//            waveformWidget.pause()
+//            waveformWidget.setPlayerPosition(startPositionMarker.position)
+//            positionCursor.updatePosition(startPositionMarker.position)
+//            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
+//            playButton.checked = false
+        }
+    }
+
+    MfxButton
+    {
+        id: playButton
+        width: 16
+        height: 16
+        color:  "#222222"
+        pressedColor:  "#111111"
+        checkable: true
+
+        anchors.leftMargin: 2
+        anchors.bottomMargin: 4
+        anchors.left: stopButton.right
+        anchors.bottom: parent.bottom
+
+        Image
+        {
+            source: playButton.checked ? "qrc:/pauseButton" : "qrc:/playButton"
+            anchors.centerIn: parent
+        }
+
+        onCheckedChanged:
+        {
+//            checked ? waveformWidget.play() : waveformWidget.pause()
+        }
+    }
+
+    MfxButton
+    {
+        id: recordButton
+        width: 16
+        height: 16
+        color:  "#222222"
+        pressedColor:  "#111111"
+
+        anchors.leftMargin: 2
+        anchors.bottomMargin: 4
+        anchors.left: playButton.right
+        anchors.bottom: parent.bottom
+
+        Image
+        {
+            source: "qrc:/recordButton"
+            anchors.centerIn: parent
+        }
+    }
+
+    Rectangle
+    {
+        id: timerArea
+        width: 76
+        height: 16
+        color:  "#222222"
+        radius: 2
+
+        anchors.leftMargin: 2
+        anchors.bottomMargin: 4
+        anchors.left: recordButton.right
+        anchors.bottom: parent.bottom
+
+        Text
+        {
+            id: timer
+            text: "00:00:00.00"
+            color: "#eeeeee"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            anchors.centerIn: parent
+            font.family: "Roboto"
+            font.pixelSize: 12
+        }
+
+//        Connections
+//        {
+//            target: waveformWidget
+//            function onTimerValueChanged(value)
+//            {
+//                timer.text = value
+//            }
+//        }
+    }
+
+    MfxButton
+    {
+        id: settingsButton
+        width: 16
+        height: 16
+        color:  "#222222"
+        pressedColor:  "#111111"
+
+        anchors.leftMargin: 8
+        anchors.bottomMargin: 4
+        anchors.left: timerArea.right
+        anchors.bottom: parent.bottom
+
+        Image
+        {
+            source: "qrc:/settingsButton"
+            anchors.centerIn: parent
+        }
+    }
+
+    MfxButton
+    {
+        id: resetButton
+        width: 40
+        height: 16
+        color:  "#222222"
+        pressedColor:  "#111111"
+
+        anchors.leftMargin: 8
+        anchors.bottomMargin: 4
+        anchors.left: settingsButton.right
+        anchors.bottom: parent.bottom
+
+        text: qsTr("reset")
+        textSize: 10
+
+        onClicked:
+        {
+            project.setProperty("startPosition", 0)
+            project.setProperty("stopPosition", waveformWidget.duration() - 1)
+            project.setProperty("startLoop", 1)
+            project.setProperty("stopLoop", waveformWidget.duration() - 2)
+
+//            startPositionMarker.position = project.property("startPosition")
+//            stopPositionMarker.position = project.property("stopPosition")
+//            startLoopMarker.position = project.property("startLoop")
+//            stopLoopMarker.position = project.property("stopLoop")
+
+//            startPositionMarker.updatePosition()
+//            waveformWidget.setPlayerPosition(startPositionMarker.position)
+//            positionCursor.updatePosition(startPositionMarker.position)
+//            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
+//            stopPositionMarker.updatePosition()
+//            startLoopMarker.updatePosition()
+//            stopLoopMarker.updatePosition()
+
+//            cueView.refresh()
+        }
+    }
+
+    MfxButton
+    {
+        id: repeatButton
+        width: 28
+        height: 16
+        color:  "#222222"
+        checkable: true
+
+        anchors.leftMargin: 8
+        anchors.bottomMargin: 4
+        anchors.left: resetButton.right
+        anchors.bottom: parent.bottom
+
+        Image
+        {
+            source: repeatButton.checked ? "qrc:/repeatButtonChecked" : "qrc:/repeatButton"
+            anchors.centerIn: parent
+        }
+    }
+
+    Item
+    {
+        id: volumeRegulator
+        width: 104
+        height: 8
+
+        anchors.rightMargin: 20
+        anchors.right: monoModeButton.left
+        anchors.bottomMargin: 2
+        anchors.bottom: scrollArea.bottom
+
+        Text
+        {
+            id: volumeCaption
+            text: qsTr("Volume")
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.rightMargin: 8
+            anchors.right: parent.left
+
+            color: "#eeeeee"
+            padding: 0
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            font.family: "Roboto"
+            font.pixelSize: 12
+        }
+
+        Canvas
+        {
+            anchors.fill: parent
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.fillStyle = "#222222"
+                ctx.lineTo(width, height)
+                ctx.lineTo(width, 0)
+                ctx.lineTo(0, height)
+                ctx.fill()
+            }
+        }
+
+        Rectangle
+        {
+            id: volumeLevelBar
+            width: 4
+            height: 12
+            radius: 2
+            color: "#ffffff"
+            anchors.verticalCenter: volumeRegulator.verticalCenter
+            x: 100
+
+            onXChanged:
+            {
+                waveformWidget.setVolume(x);
+            }
+        }
+
+        MouseArea
+        {
+            id: barMovingArea
+            anchors.topMargin: -10
+            anchors.bottomMargin: -10
+            anchors.fill: parent
+
+            onClicked:
+            {
+                volumeLevelBar.x = mouseX
+            }
+
+            onPositionChanged:
+            {
+                if(mouse.buttons)
+                {
+                    if(mouseX < 0)
+                        volumeLevelBar.x = 0
+
+                    else if(mouseX > volumeRegulator.width)
+                        volumeLevelBar.x = 100
+
+                    else
+                        volumeLevelBar.x = mouseX
+                }
+            }
+
+            onWheel:
+            {
+                if(wheel.angleDelta.y > 0)
+                {
+                    if(volumeLevelBar.x + 5 <= 100)
+                        volumeLevelBar.x += 5
+                    else
+                        volumeLevelBar.x = 100
+                }
+
+                else
+                {
+                    if(volumeLevelBar.x - 5 >= 0)
+                        volumeLevelBar.x -= 5
+                    else
+                        volumeLevelBar.x = 0
+                }
+            }
+        }
+    }
+
+    ButtonGroup
+    {
+        id: modeButtons
+        checkedButton: monoModeButton
+
+        onClicked: button == stereoModeButton ? waveformWidget.setStereoMode(true) : waveformWidget.setStereoMode(false)
+    }
+
+    MfxButton
+    {
+        id: stereoModeButton
+        width: 54
+        height: 16
+
+        anchors.rightMargin: 8
+        anchors.bottomMargin: 4
+        anchors.right: scrollArea.left
+        anchors.bottom: parent.bottom
+
+        checkable: true
+        color: "#27AE60"
+        text: qsTr("Stereo")
+
+        ButtonGroup.group: modeButtons
+    }
+
+    MfxButton
+    {
+        id: monoModeButton
+        width: 54
+        height: 16
+
+        anchors.rightMargin: 2
+        anchors.bottomMargin: 4
+        anchors.right: stereoModeButton.left
+        anchors.bottom: parent.bottom
+
+        checkable: true
+        color: "#27AE60"
+        text: qsTr("Mono")
+
+        ButtonGroup.group: modeButtons
+    }
+
+    Rectangle
+    {
+        id: scrollArea
+        width: 164
+        height: 16
+        anchors.rightMargin: 2
+        anchors.bottomMargin: 4
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        radius: 2
+        color: "#222222"
+
+        Text
+        {
+            id: visibleAreaRatio
+            text: "0"
+            anchors.leftMargin: 4
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+            color: "#eeeeee"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            font.family: "Roboto"
+            font.pixelSize: 10
+
+            Connections
+            {
+                target: playerWidget
+                function onMaxChanged()
+                {
+                    if(playerWidget.projectDuration())
+                    {
+                        visibleAreaRatio.text = Math.round((playerWidget.max - playerWidget.min) / playerWidget.projectDuration() * 100) + "%"
+                    }
+                }
+            }
+
+            Connections
+            {
+                target: playerWidget
+                function onMinChanged()
+                {
+                    if(playerWidget.projectDuration())
+                    {
+                        visibleAreaRatio.text = Math.round((playerWidget.max - playerWidget.min) / playerWidget.projectDuration() * 100) + "%"
+                    }
+                }
+            }
+        }
+
+        Rectangle
+        {
+            id: separator
+            width: 2
+            height: 16
+            color: "#444444"
+            anchors.right: positioningRect.left
+        }
+
+        WaveformWidget
+        {
+            id: scrollBackgroundWaveform
+            anchors.fill: positioningRect
+        }
+
+        Rectangle
+        {
+            id: positioningRect
+
+            width: 130
+            height: 16
+
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            color: "transparent"
+
+            Rectangle
+            {
+                id: positionMarker
+                width: 2
+                height: parent.height - 4
+                y: 2
+                color: "red"
+
+                Connections
+                {
+                    target: waveformWidget
+                    function onPositionChanged(pos)
+                    {
+                        positionMarker.x = pos / waveformWidget.duration() * scrollBackgroundWaveform.width
+                    }
+                }
+            }
+
+            ZoomingMouseArea
+            {
+                id: bottomScrollArea
+                image: "qrc:/resize"
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onPressed:
+                {
+                    bottomScrollArea.cursorImage.visible = false
+                }
+
+                onReleased:
+                {
+                    bottomScrollArea.cursorImage.visible = true
+                }
+
+                onMoved:
+                {
+                    playerWidget.move(-dx * (playerWidget.width / width), dy)
+                }
+
+                onWheel:
+                {
+                    timeScaleMouseArea.resizingCenterMarker.x = timeScaleMouseArea.width / 2
+                    playerWidget.zoom(wheel.angleDelta.y > 0 ? 2 : -2)
+                }
+            }
+
+            Rectangle
+            {
+                id: scrollBar
+                height: parent.height
+                width: scrollBackgroundWaveform.width
+                color: "#20507FE6"
+                border.width: 2
+                border.color: "#507FE6"
+                radius: 2
+
+                function refresh()
+                {
+                    x = playerWidget.min / playerWidget.projectDuration() * positioningRect.width
+                    width = (playerWidget.max - playerWidget.min) / playerWidget.projectDuration() * positioningRect.width
+                    if(width < 5)
+                        width = 5
+                }
+
+                Connections
+                {
+                    target: playerWidget
+                    function onMinChanged()
+                    {
+                        scrollBar.refresh()
+                    }
+                }
+
+                Connections
+                {
+                    target: playerWidget
+                    function onMaxChanged()
+                    {
+                        scrollBar.refresh()
+                    }
+                }
+            }
+        }
     }
 
     Text
@@ -528,6 +1146,7 @@ Item
         target: waveformWidget
         function onTrackDownloaded()
         {
+            scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
             waitingText.visible = false
 //            showPlayerElements()
 
@@ -538,15 +1157,12 @@ Item
                 project.setProperty("startLoop", 1)
                 project.setProperty("stopLoop", waveformWidget.duration() - 2)
 
-                project.setProperty("prePlayInterval", 10000)
+                project.setProperty("prePlayInterval", 20000)
                 project.setProperty("postPlayInterval", 10000)
             }
 
             playerWidget.min = 0
             playerWidget.max = playerWidget.projectDuration()
-
-            waveformWidget.anchors.leftMargin = msecToPixels(project.property("prePlayInterval"))
-            waveformWidget.anchors.rightMargin = msecToPixels(project.property("postPlayInterval"))
 
             waveformWidget.showAll();
 //            startPositionMarker.position = project.property("startPosition")
@@ -567,4 +1183,14 @@ Item
         }
     }
 
+    Connections
+    {
+        target: scrollBackgroundWaveform
+        function onTrackDownloaded()
+        {
+            scrollBackgroundWaveform.anchors.leftMargin = project.property("prePlayInterval") / playerWidget.projectDuration() * positioningRect.width
+            scrollBackgroundWaveform.anchors.rightMargin = project.property("postPlayInterval") / playerWidget.projectDuration() * positioningRect.width
+            scrollBackgroundWaveform.showAll()
+        }
+    }
 }
