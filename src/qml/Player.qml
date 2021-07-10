@@ -612,6 +612,123 @@ Item
         visible: stereoModeButton.checked
     }
 
+    Item
+    {
+        id: positionCursor
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        function updatePosition(pos)
+        {
+            if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
+            {
+                positionCursor.visible = true
+                positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
+            }
+
+            else
+            {
+                positionCursor.visible = false
+            }
+        }
+
+        Canvas
+        {
+            width: 12
+            height: parent.height
+            x: - width / 2 + 1
+            y: 12
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = "#99006DFF"
+                ctx.lineWidth = 2
+                ctx.fillStyle = "#6BAAFF"
+                ctx.lineTo(width, 0)
+                ctx.lineTo(width / 2, width)
+                ctx.lineTo(0, 0)
+                ctx.closePath()
+                ctx.stroke()
+                ctx.fill()
+            }
+
+            MfxMouseArea
+            {
+                id: cursorMovingArea
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
+                hoverEnabled: true
+
+                dragOnX: true
+                draggedItem: positionCursor
+                draggedItemMinX: startPositionMarker.x
+                draggedItemMaxX: stopPositionMarker.x
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
+                onMouseXChanged:
+                {
+                    if(mouse.buttons === Qt.LeftButton)
+                    {
+                        waveformWidget.setPlayerPosition(pixelsToMsec(positionCursor.x))
+                        timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
+                        positionMarker.x = pixelsToMsec(positionCursor.x) / waveformWidget.duration() * scrollBackgroundWaveform.width
+                    }
+
+                    if(positionCursor.x + positionCursor.width + 1 === Math.round(stopPositionMarker.x))
+                    {
+                        waveformWidget.setPlayerPosition(stopPositionMarker.position)
+                        timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
+                        positionCursor.updatePosition(waveformWidget.playerPosition())
+                    }
+
+                    else if(positionCursor.x === Math.round(startPositionMarker.x))
+                    {
+                        waveformWidget.setPlayerPosition(startPositionMarker.position)
+                        timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
+                        positionCursor.updatePosition(waveformWidget.playerPosition())
+                    }
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 2
+            height: waveformBackground.height
+            color: "#99006DFF"
+            x: 0
+            y: 24
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMaxChanged()
+            {
+                positionCursor.updatePosition(waveformWidget.playerPosition())
+            }
+        }
+
+        Connections
+        {
+            target: waveformWidget
+            function onMinChanged()
+            {
+                positionCursor.updatePosition(waveformWidget.playerPosition())
+            }
+        }
+    }
+
+
     Image
     {
         id: cursorImageForTimeScale
@@ -1157,8 +1274,8 @@ Item
                 project.setProperty("startLoop", 1)
                 project.setProperty("stopLoop", waveformWidget.duration() - 2)
 
-                project.setProperty("prePlayInterval", 20000)
-                project.setProperty("postPlayInterval", 10000)
+//                project.setProperty("prePlayInterval", 20000)
+//                project.setProperty("postPlayInterval", 10000)
             }
 
             playerWidget.min = 0
