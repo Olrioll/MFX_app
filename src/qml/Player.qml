@@ -614,23 +614,433 @@ Item
 
     Item
     {
+        id: startPositionMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property int position: 0
+
+        function updateVisiblePosition()
+        {
+            x = msecToPixels(position - playerWidget.min)
+        }
+
+        Canvas
+        {
+            width: 12
+            height: parent.height
+            x: -1
+            y: 12
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.fillStyle = "#ffffff"
+                ctx.lineTo(0, 12)
+                ctx.lineTo(width / 2, 6)
+                ctx.lineTo(0, 0)
+                ctx.closePath()
+                ctx.fill()
+            }
+
+            MfxMouseArea
+            {
+                id: startPositionMarkerMovingArea
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -6
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
+                hoverEnabled: true
+
+                drag.target: startPositionMarker
+                drag.axis: Drag.XAxis
+//                drag.minimumX: startPositionMarker.x
+//                drag.maximumX: stopPositionMarker.x
+
+                drag.threshold: 0
+                drag.smoothed: false
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
+                onMouseXChanged:
+                {
+                    if(wasPressedAndMoved)
+                    {
+//                        startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
+//                        project.setProperty("startPosition", startPositionMarker.position)
+
+//                        if(startLoopMarker.position < startPositionMarker.position)
+//                        {
+//                            startLoopMarker.x = startPositionMarker.x
+//                            startLoopMarker.position = startPositionMarker.position
+//                            project.setProperty("startLoop", startLoopMarker.position)
+//                        }
+
+//                        if(waveformWidget.playerPosition() < startPositionMarker.position)
+//                        {
+//                            positionCursor.x = startPositionMarker.x
+//                            waveformWidget.setPlayerPosition(startPositionMarker.position)
+//                            timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
+//                        }
+                    }
+
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height
+            color: "#ffffff"
+            x: -1
+            y: 24
+        }
+
+        onXChanged:
+        {
+            position = playerWidget.min + pixelsToMsec(x)
+        }
+
+        onPositionChanged:
+        {
+            updateVisiblePosition()
+        }
+    }
+
+    Item
+    {
+        id: stopPositionMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property int position: 0
+
+        function updateVisiblePosition()
+        {
+            x = msecToPixels(position - playerWidget.min)
+        }
+
+        Canvas
+        {
+            width: 12
+            height: parent.height
+            x: -6
+            y: 12
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.fillStyle = "#ffffff"
+                ctx.moveTo(0, 6)
+                ctx.lineTo(width / 2, 12)
+                ctx.lineTo(width / 2, 0)
+                ctx.lineTo(0, 6)
+                ctx.closePath()
+                ctx.fill()
+            }
+
+            MfxMouseArea
+            {
+                id: stopPositionMarkerMovingArea
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -4
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
+                hoverEnabled: true
+
+                drag.target: stopPositionMarker
+                drag.axis: Drag.XAxis
+                drag.minimumX: startPositionMarker.x
+//                drag.maximumX: stopPositionMarker.x
+
+                drag.threshold: 0
+                drag.smoothed: false
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
+                onMouseXChanged:
+                {
+                    if(wasPressedAndMoved)
+                    {
+//                        stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
+//                        project.setProperty("stopPosition", stopPositionMarker.position)
+
+//                        if(stopLoopMarker.position > stopPositionMarker.position)
+//                        {
+//                            stopLoopMarker.x = stopPositionMarker.x
+//                            stopLoopMarker.position = stopPositionMarker.position
+//                            project.setProperty("stopLoop", stopLoopMarker.position)
+//                        }
+
+//                        if(waveformWidget.playerPosition() > stopPositionMarker.position)
+//                        {
+//                            positionCursor.x = stopPositionMarker.x - 2
+//                            waveformWidget.setPlayerPosition(stopPositionMarker.position)
+//                            timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
+//                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height
+            color: "#ffffff"
+            x: -1
+            y: 24
+        }
+
+        onXChanged:
+        {
+            position = playerWidget.min + pixelsToMsec(x)
+        }
+
+        onPositionChanged:
+        {
+            updateVisiblePosition()
+        }
+    }
+
+    Item
+    {
+        id: startLoopMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property real position: 0
+
+        function updateVisiblePosition()
+        {
+            x = msecToPixels(position - playerWidget.min)
+        }
+
+        Canvas
+        {
+            id: startLoopMarkerCanvas
+            width: 12
+            height: parent.height
+            x: -1
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = "#F2994A"
+                ctx.lineWidth = 2
+                ctx.moveTo(1, 1)
+                ctx.lineTo(6, 1)
+                ctx.moveTo(1, 1)
+                ctx.lineTo(1, 12)
+                ctx.lineTo(6, 12)
+                ctx.stroke()
+            }
+
+            Connections
+            {
+                target: repeatButton
+                function onCheckedChanged()
+                {
+                    startLoopMarkerCanvas.requestPaint()
+                }
+            }
+
+            MfxMouseArea
+            {
+                id: startLoopMarkerMovingArea
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -4
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
+                hoverEnabled: true
+
+                drag.target: startLoopMarker
+                drag.axis: Drag.XAxis
+                drag.minimumX: 0
+//                drag.maximumX: stopPositionMarker.x
+
+                drag.threshold: 0
+                drag.smoothed: false
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
+                onMouseXChanged:
+                {
+                    if(wasPressedAndMoved)
+                    {
+//                        startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
+//                        project.setProperty("startLoop", startLoopMarker.position)
+
+//                        if(startLoopMarker.position < startPositionMarker.position)
+//                        {
+//                            startPositionMarker.x = startLoopMarker.x
+//                            startPositionMarker.position = startLoopMarker.position
+//                            project.setProperty("startPosition", startPositionMarker.position)
+//                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height + 12
+            color: "#F2994A"
+            visible: repeatButton.checked
+            x: -1
+            y: 12
+        }
+
+        onXChanged:
+        {
+            position = playerWidget.min + pixelsToMsec(x)
+        }
+
+        onPositionChanged:
+        {
+            updateVisiblePosition()
+        }
+    }
+
+    Item
+    {
+        id: stopLoopMarker
+        width: 2
+        height: mainBackground.height + 12
+        anchors.top: mainBackground.top
+
+        property real position: 0
+
+        function updateVisiblePosition()
+        {
+            x = msecToPixels(position - playerWidget.min)
+        }
+
+        Canvas
+        {
+            id: stopLoopMarkerCanvas
+            width: 12
+            height: parent.height
+            x: -7
+            y: 0
+
+            onPaint:
+            {
+                var ctx = getContext("2d")
+                ctx.miterLimit = 0.1
+                ctx.strokeStyle = "#F2994A"
+                ctx.lineWidth = 2
+                ctx.moveTo(1, 1)
+                ctx.lineTo(6, 1)
+                ctx.lineTo(6, 12)
+                ctx.lineTo(1, 12)
+                ctx.stroke()
+            }
+
+            Connections
+            {
+                target: repeatButton
+                function onCheckedChanged()
+                {
+                    stopLoopMarkerCanvas.requestPaint()
+                }
+            }
+
+            MfxMouseArea
+            {
+                id: stopLoopMarkerMovingArea
+                anchors.topMargin: -4
+                anchors.top: parent.top
+                anchors.leftMargin: -4
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 12
+                hoverEnabled: true
+
+                drag.target: stopLoopMarker
+                drag.axis: Drag.XAxis
+                drag.minimumX: 0
+//                drag.maximumX: stopPositionMarker.x
+
+                drag.threshold: 0
+                drag.smoothed: false
+
+                cursorShape: Qt.SizeHorCursor
+                onPressed: timeScaleMouseArea.visible = false
+                onReleased: timeScaleMouseArea.visible = true
+
+                onMouseXChanged:
+                {
+                    if(wasPressedAndMoved)
+                    {
+//                        stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
+//                        project.setProperty("stopLoop", stopLoopMarker.position)
+
+//                        if(stopLoopMarker.position > stopPositionMarker.position)
+//                        {
+//                            stopPositionMarker.x = stopLoopMarker.x
+//                            stopPositionMarker.position = stopLoopMarker.position
+//                            project.setProperty("stopPosition", stopPositionMarker.position)
+//                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle
+        {
+            width: 1
+            height: waveformBackground.height + 12
+            color: "#F2994A"
+            visible: repeatButton.checked
+            x: -1
+            y: 12
+        }
+
+        onXChanged:
+        {
+            position = playerWidget.min + pixelsToMsec(x)
+        }
+
+        onPositionChanged:
+        {
+            updateVisiblePosition()
+        }
+    }
+
+
+    Item
+    {
         id: positionCursor
         width: 2
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        function updatePosition(pos)
-        {
-            if(pos >= waveformWidget.min() && pos <= waveformWidget.max())
-            {
-                positionCursor.visible = true
-                positionCursor.x = waveformBackground.width * (pos - waveformWidget.min()) / (waveformWidget.max() - waveformWidget.min())
-            }
+        property int position: 0
 
-            else
-            {
-                positionCursor.visible = false
-            }
+        function updateVisiblePosition()
+        {
+            x = msecToPixels(position - playerWidget.min)
         }
 
         Canvas
@@ -665,10 +1075,13 @@ Item
                 height: 12
                 hoverEnabled: true
 
-                dragOnX: true
-                draggedItem: positionCursor
-                draggedItemMinX: startPositionMarker.x
-                draggedItemMaxX: stopPositionMarker.x
+                drag.target: positionCursor
+                drag.axis: Drag.XAxis
+                drag.minimumX: startPositionMarker.x
+//                drag.maximumX: stopPositionMarker.x
+
+                drag.threshold: 0
+                drag.smoothed: false
 
                 cursorShape: Qt.SizeHorCursor
                 onPressed: timeScaleMouseArea.visible = false
@@ -676,26 +1089,7 @@ Item
 
                 onMouseXChanged:
                 {
-                    if(mouse.buttons === Qt.LeftButton)
-                    {
-                        waveformWidget.setPlayerPosition(pixelsToMsec(positionCursor.x))
-                        timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
-                        positionMarker.x = pixelsToMsec(positionCursor.x) / waveformWidget.duration() * scrollBackgroundWaveform.width
-                    }
 
-                    if(positionCursor.x + positionCursor.width + 1 === Math.round(stopPositionMarker.x))
-                    {
-                        waveformWidget.setPlayerPosition(stopPositionMarker.position)
-                        timer.text = waveformWidget.positionString(stopPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
-                        positionCursor.updatePosition(waveformWidget.playerPosition())
-                    }
-
-                    else if(positionCursor.x === Math.round(startPositionMarker.x))
-                    {
-                        waveformWidget.setPlayerPosition(startPositionMarker.position)
-                        timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
-                        positionCursor.updatePosition(waveformWidget.playerPosition())
-                    }
                 }
             }
         }
@@ -709,25 +1103,16 @@ Item
             y: 24
         }
 
-        Connections
+        onXChanged:
         {
-            target: waveformWidget
-            function onMaxChanged()
-            {
-                positionCursor.updatePosition(waveformWidget.playerPosition())
-            }
+            position = playerWidget.min + pixelsToMsec(x)
         }
 
-        Connections
+        onPositionChanged:
         {
-            target: waveformWidget
-            function onMinChanged()
-            {
-                positionCursor.updatePosition(waveformWidget.playerPosition())
-            }
+            updateVisiblePosition()
         }
     }
-
 
     Image
     {
@@ -835,6 +1220,15 @@ Item
             anchors.centerIn: parent
             font.family: "Roboto"
             font.pixelSize: 12
+        }
+
+        Connections
+        {
+            target: positionCursor
+            function onXChanged()
+            {
+                timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x) + playerWidget.min, "hh:mm:ss.zzz").substring(0, 11)
+            }
         }
 
 //        Connections
@@ -1256,6 +1650,24 @@ Item
         text: qsTr("Not available")
 
         anchors.centerIn: waveformBackground
+    }
+
+    onMinChanged:
+    {
+        startPositionMarker.updateVisiblePosition()
+        stopPositionMarker.updateVisiblePosition()
+        startLoopMarker.updateVisiblePosition()
+        stopLoopMarker.updateVisiblePosition()
+        positionCursor.updateVisiblePosition()
+    }
+
+    onMaxChanged:
+    {
+        startPositionMarker.updateVisiblePosition()
+        stopPositionMarker.updateVisiblePosition()
+        startLoopMarker.updateVisiblePosition()
+        stopLoopMarker.updateVisiblePosition()
+        positionCursor.updateVisiblePosition()
     }
 
     Connections
