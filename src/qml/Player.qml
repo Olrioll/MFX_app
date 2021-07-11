@@ -16,6 +16,41 @@ Item
 
     property alias waitingText: waitingText
 
+    function hidePlayerElements()
+    {
+        timeScale.visible = false
+        waveformWidget.visible = false
+        startPositionMarker.visible = false
+        startLoopMarker.visible = false
+        stopPositionMarker.visible = false
+        stopLoopMarker.visible = false
+        positionCursor.visible = false
+//        cueViewFlickable.visible = false
+
+        waitingText.visible = true
+
+        for (let txt of timeScale.textMarkers)
+        {
+          txt.destroy()
+        }
+        timeScale.textMarkers = []
+
+        timer.text = "00:00:00.00"
+    }
+
+    function showPlayerElements()
+    {
+        timeScale.visible = true
+        waveformWidget.visible = true
+        startPositionMarker.visible = true
+        startLoopMarker.visible = true
+        stopPositionMarker.visible = true
+        stopLoopMarker.visible = true
+        positionCursor.visible = true
+//        cueViewFlickable.visible = true
+    }
+
+
     function projectDuration()
     {
         return project.property("prePlayInterval") + waveformWidget.duration() + project.property("postPlayInterval")
@@ -29,40 +64,6 @@ Item
     function pixelsToMsec(pixels)
     {
         return Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width)
-    }
-
-    function hidePlayerElements()
-    {
-//        timeScale.visible = false
-//        waveformWidget.visible = false
-//        startPositionMarker.visible = false
-//        startLoopMarker.visible = false
-//        stopPositionMarker.visible = false
-//        stopLoopMarker.visible = false
-//        positionCursor.visible = false
-//        cueViewFlickable.visible = false
-
-//        waitingText.visible = true
-
-//        for (let txt of timeScale.textMarkers)
-//        {
-//          txt.destroy()
-//        }
-//        timeScale.textMarkers = []
-
-//        timer.text = "00:00:00.00"
-    }
-
-    function showPlayerElements()
-    {
-//        timeScale.visible = true
-//        waveformWidget.visible = true
-//        startPositionMarker.visible = true
-//        startLoopMarker.visible = true
-//        stopPositionMarker.visible = true
-//        stopLoopMarker.visible = true
-//        positionCursor.visible = true
-//        cueViewFlickable.visible = true
     }
 
     function zoom(delta)
@@ -658,8 +659,8 @@ Item
 
                 drag.target: startPositionMarker
                 drag.axis: Drag.XAxis
-//                drag.minimumX: startPositionMarker.x
-//                drag.maximumX: stopPositionMarker.x
+                drag.minimumX: 0
+                drag.maximumX: stopPositionMarker.position < playerWidget.max ? stopPositionMarker.x : playerWidget.width
 
                 drag.threshold: 0
                 drag.smoothed: false
@@ -667,30 +668,6 @@ Item
                 cursorShape: Qt.SizeHorCursor
                 onPressed: timeScaleMouseArea.visible = false
                 onReleased: timeScaleMouseArea.visible = true
-
-                onMouseXChanged:
-                {
-                    if(wasPressedAndMoved)
-                    {
-//                        startPositionMarker.position = pixelsToMsec(startPositionMarker.x)
-//                        project.setProperty("startPosition", startPositionMarker.position)
-
-//                        if(startLoopMarker.position < startPositionMarker.position)
-//                        {
-//                            startLoopMarker.x = startPositionMarker.x
-//                            startLoopMarker.position = startPositionMarker.position
-//                            project.setProperty("startLoop", startLoopMarker.position)
-//                        }
-
-//                        if(waveformWidget.playerPosition() < startPositionMarker.position)
-//                        {
-//                            positionCursor.x = startPositionMarker.x
-//                            waveformWidget.setPlayerPosition(startPositionMarker.position)
-//                            timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
-//                        }
-                    }
-
-                }
             }
         }
 
@@ -711,6 +688,10 @@ Item
         onPositionChanged:
         {
             updateVisiblePosition()
+            if(startLoopMarker.position < startPositionMarker.position)
+            {
+                startLoopMarker.position = startPositionMarker.position
+            }
         }
     }
 
@@ -761,8 +742,8 @@ Item
 
                 drag.target: stopPositionMarker
                 drag.axis: Drag.XAxis
-                drag.minimumX: startPositionMarker.x
-//                drag.maximumX: stopPositionMarker.x
+                drag.minimumX: startPositionMarker.position > playerWidget.min ? startPositionMarker.x : 0
+                drag.maximumX: playerWidget.width
 
                 drag.threshold: 0
                 drag.smoothed: false
@@ -770,29 +751,6 @@ Item
                 cursorShape: Qt.SizeHorCursor
                 onPressed: timeScaleMouseArea.visible = false
                 onReleased: timeScaleMouseArea.visible = true
-
-                onMouseXChanged:
-                {
-                    if(wasPressedAndMoved)
-                    {
-//                        stopPositionMarker.position = pixelsToMsec(stopPositionMarker.x)
-//                        project.setProperty("stopPosition", stopPositionMarker.position)
-
-//                        if(stopLoopMarker.position > stopPositionMarker.position)
-//                        {
-//                            stopLoopMarker.x = stopPositionMarker.x
-//                            stopLoopMarker.position = stopPositionMarker.position
-//                            project.setProperty("stopLoop", stopLoopMarker.position)
-//                        }
-
-//                        if(waveformWidget.playerPosition() > stopPositionMarker.position)
-//                        {
-//                            positionCursor.x = stopPositionMarker.x - 2
-//                            waveformWidget.setPlayerPosition(stopPositionMarker.position)
-//                            timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x), "hh:mm:ss.zzz").substring(0, 11)
-//                        }
-                    }
-                }
             }
         }
 
@@ -813,6 +771,10 @@ Item
         onPositionChanged:
         {
             updateVisiblePosition()
+            if(stopLoopMarker.position > stopPositionMarker.position)
+            {
+                stopLoopMarker.position = stopPositionMarker.position
+            }
         }
     }
 
@@ -874,7 +836,7 @@ Item
                 drag.target: startLoopMarker
                 drag.axis: Drag.XAxis
                 drag.minimumX: 0
-//                drag.maximumX: stopPositionMarker.x
+                drag.maximumX: stopLoopMarker.position < playerWidget.max ? stopLoopMarker.x : playerWidget.width
 
                 drag.threshold: 0
                 drag.smoothed: false
@@ -979,8 +941,8 @@ Item
 
                 drag.target: stopLoopMarker
                 drag.axis: Drag.XAxis
-                drag.minimumX: 0
-//                drag.maximumX: stopPositionMarker.x
+                drag.minimumX: startLoopMarker.position > playerWidget.min ? startLoopMarker.x : 0
+                drag.maximumX: playerWidget.width
 
                 drag.threshold: 0
                 drag.smoothed: false
@@ -1078,7 +1040,7 @@ Item
                 drag.target: positionCursor
                 drag.axis: Drag.XAxis
                 drag.minimumX: startPositionMarker.x
-//                drag.maximumX: stopPositionMarker.x
+                drag.maximumX: stopPositionMarker.x
 
                 drag.threshold: 0
                 drag.smoothed: false
@@ -1677,7 +1639,7 @@ Item
         {
             scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
             waitingText.visible = false
-//            showPlayerElements()
+            showPlayerElements()
 
             if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
             {
@@ -1694,10 +1656,12 @@ Item
             playerWidget.max = playerWidget.projectDuration()
 
             waveformWidget.showAll();
-//            startPositionMarker.position = project.property("startPosition")
-//            stopPositionMarker.position = project.property("stopPosition")
-//            startLoopMarker.position = project.property("startLoop")
-//            stopLoopMarker.position = project.property("stopLoop")
+
+            startPositionMarker.position = project.property("startPosition")
+            stopPositionMarker.position = project.property("stopPosition")
+            startLoopMarker.position = project.property("startLoop")
+            stopLoopMarker.position = project.property("stopLoop")
+            positionCursor.position = startPositionMarker.position
 
 //            startPositionMarker.updatePosition()
 //            waveformWidget.setPlayerPosition(startPositionMarker.position)
@@ -1721,5 +1685,10 @@ Item
             scrollBackgroundWaveform.anchors.rightMargin = project.property("postPlayInterval") / playerWidget.projectDuration() * positioningRect.width
             scrollBackgroundWaveform.showAll()
         }
+    }
+
+    Component.onCompleted:
+    {
+        hidePlayerElements()
     }
 }
