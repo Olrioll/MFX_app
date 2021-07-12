@@ -15,13 +15,30 @@ Item
     property int max
 
     property int position: startPositionMarker.position
+    property alias waitingText: waitingText
+
+    onMinChanged:
+    {
+        startPositionMarker.updateVisiblePosition()
+        stopPositionMarker.updateVisiblePosition()
+        startLoopMarker.updateVisiblePosition()
+        stopLoopMarker.updateVisiblePosition()
+        positionCursor.updateVisiblePosition()
+    }
+
+    onMaxChanged:
+    {
+        startPositionMarker.updateVisiblePosition()
+        stopPositionMarker.updateVisiblePosition()
+        startLoopMarker.updateVisiblePosition()
+        stopLoopMarker.updateVisiblePosition()
+        positionCursor.updateVisiblePosition()
+    }
 
     onPositionChanged:
     {
         positionCursor.position = position
     }
-
-    property alias waitingText: waitingText
 
     function hidePlayerElements()
     {
@@ -596,6 +613,28 @@ Item
                waveformWidget.adjust()
             }
         }
+    }
+
+    Rectangle
+    {
+        id: leftShadingRect
+        anchors.top: waveformWidget.top
+        anchors.bottom: waveformWidget.bottom
+        anchors.left: waveformWidget.left
+        anchors.right: startPositionMarker.left
+        color: "black"
+        opacity: 0.5
+    }
+
+    Rectangle
+    {
+        id: rightShadingRect
+        anchors.top: waveformWidget.top
+        anchors.bottom: waveformWidget.bottom
+        anchors.right: waveformWidget.right
+        anchors.left: repeatButton.checked ? stopLoopMarker.right : stopPositionMarker.right
+        color: "black"
+        opacity: 0.5
     }
 
     Rectangle
@@ -1276,6 +1315,8 @@ Item
             source: "qrc:/settingsButton"
             anchors.centerIn: parent
         }
+
+        onClicked: timelineSettingsWidget.visible = true
     }
 
     MfxButton
@@ -1669,22 +1710,77 @@ Item
         anchors.centerIn: waveformBackground
     }
 
-    onMinChanged:
+    Item
     {
-        startPositionMarker.updateVisiblePosition()
-        stopPositionMarker.updateVisiblePosition()
-        startLoopMarker.updateVisiblePosition()
-        stopLoopMarker.updateVisiblePosition()
-        positionCursor.updateVisiblePosition()
-    }
+        id: timelineSettingsWidget
 
-    onMaxChanged:
-    {
-        startPositionMarker.updateVisiblePosition()
-        stopPositionMarker.updateVisiblePosition()
-        startLoopMarker.updateVisiblePosition()
-        stopLoopMarker.updateVisiblePosition()
-        positionCursor.updateVisiblePosition()
+        width: 252
+        height: 108
+        visible: false
+
+        Rectangle
+        {
+            id: timelineSettingsWidgetBackground
+            radius: 2
+            color: "#444444"
+            anchors.fill: parent
+
+            Text
+            {
+                color: "#ffffff"
+                text: qsTr("Timeline settings")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideMiddle
+                anchors.left: parent.left
+                anchors.right: parent.right
+                font.family: "Roboto"
+                topPadding: 8
+            }
+
+            MouseArea
+            {
+                height: 28
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                drag.target: timelineSettingsWidget
+                drag.axis: Drag.XandYAxis
+
+                drag.minimumX: 0
+                drag.maximumX: playerWidget.width - timelineSettingsWidget.width
+                drag.minimumY: 0
+                drag.maximumY: playerWidget.height - timelineSettingsWidget.height
+            }
+
+            Button
+            {
+                width: 25
+                height: 25
+                anchors.top: parent.top
+                anchors.topMargin: 3
+                anchors.right: parent.right
+
+                bottomPadding: 0
+                topPadding: 0
+                rightPadding: 0
+                leftPadding: 0
+
+                background: Rectangle {
+                        color: "#444444"
+                        opacity: 0
+                    }
+
+                Image
+                {
+                    source: "qrc:/utilityCloseButton"
+                }
+
+                onClicked: timelineSettingsWidget.visible = false
+            }
+        }
+
     }
 
     Connections
@@ -1717,14 +1813,6 @@ Item
             startPositionMarker.position = project.property("startPosition")
             stopPositionMarker.position = project.property("stopPosition")
             positionCursor.position = startPositionMarker.position
-
-//            startPositionMarker.updatePosition()
-//            waveformWidget.setPlayerPosition(startPositionMarker.position)
-//            positionCursor.updatePosition(startPositionMarker.position)
-//            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
-//            stopPositionMarker.updatePosition()
-//            startLoopMarker.updatePosition()
-//            stopLoopMarker.updatePosition()
 
 //            cueView.loadCues()
 //            cueView.refresh()
