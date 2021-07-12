@@ -893,22 +893,6 @@ Item
                 cursorShape: Qt.SizeHorCursor
                 onPressed: timeScaleMouseArea.visible = false
                 onReleased: timeScaleMouseArea.visible = true
-
-                onMouseXChanged:
-                {
-                    if(wasPressedAndMoved)
-                    {
-//                        startLoopMarker.position = pixelsToMsec(startLoopMarker.x)
-//                        project.setProperty("startLoop", startLoopMarker.position)
-
-//                        if(startLoopMarker.position < startPositionMarker.position)
-//                        {
-//                            startPositionMarker.x = startLoopMarker.x
-//                            startPositionMarker.position = startLoopMarker.position
-//                            project.setProperty("startPosition", startPositionMarker.position)
-//                        }
-                    }
-                }
             }
         }
 
@@ -925,17 +909,24 @@ Item
         onXChanged:
         {
             position = playerWidget.min + pixelsToMsec(x)
+
+            if(playerWidget.position < startPositionMarker.position)
+            {
+                playerWidget.position = startPositionMarker.position
+                positionCursor.updateVisiblePosition()
+            }
+
+            if(startLoopMarker.position < startPositionMarker.position)
+            {
+                startPositionMarker.position = startLoopMarker.position
+            }
+
         }
 
         onPositionChanged:
         {
             updateVisiblePosition()
             project.setProperty("startLoop", startLoopMarker.position)
-
-            if(startLoopMarker.position < startPositionMarker.position)
-            {
-                startPositionMarker.position = startLoopMarker.position
-            }
         }
     }
 
@@ -1005,22 +996,6 @@ Item
                 cursorShape: Qt.SizeHorCursor
                 onPressed: timeScaleMouseArea.visible = false
                 onReleased: timeScaleMouseArea.visible = true
-
-                onMouseXChanged:
-                {
-                    if(wasPressedAndMoved)
-                    {
-//                        stopLoopMarker.position = pixelsToMsec(stopLoopMarker.x)
-//                        project.setProperty("stopLoop", stopLoopMarker.position)
-
-//                        if(stopLoopMarker.position > stopPositionMarker.position)
-//                        {
-//                            stopPositionMarker.x = stopLoopMarker.x
-//                            stopPositionMarker.position = stopLoopMarker.position
-//                            project.setProperty("stopPosition", stopPositionMarker.position)
-//                        }
-                    }
-                }
             }
         }
 
@@ -1037,17 +1012,22 @@ Item
         onXChanged:
         {
             position = playerWidget.min + pixelsToMsec(x)
+
+            if(stopLoopMarker.position > stopPositionMarker.position)
+            {
+                stopPositionMarker.position = stopLoopMarker.position
+            }
+
+            if(playerWidget.position > stopPositionMarker.position)
+            {
+                playerWidget.position = stopPositionMarker.position
+            }
         }
 
         onPositionChanged:
         {
             updateVisiblePosition()
             project.setProperty("stopLoop", stopLoopMarker.position)
-
-            if(stopLoopMarker.position > stopPositionMarker.position)
-            {
-                stopPositionMarker.position = stopLoopMarker.position
-            }
         }
     }
 
