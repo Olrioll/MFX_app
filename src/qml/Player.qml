@@ -14,6 +14,13 @@ Item
     property int min
     property int max
 
+    property int position: startPositionMarker.position
+
+    onPositionChanged:
+    {
+        positionCursor.position = position
+    }
+
     property alias waitingText: waitingText
 
     function hidePlayerElements()
@@ -197,6 +204,42 @@ Item
         else // Работаем с зумом
         {
             playerWidget.zoom(dy)
+        }
+    }
+
+    Timer
+    {
+        id: playerTimer
+        interval: 10
+        repeat: true
+
+        onTriggered:
+        {
+            if(playerWidget.position + interval < project.property("prePlayInterval"))
+            {
+                playerWidget.position += interval
+            }
+
+            else if (playerWidget.position + interval > project.property("prePlayInterval") + waveformWidget.duration())
+            {
+                if(playerWidget.position + interval < stopPositionMarker.position)
+                {
+                    playerWidget.position += interval
+                }
+                else
+                {
+                    playerWidget.position = stopPositionMarker.position
+                    playerTimer.stop()
+                    playButton.checked = false
+                }
+            }
+
+            else
+            {
+                playerTimer.stop()
+                waveformWidget.setPlayerPosition(playerWidget.position - project.property("prePlayInterval"))
+                waveformWidget.play()
+            }
         }
     }
 
@@ -1008,7 +1051,6 @@ Item
         }
     }
 
-
     Item
     {
         id: positionCursor
@@ -1016,7 +1058,7 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        property int position: 0
+        property int position: playerWidget.position
 
         function updateVisiblePosition()
         {
@@ -1069,7 +1111,13 @@ Item
 
                 onMouseXChanged:
                 {
-
+                    if(mouse.buttons === Qt.LeftButton)
+                    {
+                        if(playerWidget.position > project.property("prePlayInterval") && playerWidget.position < project.property("prePlayInterval") + waveformWidget.duration())
+                        {
+                            waveformWidget.setPlayerPosition(playerWidget.position - project.property("prePlayInterval"))
+                        }
+                    }
                 }
             }
         }
@@ -1085,7 +1133,7 @@ Item
 
         onXChanged:
         {
-            position = playerWidget.min + pixelsToMsec(x)
+            playerWidget.position = playerWidget.min + pixelsToMsec(x)
         }
 
         onPositionChanged:
@@ -1152,7 +1200,16 @@ Item
 
         onCheckedChanged:
         {
-//            checked ? waveformWidget.play() : waveformWidget.pause()
+            if(checked)
+            {
+                playerTimer.start()
+            }
+
+            else
+            {
+                waveformWidget.pause()
+                playerTimer.stop()
+            }
         }
     }
 
@@ -1702,6 +1759,39 @@ Item
             scrollBackgroundWaveform.anchors.leftMargin = project.property("prePlayInterval") / playerWidget.projectDuration() * positioningRect.width
             scrollBackgroundWaveform.anchors.rightMargin = project.property("postPlayInterval") / playerWidget.projectDuration() * positioningRect.width
             scrollBackgroundWaveform.showAll()
+        }
+    }
+
+    Connections
+    {
+        target: waveformWidget
+        function onPositionChanged(pos)
+        {
+            let currPos = project.property("prePlayInterval") + pos
+
+            if(repeatButton.checked && currPos >= stopLoopMarker.position)
+            {
+                waveformWidget.pause()
+                playerWidget.position = startLoopMarker.position
+                playerTimer.start()
+            }
+
+            else if(currPos < stopPositionMarker.position)
+            {
+                playerWidget.position = currPos
+
+                if(waveformWidget.duration() - pos < 10)
+                {
+                    waveformWidget.pause()
+                    playerTimer.start()
+                }
+            }
+
+            else
+            {
+                waveformWidget.pause()
+                playButton.checked = false
+            }
         }
     }
 
