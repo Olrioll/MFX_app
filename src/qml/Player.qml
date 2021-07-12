@@ -63,7 +63,7 @@ Item
 
     function pixelsToMsec(pixels)
     {
-        return Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width)
+        return Math.round(Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width) / 10) * 10
     }
 
     function zoom(delta)
@@ -660,7 +660,8 @@ Item
                 drag.target: startPositionMarker
                 drag.axis: Drag.XAxis
                 drag.minimumX: 0
-                drag.maximumX: stopPositionMarker.position < playerWidget.max ? stopPositionMarker.x : playerWidget.width
+                drag.maximumX: (stopLoopMarker.position < stopPositionMarker.position ? stopLoopMarker : stopPositionMarker).position < playerWidget.max ?
+                                   (stopLoopMarker.position < stopPositionMarker.position ? stopLoopMarker : stopPositionMarker).x : playerWidget.width
 
                 drag.threshold: 0
                 drag.smoothed: false
@@ -688,6 +689,8 @@ Item
         onPositionChanged:
         {
             updateVisiblePosition()
+            project.setProperty("startPosition", startPositionMarker.position)
+
             if(startLoopMarker.position < startPositionMarker.position)
             {
                 startLoopMarker.position = startPositionMarker.position
@@ -742,7 +745,8 @@ Item
 
                 drag.target: stopPositionMarker
                 drag.axis: Drag.XAxis
-                drag.minimumX: startPositionMarker.position > playerWidget.min ? startPositionMarker.x : 0
+                drag.minimumX: (startLoopMarker.position > startPositionMarker.position ? startLoopMarker : startPositionMarker).position > playerWidget.min ?
+                                   (startLoopMarker.position > startPositionMarker.position ? startLoopMarker : startPositionMarker).x : 0
                 drag.maximumX: playerWidget.width
 
                 drag.threshold: 0
@@ -771,6 +775,8 @@ Item
         onPositionChanged:
         {
             updateVisiblePosition()
+            project.setProperty("stopPosition", stopPositionMarker.position)
+
             if(stopLoopMarker.position > stopPositionMarker.position)
             {
                 stopLoopMarker.position = stopPositionMarker.position
@@ -881,6 +887,12 @@ Item
         onPositionChanged:
         {
             updateVisiblePosition()
+            project.setProperty("startLoop", startLoopMarker.position)
+
+            if(startLoopMarker.position < startPositionMarker.position)
+            {
+                startPositionMarker.position = startLoopMarker.position
+            }
         }
     }
 
@@ -987,6 +999,12 @@ Item
         onPositionChanged:
         {
             updateVisiblePosition()
+            project.setProperty("stopLoop", stopLoopMarker.position)
+
+            if(stopLoopMarker.position > stopPositionMarker.position)
+            {
+                stopPositionMarker.position = stopLoopMarker.position
+            }
         }
     }
 
@@ -1657,10 +1675,10 @@ Item
 
             waveformWidget.showAll();
 
-            startPositionMarker.position = project.property("startPosition")
-            stopPositionMarker.position = project.property("stopPosition")
             startLoopMarker.position = project.property("startLoop")
             stopLoopMarker.position = project.property("stopLoop")
+            startPositionMarker.position = project.property("startPosition")
+            stopPositionMarker.position = project.property("stopPosition")
             positionCursor.position = startPositionMarker.position
 
 //            startPositionMarker.updatePosition()
