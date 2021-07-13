@@ -1189,11 +1189,10 @@ Item
 
         onClicked:
         {
-//            waveformWidget.pause()
-//            waveformWidget.setPlayerPosition(startPositionMarker.position)
-//            positionCursor.updatePosition(startPositionMarker.position)
-//            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz")
-//            playButton.checked = false
+            waveformWidget.pause()
+            playerTimer.stop()
+            playerWidget.position = startPositionMarker.position
+            playButton.checked = false
         }
     }
 
@@ -1286,15 +1285,6 @@ Item
                 timer.text = waveformWidget.positionString(pixelsToMsec(positionCursor.x) + playerWidget.min, "hh:mm:ss.zzz").substring(0, 11)
             }
         }
-
-//        Connections
-//        {
-//            target: waveformWidget
-//            function onTimerValueChanged(value)
-//            {
-//                timer.text = value
-//            }
-//        }
     }
 
     MfxButton
@@ -1338,24 +1328,25 @@ Item
         onClicked:
         {
             project.setProperty("startPosition", 0)
-            project.setProperty("stopPosition", waveformWidget.duration() - 1)
-            project.setProperty("startLoop", 1)
-            project.setProperty("stopLoop", waveformWidget.duration() - 2)
+            project.setProperty("stopPosition", waveformWidget.duration())
+            project.setProperty("startLoop", 0)
+            project.setProperty("stopLoop", waveformWidget.duration())
 
-//            startPositionMarker.position = project.property("startPosition")
-//            stopPositionMarker.position = project.property("stopPosition")
-//            startLoopMarker.position = project.property("startLoop")
-//            stopLoopMarker.position = project.property("stopLoop")
+            project.setProperty("prePlayInterval", 0)
+            project.setProperty("postPlayInterval", 0)
 
-//            startPositionMarker.updatePosition()
-//            waveformWidget.setPlayerPosition(startPositionMarker.position)
-//            positionCursor.updatePosition(startPositionMarker.position)
-//            timer.text = waveformWidget.positionString(startPositionMarker.position, "hh:mm:ss.zzz").substring(0, 11)
-//            stopPositionMarker.updatePosition()
-//            startLoopMarker.updatePosition()
-//            stopLoopMarker.updatePosition()
+            playerWidget.min = 0
+            playerWidget.max = playerWidget.projectDuration()
 
-//            cueView.refresh()
+            waveformWidget.showAll();
+
+            startLoopMarker.position = project.property("startLoop")
+            stopLoopMarker.position = project.property("stopLoop")
+            startPositionMarker.position = project.property("startPosition")
+            stopPositionMarker.position = project.property("stopPosition")
+            positionCursor.position = startPositionMarker.position
+
+            timelineSettingsWidget.updateFields()
         }
     }
 
@@ -1714,9 +1705,36 @@ Item
     {
         id: timelineSettingsWidget
 
-        width: 252
+        x: settingsButton.x
+        y: settingsButton.y - height - 10
+        width: 274
         height: 108
         visible: false
+
+        function updateFields()
+        {
+            setPreIntervalValue()
+            setPostIntervalValue()
+
+            trackDurationText.text = waveformWidget.positionString(waveformWidget.duration(), "hh:mm:ss.zzz").substring(3, 11)
+            projectDurationText.text = waveformWidget.positionString(playerWidget.projectDuration(), "hh:mm:ss.zzz").substring(3, 11)
+        }
+
+        function setPreIntervalValue()
+        {
+            let string = waveformWidget.positionString(project.property("prePlayInterval"), "hh:mm:ss.zzz").substring(0, 11)
+            preMins.text = string.substr(3, 2)
+            preSecs.text = string.substr(6, 2)
+            preMsecs.text = string.substr(9, 2)
+        }
+
+        function setPostIntervalValue()
+        {
+            let string = waveformWidget.positionString(project.property("postPlayInterval"), "hh:mm:ss.zzz").substring(0, 11)
+            postMins.text = string.substr(3, 2)
+            postSecs.text = string.substr(6, 2)
+            postMsecs.text = string.substr(9, 2)
+        }
 
         Rectangle
         {
@@ -1779,6 +1797,427 @@ Item
 
                 onClicked: timelineSettingsWidget.visible = false
             }
+
+            Text
+            {
+                color: "#ffffff"
+                text: qsTr("Add before")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideMiddle
+                font.family: "Roboto"
+                font.pointSize: 7
+
+                anchors.left: preIntervalBackground.left
+                anchors.bottom: preIntervalBackground.top
+                anchors.bottomMargin: 2
+            }
+
+            Rectangle
+            {
+                id: preIntervalBackground
+                x: 10
+                y: 44
+                width: 58
+                height: 18
+                radius: 2
+                color: "black"
+
+                TextField
+                {
+                    id: preMins
+                    width: 16
+                    height: parent.height
+                    text: "00"
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHRight
+                    padding: 0
+                    font.pointSize: 8
+
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+
+                    validator: RegExpValidator { regExp: /[0-9]+/ }
+                    maximumLength: 2
+
+                    background: Rectangle
+                    {
+                        color: "transparent"
+                    }
+
+                    onFocusChanged:
+                    {
+                        if(focus)
+                        {
+                            selectAll()
+                        }
+                    }
+                }
+
+                Text
+                {
+                    id: preMinsColon
+                    height: parent.height
+                    color: "#ffffff"
+                    text: ":"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    font.family: "Roboto"
+
+                    anchors.left: preMins.right
+                    anchors.leftMargin: 2
+                    anchors.top: parent.top
+                }
+
+                TextField
+                {
+                    id: preSecs
+                    width: 16
+                    height: parent.height
+                    text: "00"
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHRight
+                    padding: 0
+                    font.pointSize: 8
+
+                    anchors.left: preMinsColon.right
+                    anchors.leftMargin: -2
+                    anchors.top: parent.top
+
+                    validator: RegExpValidator { regExp: /[0-9]+/ }
+                    maximumLength: 2
+
+                    background: Rectangle
+                    {
+                        color: "transparent"
+                    }
+
+                    onFocusChanged:
+                    {
+                        if(focus)
+                        {
+                            selectAll()
+                        }
+                    }
+                }
+
+                Text
+                {
+                    id: preSecsColon
+                    height: parent.height
+                    color: "#ffffff"
+                    text: "."
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    font.family: "Roboto"
+
+                    anchors.left: preSecs.right
+                    anchors.leftMargin: 2
+                    anchors.top: parent.top
+                }
+
+                TextField
+                {
+                    id: preMsecs
+                    width: 16
+                    height: parent.height
+                    text: "00"
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHRight
+                    padding: 0
+                    font.pointSize: 8
+
+                    anchors.left: preSecsColon.right
+                    anchors.leftMargin: -2
+                    anchors.top: parent.top
+
+                    validator: RegExpValidator { regExp: /[0-9]+/ }
+                    maximumLength: 2
+
+                    background: Rectangle
+                    {
+                        color: "transparent"
+                    }
+
+                    onFocusChanged:
+                    {
+                        if(focus)
+                        {
+                            selectAll()
+                        }
+                    }
+                }
+            }
+
+            Text
+            {
+                color: "#ffffff"
+                text: qsTr("Track time")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideMiddle
+                font.family: "Roboto"
+                font.pointSize: 7
+
+                anchors.left: trackDurationBackground.left
+                anchors.bottom: trackDurationBackground.top
+                anchors.bottomMargin: 2
+            }
+
+            Rectangle
+            {
+                id: trackDurationBackground
+                width: 58
+                height: 18
+                radius: 2
+                color: "#333333"
+
+                anchors.left: preIntervalBackground.right
+                anchors.leftMargin: 8
+                anchors.top: preIntervalBackground.top
+
+                Text
+                {
+                    id: trackDurationText
+                    color: "#ffffff"
+                    text: qsTr("00:00:00")
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    font.family: "Roboto"
+                    font.pointSize: 9
+
+                    padding: 0
+                    anchors.centerIn: parent
+                }
+            }
+
+            Text
+            {
+                color: "#ffffff"
+                text: qsTr("Add after")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideMiddle
+                font.family: "Roboto"
+                font.pointSize: 7
+
+                anchors.left: postIntervalBackground.left
+                anchors.bottom: postIntervalBackground.top
+                anchors.bottomMargin: 2
+            }
+
+            Rectangle
+            {
+                id: postIntervalBackground
+                width: 58
+                height: 18
+                radius: 2
+                color: "black"
+
+                anchors.left: trackDurationBackground.right
+                anchors.leftMargin: 8
+                anchors.top: preIntervalBackground.top
+
+                TextField
+                {
+                    id: postMins
+                    width: 16
+                    height: parent.height
+                    text: "00"
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHRight
+                    padding: 0
+                    font.pointSize: 8
+
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+
+                    validator: RegExpValidator { regExp: /[0-9]+/ }
+                    maximumLength: 2
+
+                    background: Rectangle
+                    {
+                        color: "transparent"
+                    }
+
+                    onFocusChanged:
+                    {
+                        if(focus)
+                        {
+                            selectAll()
+                        }
+                    }
+                }
+
+                Text
+                {
+                    id: postMinsColon
+                    height: parent.height
+                    color: "#ffffff"
+                    text: ":"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    font.family: "Roboto"
+
+                    anchors.left: postMins.right
+                    anchors.leftMargin: 2
+                    anchors.top: parent.top
+                }
+
+                TextField
+                {
+                    id: postSecs
+                    width: 16
+                    height: parent.height
+                    text: "00"
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHRight
+                    padding: 0
+                    font.pointSize: 8
+
+                    anchors.left: postMinsColon.right
+                    anchors.leftMargin: -2
+                    anchors.top: parent.top
+
+                    validator: RegExpValidator { regExp: /[0-9]+/ }
+                    maximumLength: 2
+
+                    background: Rectangle
+                    {
+                        color: "transparent"
+                    }
+
+                    onFocusChanged:
+                    {
+                        if(focus)
+                        {
+                            selectAll()
+                        }
+                    }
+                }
+
+                Text
+                {
+                    id: postSecsColon
+                    height: parent.height
+                    color: "#ffffff"
+                    text: "."
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    font.family: "Roboto"
+
+                    anchors.left: postSecs.right
+                    anchors.leftMargin: 2
+                    anchors.top: parent.top
+                }
+
+                TextField
+                {
+                    id: postMsecs
+                    width: 16
+                    height: parent.height
+                    text: "00"
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHRight
+                    padding: 0
+                    font.pointSize: 8
+
+                    anchors.left: postSecsColon.right
+                    anchors.leftMargin: -2
+                    anchors.top: parent.top
+
+                    validator: RegExpValidator { regExp: /[0-9]+/ }
+                    maximumLength: 2
+
+                    background: Rectangle
+                    {
+                        color: "transparent"
+                    }
+
+                    onFocusChanged:
+                    {
+                        if(focus)
+                        {
+                            selectAll()
+                        }
+                    }
+                }
+            }
+
+            Text
+            {
+                color: "#ffffff"
+                text: qsTr("Total time")
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideMiddle
+                font.family: "Roboto"
+                font.pointSize: 7
+
+                anchors.left: projectDurationBackground.left
+                anchors.bottom: projectDurationBackground.top
+                anchors.bottomMargin: 2
+            }
+
+            Rectangle
+            {
+                id: projectDurationBackground
+                width: 58
+                height: 18
+                radius: 2
+                color: "#333333"
+
+                anchors.left: postIntervalBackground.right
+                anchors.leftMargin: 8
+                anchors.top: preIntervalBackground.top
+
+                Text
+                {
+                    id: projectDurationText
+                    color: "#ffffff"
+                    text: qsTr("00:00:00")
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    font.family: "Roboto"
+                    font.pointSize: 9
+
+                    padding: 0
+                    anchors.centerIn: parent
+                }
+            }
+
+            MfxButton
+            {
+                id: setButton
+                color: "#2F80ED"
+                text: qsTr("Apply")
+
+                anchors.left: trackDurationBackground.left
+                anchors.right: postIntervalBackground.right
+                anchors.top: trackDurationBackground.bottom
+                anchors.topMargin: 12
+
+                onClicked:
+                {
+                    project.setProperty("prePlayInterval", Number(preMins.text) * 60000 + Number(preSecs.text) * 1000 + Number(preMsecs.text) * 10)
+                    project.setProperty("postPlayInterval", Number(postMins.text) * 60000 + Number(postSecs.text) * 1000 + Number(postMsecs.text) * 10)
+                    timelineSettingsWidget.updateFields()
+                    timelineSettingsWidget.visible = false
+
+                    playerWidget.min = 0
+                    playerWidget.max = playerWidget.projectDuration()
+
+                    scrollBackgroundWaveform.anchors.leftMargin = project.property("prePlayInterval") / playerWidget.projectDuration() * positioningRect.width
+                    scrollBackgroundWaveform.anchors.rightMargin = project.property("postPlayInterval") / playerWidget.projectDuration() * positioningRect.width
+                    scrollBackgroundWaveform.showAll()
+                }
+            }
         }
 
     }
@@ -1795,12 +2234,12 @@ Item
             if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
             {
                 project.setProperty("startPosition", 0)
-                project.setProperty("stopPosition", waveformWidget.duration() - 1)
-                project.setProperty("startLoop", 1)
-                project.setProperty("stopLoop", waveformWidget.duration() - 2)
+                project.setProperty("stopPosition", waveformWidget.duration())
+                project.setProperty("startLoop", 0)
+                project.setProperty("stopLoop", waveformWidget.duration())
 
-//                project.setProperty("prePlayInterval", 20000)
-//                project.setProperty("postPlayInterval", 10000)
+                project.setProperty("prePlayInterval", 0)
+                project.setProperty("postPlayInterval", 0)
             }
 
             playerWidget.min = 0
@@ -1813,6 +2252,8 @@ Item
             startPositionMarker.position = project.property("startPosition")
             stopPositionMarker.position = project.property("stopPosition")
             positionCursor.position = startPositionMarker.position
+
+            timelineSettingsWidget.updateFields()
 
 //            cueView.loadCues()
 //            cueView.refresh()
