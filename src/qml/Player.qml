@@ -683,7 +683,7 @@ Item
 
                 cuesList.forEach(function(currCue)
                 {
-                    cuePlates.push(cuePlate.createObject(cueView,
+                    cuePlates.push(cuePlateComponent.createObject(cueView,
                                                          {
                                                              name: currCue["name"],
                                                              yPosition: currCue["yPosition"],
@@ -691,6 +691,49 @@ Item
                                                              duration: currCue["duration"]
                                                          }
                                                          ))
+                })
+
+                updateHeight()
+            }
+
+            function expandCuePlate(name)
+            {
+                let hasExpanded = false
+                let expandedY = 0
+
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.name === name)
+                    {
+                        currCuePlate.isExpanded = !currCuePlate.isExpanded
+                        if(currCuePlate.isExpanded)
+                        {
+                            hasExpanded = true
+                            expandedY = currCuePlate.y
+                            return
+                        }
+                    }
+
+                    else
+                    {
+                        currCuePlate.checked = false
+                        currCuePlate.isExpanded = false
+                    }
+                })
+
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.checked = false
+                    if(hasExpanded)
+                    {
+                        if(currCuePlate.y > expandedY)
+                            currCuePlate.isAfterExpanded = true
+                    }
+
+                    else
+                    {
+                        currCuePlate.isAfterExpanded = false
+                    }
                 })
 
                 updateHeight()
@@ -714,9 +757,10 @@ Item
 
         Component
         {
-            id: cuePlate
+            id: cuePlateComponent
             Item
             {
+                id: cuePlate
                 x: msecToPixels(position - playerWidget.min)
                 y: isAfterExpanded ? yPosition + cueView.expandedHeight - cueView.collapsedHeight : yPosition
                 width: msecToPixels(duration)
@@ -775,6 +819,23 @@ Item
                     font.family: "Roboto"
                     font.pixelSize: 8
                     visible: parent.width > 0
+                }
+
+                MfxMouseArea
+                {
+                    id: cuePlateMouseArea
+                    anchors.fill: parent
+
+                    onClicked:
+                    {
+                        cuePlate.checked = !cuePlate.checked
+                    }
+
+                    onDoubleClicked:
+                    {
+                        cueView.expandCuePlate(cuePlate.name)
+                        cuePlate.checked = true
+                    }
                 }
             }
         }
