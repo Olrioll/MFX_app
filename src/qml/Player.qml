@@ -696,22 +696,27 @@ Item
                 updateHeight()
             }
 
+            function collapseAll()
+            {
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.isExpanded = false
+                    currCuePlate.isAfterExpanded = false
+                })
+
+                updateHeight()
+            }
+
             function expandCuePlate(name)
             {
-                let hasExpanded = false
                 let expandedY = 0
 
                 cuePlates.forEach(function(currCuePlate)
                 {
                     if(currCuePlate.name === name)
                     {
-                        currCuePlate.isExpanded = !currCuePlate.isExpanded
-                        if(currCuePlate.isExpanded)
-                        {
-                            hasExpanded = true
-                            expandedY = currCuePlate.y
-                            return
-                        }
+                        currCuePlate.isExpanded = true
+                        expandedY = currCuePlate.y
                     }
 
                     else
@@ -724,10 +729,10 @@ Item
                 cuePlates.forEach(function(currCuePlate)
                 {
                     currCuePlate.checked = false
-                    if(hasExpanded)
+
+                    if(currCuePlate.y > expandedY)
                     {
-                        if(currCuePlate.y > expandedY)
-                            currCuePlate.isAfterExpanded = true
+                        currCuePlate.isAfterExpanded = true
                     }
 
                     else
@@ -833,7 +838,11 @@ Item
 
                     onDoubleClicked:
                     {
-                        cueView.expandCuePlate(cuePlate.name)
+                        if(cuePlate.isExpanded)
+                            cueView.collapseAll()
+                        else
+                            cueView.expandCuePlate(cuePlate.name)
+
                         cuePlate.checked = true
                     }
                 }
