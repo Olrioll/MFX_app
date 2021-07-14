@@ -637,6 +637,149 @@ Item
         opacity: 0.5
     }
 
+    Flickable
+    {
+        id: cueViewFlickable
+        anchors.fill: waveformBackground
+        contentHeight: cueView.height
+        clip: true
+
+        Item
+        {
+            id: cueView
+            width: waveformWidget.width
+            property int rowMargin: 2
+            property int collapsedHeight: 10
+            property int expandedHeight: 36
+
+            property var cuePlates: []
+
+            function updateHeight()
+            {
+                let maxY = 0
+                let isExpanded = false
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.y >= maxY)
+                    {
+                        maxY = currCuePlate.y
+                        isExpanded = isExpanded ? isExpanded : currCuePlate.isExpanded
+                    }
+                })
+
+                cueView.height = maxY + cueView.rowMargin + (isExpanded ? cueView.expandedHeight : cueView.collapsedHeight)
+            }
+
+            function loadCues()
+            {
+                for(var i = 0; i < cuePlates.length; i++)
+                {
+                    cuePlates[i].destroy()
+                }
+
+                cuePlates = []
+
+                let cuesList = project.getCues()
+
+                cuesList.forEach(function(currCue)
+                {
+                    cuePlates.push(cuePlate.createObject(cueView,
+                                                         {
+                                                             name: currCue["name"],
+                                                             yPosition: currCue["yPosition"],
+                                                             position: currCue["position"],
+                                                             duration: currCue["duration"]
+                                                         }
+                                                         ))
+                })
+
+                updateHeight()
+            }
+        }
+
+        ScrollBar.vertical: ScrollBar
+        {
+            id: cueViewScrollBar
+            policy: cueView.height > waveformBackground.height ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+
+            contentItem:
+                Rectangle
+                {
+                    implicitWidth: 10
+                    radius: 2
+                    color: "#c4c4c4"
+                    opacity: parent.pressed ? 0.25 : 0.5
+                }
+        }
+
+        Component
+        {
+            id: cuePlate
+            Item
+            {
+                x: msecToPixels(position - playerWidget.min)
+                y: isAfterExpanded ? yPosition + cueView.expandedHeight - cueView.collapsedHeight : yPosition
+                width: msecToPixels(duration)
+                height: isExpanded ? cueView.expandedHeight : cueView.collapsedHeight
+
+                property string name: ""
+                property bool isExpanded: false
+                property bool checked: false
+                property bool isAfterExpanded: false
+                property int yPosition
+                property int position // в мсек
+                property int duration  // в мсек
+                property int tempRow
+                property int tempPosition
+
+                states:
+                    [
+                    State
+                    {
+                        name: "intersected"
+                        PropertyChanges
+                        {
+                            target: frame
+                            color: "#3FEB5757"
+                        }
+
+                        PropertyChanges
+                        {
+                            target: frame.border
+                            color: "#EB5757"
+                        }
+                    }
+                ]
+
+                Rectangle
+                {
+                    id: frame
+                    anchors.fill: parent
+
+                    radius: 4
+                    color: "#7F27AE60"
+                    border.width: 2
+                    border.color: parent.checked ? "#2F80ED" : "#27AE60"
+
+                }
+
+                Text
+                {
+                    id: caption
+                    color: "#ffffff"
+                    text: parent.name
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideMiddle
+                    anchors.centerIn: parent
+                    font.family: "Roboto"
+                    font.pixelSize: 8
+                    visible: parent.width > 0
+                }
+            }
+        }
+    }
+
     Rectangle
     {
         id: leftChannelMarker
@@ -2255,7 +2398,7 @@ Item
 
             timelineSettingsWidget.updateFields()
 
-//            cueView.loadCues()
+            cueView.loadCues()
 //            cueView.refresh()
         }
     }
