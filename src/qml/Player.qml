@@ -829,7 +829,10 @@ Item
                 MfxMouseArea
                 {
                     id: cuePlateMouseArea
-                    anchors.fill: parent
+                    anchors.top: cuePlate.top
+                    anchors.bottom: cuePlate.bottom
+                    anchors.left: cuePlate.left
+                    width: cuePlate.width - 4
 
                     onClicked:
                     {
@@ -844,6 +847,32 @@ Item
                             cueView.expandCuePlate(cuePlate.name)
 
                         cuePlate.checked = true
+                    }
+                }
+
+                MfxMouseArea
+                {
+                    id: cuePlateResizeMouseArea
+                    width: 4
+                    anchors.top: cuePlate.top
+                    anchors.bottom: cuePlate.bottom
+                    anchors.left: cuePlateMouseArea.right
+
+                    cursor: Qt.SizeHorCursor
+
+                    onPressed: cueViewFlickable.interactive = false
+
+                    onMouseXChanged:
+                    {
+                        let delta = pixelsToMsec(mouseX - pressedX)
+                        if(cuePlate.duration + delta > 0)
+                            cuePlate.duration += delta
+                    }
+
+                    onReleased:
+                    {
+                        cueViewFlickable.interactive = true
+                        project.setCueProperty(cuePlate.name, "duration", cuePlate.duration)
                     }
                 }
             }
