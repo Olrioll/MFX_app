@@ -20,6 +20,8 @@ public slots:
     QPoint cursorPos() const;
     void saveLastPos();
     void moveToLastPos();
+    int dx() const;
+    int dy() const;
 
 signals:
 

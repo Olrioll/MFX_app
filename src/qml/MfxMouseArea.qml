@@ -5,15 +5,11 @@ MouseArea
     property var cursor: Qt.ArrowCursor
     property int pressedX
     property int pressedY
+    property int dx
+    property int dX
+    property int dy
+    property int dY
     property bool wasPressedAndMoved: false
-
-    property var draggedItem: null
-    property bool dragOnX: false
-    property bool dragOnY: false
-    property int draggedItemMinX
-    property int draggedItemMaxX
-    property int draggedItemMinY
-    property int draggedItemMaxY
 
     cursorShape: applicationWindow.isMouseCursorVisible ? cursor : Qt.BlankCursor
 
@@ -21,49 +17,25 @@ MouseArea
     {
         pressedX = mouseX
         pressedY = mouseY
+        cursorManager.saveLastPos()
     }
 
     onPositionChanged:
     {
+        dx = mouseX - pressedX
+        dy = mouseY - pressedY
+        dX = cursorManager.dx()
+        dY = cursorManager.dy()
+
         if(mouse.buttons)
         {
             wasPressedAndMoved = true
-
-            if(draggedItem)
-            {
-                if(dragOnX)
-                {
-                    let currX = draggedItem.x + (mouseX - pressedX)
-
-                    if(currX < draggedItemMinX)
-                        draggedItem.x = draggedItemMinX
-
-                    else if(currX + draggedItem.width > draggedItemMaxX)
-                        draggedItem.x = draggedItemMaxX - draggedItem.width
-
-                    else
-                        draggedItem.x = currX
-                }
-
-                if(dragOnY)
-                {
-                    let currY = draggedItem.y + (mouseY - pressedY)
-
-                    if(currY < draggedItemMinY)
-                        draggedItem.y = draggedItemMinY
-
-                    else if(currY + draggedItem.height > draggedItemMaxY)
-                        draggedItem.y = draggedItemMaxY - draggedItem.height
-
-                    else
-                        draggedItem.y = currY
-                }
-            }
         }
     }
 
     onReleased:
     {
+        dX = 0
         wasPressedAndMoved = false
     }
 }

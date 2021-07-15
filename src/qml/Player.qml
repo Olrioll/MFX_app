@@ -615,28 +615,6 @@ Item
         }
     }
 
-    Rectangle
-    {
-        id: leftShadingRect
-        anchors.top: waveformWidget.top
-        anchors.bottom: waveformWidget.bottom
-        anchors.left: waveformWidget.left
-        anchors.right: startPositionMarker.left
-        color: "black"
-        opacity: 0.5
-    }
-
-    Rectangle
-    {
-        id: rightShadingRect
-        anchors.top: waveformWidget.top
-        anchors.bottom: waveformWidget.bottom
-        anchors.right: waveformWidget.right
-        anchors.left: repeatButton.checked ? stopLoopMarker.right : stopPositionMarker.right
-        color: "black"
-        opacity: 0.5
-    }
-
     Flickable
     {
         id: cueViewFlickable
@@ -653,6 +631,7 @@ Item
             property int expandedHeight: 36
 
             property var cuePlates: []
+            property var movedPlates: []
 
             function updateHeight()
             {
@@ -743,6 +722,66 @@ Item
 
                 updateHeight()
             }
+
+            function checkedPlates()
+            {
+                let checkedPlatesList = []
+
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.checked)
+                        checkedPlatesList.push(currCuePlate)
+                })
+
+                return checkedPlatesList
+            }
+
+            function movePlatesHorizontally(initPlate, dx)
+            {
+                movedPlates = checkedPlates()
+
+                if(movedPlates.indexOf(initPlate) === -1)
+                    movedPlates.push(initPlate)
+
+                let isFitsLimits = true
+                let delta = pixelsToMsec(dx)
+                movedPlates.forEach(function(currCuePlate)
+                {
+                    if( ! ((currCuePlate.startMovingPosition + delta >= 0) && (currCuePlate.startMovingPosition + delta < playerWidget.projectDuration())))
+                    {
+                        isFitsLimits = false
+                        return
+                    }
+                })
+
+                if(! isFitsLimits)
+                    return
+
+                let hasIntersection = false
+
+                movedPlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.position = currCuePlate.startMovingPosition + delta
+
+                    cuePlates.forEach(function(otherCuePlate)
+                    {
+                        if((currCuePlate.name !== otherCuePlate.name) && (currCuePlate.y === otherCuePlate.y))                        {
+                            if( ! ((currCuePlate.position + currCuePlate.duration < otherCuePlate.position) ||
+                                   (currCuePlate.position > otherCuePlate.position + otherCuePlate.duration)))
+                            {
+                                hasIntersection = true
+                                return
+                            }
+                        }
+                    })
+                })
+
+                movedPlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.state = hasIntersection ? "intersected" : ""
+                })
+            }
+
         }
 
         ScrollBar.vertical: ScrollBar
@@ -778,8 +817,8 @@ Item
                 property int yPosition
                 property int position // в мсек
                 property int duration  // в мсек
-                property int tempRow
-                property int tempPosition
+                property int startMovingY
+                property int startMovingPosition
 
                 states:
                     [
@@ -834,6 +873,14 @@ Item
                     anchors.left: cuePlate.left
                     width: cuePlate.width - 4
 
+                    onPressed:
+                    {
+                        cueViewFlickable.interactive = false
+                        cuePlate.startMovingPosition = cuePlate.position
+                        cuePlate.startMovingY = cuePlate.yPosition
+                        cueView.checkedPlates().forEach((currCuePlate) => currCuePlate.startMovingPosition = currCuePlate.position)
+                    }
+
                     onClicked:
                     {
                         cuePlate.checked = !cuePlate.checked
@@ -847,6 +894,37 @@ Item
                             cueView.expandCuePlate(cuePlate.name)
 
                         cuePlate.checked = true
+                    }
+
+                    onMouseXChanged:
+                    {
+                        cueView.movePlatesHorizontally(cuePlate, dX)
+                    }
+
+                    onReleased:
+                    {
+                        cueViewFlickable.interactive = true
+
+                        if(cueView.movedPlates.length > 1)
+                        {
+                            if(cueView.movedPlates[0].state === "intersected")
+                            {
+                                cueView.movedPlates.forEach(function(currCuePlate)
+                                {
+                                    currCuePlate.position = currCuePlate.startMovingPosition
+                                    currCuePlate.yPosition = currCuePlate.startMovingY
+                                })
+                            }
+
+                            else
+                            {
+                                cueView.movedPlates.forEach(function(currCuePlate)
+                                {
+                                    project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
+                                    project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
+                                })
+                            }
+                        }
                     }
                 }
 
@@ -864,7 +942,7 @@ Item
 
                     onMouseXChanged:
                     {
-                        let delta = pixelsToMsec(mouseX - pressedX)
+                        let delta = pixelsToMsec(dx)
                         if(cuePlate.duration + delta > 0)
                             cuePlate.duration += delta
                     }
@@ -877,6 +955,28 @@ Item
                 }
             }
         }
+    }
+
+    Rectangle
+    {
+        id: leftShadingRect
+        anchors.top: waveformWidget.top
+        anchors.bottom: waveformWidget.bottom
+        anchors.left: waveformBackground.left
+        anchors.right: startPositionMarker.left
+        color: "black"
+        opacity: 0.5
+    }
+
+    Rectangle
+    {
+        id: rightShadingRect
+        anchors.top: waveformWidget.top
+        anchors.bottom: waveformWidget.bottom
+        anchors.right: waveformBackground.right
+        anchors.left: repeatButton.checked ? stopLoopMarker.right : stopPositionMarker.right
+        color: "black"
+        opacity: 0.5
     }
 
     Rectangle

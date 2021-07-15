@@ -38,3 +38,13 @@ void CursorManager::moveToLastPos()
 {
     QCursor::setPos(_lastPos);
 }
+
+int CursorManager::dx() const
+{
+    return QCursor::pos().x() - _lastPos.x();
+}
+
+int CursorManager::dy() const
+{
+    return QCursor::pos().y() - _lastPos.y();
+}
