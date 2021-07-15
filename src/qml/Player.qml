@@ -738,11 +738,6 @@ Item
 
             function movePlatesHorizontally(initPlate, dx)
             {
-                movedPlates = checkedPlates()
-
-                if(movedPlates.indexOf(initPlate) === -1)
-                    movedPlates.push(initPlate)
-
                 let isFitsLimits = true
                 let delta = pixelsToMsec(dx)
                 movedPlates.forEach(function(currCuePlate)
@@ -757,15 +752,34 @@ Item
                 if(! isFitsLimits)
                     return
 
+                movedPlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.position = currCuePlate.startMovingPosition + delta
+                })
+            }
+
+            function movePlatesVertically(initPlate, dy)
+            {
+                let step = cueView.collapsedHeight + cueView.rowMargin
+                let stepCount = Math.round(Math.abs(dy) / step)
+                step = dy > 0 ? step : -step
+
+                cueView.movedPlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.yPosition = currCuePlate.startMovingY + step * stepCount
+                })
+            }
+
+            function checkPlatesIntersection()
+            {
                 let hasIntersection = false
 
                 movedPlates.forEach(function(currCuePlate)
                 {
-                    currCuePlate.position = currCuePlate.startMovingPosition + delta
-
                     cuePlates.forEach(function(otherCuePlate)
                     {
-                        if((currCuePlate.name !== otherCuePlate.name) && (currCuePlate.y === otherCuePlate.y))                        {
+                        if((currCuePlate !== otherCuePlate) && (currCuePlate.y === otherCuePlate.y))
+                        {
                             if( ! ((currCuePlate.position + currCuePlate.duration < otherCuePlate.position) ||
                                    (currCuePlate.position > otherCuePlate.position + otherCuePlate.duration)))
                             {
@@ -876,9 +890,17 @@ Item
                     onPressed:
                     {
                         cueViewFlickable.interactive = false
-                        cuePlate.startMovingPosition = cuePlate.position
-                        cuePlate.startMovingY = cuePlate.yPosition
-                        cueView.checkedPlates().forEach((currCuePlate) => currCuePlate.startMovingPosition = currCuePlate.position)
+
+                        cueView.movedPlates = cueView.checkedPlates()
+
+                        if(cueView.movedPlates.indexOf(cuePlate) === -1)
+                            cueView.movedPlates.push(cuePlate)
+
+                        cueView.movedPlates.forEach(function(currCuePlate)
+                        {
+                            currCuePlate.startMovingPosition = currCuePlate.position
+                            currCuePlate.startMovingY = currCuePlate.yPosition
+                        })
                     }
 
                     onClicked:
@@ -896,9 +918,11 @@ Item
                         cuePlate.checked = true
                     }
 
-                    onMouseXChanged:
+                    onPositionChanged:
                     {
                         cueView.movePlatesHorizontally(cuePlate, dX)
+                        cueView.movePlatesVertically(cuePlate, dY)
+                        cueView.checkPlatesIntersection()
                     }
 
                     onReleased:

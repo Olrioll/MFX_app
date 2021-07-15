@@ -6,9 +6,9 @@ MouseArea
     property int pressedX
     property int pressedY
     property int dx
-    property int dX
     property int dy
-    property int dY
+    property int dX: 0
+    property int dY: 0
     property bool wasPressedAndMoved: false
 
     cursorShape: applicationWindow.isMouseCursorVisible ? cursor : Qt.BlankCursor
@@ -36,6 +36,7 @@ MouseArea
     onReleased:
     {
         dX = 0
+        dY = 0
         wasPressedAndMoved = false
     }
 }
