@@ -653,34 +653,6 @@ Item
             }
         }
 
-        Rectangle
-        {
-            id: movedPlatesRect
-            width: 100
-            height: 100
-            color: "transparent"
-            border.color: "lightblue"
-            border.width: 1
-            radius: 2
-
-            visible: false
-
-            onYChanged:
-            {
-                if (mapToItem(waveformBackground, 0, 0).y < 4)
-                {
-                    cueViewFlickable.contentY -= 12
-                    cueView.movePlatesOnY(-12)
-                }
-
-                else if (mapToItem(waveformBackground, 0, height).y > waveformBackground.height - 4)
-                {
-                    cueViewFlickable.contentY += 12
-                    cueView.movePlatesOnY(12)
-                }
-            }
-        }
-
         Item
         {
             id: cueView
@@ -794,42 +766,6 @@ Item
 
                 return checkedPlatesList
             }
-
-//            function movePlatesHorizontally(dx)
-//            {
-//                let isFitsLimits = true
-//                let delta = pixelsToMsec(dx)
-//                movedPlates.forEach(function(currCuePlate)
-//                {
-//                    if( ! ((currCuePlate.startMovingPosition + delta >= 0) && (currCuePlate.startMovingPosition + delta < playerWidget.projectDuration())))
-//                    {
-//                        isFitsLimits = false
-//                        return
-//                    }
-//                })
-
-//                if(! isFitsLimits)
-//                    return
-
-//                movedPlates.forEach(function(currCuePlate)
-//                {
-//                    currCuePlate.position = currCuePlate.startMovingPosition + delta
-//                })
-//            }
-
-//            function movePlatesVertically(dy)
-//            {
-//                let step = cueView.collapsedHeight + cueView.rowMargin
-//                let stepCount = Math.round(Math.abs(dy) / step)
-//                step = dy > 0 ? step : -step
-
-//                cueView.movedPlates.forEach(function(currCuePlate)
-//                {
-//                    currCuePlate.yPosition = currCuePlate.startMovingY + step * stepCount
-//                })
-
-//                updateHeight()
-//            }
 
             function movePlatesOnY(dy)
             {
@@ -957,13 +893,6 @@ Item
                     anchors.left: cuePlate.left
                     width: cuePlate.width - 4
 
-                    drag.target: movedPlatesRect
-                    drag.axis: Drag.XAndYAxis
-                    drag.minimumX: 0
-                    drag.maximumX: cueViewFlickable.width - movedPlatesRect.width
-                    drag.minimumY: 0
-//                    drag.maximumY: cueViewFlickable.height - movedPlatesRect.height
-
                     drag.threshold: 0
                     drag.smoothed: false
 
@@ -976,33 +905,13 @@ Item
                         if(cueView.movedPlates.indexOf(cuePlate) === -1)
                             cueView.movedPlates.push(cuePlate)
 
-                        let rectX1 = cueView.movedPlates[0].x
-                        let rectY1 = cueView.movedPlates[0].y
-                        let rectX2 = cueView.movedPlates[0].x + cueView.movedPlates[0].width
-                        let rectY2 = cueView.movedPlates[0].y + cueView.movedPlates[0].height
-
                         cueView.movedPlates.forEach(function(currCuePlate)
                         {
                             currCuePlate.startMovingPosition = currCuePlate.position
                             currCuePlate.startMovingY = currCuePlate.yPosition
-
-                            if(currCuePlate.x < rectX1)
-                                rectX1 = currCuePlate.x
-
-                            if(currCuePlate.y < rectY1)
-                                rectY1 = currCuePlate.y
-
-                            if(currCuePlate.x + currCuePlate.width > rectX2)
-                                rectX2 = currCuePlate.x + currCuePlate.width
-
-                            if(currCuePlate.y + currCuePlate.height > rectY2)
-                                rectY2 = currCuePlate.y + currCuePlate.height
                         })
 
-                        movedPlatesRect.x = rectX1 - 4
-                        movedPlatesRect.y = rectY1 - 4
-                        movedPlatesRect.width = rectX2 - rectX1 + 8
-                        movedPlatesRect.height = rectY2 - rectY1 + 8
+
                     }
 
                     onClicked:
@@ -1022,7 +931,6 @@ Item
 
                     onPositionChanged:
                     {
-//                        cueView.movePlatesHorizontally(dX)
                         let delta = pixelsToMsec(xAcc)
 
                         if(Math.abs(delta) > 0)
@@ -1047,7 +955,6 @@ Item
                             }
                         }
 
-//                        cueView.movePlatesVertically(dY)
                         let step = cueView.collapsedHeight + cueView.rowMargin
                         let stepCount = Math.round(Math.abs(yAcc) / step)
 
