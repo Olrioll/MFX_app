@@ -619,8 +619,68 @@ Item
     {
         id: cueViewFlickable
         anchors.fill: waveformBackground
-        contentHeight: cueView.height
+        contentHeight: waveformBackground.height > cueView.height ? waveformBackground.height : cueView.height
         clip: true
+
+        MfxMouseArea
+        {
+            id: cueViewFlickableMouseArea
+            anchors.fill: parent
+
+            onPressed:
+            {
+                cueViewFlickable.interactive = false
+            }
+
+            onClicked:
+            {
+                cueView.cuePlates.forEach(function(currCuePlate)
+                {
+                    currCuePlate.checked = false
+                })
+
+                cueView.collapseAll()
+            }
+
+            onPositionChanged:
+            {
+
+            }
+
+            onReleased:
+            {
+                cueViewFlickable.interactive = true
+            }
+        }
+
+        Rectangle
+        {
+            id: movedPlatesRect
+            width: 100
+            height: 100
+            color: "transparent"
+            border.color: "lightblue"
+            border.width: 1
+            radius: 2
+
+            visible: false
+
+            onYChanged:
+            {
+                if (mapToItem(waveformBackground, 0, 0).y < 4)
+                {
+//                    cueViewFlickable.flick(0, 300)
+                    cueViewFlickable.contentY -= 12
+                    cueView.movedPlates.forEach(function(currCuePlate)
+                    {
+                        currCuePlate.yPosition -= 12
+//                        currCuePlate.y -= 12
+                    })
+
+                    cueView.updateHeight()
+                }
+            }
+        }
 
         Item
         {
@@ -736,7 +796,7 @@ Item
                 return checkedPlatesList
             }
 
-            function movePlatesHorizontally(initPlate, dx)
+            function movePlatesHorizontally(dx)
             {
                 let isFitsLimits = true
                 let delta = pixelsToMsec(dx)
@@ -758,7 +818,7 @@ Item
                 })
             }
 
-            function movePlatesVertically(initPlate, dy)
+            function movePlatesVertically(dy)
             {
                 let step = cueView.collapsedHeight + cueView.rowMargin
                 let stepCount = Math.round(Math.abs(dy) / step)
@@ -768,6 +828,8 @@ Item
                 {
                     currCuePlate.yPosition = currCuePlate.startMovingY + step * stepCount
                 })
+
+                updateHeight()
             }
 
             function checkPlatesIntersection()
@@ -795,7 +857,6 @@ Item
                     currCuePlate.state = hasIntersection ? "intersected" : ""
                 })
             }
-
         }
 
         ScrollBar.vertical: ScrollBar
@@ -887,6 +948,16 @@ Item
                     anchors.left: cuePlate.left
                     width: cuePlate.width - 4
 
+                    drag.target: movedPlatesRect
+                    drag.axis: Drag.XAndYAxis
+                    drag.minimumX: 0
+                    drag.maximumX: cueViewFlickable.width - movedPlatesRect.width
+                    drag.minimumY: 0
+                    drag.maximumY: cueViewFlickable.height - movedPlatesRect.height
+
+                    drag.threshold: 0
+                    drag.smoothed: false
+
                     onPressed:
                     {
                         cueViewFlickable.interactive = false
@@ -896,11 +967,35 @@ Item
                         if(cueView.movedPlates.indexOf(cuePlate) === -1)
                             cueView.movedPlates.push(cuePlate)
 
+//                        let topAnchorPlate = cueView.movedPlates[0] // самя верхняя плашка
+//                        let leftAnchorPlate = cueView.movedPlates[0] // самя левая плашка
+                        let rectX1 = cueView.movedPlates[0].x
+                        let rectY1 = cueView.movedPlates[0].y
+                        let rectX2 = cueView.movedPlates[0].x + cueView.movedPlates[0].width
+                        let rectY2 = cueView.movedPlates[0].y + cueView.movedPlates[0].height
+
                         cueView.movedPlates.forEach(function(currCuePlate)
                         {
                             currCuePlate.startMovingPosition = currCuePlate.position
                             currCuePlate.startMovingY = currCuePlate.yPosition
+
+                            if(currCuePlate.x < rectX1)
+                                rectX1 = currCuePlate.x
+
+                            if(currCuePlate.y < rectY1)
+                                rectY1 = currCuePlate.y
+
+                            if(currCuePlate.x + currCuePlate.width > rectX2)
+                                rectX2 = currCuePlate.x + currCuePlate.width
+
+                            if(currCuePlate.y + currCuePlate.height > rectY2)
+                                rectY2 = currCuePlate.y + currCuePlate.height
                         })
+
+                        movedPlatesRect.x = rectX1 - 4
+                        movedPlatesRect.y = rectY1 - 4
+                        movedPlatesRect.width = rectX2 - rectX1 + 8
+                        movedPlatesRect.height = rectY2 - rectY1 + 8
                     }
 
                     onClicked:
@@ -920,8 +1015,8 @@ Item
 
                     onPositionChanged:
                     {
-                        cueView.movePlatesHorizontally(cuePlate, dX)
-                        cueView.movePlatesVertically(cuePlate, dY)
+                        cueView.movePlatesHorizontally(dX)
+                        cueView.movePlatesVertically(dY)
                         cueView.checkPlatesIntersection()
                     }
 
@@ -929,7 +1024,7 @@ Item
                     {
                         cueViewFlickable.interactive = true
 
-                        if(cueView.movedPlates.length > 1)
+                        if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
                         {
                             if(cueView.movedPlates[0].state === "intersected")
                             {
@@ -949,6 +1044,22 @@ Item
                                 })
                             }
                         }
+
+                        else // Перетаскиваем одну плашку
+                        {
+                            cueView.movedPlates.forEach(function(currCuePlate)
+                            {
+                                project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
+                                project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
+                            })
+                        }
+                    }
+
+                    onWasPressedAndMovedChanged:
+                    {
+                        movedPlatesRect.visible = wasPressedAndMoved
+                        if(wasPressedAndMoved)
+                            cueView.collapseAll()
                     }
                 }
 

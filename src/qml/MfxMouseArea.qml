@@ -27,7 +27,7 @@ MouseArea
         dX = cursorManager.dx()
         dY = cursorManager.dy()
 
-        if(mouse.buttons)
+        if(mouse.buttons && !wasPressedAndMoved)
         {
             wasPressedAndMoved = true
         }
