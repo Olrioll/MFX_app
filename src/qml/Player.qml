@@ -663,6 +663,10 @@ Item
 
             property var cuePlates: []
             property var movedPlates: []
+            property var leftMovedPlate: undefined
+            property var rightMovedPlate: undefined
+            property var topMovedPlate: undefined
+            property var bottomMovedPlate: undefined
 
             function updateHeight()
             {
@@ -905,13 +909,28 @@ Item
                         if(cueView.movedPlates.indexOf(cuePlate) === -1)
                             cueView.movedPlates.push(cuePlate)
 
+                        cueView.leftMovedPlate = cueView.movedPlates[0]
+                        cueView.rightMovedPlate = cueView.movedPlates[0]
+                        cueView.topMovedPlate = cueView.movedPlates[0]
+                        cueView.bottomMovedPlate = cueView.movedPlates[0]
+
                         cueView.movedPlates.forEach(function(currCuePlate)
                         {
                             currCuePlate.startMovingPosition = currCuePlate.position
                             currCuePlate.startMovingY = currCuePlate.yPosition
+
+                            if(currCuePlate.x < cueView.leftMovedPlate.x)
+                               cueView.leftMovedPlate =  currCuePlate
+
+                            if(currCuePlate.x + currCuePlate.width > cueView.rightMovedPlate.x + cueView.rightMovedPlate.width)
+                               cueView.rightMovedPlate =  currCuePlate
+
+                            if(currCuePlate.y < cueView.topMovedPlate.y)
+                               cueView.topMovedPlate =  currCuePlate
+
+                            if(currCuePlate.y + currCuePlate.height > cueView.rightMovedPlate.y + cueView.rightMovedPlate.heght)
+                               cueView.bottomMovedPlate =  currCuePlate
                         })
-
-
                     }
 
                     onClicked:
@@ -931,6 +950,7 @@ Item
 
                     onPositionChanged:
                     {
+                        // Перемещение по горизонтали
                         let delta = pixelsToMsec(xAcc)
 
                         if(Math.abs(delta) > 0)
@@ -955,6 +975,7 @@ Item
                             }
                         }
 
+                        // Перемещение по вертикали
                         let step = cueView.collapsedHeight + cueView.rowMargin
                         let stepCount = Math.round(Math.abs(yAcc) / step)
 
@@ -967,6 +988,18 @@ Item
                             cueView.movePlatesOnY(step * stepCount)
 
                             cueView.checkPlatesIntersection()
+                        }
+
+                        // Прокрутка по вертикали
+
+                        if((cueViewFlickable.height - cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y) <= step)
+                        {
+                            cueViewFlickable.contentY += step
+                        }
+
+                        else if(cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y <= step)
+                        {
+                            cueViewFlickable.contentY -= step
                         }
                     }
 
@@ -982,6 +1015,7 @@ Item
                                 {
                                     currCuePlate.position = currCuePlate.startMovingPosition
                                     currCuePlate.yPosition = currCuePlate.startMovingY
+                                    currCuePlate.state = ""
                                 })
                             }
 
