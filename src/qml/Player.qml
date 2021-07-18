@@ -622,6 +622,40 @@ Item
         contentHeight: waveformBackground.height > cueView.height ? waveformBackground.height : cueView.height
         clip: true
 
+        Timer
+        {
+            id: scrollUpTimer
+            interval: 100
+            repeat: true
+
+            onTriggered:
+            {
+                cueViewFlickable.contentY -= cueView.step
+                if(cueView.movedPlates.length)
+                {
+                    cueView.movePlatesOnY(-cueView.step)
+                    cueView.checkPlatesIntersection()
+                }
+            }
+        }
+
+        Timer
+        {
+            id: scrollDownTimer
+            interval: 100
+            repeat: true
+
+            onTriggered:
+            {
+                cueViewFlickable.contentY += cueView.step
+                if(cueView.movedPlates.length)
+                {
+                    cueView.movePlatesOnY(cueView.step)
+                    cueView.checkPlatesIntersection()
+                }
+            }
+        }
+
         MfxMouseArea
         {
             id: cueViewFlickableMouseArea
@@ -660,6 +694,7 @@ Item
             property int rowMargin: 2
             property int collapsedHeight: 10
             property int expandedHeight: 36
+            property int step: collapsedHeight + rowMargin
 
             property var cuePlates: []
             property var movedPlates: []
@@ -986,26 +1021,36 @@ Item
                             yAcc -= step * stepCount
 
                             cueView.movePlatesOnY(step * stepCount)
-
                             cueView.checkPlatesIntersection()
                         }
 
                         // Прокрутка по вертикали
 
-                        if((cueViewFlickable.height - cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y) <= step)
+//                        if((cueViewFlickable.height - cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y) <= step)
+                        if(cueViewFlickable.height - mapToItem(cueViewFlickable, mouseX, mouseY).y <= step)
                         {
-                            cueViewFlickable.contentY += step
+                            scrollDownTimer.start()
                         }
 
-                        else if(cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y <= step)
+//                        else if(cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y <= step)
+                        else if(mapToItem(cueViewFlickable, mouseX, mouseY).y <= step)
                         {
-                            cueViewFlickable.contentY -= step
+                            scrollDownTimer.stop()
+                            scrollUpTimer.start()
+                        }
+
+                        else
+                        {
+                            scrollDownTimer.stop()
+                            scrollUpTimer.stop()
                         }
                     }
 
                     onReleased:
                     {
                         cueViewFlickable.interactive = true
+                        scrollDownTimer.stop()
+                        scrollUpTimer.stop()
 
                         if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
                         {
@@ -1037,6 +1082,8 @@ Item
                                 project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
                             })
                         }
+
+                        cueView.movedPlates = []
                     }
 
                     onWasPressedAndMovedChanged:
