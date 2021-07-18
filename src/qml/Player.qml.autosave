@@ -860,8 +860,6 @@ Item
                     cueView.cuePlates.forEach(function(currCuePlate)
                     {
                         currCuePlate.yPosition += offset
-//                        project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
-//                        project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
                     })
                 }
 
@@ -880,8 +878,6 @@ Item
                         cueView.cuePlates.forEach(function(currCuePlate)
                         {
                             currCuePlate.yPosition -= offset
-//                            project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
-//                            project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
                         })
                     }
                 }
