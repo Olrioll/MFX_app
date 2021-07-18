@@ -664,6 +664,8 @@ Item
             onPressed:
             {
                 cueViewFlickable.interactive = false
+                selectRect.width = 0
+                selectRect.height = 0
 
                 selectRect.x = mapToItem(cueView, mouseX, mouseY).x
                 selectRect.y = mapToItem(cueView, mouseX, mouseY).y
@@ -684,8 +686,8 @@ Item
                    }
                 })
 
-                selectRect.width = 0
-                selectRect.height = 0
+//                selectRect.width = 0
+//                selectRect.height = 0
 
                 cueView.collapseAll()
             }
@@ -700,15 +702,15 @@ Item
                 if(dy < 0)
                     selectRect.y = mapToItem(cueView, pressedX, pressedY).y - selectRect.height
 
-                if(mapToGlobal(mouseX, mouseY).y  > mapToGlobal(waveformBackground.x, waveformBackground.y + waveformBackground.height).y)
-                {
-                    cueViewFlickable.contentY += 6
-                }
+//                if(mapToGlobal(mouseX, mouseY).y  > waveformBackground.mapToGlobal(waveformBackground.x, waveformBackground.height).y)
+//                {
+//                    cueViewFlickable.contentY += 6
+//                }
 
-                else if(mouseY < 0)
-                {
-                    cueViewFlickable.contentY -= 6
-                }
+//                else if(mapToGlobal(mouseX, mouseY).y < waveformBackground.mapToGlobal(waveformBackground.x, 0).y)
+//                {
+//                    cueViewFlickable.contentY -= 6
+//                }
             }
 
             onReleased:
@@ -723,8 +725,8 @@ Item
                    }
                 })
 
-                selectRect.width = 0
-                selectRect.height = 0
+//                selectRect.width = 0
+//                selectRect.height = 0
             }
         }
 
@@ -936,6 +938,7 @@ Item
                 color: "transparent"
                 border.width: 2
                 border.color: "#2F4C8A"
+                visible: cueViewFlickableMouseArea.pressed
 
                 Rectangle
                 {
@@ -1172,22 +1175,12 @@ Item
                             else
                             {
                                 cueView.updatePositions()
-//                                cueView.movedPlates.forEach(function(currCuePlate)
-//                                {
-//                                    project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
-//                                    project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
-//                                })
                             }
                         }
 
                         else // Перетаскиваем одну плашку
                         {
                             cueView.updatePositions()
-//                            cueView.movedPlates.forEach(function(currCuePlate)
-//                            {
-//                                project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
-//                                project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
-//                            })
                         }
 
                         cueView.movedPlates = []
@@ -1195,7 +1188,6 @@ Item
 
                     onWasPressedAndMovedChanged:
                     {
-//                        movedPlatesRect.visible = wasPressedAndMoved
                         if(wasPressedAndMoved)
                             cueView.collapseAll()
                     }
