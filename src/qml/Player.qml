@@ -664,6 +664,9 @@ Item
             onPressed:
             {
                 cueViewFlickable.interactive = false
+
+                selectRect.x = mapToItem(cueView, mouseX, mouseY).x
+                selectRect.y = mapToItem(cueView, mouseX, mouseY).y
             }
 
             onClicked:
@@ -673,17 +676,55 @@ Item
                     currCuePlate.checked = false
                 })
 
+                cueView.cuePlates.forEach(function(currCuePlate)
+                {
+                   if(selectRect.contains(currCuePlate.mapToItem(selectRect, 0, 0)) && selectRect.contains(currCuePlate.mapToItem(selectRect, currCuePlate.width, currCuePlate.height)))
+                   {
+                       currCuePlate.checked = true
+                   }
+                })
+
+                selectRect.width = 0
+                selectRect.height = 0
+
                 cueView.collapseAll()
             }
 
             onPositionChanged:
             {
+                selectRect.width = Math.abs(dx)
+                selectRect.height = Math.abs(dy)
 
+                if(dx < 0)
+                    selectRect.x = mapToItem(cueView, pressedX, pressedY).x - selectRect.width
+                if(dy < 0)
+                    selectRect.y = mapToItem(cueView, pressedX, pressedY).y - selectRect.height
+
+                if(mapToGlobal(mouseX, mouseY).y  > mapToGlobal(waveformBackground.x, waveformBackground.y + waveformBackground.height).y)
+                {
+                    cueViewFlickable.contentY += 6
+                }
+
+                else if(mouseY < 0)
+                {
+                    cueViewFlickable.contentY -= 6
+                }
             }
 
             onReleased:
             {
                 cueViewFlickable.interactive = true
+
+                cueView.cuePlates.forEach(function(currCuePlate)
+                {
+                   if(selectRect.contains(currCuePlate.mapToItem(selectRect, 0, 0)) && selectRect.contains(currCuePlate.mapToItem(selectRect, currCuePlate.width, currCuePlate.height)))
+                   {
+                       currCuePlate.checked = true
+                   }
+                })
+
+                selectRect.width = 0
+                selectRect.height = 0
             }
         }
 
@@ -889,6 +930,22 @@ Item
                 })
             }
 
+            Rectangle
+            {
+                id: selectRect
+                color: "transparent"
+                border.width: 2
+                border.color: "#2F4C8A"
+
+                Rectangle
+                {
+                    id: fillRect
+                    anchors.margins: selectRect.border.width
+                    anchors.fill: parent
+                    color: "#2F4C8A"
+                    opacity: 0.5
+                }
+            }
         }
 
         ScrollBar.vertical: ScrollBar
