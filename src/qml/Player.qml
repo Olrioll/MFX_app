@@ -686,9 +686,6 @@ Item
                    }
                 })
 
-//                selectRect.width = 0
-//                selectRect.height = 0
-
                 cueView.collapseAll()
             }
 
@@ -701,16 +698,6 @@ Item
                     selectRect.x = mapToItem(cueView, pressedX, pressedY).x - selectRect.width
                 if(dy < 0)
                     selectRect.y = mapToItem(cueView, pressedX, pressedY).y - selectRect.height
-
-//                if(mapToGlobal(mouseX, mouseY).y  > waveformBackground.mapToGlobal(waveformBackground.x, waveformBackground.height).y)
-//                {
-//                    cueViewFlickable.contentY += 6
-//                }
-
-//                else if(mapToGlobal(mouseX, mouseY).y < waveformBackground.mapToGlobal(waveformBackground.x, 0).y)
-//                {
-//                    cueViewFlickable.contentY -= 6
-//                }
             }
 
             onReleased:
@@ -724,9 +711,6 @@ Item
                        currCuePlate.checked = true
                    }
                 })
-
-//                selectRect.width = 0
-//                selectRect.height = 0
             }
         }
 
@@ -1078,7 +1062,7 @@ Item
 
                     onClicked:
                     {
-                        cuePlate.checked = !cuePlate.checked
+
                     }
 
                     onDoubleClicked:
@@ -1134,13 +1118,11 @@ Item
 
                         // Прокрутка по вертикали
 
-//                        if((cueViewFlickable.height - cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y) <= step)
                         if(cueViewFlickable.height - mapToItem(cueViewFlickable, mouseX, mouseY).y <= step)
                         {
                             scrollDownTimer.start()
                         }
 
-//                        else if(cueView.bottomMovedPlate.mapToItem(cueViewFlickable, 0, cueView.bottomMovedPlate.height).y <= step)
                         else if(mapToItem(cueViewFlickable, mouseX, mouseY).y <= step)
                         {
                             scrollDownTimer.stop()
@@ -1159,6 +1141,11 @@ Item
                         cueViewFlickable.interactive = true
                         scrollDownTimer.stop()
                         scrollUpTimer.stop()
+
+                        if(!wasPressedAndMoved)
+                        {
+                            cuePlate.checked = !cuePlate.checked
+                        }
 
                         if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
                         {

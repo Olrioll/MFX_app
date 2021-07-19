@@ -17,6 +17,7 @@ MouseArea
 
     onPressed:
     {
+        wasPressedAndMoved = false
         pressedX = mouseX
         pressedY = mouseY
         xAcc = 0
@@ -45,6 +46,5 @@ MouseArea
     {
         dX = 0
         dY = 0
-        wasPressedAndMoved = false
     }
 }
