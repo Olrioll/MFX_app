@@ -615,6 +615,83 @@ Item
         }
     }
 
+
+    Rectangle
+    {
+        id: prePlayTimeMarker
+        width: waveformWidget.anchors.leftMargin
+        height: 2
+        anchors.left: waveformBackground.left
+        anchors.verticalCenter: waveformBackground.verticalCenter
+        color: "yellow"
+        opacity: 0.5
+        visible: monoModeButton.checked
+    }
+
+    Rectangle
+    {
+        id: postPlayTimeMarker
+        width: waveformWidget.anchors.rightMargin
+        height: 2
+        anchors.right: waveformBackground.right
+        anchors.verticalCenter: waveformBackground.verticalCenter
+        color: "yellow"
+        opacity: 0.5
+        visible: monoModeButton.checked
+    }
+
+    Rectangle
+    {
+        id: prePlayTimeMarkerL
+        width: waveformWidget.anchors.leftMargin
+        height: 2
+        anchors.left: waveformBackground.left
+        anchors.verticalCenter: waveformBackground.verticalCenter
+        anchors.verticalCenterOffset: -(waveformBackground.height / 4)
+        color: "yellow"
+        opacity: 0.5
+        visible: stereoModeButton.checked
+    }
+
+    Rectangle
+    {
+        id: prePlayTimeMarkerR
+        width: waveformWidget.anchors.leftMargin
+        height: 2
+        anchors.left: waveformBackground.left
+        anchors.verticalCenter: waveformBackground.verticalCenter
+        anchors.verticalCenterOffset: waveformBackground.height / 4 - 1
+        color: "yellow"
+        opacity: 0.5
+        visible: stereoModeButton.checked
+    }
+
+    Rectangle
+    {
+        id: postPlayTimeMarkerL
+        width: waveformWidget.anchors.rightMargin
+        height: 2
+        anchors.right: waveformBackground.right
+        anchors.verticalCenter: waveformBackground.verticalCenter
+        anchors.verticalCenterOffset: -(waveformBackground.height / 4)
+        color: "yellow"
+        opacity: 0.5
+        visible: stereoModeButton.checked
+    }
+
+    Rectangle
+    {
+        id: postPlayTimeMarkerR
+        width: waveformWidget.anchors.rightMargin
+        height: 2
+        anchors.right: waveformBackground.right
+        anchors.verticalCenter: waveformBackground.verticalCenter
+        anchors.verticalCenterOffset: waveformBackground.height / 4 - 1
+        color: "yellow"
+        opacity: 0.5
+        visible: stereoModeButton.checked
+    }
+
     Flickable
     {
         id: cueViewFlickable
