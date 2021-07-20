@@ -40,6 +40,8 @@ Item
         positionCursor.position = position
     }
 
+    onWidthChanged: updatePlayerElements()
+
     function hidePlayerElements()
     {
         timeScale.visible = false
@@ -74,6 +76,19 @@ Item
 //        cueViewFlickable.visible = true
     }
 
+    function updatePlayerElements()
+    {
+        if(waveformWidget.visible)
+        {
+            startLoopMarker.updateVisiblePosition()
+            stopLoopMarker.updateVisiblePosition()
+            startPositionMarker.updateVisiblePosition()
+            stopPositionMarker.updateVisiblePosition()
+            positionCursor.updateVisiblePosition()
+
+            timelineSettingsWidget.updateFields()
+        }
+    }
 
     function projectDuration()
     {
@@ -113,8 +128,8 @@ Item
         {
             if((waveformWidget.maxSample() - waveformWidget.minSample()) / waveformWidget.width > 4) // максимальный масштаб - 4 сэмпла на пиксель
             {
-                playerWidget.min += Math.round(leftShift)
-                playerWidget.max -= Math.round(rightShift)
+                playerWidget.min += Math.round(leftShift / 10) * 10
+                playerWidget.max -= Math.round(rightShift / 10) * 10
             }
         }
 
@@ -122,8 +137,8 @@ Item
         {
             if((playerWidget.min - leftShift) >= 0 && (playerWidget.max + rightShift) <= playerWidget.projectDuration())
             {
-                playerWidget.min -= Math.round(leftShift)
-                playerWidget.max += Math.round(rightShift)
+                playerWidget.min -= Math.round(leftShift / 10) * 10
+                playerWidget.max += Math.round(rightShift / 10) * 10
             }
 
             else
@@ -138,7 +153,7 @@ Item
 
                     if((playerWidget.max + dWidth) < playerWidget.projectDuration())
                     {
-                        playerWidget.max += dWidth
+                        playerWidget.max += Math.round(dWidth / 10) * 10
                     }
 
                     else
@@ -152,7 +167,7 @@ Item
 
                     if((playerWidget.min - dWidth) >= 0)
                     {
-                        playerWidget.min -= dWidth
+                        playerWidget.min -= Math.round(dWidth / 10) * 10
                     }
 
                     else
@@ -614,7 +629,6 @@ Item
             }
         }
     }
-
 
     Rectangle
     {
@@ -3021,7 +3035,6 @@ Item
             timelineSettingsWidget.updateFields()
 
             cueView.loadCues()
-//            cueView.refresh()
         }
     }
 
