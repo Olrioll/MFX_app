@@ -733,6 +733,54 @@ Item
             }
         }
 
+        Timer
+        {
+            id: scrollLeftTimer
+            interval: 100
+            repeat: true
+
+            onTriggered:
+            {
+                let step = Math.round((playerWidget.max - playerWidget.min) * 0.05 * 0.1) * 10
+                if(playerWidget.min - step >= 0)
+                {
+                    playerWidget.min -= step
+                    playerWidget.max -= step
+
+                    cueView.movedPlates.forEach(function(currCuePLate)
+                    {
+                        currCuePLate.position -= step
+                    })
+
+                    cueView.checkPlatesIntersection()
+                }
+            }
+        }
+
+        Timer
+        {
+            id: scrollRightTimer
+            interval: 100
+            repeat: true
+
+            onTriggered:
+            {
+                let step = Math.round((playerWidget.max - playerWidget.min) * 0.05 * 0.1) * 10
+                if(playerWidget.max + step <= playerWidget.projectDuration())
+                {
+                    playerWidget.min += step
+                    playerWidget.max += step
+
+                    cueView.movedPlates.forEach(function(currCuePLate)
+                    {
+                        currCuePLate.position += step
+                    })
+
+                    cueView.checkPlatesIntersection()
+                }
+            }
+        }
+
         MfxMouseArea
         {
             id: cueViewFlickableMouseArea
@@ -764,6 +812,30 @@ Item
                 })
 
                 cueView.collapseAll()
+            }
+
+            onDoubleClicked:
+            {
+                let newCueName = "newCue1"
+                if(cueView.cuePlates.length > 0)
+                    newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
+
+                                project.addCue(
+                                            [
+                                                {propName: "name", propValue: newCueName},
+                                                {propName: "yPosition", propValue: 12},
+                                                {propName: "position", propValue: 0},
+                                                {propName: "duration", propValue: 15000}
+                                            ])
+
+                cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
+                                                     {
+                                                         name: newCueName,
+                                                         yPosition: 12,
+                                                         position: 0,
+                                                         duration: 15000
+                                                     }
+                                                     ))
             }
 
             onPositionChanged:
@@ -1175,6 +1247,7 @@ Item
                                 cueView.movedPlates.forEach(function(currCuePlate)
                                 {
                                     currCuePlate.position += delta
+                                    cueView.checkPlatesIntersection()
                                 })
                             }
                         }
@@ -1191,6 +1264,25 @@ Item
 
                             cueView.movePlatesOnY(step * stepCount)
                             cueView.checkPlatesIntersection()
+                        }
+
+                        // Прокрутка по горизонтали
+
+                        if(mapToItem(cueViewFlickable, mouseX, mouseY).x < 4)
+                        {
+                            scrollLeftTimer.start()
+                        }
+
+                        else if(mapToItem(cueViewFlickable, mouseX, mouseY).x > cueViewFlickable.width - 4)
+                        {
+                            scrollLeftTimer.stop()
+                            scrollRightTimer.start()
+                        }
+
+                        else
+                        {
+                            scrollLeftTimer.stop()
+                            scrollRightTimer.stop()
                         }
 
                         // Прокрутка по вертикали
@@ -1218,13 +1310,15 @@ Item
                         cueViewFlickable.interactive = true
                         scrollDownTimer.stop()
                         scrollUpTimer.stop()
+                        scrollLeftTimer.stop()
+                        scrollRightTimer.stop()
 
                         if(!wasPressedAndMoved)
                         {
                             cuePlate.checked = !cuePlate.checked
                         }
 
-                        if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
+//                        if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
                         {
                             if(cueView.movedPlates[0].state === "intersected")
                             {
@@ -1242,10 +1336,10 @@ Item
                             }
                         }
 
-                        else // Перетаскиваем одну плашку
-                        {
-                            cueView.updatePositions()
-                        }
+//                        else // Перетаскиваем одну плашку
+//                        {
+//                            cueView.updatePositions()
+//                        }
 
                         cueView.movedPlates = []
                     }
