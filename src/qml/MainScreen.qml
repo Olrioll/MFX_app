@@ -20,11 +20,6 @@ Item
 
         sceneWidget.parent = leftPanel
         sceneWidget.anchors.fill = leftPanel
-//        sceneWidget.anchors.margins = 2
-//        sceneWidget.anchors.left = mainScreen.left
-//        sceneWidget.anchors.right = mainScreen.right
-//        sceneWidget.anchors.top = mainScreen.top
-//        sceneWidget.anchors.bottom = playerWidget.top
     }
 
     Item
@@ -38,6 +33,48 @@ Item
 
         MfxButton
         {
+            id: visualizationButton
+            checkable: true
+            width: 100
+            z: 1
+            text: qsTr("Visualization")
+
+            anchors.topMargin: 6
+            anchors.leftMargin: 6
+            anchors.top: parent.top
+            anchors.left: parent.left
+        }
+
+        MfxButton
+        {
+            id: cueListButton
+            checkable: true
+            width: 100
+            z: 1
+            text: qsTr("Cue List")
+
+            anchors.topMargin: 6
+            anchors.leftMargin: 2
+            anchors.top: parent.top
+            anchors.left: visualizationButton.right
+        }
+
+        MfxButton
+        {
+            id: deviceListButton1
+            checkable: true
+            width: 100
+            z: 1
+            text: qsTr("Device List")
+
+            anchors.topMargin: 6
+            anchors.leftMargin: 2
+            anchors.top: parent.top
+            anchors.left: cueListButton.right
+        }
+
+        MfxButton
+        {
             id: cueContentButton
             checkable: true
             width: 100
@@ -47,12 +84,12 @@ Item
             anchors.topMargin: 6
             anchors.rightMargin: 2
             anchors.top: parent.top
-            anchors.right: deviceListButton.left
+            anchors.right: deviceListButton2.left
         }
 
         MfxButton
         {
-            id: deviceListButton
+            id: deviceListButton2
             checkable: true
             width: 100
             z: 1

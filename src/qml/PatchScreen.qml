@@ -21,12 +21,21 @@ Item
         if(!sceneWidget)
             return
 
-        sceneWidget.parent = this
-        sceneWidget.anchors.margins = 2
-        sceneWidget.anchors.left = patchScreen.left
-        sceneWidget.anchors.right = groupList.left
-        sceneWidget.anchors.top = patchScreen.top
-        sceneWidget.anchors.bottom = patchScreen.bottom
+        sceneWidget.parent = sceneWidgetItem
+        sceneWidget.anchors.fill = sceneWidgetItem
+
+//        console.log(sceneWidget.height)
+    }
+
+    Item
+    {
+        id: sceneWidgetItem
+
+        anchors.margins: 2
+        anchors.left: patchScreen.left
+        anchors.right: groupList.left
+        anchors.top: patchScreen.top
+        anchors.bottom: patchScreen.bottom
     }
 
     SideDockedWindow
