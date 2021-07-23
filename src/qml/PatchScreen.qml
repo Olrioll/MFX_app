@@ -23,6 +23,7 @@ Item
 
         sceneWidget.parent = sceneWidgetItem
         sceneWidget.anchors.fill = sceneWidgetItem
+        sceneWidget.visible = true
 
 //        console.log(sceneWidget.height)
     }

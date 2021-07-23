@@ -20,6 +20,7 @@ Item
 
         sceneWidget.parent = leftPanel
         sceneWidget.anchors.fill = leftPanel
+        sceneWidget.visible = visualizationButton.checked
     }
 
     Item
@@ -43,6 +44,14 @@ Item
             anchors.leftMargin: 6
             anchors.top: parent.top
             anchors.left: parent.left
+
+            onCheckedChanged:
+            {
+                if(sceneWidget)
+                    checked ? sceneWidget.visible = true : sceneWidget.visible = false
+            }
+
+            ButtonGroup.group: leftButtonsGroup
         }
 
         MfxButton
@@ -57,6 +66,8 @@ Item
             anchors.leftMargin: 2
             anchors.top: parent.top
             anchors.left: visualizationButton.right
+
+            ButtonGroup.group: leftButtonsGroup
         }
 
         MfxButton
@@ -71,6 +82,15 @@ Item
             anchors.leftMargin: 2
             anchors.top: parent.top
             anchors.left: cueListButton.right
+
+            ButtonGroup.group: leftButtonsGroup
+        }
+
+        ButtonGroup
+        {
+            id: leftButtonsGroup
+            checkedButton: visualizationButton
+
         }
 
         MfxButton
