@@ -109,8 +109,6 @@ Item
         }
     }
 
-
-
     Item
     {
         id: listArea

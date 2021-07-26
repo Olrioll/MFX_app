@@ -19,4 +19,23 @@ void ActionsManager::loadActions()
     {
         _actions.push_back(Action(action.toObject()));
     }
+
+    emit actionsLoaded();
+}
+
+QVariantList ActionsManager::getActions() const
+{
+    QVariantList actionsList;
+    for(auto & action : _actions)
+    {
+        QVariantMap actionProperties;
+        for(auto & prop : action.properties)
+        {
+            actionProperties.insert(prop.first, prop.second);
+        }
+
+       actionsList.push_back(actionProperties);
+    }
+
+    return actionsList;
 }

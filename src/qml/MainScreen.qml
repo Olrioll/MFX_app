@@ -107,6 +107,12 @@ Item
             anchors.rightMargin: 2
             anchors.top: parent.top
             anchors.right: deviceListButton2.left
+
+            onClicked:
+            {
+                if(checked)
+                    deviceListButton2.checked = false
+            }
         }
 
         MfxButton
@@ -116,11 +122,344 @@ Item
             width: 100
             z: 1
             text: qsTr("Device List")
+            checked: true
 
             anchors.topMargin: 6
             anchors.rightMargin: 6
             anchors.top: parent.top
             anchors.right: parent.right
+
+            onClicked:
+            {
+                if(checked)
+                    cueContentButton.checked = false
+            }
+        }
+
+        Item
+        {
+            id: rightWidget
+
+            z: 1
+            width: 440
+            anchors.topMargin: 2
+            anchors.top: cueContentButton.bottom
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 2
+            anchors.right: parent.right
+            visible: cueContentButton.checked || deviceListButton2.checked
+
+            Rectangle
+            {
+                id: rightWidgetFrame
+                anchors.fill: parent
+                color: "black"
+                radius: 2
+                clip: true
+
+                border.width: 2
+                border.color: "#444444"
+
+
+                ListView
+                {
+                    id: sortedDeviceListView
+
+                    anchors.fill: parent
+                    anchors.topMargin: 6
+                    anchors.leftMargin: 6
+                    spacing: 10
+                    ScrollBar.vertical: ScrollBar
+                    {
+                        policy: ScrollBar.AsNeeded
+                        anchors
+                        {
+                            right: sortedDeviceListView.right
+                            top: sortedDeviceListView.top
+                            bottom: sortedDeviceListView.bottom
+                            rightMargin: -3
+                        }
+                    }
+
+                    function loadGroups()
+                    {
+                        groupListModel.append({groupName: "Sequences"})
+                        groupListModel.append({groupName: "Dimmer"})
+                        groupListModel.append({groupName: "Shot"})
+                        groupListModel.append({groupName: "Pyro"})
+                    }
+
+                    delegate: Component
+                    {
+                        Item
+                        {
+                            id: typeGroup
+                            height: collapseButton.checked ? collapseButton.height + deviceListView.contentItem.height + 20 : collapseButton.height
+                            property string name: groupName
+                            property alias deviceList: deviceListView
+                            property bool isExpanded: collapseButton.checked
+
+                            Button
+                            {
+                                id: collapseButton
+                                width: 16
+                                height: 16
+                                checkable: true
+
+                                bottomPadding: 0
+                                topPadding: 0
+                                rightPadding: 0
+                                leftPadding: 0
+
+                                background: Rectangle {
+                                    color: "#444444"
+                                    radius: 2
+                                }
+
+                                contentItem: Text {
+                                    color: "#ffffff"
+                                    text: parent.checked ? "-" : "+"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideRight
+                                    font.family: "Roboto"
+                                    font.pixelSize: 14
+                                }
+
+                                onCheckedChanged:
+                                {
+                                    isExpanded = checked
+                                }
+                            }
+
+                            Rectangle
+                            {
+                                color: "#000000"
+                                radius: 2
+                                anchors.leftMargin: 10
+                                anchors.left: collapseButton.right
+                                height: collapseButton.height
+                                width: groupNameText.width + 4
+
+                                Text
+                                {
+                                    id: groupNameText
+                                    color: "#ffffff"
+                                    text: typeGroup.name
+                                    anchors.leftMargin: 2
+                                    anchors.left: parent.left
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    horizontalAlignment: Text.AlignHLeft
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideRight
+                                    font.family: "Roboto"
+                                    font.pixelSize: 12
+                                }
+                            }
+
+                            Item
+                            {
+                                id: listArea
+                                visible: collapseButton.checked
+                                x: 18
+                                y: 30
+
+                                ListView
+                                {
+                                    id: deviceListView
+                                    anchors.margins: 2
+                                    anchors.top: parent.top
+                                    anchors.left: parent.left
+                                    width: 392
+                                    height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
+                                    spacing: 2
+                                    ScrollBar.vertical: ScrollBar {}
+
+                                    property string groupName: typeGroup.name
+                                    property bool held: false
+
+                                    function loadDeviceList()
+                                    {
+                                        deviceListModel.clear()
+                                        var listSize = project.patchCount()
+                                        for(let i = 0; i < listSize; i++)
+                                        {
+                                            if(project.patchType(i) === deviceListView.groupName)
+                                                deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, currentId: project.patchPropertyForIndex(i, "ID")})
+                                        }
+                                    }
+
+                                    function refreshPlatesNo()
+                                    {
+                                        for(let i = 0; i < deviceListModel.count; i++)
+                                        {
+                                            deviceListModel.get(i).counter = i + 1
+                                        }
+                                    }
+
+                                    delegate: PatchPlate
+                                    {
+                                        no: counter
+                                        patchId: currentId
+                                    }
+
+                                    model: ListModel
+                                    {
+                                        id: deviceListModel
+                                    }
+
+                                    Component.onCompleted:
+                                    {
+                                        loadDeviceList()
+                                    }
+
+                                    PatchPlate
+                                    {
+                                        id: draggedPlate
+                                        visible: deviceListView.held
+                                        opacity: 0.8
+                                        withBorder: true
+
+                                        property string infoText: ""
+
+                                        Drag.active: deviceListView.held
+                                        Drag.source: this
+                                        Drag.hotSpot.x: this.width / 2
+                                        Drag.hotSpot.y: this.height / 2
+
+                                        states: State
+                                        {
+                                            when: deviceListView.held
+
+                                            ParentChange { target: draggedPlate; parent: patchScreen }
+                                            AnchorChanges {
+                                                target: draggedPlate
+                                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+                                            }
+                                        }
+
+                                        Text
+                                        {
+                                            anchors.centerIn: parent
+                                            color: "#ffffff"
+                                            font.family: "Roboto"
+                                            font.pixelSize: 12
+                                            text: parent.infoText
+                                        }
+                                    }
+
+                                    MouseArea
+                                    {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        propagateComposedEvents: true
+
+                                        property var pressedItem: null
+                                        property int pressedX
+                                        property int pressedY
+                                        property bool wasDragging: false
+
+                                        drag.target: deviceListView.held ? draggedPlate : undefined
+                                        drag.axis: Drag.XAndYAxis
+
+                                        drag.minimumX: 0
+                                        drag.maximumX: mainScreen.width - draggedPlate.width
+                                        drag.minimumY: 0
+                                        drag.maximumY: mainScreen.height - draggedPlate.height
+
+                                        drag.threshold: 0
+                                        drag.smoothed: false
+
+                                        onClicked:
+                                        {
+                                            pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                                            if(pressedItem)
+                                            {
+                                                if(!wasDragging)
+                                                    project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
+
+                                                wasDragging = false
+                                            }
+                                        }
+
+
+                                        onPressed:
+                                        {
+                                            pressedX = mouseX
+                                            pressedY = mouseY
+
+                                            pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                                            if(pressedItem)
+                                            {
+                                                draggedPlate.Drag.hotSpot.x = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
+                                                draggedPlate.Drag.hotSpot.y = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
+
+                                                draggedPlate.checkedIDs = []
+                                                for(let i = 0; i < deviceListView.count; i++)
+                                                {
+                                                    if(deviceListView.itemAtIndex(i).checked)
+                                                        draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
+                                                }
+
+                                                if(draggedPlate.checkedIDs.length === 0) // Перетаскивем только одну плашку, а она может быть и не выделена
+                                                {
+                                                    draggedPlate.checkedIDs.push(pressedItem.patchId)
+                                                }
+
+                                                deviceListView.held = true
+                                                draggedPlate.x = pressedItem.mapToItem(patchScreen, 0, 0).x
+                                                draggedPlate.y = pressedItem.mapToItem(patchScreen, 0, 0).y
+                                                draggedPlate.no = pressedItem.no
+                                                draggedPlate.width = pressedItem.width
+                                                draggedPlate.height = pressedItem.height
+                                                draggedPlate.name = pressedItem.name
+                                                draggedPlate.imageFile = pressedItem.imageFile
+
+                                                draggedPlate.infoText = qsTr("Adding patches with IDs: " + draggedPlate.checkedIDs)
+
+                                                draggedPlate.refreshCells()
+                                            }
+                                        }
+
+                                        onPositionChanged:
+                                        {
+                                            wasDragging = true
+                                        }
+
+                                        onReleased:
+                                        {
+                                            if(drag.target)
+                                            {
+                                                drag.target.Drag.drop()
+                                                deviceListView.held = false
+                                                wasDragging = false
+                                                pressedItem.withBorder = false
+                                                pressedItem = null
+                                            }
+                                        }
+                                    }
+
+                                    Connections
+                                    {
+                                        target: project
+                                        function onPatchListChanged() {deviceListView.loadDeviceList()}
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    model: ListModel
+                    {
+                        id: groupListModel
+                    }
+
+                    Component.onCompleted:
+                    {
+                        loadGroups();
+                    }
+                }
+            }
         }
     }
 
@@ -384,6 +723,7 @@ Item
                             height: actionView.cellHeight
 
                             property string name: actionName
+                            property bool checked: checkedState
 
                             Rectangle
                             {
@@ -427,6 +767,21 @@ Item
                                     anchors.bottom: parent.bottom
                                     anchors.horizontalCenter: parent.horizontalCenter
                                 }
+                            }
+
+                            Rectangle
+                            {
+                                width: actionView.cellWidth - 4
+                                height: actionView.cellHeight - 4
+                                id: actionPlateBorder
+                                anchors.centerIn: parent
+                                color: "transparent"
+                                radius: 2
+
+                                border.width: 2
+                                border.color: "#27AE60"
+
+                                visible: parent.checked
                             }
                         }
                     }
@@ -477,12 +832,57 @@ Item
                         }
                     }
 
+                    Connections
+                    {
+                        target: actionsManager
+                        function onActionsLoaded()
+                        {
+                            let actionsList = actionsManager.getActions()
+
+                            actionListModel.clear()
+                            actionsList.forEach(function(currAction, index)
+                            {
+                                actionListModel.insert(index, {actionName: currAction["name"]})
+                            })
+                        }
+                    }
+
+                    MfxMouseArea
+                    {
+                        id: actionsViewMouseArea
+
+                        anchors.fill: parent
+
+                        onClicked:
+                        {
+                            let clickedItemName = actionView.itemAt(mouseX, mouseY).name
+                            if(clickedItemName)
+                            {
+                                for(let i = 0; i < actionListModel.count; i++)
+                                {
+                                    actionListModel.get(i).actionName === clickedItemName ?
+                                                actionListModel.setProperty(i, "checkedState", true) : actionListModel.setProperty(i, "checkedState", false)
+                                }
+                            }
+                        }
+                    }
+
                     Component.onCompleted:
                     {
-                        for (let i = 1; i < 81; i++)
+//                        for (let i = 1; i < 81; i++)
+//                        {
+//                            actionListModel.insert(i - 1, {actionName: "name" + i})
+//                        }
+
+                        let actionsList = actionsManager.getActions()
+
+                        actionListModel.clear()
+                        actionsList.forEach(function(currAction, index)
                         {
-                            actionListModel.insert(i - 1, {actionName: "name" + i})
-                        }
+                            actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})
+                        })
+
+                        actionsViewMouseArea.parent = actionView.contentItem
                     }
                 }
             }

@@ -12,7 +12,6 @@ ListView
     anchors.left: parent.left
     width: 392
     height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
-//    clip: true
     spacing: 2
     ScrollBar.vertical: ScrollBar {}
 
@@ -150,8 +149,6 @@ ListView
         property var pressedItem: null
         property int pressedX
         property int pressedY
-//        property int mappedPressedX
-//        property int mappedPressedY
         property bool wasDragging: false
 
         drag.target: deviceListView.held ? draggedPlate : undefined
@@ -186,8 +183,6 @@ ListView
             pressedItem = deviceListView.itemAt(mouseX, mouseY)
             if(pressedItem)
             {
-//                mappedPressedX = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
-//                mappedPressedY = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
                 draggedPlate.Drag.hotSpot.x = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
                 draggedPlate.Drag.hotSpot.y = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
 
@@ -221,23 +216,6 @@ ListView
         onPositionChanged:
         {
             wasDragging = true
-
-//            let currX = mouseArea.mapToItem(patchScreen, mouseX, mouseY).x - mappedPressedX
-//            let currY = mouseArea.mapToItem(patchScreen, mouseX, mouseY).y - mappedPressedY
-
-//            if(currX < 0)
-//                draggedPlate.x = 0
-//            else if(currX > patchScreen.width - draggedPlate.width)
-//                draggedPlate.x = patchScreen.width - draggedPlate.width
-//            else
-//                draggedPlate.x = currX
-
-//            if(currY < 0)
-//                draggedPlate.y = 0
-//            else if(currY > patchScreen.height - draggedPlate.height)
-//                draggedPlate.y = patchScreen.height - draggedPlate.height
-//            else
-//                draggedPlate.y = currY
         }
 
         onReleased:
@@ -276,90 +254,6 @@ ListView
             onExited: groupBackground.border.color = "transparent"
         }
     }
-
-//    Rectangle
-//    {
-//        id: dropMarker
-//        width: parent.width - 8
-//        height: 2
-//        color: "lightblue"
-//        visible: false
-//    }
-
-//    DropArea
-//    {
-//        id: deviceListWidgetDropArea
-//        anchors.fill: parent
-
-//        property var currPlate: null
-
-//        onEntered:
-//        {
-//            if(deviceListView.itemAt(drag.x, drag.y))
-//            {
-//                currPlate = deviceListView.itemAt(drag.x, drag.y)
-//                dropMarker.width = currPlate.width
-//                dropMarker.visible = true
-//            }
-//        }
-
-//        onExited:
-//        {
-//            dropMarker.visible = false
-//        }
-
-//        onPositionChanged:
-//        {
-//            if(deviceListView.itemAt(drag.x, drag.y) !== currPlate)
-//            {
-//                currPlate = deviceListView.itemAt(drag.x, drag.y)
-
-//                if(currPlate)
-//                {
-//                    dropMarker.width = currPlate.width
-//                    dropMarker.x = currPlate.x
-//                    dropMarker.y = currPlate.y + currPlate.height
-//                    dropMarker.visible = true
-//                }
-//            }
-//        }
-
-//        onDropped:
-//        {
-//            dropMarker.visible = false
-
-//            if(!applicationWindow.isPatchEditorOpened)
-//            {
-//                if (drag.source.name === "Sequences")
-//                {
-//                    var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow);
-//                    addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
-//                    addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
-//                }
-
-//                else if (drag.source.name === "Dimmer")
-//                {
-//                    var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow);
-//                    addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
-//                    addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
-//                }
-
-//                else if (drag.source.name === "Shot")
-//                {
-//                    var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow);
-//                    addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
-//                    addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
-//                }
-
-//                else if (drag.source.name === "Pyro")
-//                {
-//                    var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow);
-//                    addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2
-//                    addPyroWindow.y = applicationWindow.height / 2 - addPyroWindow.height / 2
-//                }
-//            }
-//        }
-//    }
 
     Connections
     {

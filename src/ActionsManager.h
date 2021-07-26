@@ -77,7 +77,13 @@ public:
 
     void loadActions();
 
+public slots:
+
+    QVariantList getActions() const;
+
 signals:
+
+    void actionsLoaded();
 
 private:
 
