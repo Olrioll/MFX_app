@@ -280,11 +280,11 @@ Item
 
             MfxButton
             {
-                id: lingeringButton
+                id: lingericButton
                 checkable: true
                 width: 72
                 height: 26
-                text: qsTr("Lingering")
+                text: qsTr("Lingeric")
                 textSize: 10
 
                 anchors.top: parent.top
@@ -303,7 +303,7 @@ Item
                 textSize: 10
 
                 anchors.top: parent.top
-                anchors.left: lingeringButton.right
+                anchors.left: lingericButton.right
 
                 ButtonGroup.group: actionTypesGroup
             }
@@ -326,7 +326,7 @@ Item
             ButtonGroup
             {
                 id: actionTypesGroup
-                checkedButton: lingeringButton
+                checkedButton: lingericButton
 
             }
 

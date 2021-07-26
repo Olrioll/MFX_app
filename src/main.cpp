@@ -6,6 +6,7 @@
 
 #include "SettingsManager.h"
 #include "ProjectManager.h"
+#include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
 #include "cursormanager.h"
@@ -18,6 +19,8 @@ int main(int argc, char** argv)
 
     SettingsManager settings;
     ProjectManager project(settings);
+    ActionsManager actionsManager(settings);
+    actionsManager.loadActions();
     CursorManager cursorManager;
 
     QTranslator translator;
@@ -29,6 +32,7 @@ int main(int argc, char** argv)
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("settingsManager", &settings);
     engine.rootContext()->setContextProperty("project", &project);
+    engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.load(QUrl(QStringLiteral("qrc:/src/qml/main.qml")));
