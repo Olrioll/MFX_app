@@ -877,6 +877,42 @@ Item
             }
         }
 
+        DropArea
+        {
+            id: cueViewFlickableDropArea
+            anchors.fill: parent
+
+            onDropped:
+            {
+                let newX = mapToItem(cueView, drag.x, drag.y).x
+                let newY = mapToItem(cueView, drag.x, drag.y).y
+
+                let newYposition = Math.round(newY / 12) * 12
+                let newPosition = playerWidget.min + pixelsToMsec(newX)
+
+                let newCueName = "newCue1"
+                if(cueView.cuePlates.length > 0)
+                    newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
+
+                                project.addCue(
+                                            [
+                                                {propName: "name", propValue: newCueName},
+                                                {propName: "yPosition", propValue: newYposition},
+                                                {propName: "position", propValue: newPosition},
+                                                {propName: "duration", propValue: 15000}
+                                            ])
+
+                cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
+                                                     {
+                                                         name: newCueName,
+                                                         yPosition: newYposition,
+                                                         position: newPosition,
+                                                         duration: 15000
+                                                     }
+                                                     ))
+            }
+        }
+
         Item
         {
             id: cueView
