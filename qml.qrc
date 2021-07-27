@@ -50,7 +50,6 @@
         <file>src/qml/MfxMenu.qml</file>
         <file>src/qml/MainScreen.qml</file>
         <file>src/qml/OutputScreen.qml</file>
-        <file>src/qml/PlayerWidget.qml</file>
         <file alias="stopButton">src/img/player_stopButton.png</file>
         <file alias="playButton">src/img/player_playPauseButton.png</file>
         <file alias="pauseButton">src/img/player_pauseButton.png</file>

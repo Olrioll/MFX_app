@@ -331,7 +331,7 @@ Item
                                         {
                                             when: deviceListView.held
 
-                                            ParentChange { target: draggedPlate; parent: patchScreen }
+                                            ParentChange { target: draggedPlate; parent: mainScreen }
                                             AnchorChanges {
                                                 target: draggedPlate
                                                 anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
@@ -407,8 +407,8 @@ Item
                                                 }
 
                                                 deviceListView.held = true
-                                                draggedPlate.x = pressedItem.mapToItem(patchScreen, 0, 0).x
-                                                draggedPlate.y = pressedItem.mapToItem(patchScreen, 0, 0).y
+                                                draggedPlate.x = pressedItem.mapToItem(mainScreen, 0, 0).x
+                                                draggedPlate.y = pressedItem.mapToItem(mainScreen, 0, 0).y
                                                 draggedPlate.no = pressedItem.no
                                                 draggedPlate.width = pressedItem.width
                                                 draggedPlate.height = pressedItem.height
