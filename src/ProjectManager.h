@@ -231,6 +231,7 @@ public slots:
     QList<int> patchesIdList(QString groupName) const;
 
     void addCue(QVariantList properties);
+    void deleteCues(QStringList names);
     int CueCount() const;
     void minimizeCueRowCount();
     int maxCueRow() const;

@@ -648,6 +648,31 @@ void ProjectManager::addCue(QVariantList properties)
     _cues.push_back(cue);
 }
 
+void ProjectManager::deleteCues(QStringList names)
+{
+    QList<Cue> newList;
+
+    for(auto & currCue : _cues)
+    {
+        bool shouldBeDeleted = false;
+        for(auto & name : names)
+        {
+            if(currCue.property("name").toString() == name)
+            {
+                shouldBeDeleted = true;
+                break;
+            }
+        }
+
+        if(! shouldBeDeleted)
+        {
+            newList.push_back(currCue);
+        }
+    }
+
+    _cues = newList;
+}
+
 int ProjectManager::CueCount() const
 {
     return _cues.size();

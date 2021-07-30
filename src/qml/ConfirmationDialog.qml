@@ -6,7 +6,7 @@ Item
 {
     id: dialog
     width: 220
-    height: 200
+    height: 120
 
     property string caption
     property string dialogText

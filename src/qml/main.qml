@@ -202,8 +202,6 @@ ApplicationWindow
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
         }
-
-//        Component.onCompleted: currentIndex = 1
     }
 
     ProjectSettingsWidget

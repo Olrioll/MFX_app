@@ -731,6 +731,86 @@ Item
         anchors.fill: waveformBackground
         contentHeight: waveformBackground.height > cueView.height ? waveformBackground.height : cueView.height
         clip: true
+        focus: cueViewFlickableMouseArea.containsMouse
+
+        Keys.onPressed:
+        {
+            console.log(event.keyh)
+            if (event.key === Qt.Key_Delete)
+            {
+                let checkedPlates = cueView.checkedPlates()
+
+                if(checkedPlates.length)
+                {
+                    var confirmDelDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                    confirmDelDialog.x = applicationWindow.width / 2 - confirmDelDialog.width / 2
+                    confirmDelDialog.y = applicationWindow.height / 2 - confirmDelDialog.height / 2
+                    confirmDelDialog.caption = qsTr("Delete Cues")
+                    confirmDelDialog.dialogText = qsTr("Delete selected cues from the project?")
+                    confirmDelDialog.acceptButtonText = qsTr("Delete")
+                    confirmDelDialog.cancelButtonText = qsTr("Cancel")
+                    confirmDelDialog.acceptButtonColor = "#EB5757"
+                    confirmDelDialog.cancelButtonColor = "#27AE60"
+
+                    confirmDelDialog.accepted.connect(() =>
+                                                      {
+                                                          let deletedCuesNames = []
+                                                          checkedPlates.forEach(function(currCuePlate)
+                                                          {
+                                                              deletedCuesNames.push(currCuePlate.name)
+                                                          })
+
+                                                          project.deleteCues(deletedCuesNames)
+                                                          cueView.loadCues()
+
+                                                          let lowestY = cueView.cuePlates[0].yPosition
+                                                          let offset = 0
+
+                                                          cueView.movedPlates.forEach(function(currCuePlate)
+                                                          {
+                                                              if(currCuePlate.yPosition < lowestY)
+                                                                  lowestY = currCuePlate.yPosition
+
+                                                          })
+
+                                                          if(lowestY < cueView.step)
+                                                          {
+                                                              offset = cueView.step - lowestY
+                                                              cueView.cuePlates.forEach(function(currCuePlate)
+                                                              {
+                                                                  currCuePlate.yPosition += offset
+                                                              })
+                                                          }
+
+                                                          else // Проверяем, нужно ли убрать пустое пространство сверху
+                                                          {
+                                                              lowestY = cueView.cuePlates[0].yPosition
+                                                              cueView.cuePlates.forEach(function(currCuePlate)
+                                                              {
+                                                                  if(currCuePlate.yPosition < lowestY)
+                                                                      lowestY = currCuePlate.yPosition
+                                                              })
+
+                                                              if(lowestY > cueView.step)
+                                                              {
+                                                                  offset = lowestY - cueView.step
+                                                                  cueView.cuePlates.forEach(function(currCuePlate)
+                                                                  {
+                                                                      currCuePlate.yPosition -= offset
+                                                                  })
+                                                              }
+                                                          }
+
+                                                          cueView.cuePlates.forEach(function(currCuePlate)
+                                                          {
+                                                              project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
+                                                              project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
+                                                          })
+
+                                                      })
+                }
+            }
+        }
 
         Timer
         {
@@ -818,6 +898,7 @@ Item
         {
             id: cueViewFlickableMouseArea
             anchors.fill: parent
+            hoverEnabled: true
 
             onPressed:
             {
@@ -905,33 +986,48 @@ Item
             {
                 if(!drag.source.intersectionState)
                 {
-                    console.log(drag.source.intersectionState)
                     let newX = mapToItem(cueView, drag.x, drag.y).x
                     let newY = mapToItem(cueView, drag.x, drag.y).y
 
                     let newYposition = Math.round(newY / 12) * 12
                     let newPosition = playerWidget.min + pixelsToMsec(newX)
 
-                    let newCueName = "newCue1"
-                    if(cueView.cuePlates.length > 0)
-                        newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
+                    let newCueName = "Cue"
 
-                    project.addCue(
-                                [
-                                    {propName: "name", propValue: newCueName},
-                                    {propName: "yPosition", propValue: newYposition},
-                                    {propName: "position", propValue: newPosition},
-                                    {propName: "duration", propValue: 15000}
-                                ])
+                    for(let i = 1; i < 1000; i++)
+                    {
+                        newCueName = "Cue" + i
+                        let isNameFree = true
+                        cueView.cuePlates.forEach(function(currCuePlate)
+                        {
+                            if(currCuePlate.name === newCueName)
+                            {
+                                isNameFree = false
+                                return
+                            }
+                        })
 
-                    cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
-                                                                          {
-                                                                              name: newCueName,
-                                                                              yPosition: newYposition,
-                                                                              position: newPosition,
-                                                                              duration: 15000
-                                                                          }
-                                                                          ))
+                        if(isNameFree)
+                        {
+                            project.addCue(
+                                        [
+                                            {propName: "name", propValue: newCueName},
+                                            {propName: "yPosition", propValue: newYposition},
+                                            {propName: "position", propValue: newPosition},
+                                            {propName: "duration", propValue: 15000}
+                                        ])
+
+                            cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
+                                                                                  {
+                                                                                      name: newCueName,
+                                                                                      yPosition: newYposition,
+                                                                                      position: newPosition,
+                                                                                      duration: 15000
+                                                                                  }
+                                                                                  ))
+                            break
+                        }
+                    }
                 }
             }
         }
