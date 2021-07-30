@@ -96,7 +96,11 @@ Item
                 source: "qrc:/utilityCloseButton"
             }
 
-            onClicked: dialog.destroy()
+            onClicked:
+            {
+                applicationWindow.contentItem.focus = true
+                dialog.destroy()
+            }
         }
 
         Rectangle
@@ -136,6 +140,7 @@ Item
 
                 onClicked:
                 {
+                    applicationWindow.contentItem.focus = true
                     accepted()
                     dialog.destroy()
                 }
@@ -153,6 +158,7 @@ Item
 
                 onClicked:
                 {
+                    applicationWindow.contentItem.focus = true
                     declined()
                     dialog.destroy()
                 }

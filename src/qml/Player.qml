@@ -733,82 +733,25 @@ Item
         clip: true
         focus: cueViewFlickableMouseArea.containsMouse
 
-        Keys.onPressed:
+        Keys.onDeletePressed:
         {
-            console.log(event.keyh)
-            if (event.key === Qt.Key_Delete)
+            event.accepted = true
+            let checkedPlates = cueView.checkedPlates()
+
+            if(checkedPlates.length)
             {
-                let checkedPlates = cueView.checkedPlates()
+                var confirmDelDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                confirmDelDialog.x = applicationWindow.width / 2 - confirmDelDialog.width / 2
+                confirmDelDialog.y = applicationWindow.height / 2 - confirmDelDialog.height / 2
+                confirmDelDialog.caption = qsTr("Delete Cues")
+                confirmDelDialog.dialogText = qsTr("Delete selected cues from the project?")
+                confirmDelDialog.acceptButtonText = qsTr("Delete")
+                confirmDelDialog.cancelButtonText = qsTr("Cancel")
+                confirmDelDialog.acceptButtonColor = "#EB5757"
+                confirmDelDialog.cancelButtonColor = "#27AE60"
 
-                if(checkedPlates.length)
-                {
-                    var confirmDelDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
-                    confirmDelDialog.x = applicationWindow.width / 2 - confirmDelDialog.width / 2
-                    confirmDelDialog.y = applicationWindow.height / 2 - confirmDelDialog.height / 2
-                    confirmDelDialog.caption = qsTr("Delete Cues")
-                    confirmDelDialog.dialogText = qsTr("Delete selected cues from the project?")
-                    confirmDelDialog.acceptButtonText = qsTr("Delete")
-                    confirmDelDialog.cancelButtonText = qsTr("Cancel")
-                    confirmDelDialog.acceptButtonColor = "#EB5757"
-                    confirmDelDialog.cancelButtonColor = "#27AE60"
+                confirmDelDialog.accepted.connect(cueView.deleteCues)
 
-                    confirmDelDialog.accepted.connect(() =>
-                                                      {
-                                                          let deletedCuesNames = []
-                                                          checkedPlates.forEach(function(currCuePlate)
-                                                          {
-                                                              deletedCuesNames.push(currCuePlate.name)
-                                                          })
-
-                                                          project.deleteCues(deletedCuesNames)
-                                                          cueView.loadCues()
-
-                                                          let lowestY = cueView.cuePlates[0].yPosition
-                                                          let offset = 0
-
-                                                          cueView.movedPlates.forEach(function(currCuePlate)
-                                                          {
-                                                              if(currCuePlate.yPosition < lowestY)
-                                                                  lowestY = currCuePlate.yPosition
-
-                                                          })
-
-                                                          if(lowestY < cueView.step)
-                                                          {
-                                                              offset = cueView.step - lowestY
-                                                              cueView.cuePlates.forEach(function(currCuePlate)
-                                                              {
-                                                                  currCuePlate.yPosition += offset
-                                                              })
-                                                          }
-
-                                                          else // Проверяем, нужно ли убрать пустое пространство сверху
-                                                          {
-                                                              lowestY = cueView.cuePlates[0].yPosition
-                                                              cueView.cuePlates.forEach(function(currCuePlate)
-                                                              {
-                                                                  if(currCuePlate.yPosition < lowestY)
-                                                                      lowestY = currCuePlate.yPosition
-                                                              })
-
-                                                              if(lowestY > cueView.step)
-                                                              {
-                                                                  offset = lowestY - cueView.step
-                                                                  cueView.cuePlates.forEach(function(currCuePlate)
-                                                                  {
-                                                                      currCuePlate.yPosition -= offset
-                                                                  })
-                                                              }
-                                                          }
-
-                                                          cueView.cuePlates.forEach(function(currCuePlate)
-                                                          {
-                                                              project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
-                                                              project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
-                                                          })
-
-                                                      })
-                }
             }
         }
 
@@ -926,30 +869,6 @@ Item
                 })
 
                 cueView.collapseAll()
-            }
-
-            onDoubleClicked:
-            {
-//                let newCueName = "newCue1"
-//                if(cueView.cuePlates.length > 0)
-//                    newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
-
-//                                project.addCue(
-//                                            [
-//                                                {propName: "name", propValue: newCueName},
-//                                                {propName: "yPosition", propValue: 12},
-//                                                {propName: "position", propValue: 0},
-//                                                {propName: "duration", propValue: 15000}
-//                                            ])
-
-//                cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
-//                                                     {
-//                                                         name: newCueName,
-//                                                         yPosition: 12,
-//                                                         position: 0,
-//                                                         duration: 15000
-//                                                     }
-//                                                     ))
             }
 
             onPositionChanged:
@@ -1149,6 +1068,65 @@ Item
                 })
 
                 return checkedPlatesList
+            }
+
+            function deleteCues()
+            {
+                let deletedCuesNames = []
+                checkedPlates().forEach(function(currCuePlate)
+                {
+                    deletedCuesNames.push(currCuePlate.name)
+                })
+
+                project.deleteCues(deletedCuesNames)
+                loadCues()
+
+                if(!cuePlates.length)
+                    return
+
+                let lowestY = cuePlates[0].yPosition
+                let offset = 0
+
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.yPosition < lowestY)
+                        lowestY = currCuePlate.yPosition
+
+                })
+
+                if(lowestY < cueView.step)
+                {
+                    offset = cueView.step - lowestY
+                    cueView.cuePlates.forEach(function(currCuePlate)
+                    {
+                        currCuePlate.yPosition += offset
+                    })
+                }
+
+                else // Проверяем, нужно ли убрать пустое пространство сверху
+                {
+                    lowestY = cuePlates[0].yPosition
+                    cuePlates.forEach(function(currCuePlate)
+                    {
+                        if(currCuePlate.yPosition < lowestY)
+                            lowestY = currCuePlate.yPosition
+                    })
+
+                    if(lowestY > cueView.step)
+                    {
+                        offset = lowestY - cueView.step
+                        cueView.cuePlates.forEach(function(currCuePlate)
+                        {
+                            currCuePlate.yPosition -= offset
+                        })
+                    }
+                }
+
+                cueView.cuePlates.forEach(function(currCuePlate)
+                {
+                    project.setCueProperty(currCuePlate.name, "position", currCuePlate.position)
+                    project.setCueProperty(currCuePlate.name, "yPosition", currCuePlate.yPosition)
+                })
             }
 
             function movePlatesOnY(dy)
