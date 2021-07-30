@@ -316,7 +316,7 @@ Item
                                     PatchPlate
                                     {
                                         id: draggedPlate
-                                        visible: deviceListView.held
+                                        visible: deviceListView.held && mouseArea.wasPressedAndMoved && !draggedCuePlate.visible
                                         opacity: 0.8
                                         withBorder: true
 
@@ -346,9 +346,38 @@ Item
                                             font.pixelSize: 12
                                             text: parent.infoText
                                         }
+
+                                        onParentChanged:
+                                        {
+                                            if(draggedCuePlate)
+                                                draggedCuePlate.parent = parent
+                                        }
                                     }
 
-                                    MouseArea
+                                    Item
+                                    {
+                                        id: draggedCuePlate
+                                        visible: false
+
+                                        x: draggedPlate.x + draggedPlate.Drag.hotSpot.x
+                                        y: draggedPlate.y + draggedPlate.Drag.hotSpot.y
+
+                                        height: 12
+                                        width: 100
+
+                                        Rectangle
+                                        {
+                                            id: frame
+                                            anchors.fill: parent
+
+                                            radius: 4
+                                            color: "#7F27AE60"
+                                            border.width: 2
+                                            border.color: "#27AE60"
+                                        }
+                                    }
+
+                                    MfxMouseArea
                                     {
                                         id: mouseArea
                                         anchors.fill: parent
@@ -424,6 +453,14 @@ Item
                                         onPositionChanged:
                                         {
                                             wasDragging = true
+                                            if(playerWidget.contains(mouseArea.mapToItem(playerWidget, mouseX, mouseY)))
+                                            {
+                                                draggedCuePlate.visible = true
+                                            }
+                                            else
+                                            {
+                                                draggedCuePlate.visible = false
+                                            }
                                         }
 
                                         onReleased:
@@ -435,6 +472,7 @@ Item
                                                 wasDragging = false
                                                 pressedItem.withBorder = false
                                                 pressedItem = null
+                                                draggedCuePlate.visible = false
                                             }
                                         }
                                     }

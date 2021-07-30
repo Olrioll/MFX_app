@@ -16,6 +16,7 @@ Item
 
     property int position: startPositionMarker.position
     property alias waitingText: waitingText
+    property alias cueViewFlickableMouseArea: cueViewFlickableMouseArea
 
     onMinChanged:
     {
