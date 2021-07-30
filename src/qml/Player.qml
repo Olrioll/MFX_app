@@ -1039,7 +1039,7 @@ Item
                     currCuePlate.yPosition += dy
                 })
 
-                updateHeight()
+//                updateHeight()
             }
 
             function checkPlatesIntersection()
@@ -1382,6 +1382,7 @@ Item
 
                             else
                             {
+                                cueView.updateHeight()
                                 cueView.updatePositions()
                             }
                         }
