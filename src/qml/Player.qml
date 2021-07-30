@@ -16,7 +16,7 @@ Item
 
     property int position: startPositionMarker.position
     property alias waitingText: waitingText
-    property alias cueViewFlickableMouseArea: cueViewFlickableMouseArea
+    property alias cueView: cueView
 
     onMinChanged:
     {
@@ -238,6 +238,24 @@ Item
         {
             playerWidget.zoom(dy)
         }
+    }
+
+    function isRectIntersectsWithCuePlate(pos, width, height)
+    {
+        let hasIntersection = false
+        cueView.cuePlates.forEach(function(currCuePlate)
+        {
+            if(currCuePlate.x + currCuePlate.width >= pos.x &&
+                        currCuePlate.x <= pos.x + width &&
+                        currCuePlate.y <= pos.y + height &&
+                        currCuePlate.y + currCuePlate.height >= pos.y)
+            {
+                hasIntersection = true
+                return
+            }
+        })
+
+        return hasIntersection
     }
 
     Timer
@@ -831,26 +849,26 @@ Item
 
             onDoubleClicked:
             {
-                let newCueName = "newCue1"
-                if(cueView.cuePlates.length > 0)
-                    newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
+//                let newCueName = "newCue1"
+//                if(cueView.cuePlates.length > 0)
+//                    newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
 
-                                project.addCue(
-                                            [
-                                                {propName: "name", propValue: newCueName},
-                                                {propName: "yPosition", propValue: 12},
-                                                {propName: "position", propValue: 0},
-                                                {propName: "duration", propValue: 15000}
-                                            ])
+//                                project.addCue(
+//                                            [
+//                                                {propName: "name", propValue: newCueName},
+//                                                {propName: "yPosition", propValue: 12},
+//                                                {propName: "position", propValue: 0},
+//                                                {propName: "duration", propValue: 15000}
+//                                            ])
 
-                cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
-                                                     {
-                                                         name: newCueName,
-                                                         yPosition: 12,
-                                                         position: 0,
-                                                         duration: 15000
-                                                     }
-                                                     ))
+//                cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
+//                                                     {
+//                                                         name: newCueName,
+//                                                         yPosition: 12,
+//                                                         position: 0,
+//                                                         duration: 15000
+//                                                     }
+//                                                     ))
             }
 
             onPositionChanged:
@@ -885,32 +903,36 @@ Item
 
             onDropped:
             {
-                let newX = mapToItem(cueView, drag.x, drag.y).x
-                let newY = mapToItem(cueView, drag.x, drag.y).y
+                if(!drag.source.intersectionState)
+                {
+                    console.log(drag.source.intersectionState)
+                    let newX = mapToItem(cueView, drag.x, drag.y).x
+                    let newY = mapToItem(cueView, drag.x, drag.y).y
 
-                let newYposition = Math.round(newY / 12) * 12
-                let newPosition = playerWidget.min + pixelsToMsec(newX)
+                    let newYposition = Math.round(newY / 12) * 12
+                    let newPosition = playerWidget.min + pixelsToMsec(newX)
 
-                let newCueName = "newCue1"
-                if(cueView.cuePlates.length > 0)
-                    newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
+                    let newCueName = "newCue1"
+                    if(cueView.cuePlates.length > 0)
+                        newCueName = cueView.cuePlates[cueView.cuePlates.length - 1].name + "1"
 
-                                project.addCue(
-                                            [
-                                                {propName: "name", propValue: newCueName},
-                                                {propName: "yPosition", propValue: newYposition},
-                                                {propName: "position", propValue: newPosition},
-                                                {propName: "duration", propValue: 15000}
-                                            ])
+                    project.addCue(
+                                [
+                                    {propName: "name", propValue: newCueName},
+                                    {propName: "yPosition", propValue: newYposition},
+                                    {propName: "position", propValue: newPosition},
+                                    {propName: "duration", propValue: 15000}
+                                ])
 
-                cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
-                                                     {
-                                                         name: newCueName,
-                                                         yPosition: newYposition,
-                                                         position: newPosition,
-                                                         duration: 15000
-                                                     }
-                                                     ))
+                    cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
+                                                                          {
+                                                                              name: newCueName,
+                                                                              yPosition: newYposition,
+                                                                              position: newPosition,
+                                                                              duration: 15000
+                                                                          }
+                                                                          ))
+                }
             }
         }
 

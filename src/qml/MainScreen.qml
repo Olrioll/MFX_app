@@ -321,6 +321,7 @@ Item
                                         withBorder: true
 
                                         property string infoText: ""
+                                        property string intersectionState: draggedCuePlate.state
 
                                         Drag.active: deviceListView.held
                                         Drag.source: this
@@ -362,7 +363,7 @@ Item
                                         x: draggedPlate.x + draggedPlate.Drag.hotSpot.x
                                         y: draggedPlate.y + draggedPlate.Drag.hotSpot.y
 
-                                        height: 12
+                                        height: 10
                                         width: 100
 
                                         Rectangle
@@ -375,6 +376,25 @@ Item
                                             border.width: 2
                                             border.color: "#27AE60"
                                         }
+
+                                        states:
+                                            [
+                                            State
+                                            {
+                                                name: "intersected"
+                                                PropertyChanges
+                                                {
+                                                    target: frame
+                                                    color: "#3FEB5757"
+                                                }
+
+                                                PropertyChanges
+                                                {
+                                                    target: frame.border
+                                                    color: "#EB5757"
+                                                }
+                                            }
+                                        ]
                                     }
 
                                     MfxMouseArea
@@ -456,6 +476,18 @@ Item
                                             if(playerWidget.contains(mouseArea.mapToItem(playerWidget, mouseX, mouseY)))
                                             {
                                                 draggedCuePlate.visible = true
+
+                                                // Проверяем, накладывемся ли на какую-нибудь плашку
+                                                if(playerWidget.isRectIntersectsWithCuePlate(mouseArea.mapToItem(playerWidget.cueView, mouseX, mouseY), draggedCuePlate.width, draggedCuePlate.height))
+                                                {
+                                                    draggedCuePlate.state = "intersected"
+                                                }
+
+                                                else
+                                                {
+                                                    draggedCuePlate.state = ""
+                                                }
+
                                             }
                                             else
                                             {
