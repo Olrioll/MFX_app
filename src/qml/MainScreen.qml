@@ -160,373 +160,565 @@ Item
                 border.width: 2
                 border.color: "#444444"
 
-
-                ListView
+                MfxButton
                 {
-                    id: sortedDeviceListView
+                    id: devicesButton
+                    height: 24
+                    text: qsTr("Devices")
+                    checkable: true
 
+                    anchors.topMargin: 4
+                    anchors.leftMargin: 4
+                    anchors.rightMargin: parent.width / 2
+
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    ButtonGroup.group: switchDevicesListButtons
+                }
+
+                MfxButton
+                {
+                    id: groupsButton
+                    height: 24
+                    text: qsTr("Groups")
+                    checkable: true
+
+                    anchors.topMargin: 4
+                    anchors.rightMargin: 4
+
+                    anchors.top: parent.top
+                    anchors.left: devicesButton.right
+                    anchors.right: parent.right
+
+                    ButtonGroup.group: switchDevicesListButtons
+                }
+
+                ButtonGroup
+                {
+                    id: switchDevicesListButtons
+                    checkedButton: devicesButton
+
+                    onClicked: button == devicesButton ? devicesListStackLayout.currentIndex = 0 : devicesListStackLayout.currentIndex = 1
+                }
+
+                StackLayout
+                {
+                    id: devicesListStackLayout
                     anchors.fill: parent
-                    anchors.topMargin: 6
+                    anchors.topMargin: 32
                     anchors.leftMargin: 6
-                    spacing: 10
-                    ScrollBar.vertical: ScrollBar
+                    anchors.bottomMargin: 6
+                    clip: true
+
+                    ListView
                     {
-                        policy: ScrollBar.AsNeeded
-                        anchors
+                        id: sortedDeviceListView
+
+                        spacing: 10
+                        ScrollBar.vertical: ScrollBar
                         {
-                            right: sortedDeviceListView.right
-                            top: sortedDeviceListView.top
-                            bottom: sortedDeviceListView.bottom
-                            rightMargin: -3
+                            policy: ScrollBar.AsNeeded
+                            anchors
+                            {
+                                right: sortedDeviceListView.right
+                                top: sortedDeviceListView.top
+                                bottom: sortedDeviceListView.bottom
+                                rightMargin: -3
+                            }
                         }
-                    }
 
-                    function loadGroups()
-                    {
-                        groupListModel.append({groupName: "Sequences"})
-                        groupListModel.append({groupName: "Dimmer"})
-                        groupListModel.append({groupName: "Shot"})
-                        groupListModel.append({groupName: "Pyro"})
-                    }
-
-                    delegate: Component
-                    {
-                        Item
+                        function loadGroups()
                         {
-                            id: typeGroup
-                            height: collapseButton.checked ? collapseButton.height + deviceListView.contentItem.height + 20 : collapseButton.height
-                            property string name: groupName
-                            property alias deviceList: deviceListView
-                            property bool isExpanded: collapseButton.checked
+                            groupListModel.append({groupName: "Sequences"})
+                            groupListModel.append({groupName: "Dimmer"})
+                            groupListModel.append({groupName: "Shot"})
+                            groupListModel.append({groupName: "Pyro"})
+                        }
 
-                            Button
+                        delegate: Item
                             {
-                                id: collapseButton
-                                width: 16
-                                height: 16
-                                checkable: true
+                                id: typeGroup
+                                height: collapseButton.checked ? collapseButton.height + deviceListView.contentItem.height + 20 : collapseButton.height
+                                property string name: groupName
+                                property bool isExpanded: collapseButton.checked
 
-                                bottomPadding: 0
-                                topPadding: 0
-                                rightPadding: 0
-                                leftPadding: 0
+                                Button
+                                {
+                                    id: collapseButton
+                                    width: 16
+                                    height: 16
+                                    checkable: true
 
-                                background: Rectangle {
-                                    color: "#444444"
+                                    bottomPadding: 0
+                                    topPadding: 0
+                                    rightPadding: 0
+                                    leftPadding: 0
+
+                                    background: Rectangle {
+                                        color: "#444444"
+                                        radius: 2
+                                    }
+
+                                    contentItem: Text {
+                                        color: "#ffffff"
+                                        text: parent.checked ? "-" : "+"
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        elide: Text.ElideRight
+                                        font.family: "Roboto"
+                                        font.pixelSize: 14
+                                    }
+
+                                    onCheckedChanged:
+                                    {
+                                        isExpanded = checked
+                                    }
+                                }
+
+                                Rectangle
+                                {
+                                    color: "#000000"
                                     radius: 2
-                                }
+                                    anchors.leftMargin: 10
+                                    anchors.left: collapseButton.right
+                                    height: collapseButton.height
+                                    width: groupNameText.width + 4
 
-                                contentItem: Text {
-                                    color: "#ffffff"
-                                    text: parent.checked ? "-" : "+"
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                    elide: Text.ElideRight
-                                    font.family: "Roboto"
-                                    font.pixelSize: 14
-                                }
-
-                                onCheckedChanged:
-                                {
-                                    isExpanded = checked
-                                }
-                            }
-
-                            Rectangle
-                            {
-                                color: "#000000"
-                                radius: 2
-                                anchors.leftMargin: 10
-                                anchors.left: collapseButton.right
-                                height: collapseButton.height
-                                width: groupNameText.width + 4
-
-                                Text
-                                {
-                                    id: groupNameText
-                                    color: "#ffffff"
-                                    text: typeGroup.name
-                                    anchors.leftMargin: 2
-                                    anchors.left: parent.left
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    horizontalAlignment: Text.AlignHLeft
-                                    verticalAlignment: Text.AlignVCenter
-                                    elide: Text.ElideRight
-                                    font.family: "Roboto"
-                                    font.pixelSize: 12
-                                }
-                            }
-
-                            Item
-                            {
-                                id: listArea
-                                visible: collapseButton.checked
-                                x: 18
-                                y: 30
-
-                                ListView
-                                {
-                                    id: deviceListView
-                                    anchors.margins: 2
-                                    anchors.top: parent.top
-                                    anchors.left: parent.left
-                                    width: 392
-                                    height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
-                                    spacing: 2
-                                    ScrollBar.vertical: ScrollBar {}
-
-                                    property string groupName: typeGroup.name
-                                    property bool held: false
-
-                                    function loadDeviceList()
+                                    Text
                                     {
-                                        deviceListModel.clear()
-                                        var listSize = project.patchCount()
-                                        for(let i = 0; i < listSize; i++)
+                                        id: groupNameText
+                                        color: "#ffffff"
+                                        text: typeGroup.name
+                                        anchors.leftMargin: 2
+                                        anchors.left: parent.left
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        horizontalAlignment: Text.AlignHLeft
+                                        verticalAlignment: Text.AlignVCenter
+                                        elide: Text.ElideRight
+                                        font.family: "Roboto"
+                                        font.pixelSize: 12
+                                    }
+                                }
+
+                                Item
+                                {
+                                    id: listArea
+                                    visible: collapseButton.checked
+                                    x: 18
+                                    y: 30
+
+                                    property alias deviceListView: deviceListView
+
+                                    ListView
+                                    {
+                                        id: deviceListView
+                                        anchors.margins: 2
+                                        anchors.top: parent.top
+                                        anchors.left: parent.left
+                                        width: 392
+                                        height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
+                                        spacing: 2
+                                        interactive: false
+
+                                        ScrollBar.vertical: ScrollBar {}
+
+                                        property string groupName: typeGroup.name
+                                        property bool held: false
+
+                                        function getItemAtGlobalPosition(posX, posY)
                                         {
-                                            if(project.patchType(i) === deviceListView.groupName)
-                                                deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, currentId: project.patchPropertyForIndex(i, "ID")})
+                                            return itemAt(mapFromGlobal(posX, posY).x, mapFromGlobal(posX, posY).y)
                                         }
-                                    }
 
-                                    function refreshPlatesNo()
-                                    {
-                                        for(let i = 0; i < deviceListModel.count; i++)
+                                        function loadDeviceList()
                                         {
-                                            deviceListModel.get(i).counter = i + 1
-                                        }
-                                    }
-
-                                    delegate: PatchPlate
-                                    {
-                                        no: counter
-                                        patchId: currentId
-                                    }
-
-                                    model: ListModel
-                                    {
-                                        id: deviceListModel
-                                    }
-
-                                    Component.onCompleted:
-                                    {
-                                        loadDeviceList()
-                                    }
-
-                                    PatchPlate
-                                    {
-                                        id: draggedPlate
-                                        visible: deviceListView.held && mouseArea.wasPressedAndMoved && !draggedCuePlate.visible
-                                        opacity: 0.8
-                                        withBorder: true
-
-                                        property string infoText: ""
-                                        property string intersectionState: draggedCuePlate.state
-
-                                        Drag.active: deviceListView.held
-                                        Drag.source: this
-                                        Drag.hotSpot.x: this.width / 2
-                                        Drag.hotSpot.y: this.height / 2
-
-                                        states: State
-                                        {
-                                            when: deviceListView.held
-
-                                            ParentChange { target: draggedPlate; parent: mainScreen }
-                                            AnchorChanges {
-                                                target: draggedPlate
-                                                anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+                                            deviceListModel.clear()
+                                            var listSize = project.patchCount()
+                                            for(let i = 0; i < listSize; i++)
+                                            {
+                                                if(project.patchType(i) === deviceListView.groupName)
+                                                    deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, currentId: project.patchPropertyForIndex(i, "ID")})
                                             }
                                         }
 
-                                        Text
+                                        function refreshPlatesNo()
                                         {
-                                            anchors.centerIn: parent
-                                            color: "#ffffff"
-                                            font.family: "Roboto"
-                                            font.pixelSize: 12
-                                            text: parent.infoText
+                                            for(let i = 0; i < deviceListModel.count; i++)
+                                            {
+                                                deviceListModel.get(i).counter = i + 1
+                                            }
                                         }
 
-                                        onParentChanged:
+                                        delegate: PatchPlate
                                         {
-                                            if(draggedCuePlate)
-                                                draggedCuePlate.parent = parent
+                                            no: counter
+                                            patchId: currentId
                                         }
-                                    }
 
-                                    Item
-                                    {
-                                        id: draggedCuePlate
-                                        visible: false
-
-                                        x: draggedPlate.x + draggedPlate.Drag.hotSpot.x
-                                        y: draggedPlate.y + draggedPlate.Drag.hotSpot.y
-
-                                        height: 10
-                                        width: 100
-
-                                        Rectangle
+                                        model: ListModel
                                         {
-                                            id: frame
+                                            id: deviceListModel
+                                        }
+
+                                        Component.onCompleted:
+                                        {
+                                            loadDeviceList()
+                                        }
+
+                                        PatchPlate
+                                        {
+                                            id: draggedPlate
+                                            visible: deviceListView.held && mouseArea.wasPressedAndMoved && !draggedCuePlate.visible
+                                            opacity: 0.8
+                                            withBorder: true
+
+                                            property string infoText: ""
+                                            property string intersectionState: draggedCuePlate.state
+
+                                            Drag.active: deviceListView.held
+                                            Drag.source: this
+                                            Drag.hotSpot.x: this.width / 2
+                                            Drag.hotSpot.y: this.height / 2
+
+                                            states: State
+                                            {
+                                                when: deviceListView.held
+
+                                                ParentChange { target: draggedPlate; parent: mainScreen }
+                                                AnchorChanges {
+                                                    target: draggedPlate
+                                                    anchors { horizontalCenter: undefined; verticalCenter: undefined; left: undefined; right: undefined }
+                                                }
+                                            }
+
+                                            Text
+                                            {
+                                                anchors.centerIn: parent
+                                                color: "#ffffff"
+                                                font.family: "Roboto"
+                                                font.pixelSize: 12
+                                                text: parent.infoText
+                                            }
+
+                                            onParentChanged:
+                                            {
+                                                if(draggedCuePlate)
+                                                    draggedCuePlate.parent = parent
+                                            }
+                                        }
+
+                                        Item
+                                        {
+                                            id: draggedCuePlate
+                                            visible: false
+
+                                            x: draggedPlate.x + draggedPlate.Drag.hotSpot.x
+                                            y: draggedPlate.y + draggedPlate.Drag.hotSpot.y
+
+                                            height: 10
+                                            width: 100
+
+                                            Rectangle
+                                            {
+                                                id: frame
+                                                anchors.fill: parent
+
+                                                radius: 4
+                                                color: "#7F27AE60"
+                                                border.width: 2
+                                                border.color: "#27AE60"
+                                            }
+
+                                            states:
+                                                [
+                                                State
+                                                {
+                                                    name: "intersected"
+                                                    PropertyChanges
+                                                    {
+                                                        target: frame
+                                                        color: "#3FEB5757"
+                                                    }
+
+                                                    PropertyChanges
+                                                    {
+                                                        target: frame.border
+                                                        color: "#EB5757"
+                                                    }
+                                                }
+                                            ]
+                                        }
+
+                                        MfxMouseArea
+                                        {
+                                            id: mouseArea
                                             anchors.fill: parent
 
-                                            radius: 4
-                                            color: "#7F27AE60"
-                                            border.width: 2
-                                            border.color: "#27AE60"
-                                        }
+                                            property var pressedItem: null
+                                            property bool wasDragging: false
 
-                                        states:
-                                            [
-                                            State
+                                            drag.target: deviceListView.held ? draggedPlate : undefined
+                                            drag.axis: Drag.XAndYAxis
+
+                                            drag.minimumX: 0
+                                            drag.maximumX: mainScreen.width - draggedPlate.width
+                                            drag.minimumY: 0
+                                            drag.maximumY: mainScreen.height - draggedPlate.height
+
+                                            drag.threshold: 0
+                                            drag.smoothed: false
+
+                                            onClicked:
                                             {
-                                                name: "intersected"
-                                                PropertyChanges
+                                                pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                                                if(pressedItem)
                                                 {
-                                                    target: frame
-                                                    color: "#3FEB5757"
-                                                }
+                                                    if(!wasDragging)
+                                                        project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
 
-                                                PropertyChanges
-                                                {
-                                                    target: frame.border
-                                                    color: "#EB5757"
+                                                    wasDragging = false
                                                 }
                                             }
-                                        ]
-                                    }
 
-                                    MfxMouseArea
-                                    {
-                                        id: mouseArea
-                                        anchors.fill: parent
-                                        propagateComposedEvents: true
 
-                                        property var pressedItem: null
-                                        property int pressedX
-                                        property int pressedY
-                                        property bool wasDragging: false
-
-                                        drag.target: deviceListView.held ? draggedPlate : undefined
-                                        drag.axis: Drag.XAndYAxis
-
-                                        drag.minimumX: 0
-                                        drag.maximumX: mainScreen.width - draggedPlate.width
-                                        drag.minimumY: 0
-                                        drag.maximumY: mainScreen.height - draggedPlate.height
-
-                                        drag.threshold: 0
-                                        drag.smoothed: false
-
-                                        onClicked:
-                                        {
-                                            pressedItem = deviceListView.itemAt(mouseX, mouseY)
-                                            if(pressedItem)
+                                            onPressed:
                                             {
-                                                if(!wasDragging)
-                                                    project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
+                                                pressedItem = deviceListView.itemAt(mouseX, mouseY)
+                                                if(pressedItem)
+                                                {
+                                                    draggedPlate.Drag.hotSpot.x = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
+                                                    draggedPlate.Drag.hotSpot.y = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
 
-                                                wasDragging = false
+                                                    draggedPlate.checkedIDs = []
+                                                    for(let i = 0; i < deviceListView.count; i++)
+                                                    {
+                                                        if(deviceListView.itemAtIndex(i).checked)
+                                                            draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
+                                                    }
+
+                                                    if(!draggedPlate.checkedIDs.includes(pressedItem.patchId))
+                                                        draggedPlate.checkedIDs.push(pressedItem.patchId)
+
+                                                    deviceListView.held = true
+                                                    draggedPlate.x = pressedItem.mapToItem(mainScreen, 0, 0).x
+                                                    draggedPlate.y = pressedItem.mapToItem(mainScreen, 0, 0).y
+                                                    draggedPlate.no = pressedItem.no
+                                                    draggedPlate.width = pressedItem.width
+                                                    draggedPlate.height = pressedItem.height
+                                                    draggedPlate.name = pressedItem.name
+                                                    draggedPlate.imageFile = pressedItem.imageFile
+
+                                                    draggedPlate.infoText = qsTr("Adding patches with IDs: " + draggedPlate.checkedIDs)
+
+                                                    draggedPlate.refreshCells()
+                                                }
                                             }
-                                        }
 
-
-                                        onPressed:
-                                        {
-                                            pressedX = mouseX
-                                            pressedY = mouseY
-
-                                            pressedItem = deviceListView.itemAt(mouseX, mouseY)
-                                            if(pressedItem)
+                                            onPositionChanged:
                                             {
-                                                draggedPlate.Drag.hotSpot.x = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
-                                                draggedPlate.Drag.hotSpot.y = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
-
-                                                draggedPlate.checkedIDs = []
-                                                for(let i = 0; i < deviceListView.count; i++)
+                                                wasDragging = true
+                                                if(playerWidget.contains(mouseArea.mapToItem(playerWidget, mouseX, mouseY)))
                                                 {
-                                                    if(deviceListView.itemAtIndex(i).checked)
-                                                        draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
+                                                    draggedCuePlate.visible = true
+
+                                                    // Проверяем, накладывемся ли на какую-нибудь плашку
+                                                    if(playerWidget.isRectIntersectsWithCuePlate(mouseArea.mapToItem(playerWidget.cueView, mouseX, mouseY), draggedCuePlate.width, draggedCuePlate.height))
+                                                    {
+                                                        draggedCuePlate.state = "intersected"
+                                                    }
+
+                                                    else
+                                                    {
+                                                        draggedCuePlate.state = ""
+                                                    }
+
                                                 }
-
-                                                if(draggedPlate.checkedIDs.length === 0) // Перетаскивем только одну плашку, а она может быть и не выделена
-                                                {
-                                                    draggedPlate.checkedIDs.push(pressedItem.patchId)
-                                                }
-
-                                                deviceListView.held = true
-                                                draggedPlate.x = pressedItem.mapToItem(mainScreen, 0, 0).x
-                                                draggedPlate.y = pressedItem.mapToItem(mainScreen, 0, 0).y
-                                                draggedPlate.no = pressedItem.no
-                                                draggedPlate.width = pressedItem.width
-                                                draggedPlate.height = pressedItem.height
-                                                draggedPlate.name = pressedItem.name
-                                                draggedPlate.imageFile = pressedItem.imageFile
-
-                                                draggedPlate.infoText = qsTr("Adding patches with IDs: " + draggedPlate.checkedIDs)
-
-                                                draggedPlate.refreshCells()
-                                            }
-                                        }
-
-                                        onPositionChanged:
-                                        {
-                                            wasDragging = true
-                                            if(playerWidget.contains(mouseArea.mapToItem(playerWidget, mouseX, mouseY)))
-                                            {
-                                                draggedCuePlate.visible = true
-
-                                                // Проверяем, накладывемся ли на какую-нибудь плашку
-                                                if(playerWidget.isRectIntersectsWithCuePlate(mouseArea.mapToItem(playerWidget.cueView, mouseX, mouseY), draggedCuePlate.width, draggedCuePlate.height))
-                                                {
-                                                    draggedCuePlate.state = "intersected"
-                                                }
-
                                                 else
                                                 {
-                                                    draggedCuePlate.state = ""
+                                                    draggedCuePlate.visible = false
                                                 }
-
                                             }
-                                            else
+
+                                            onReleased:
                                             {
-                                                draggedCuePlate.visible = false
+                                                if(drag.target)
+                                                {
+                                                    drag.target.Drag.drop()
+                                                    deviceListView.held = false
+                                                    wasDragging = false
+                                                    pressedItem.withBorder = false
+                                                    pressedItem = null
+                                                    draggedCuePlate.visible = false
+                                                }
                                             }
                                         }
 
-                                        onReleased:
+                                        Connections
                                         {
-                                            if(drag.target)
-                                            {
-                                                drag.target.Drag.drop()
-                                                deviceListView.held = false
-                                                wasDragging = false
-                                                pressedItem.withBorder = false
-                                                pressedItem = null
-                                                draggedCuePlate.visible = false
-                                            }
+                                            target: project
+                                            function onPatchListChanged() {deviceListView.loadDeviceList()}
                                         }
-                                    }
-
-                                    Connections
-                                    {
-                                        target: project
-                                        function onPatchListChanged() {deviceListView.loadDeviceList()}
                                     }
                                 }
                             }
+
+                        model: ListModel
+                        {
+                            id: groupListModel
+                        }
+
+                        Component.onCompleted:
+                        {
+                            loadGroups();
                         }
                     }
 
-                    model: ListModel
+                    DeviceGroupWidget
                     {
-                        id: groupListModel
+                        isButtonsVisible: false
+                    }
+                }
+
+                PatchPlate
+                {
+                    id: draggedPlate2
+                    visible: stackLayoutMouseArea.wasPressedAndMoved && !draggedCuePlate2.visible
+                    opacity: 0.8
+                    withBorder: true
+                    parent: mainScreen
+
+                    property string infoText: ""
+                    property string intersectionState: draggedCuePlate2.state
+
+                    Drag.active: stackLayoutMouseArea.wasPressedAndMoved
+                    Drag.source: draggedPlate2
+                    Drag.hotSpot.x: 10
+                    Drag.hotSpot.y: 10
+
+                    Text
+                    {
+                        anchors.centerIn: parent
+                        color: "#ffffff"
+                        font.family: "Roboto"
+                        font.pixelSize: 12
+                        text: parent.infoText
                     }
 
-                    Component.onCompleted:
+                    onParentChanged:
                     {
-                        loadGroups();
+                        if(draggedCuePlate2)
+                            draggedCuePlate2.parent = parent
+                    }
+                }
+
+                Item
+                {
+                    id: draggedCuePlate2
+                    visible: false
+                    parent: mainScreen
+
+                    x: draggedPlate2.x
+                    y: draggedPlate2.y
+
+                    height: 10
+                    width: 100
+
+                    Rectangle
+                    {
+                        id: frame2
+                        anchors.fill: parent
+
+                        radius: 4
+                        color: "#7F27AE60"
+                        border.width: 2
+                        border.color: "#27AE60"
+                    }
+
+                    states:
+                        [
+                        State
+                        {
+                            name: "intersected"
+                            PropertyChanges
+                            {
+                                target: frame2
+                                color: "#3FEB5757"
+                            }
+
+                            PropertyChanges
+                            {
+                                target: frame2.border
+                                color: "#EB5757"
+                            }
+                        }
+                    ]
+                }
+
+                MfxMouseArea
+                {
+                    id: stackLayoutMouseArea
+                    anchors.leftMargin: 40
+                    anchors.fill: devicesListStackLayout
+                    propagateComposedEvents: true
+                    hoverEnabled: true
+
+                    visible: devicesListStackLayout.currentIndex !== 0
+
+                    drag.target: draggedPlate2
+                    drag.axis: Drag.XAndYAxis
+
+                    drag.minimumX: 0
+                    drag.maximumX: mainScreen.width - draggedPlate2.width
+                    drag.minimumY: 0
+                    drag.maximumY: mainScreen.height - draggedPlate2.height
+
+                    drag.threshold: 0
+                    drag.smoothed: false
+
+                    onPressed:
+                    {
+                        draggedPlate2.x = mapToItem(mainScreen, mouseX, mouseY).x
+                        draggedPlate2.y = mapToItem(mainScreen, mouseX, mouseY).y
+
+                        draggedPlate2.checkedIDs = project.checkedPatchesList()
+                        draggedPlate2.infoText = qsTr("Adding patches with IDs: " + draggedPlate2.checkedIDs)
+                        draggedPlate2.refreshCells()
+                    }
+
+                    onPositionChanged:
+                    {
+                        if(playerWidget.contains(mapToItem(playerWidget, mouseX, mouseY)))
+                        {
+                            draggedCuePlate2.visible = true
+
+                            // Проверяем, накладывемся ли на какую-нибудь плашку
+                            if(playerWidget.isRectIntersectsWithCuePlate(mapToItem(playerWidget.cueView, mouseX, mouseY), draggedCuePlate2.width, draggedCuePlate2.height))
+                            {
+                                draggedCuePlate2.state = "intersected"
+                            }
+
+                            else
+                            {
+                                draggedCuePlate2.state = ""
+                            }
+                        }
+
+                        else
+                        {
+                            draggedCuePlate2.visible = false
+                        }
+                    }
+
+                    onReleased:
+                    {
+                        if(drag.target)
+                        {
+                            drag.target.Drag.drop()
+                            draggedCuePlate2.visible = false
+                        }
+                        wasPressedAndMoved = false
                     }
                 }
             }

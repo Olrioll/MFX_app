@@ -195,10 +195,16 @@ Item
             }
         }
 
-        MouseAreaWithHidingCursor
+        MfxMouseArea
         {
             id: mouseArea
             anchors.fill: parent
+            preventStealing: true
+
+            onEntered:
+            {
+
+            }
 
             onClicked:
             {
@@ -207,6 +213,11 @@ Item
                 {
                     project.setCurrentGroup(parentList.groupName)
                 }
+            }
+
+            onPressed:
+            {
+//                console.log("here")
             }
         }
     }

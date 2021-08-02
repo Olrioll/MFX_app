@@ -9,6 +9,8 @@ Item
 {
     width: groupListView.width + 10
 
+    property bool isButtonsVisible: true
+
     ListView
     {
         id: groupListView
@@ -18,7 +20,7 @@ Item
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottomMargin: 10
-        anchors.bottom: addGroupButton.top
+        anchors.bottom: isButtonsVisible ? addGroupButton.top : parent.bottom
         spacing: 10
 
         ScrollBar.vertical: ScrollBar
@@ -91,7 +93,7 @@ Item
         height: 40
         width: parent.width
         anchors.left: parent.left
-        anchors.bottomMargin: -2
+        anchors.bottomMargin: parent.isButtonsVisible ? -2 : -16
         anchors.bottom: parent.bottom
 
         LinearGradient
@@ -113,6 +115,7 @@ Item
         text: width > 70 ? qsTr("Add Group") : qsTr("Add")
         width: (parent.width) / 3 - 4
         color: "#27AE60"
+        visible: parent.isButtonsVisible
 
         anchors.left: parent.left
         anchors.bottom: parent.bottom
@@ -134,6 +137,7 @@ Item
         text: qsTr("Edit")
         width: addGroupButton.width
         color: "#2F80ED"
+        visible: parent.isButtonsVisible
 
         anchors.leftMargin: 2
         anchors.left: addGroupButton.right
@@ -158,6 +162,7 @@ Item
         text: width > 70 ? qsTr("Delete selected") : qsTr("Delete")
         width: editButton.width
         color: "#EB5757"
+        visible: parent.isButtonsVisible
 
         anchors.leftMargin: 2
         anchors.left: editButton.right

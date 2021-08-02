@@ -637,6 +637,21 @@ QList<int> ProjectManager::patchesIdList(QString groupName) const
     return QList<int> {};
 }
 
+QList<int> ProjectManager::checkedPatchesList() const
+{
+    QList<int> ids;
+
+    for(int i = 0; i < _patches.size(); i++)
+    {
+        if(_patches[i].property("checked").toBool())
+        {
+            ids.push_back(_patches[i].property("ID").toInt());
+        }
+    }
+
+    return ids;
+}
+
 void ProjectManager::addCue(QVariantList properties)
 {
     Cue cue;

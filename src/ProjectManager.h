@@ -229,6 +229,7 @@ public slots:
     int patchCount() const;
     int patchIndexForId(int id) const;
     QList<int> patchesIdList(QString groupName) const;
+    QList<int> checkedPatchesList() const;
 
     void addCue(QVariantList properties);
     void deleteCues(QStringList names);
