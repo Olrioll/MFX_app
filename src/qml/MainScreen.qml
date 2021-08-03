@@ -577,7 +577,8 @@ Item
 
                     DeviceGroupWidget
                     {
-                        isButtonsVisible: false
+                        patchScreenMode: false
+                        dropAreaAvaliable: false
                     }
                 }
 

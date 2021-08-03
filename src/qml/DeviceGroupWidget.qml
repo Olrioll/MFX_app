@@ -7,9 +7,11 @@ import "qrc:/"
 
 Item
 {
+    id: deviceGroupWidget
     width: groupListView.width + 10
 
-    property bool isButtonsVisible: true
+    property bool patchScreenMode: true
+    property bool dropAreaAvaliable: true
 
     ListView
     {
@@ -20,8 +22,10 @@ Item
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.bottomMargin: 10
-        anchors.bottom: isButtonsVisible ? addGroupButton.top : parent.bottom
+        anchors.bottom: patchScreenMode ? addGroupButton.top : parent.bottom
         spacing: 10
+
+        property bool dropAreaAvaliable: deviceGroupWidget.dropAreaAvaliable
 
         ScrollBar.vertical: ScrollBar
         {
@@ -51,6 +55,8 @@ Item
         {
             id: deviceGroup
             name: groupName
+            dropAreaAvaliable: dropAreaAval
+
             Connections
             {
                 target: deviceGroup
@@ -64,7 +70,7 @@ Item
         function addGroup(name)
         {
             if(project.addGroup(name))
-                groupListModel.append({groupName: name})
+                groupListModel.append({groupName: name, dropAreaAval: groupListView.dropAreaAvaliable})
         }
 
         function loadGroups()
@@ -72,7 +78,7 @@ Item
             groupListModel.clear()
             project.groupNames().forEach(function(item, i, arr)
             {
-                groupListModel.append({groupName: item})
+                groupListModel.append({groupName: item, dropAreaAval: groupListView.dropAreaAvaliable})
             })
         }
 
@@ -93,7 +99,7 @@ Item
         height: 40
         width: parent.width
         anchors.left: parent.left
-        anchors.bottomMargin: parent.isButtonsVisible ? -2 : -16
+        anchors.bottomMargin: parent.patchScreenMode ? -2 : -16
         anchors.bottom: parent.bottom
 
         LinearGradient
@@ -115,7 +121,7 @@ Item
         text: width > 70 ? qsTr("Add Group") : qsTr("Add")
         width: (parent.width) / 3 - 4
         color: "#27AE60"
-        visible: parent.isButtonsVisible
+        visible: parent.patchScreenMode
 
         anchors.left: parent.left
         anchors.bottom: parent.bottom
@@ -137,7 +143,7 @@ Item
         text: qsTr("Edit")
         width: addGroupButton.width
         color: "#2F80ED"
-        visible: parent.isButtonsVisible
+        visible: parent.patchScreenMode
 
         anchors.leftMargin: 2
         anchors.left: addGroupButton.right
@@ -162,7 +168,7 @@ Item
         text: width > 70 ? qsTr("Delete selected") : qsTr("Delete")
         width: editButton.width
         color: "#EB5757"
-        visible: parent.isButtonsVisible
+        visible: parent.patchScreenMode
 
         anchors.leftMargin: 2
         anchors.left: editButton.right

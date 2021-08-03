@@ -12,6 +12,7 @@ Item
     property bool checked: name === project.currentGroup() ? true : false
     property alias deviceList: deviceList
     property bool isExpanded: collapseButton.checked
+    property bool dropAreaAvaliable: true
 
     signal groupNameClicked
     signal viewChanged
@@ -94,6 +95,7 @@ Item
         DropArea
         {
             anchors.fill: parent
+            enabled: dropAreaAvaliable
 
             onEntered: groupBackground.border.color = "lightblue"
             onExited: groupBackground.border.color = "transparent"

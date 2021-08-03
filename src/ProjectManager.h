@@ -117,6 +117,7 @@ public:
     struct Cue
     {
         QList<QPair<QString, QVariant>> properties;
+        QList<QPair<QString, QVariant>> actions;
 
         Cue() {}
 
@@ -129,6 +130,12 @@ public:
                 properties.push_back({key, propObject.value(key).toVariant()});
             }
 
+            foreach(auto action, cueObject["actions"].toArray())
+            {
+                auto actObject = action.toObject();
+                auto key = actObject.keys().first();
+                actions.push_back({key, actObject.value(key).toVariant()});
+            }
         }
 
         QJsonObject toJsonObject() const
@@ -144,6 +151,17 @@ public:
             }
 
             cueObject.insert("properties", propertiesArray);
+
+            QJsonArray actionsArray;
+            foreach(auto action, actions)
+            {
+                QJsonObject actObject;
+                actObject.insert(action.first, action.second.toJsonValue());
+                actionsArray.append(actObject);
+            }
+
+            cueObject.insert("actions", actionsArray);
+
             return cueObject;
         }
 
