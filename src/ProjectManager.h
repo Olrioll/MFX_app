@@ -189,6 +189,13 @@ public:
 
             properties.push_back({name, value});
         }
+
+        void addAction(QString actionName, int position)
+        {
+            QVariantMap newActionProperties;
+            newActionProperties.insert("position", position);
+            actions.push_back({actionName, newActionProperties});
+        }
     };
 
     ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
@@ -249,6 +256,10 @@ public slots:
     QList<int> patchesIdList(QString groupName) const;
     QList<int> checkedPatchesList() const;
 
+    QString patchType(int index) const;
+    QStringList patchPropertiesNames(int index) const;
+    QList<QVariant> patchPropertiesValues(int index) const;
+
     void addCue(QVariantList properties);
     void deleteCues(QStringList names);
     int CueCount() const;
@@ -257,10 +268,8 @@ public slots:
     QVariant getCueProperties(QString name) const;
     QVariantList getCues() const;
     void setCueProperty(QString cueName, QString propertyName, QVariant value);
-
-    QString patchType(int index) const;
-    QStringList patchPropertiesNames(int index) const;
-    QList<QVariant> patchPropertiesValues(int index) const;
+    void addActionToCue(QString cueName, QString actionName, int position);
+    QVariantList cueActions(QString cueName) const;
 
     int currentGroupIndex() const;
     QString currentGroup() const;

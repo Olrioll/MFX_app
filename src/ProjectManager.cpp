@@ -9,14 +9,7 @@
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
-//    if(_settings.value("lastProject").toString() == "")
-//    {
-//        newProject();
-//    }
-//    else
-//    {
-//        loadProject(_settings.value("lastProject").toString());
-//    }
+
 }
 
 ProjectManager::~ProjectManager()
@@ -766,6 +759,39 @@ void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVari
             cue.setProperty(propertyName, value);
         }
     }
+}
+
+void ProjectManager::addActionToCue(QString cueName, QString actionName, int position)
+{
+    for(auto & cue : _cues)
+    {
+        if(cue.property("name") == cueName)
+        {
+            cue.addAction(actionName, position);
+        }
+    }
+}
+
+QVariantList ProjectManager::cueActions(QString cueName) const
+{
+    QVariantList actionList;
+    for(auto & cue : _cues)
+    {
+        if(cue.property("name") == cueName)
+        {
+            for(auto & action : cue.actions)
+            {
+                QVariantMap actionObject;
+                actionObject.insert("name", action.first);
+                actionObject.insert("properties", action.second);
+                actionList.push_back(actionObject);
+            }
+
+            break;
+        }
+    }
+
+    return actionList;
 }
 
 QString ProjectManager::patchType(int index) const

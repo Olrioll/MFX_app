@@ -24,6 +24,11 @@ Item
         sceneWidget.visible = visualizationButton.checked
     }
 
+    function checkedActionName()
+    {
+        return actionView.checkedActionName()
+    }
+
     Item
     {
         id: leftPanel
@@ -971,6 +976,19 @@ Item
 
                     cellWidth: 60
                     cellHeight: 52
+
+                    function checkedActionName()
+                    {
+                        for(let i = 0; i < actionListModel.count; i++)
+                        {
+                            if(actionListModel.get(i).checkedState)
+                            {
+                                return actionListModel.get(i).actionName
+                            }
+                        }
+
+                        return ""
+                    }
 
                     model: ListModel
                     {

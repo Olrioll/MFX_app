@@ -16,60 +16,31 @@ public:
 
     struct Action
     {
-        QList<QPair<QString, QVariant>> properties;
+        QVariantMap properties;
 
         Action() {}
 
         Action(const QJsonObject& actionObject)
         {
-            foreach(auto property, actionObject["properties"].toArray())
-            {
-                auto propObject = property.toObject();
-                auto key = propObject.keys().first();
-                properties.push_back({key, propObject.value(key).toVariant()});
-            }
-
+            properties = actionObject["properties"].toObject().toVariantMap();
         }
 
         QJsonObject toJsonObject() const
         {
             QJsonObject actionObject;
+            actionObject.fromVariantMap(properties);
 
-            QJsonArray propertiesArray;
-            foreach(auto prop, properties)
-            {
-                QJsonObject propObject;
-                propObject.insert(prop.first, prop.second.toJsonValue());
-                propertiesArray.append(propObject);
-            }
-
-            actionObject.insert("properties", propertiesArray);
             return actionObject;
         }
 
         QVariant property(QString name) const
         {
-            foreach(auto prop, properties)
-            {
-                if(prop.first == name)
-                    return prop.second;
-            }
-
-            return 0;
+            return properties[name];
         }
 
         void setProperty(QString name, QVariant value)
         {
-            for(auto & prop : properties)
-            {
-                if(prop.first == name)
-                {
-                    prop.second = value;
-                    return;
-                }
-            }
-
-            properties.push_back({name, value});
+            properties[name] = value;
         }
     };
 
@@ -80,6 +51,7 @@ public:
 public slots:
 
     QVariantList getActions() const;
+    QVariantMap actionProperties(QString name) const;
 
 signals:
 

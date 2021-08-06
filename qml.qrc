@@ -68,5 +68,7 @@
         <file alias="trackPlaceholder">src/img/trackPlaceholder.png</file>
         <file>src/qml/MfxMouseArea.qml</file>
         <file>src/qml/Player.qml</file>
+        <file alias="actionPrefireMarker">src/img/actionPrefireMarker.png</file>
+        <file alias="actionStartMarker">src/img/actionStartMarker.png</file>
     </qresource>
 </RCC>

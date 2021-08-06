@@ -928,23 +928,32 @@ Item
 
                         if(isNameFree)
                         {
-                            project.addCue(
-                                        [
-                                            {propName: "name", propValue: newCueName},
-                                            {propName: "yPosition", propValue: newYposition},
-                                            {propName: "position", propValue: newPosition},
-                                            {propName: "duration", propValue: 15000}
-                                        ])
+                            let checkedAction = mainScreen.checkedActionName()
+                            if(checkedAction)
+                            {
+                                project.addCue(
+                                            [
+                                                {propName: "name", propValue: newCueName},
+                                                {propName: "yPosition", propValue: newYposition},
+//                                                {propName: "position", propValue: newPosition},
+                                                {propName: "duration", propValue: 15000}
+                                            ])
 
-                            cueView.cuePlates.push(cuePlateComponent.createObject(cueView,
-                                                                                  {
-                                                                                      name: newCueName,
-                                                                                      yPosition: newYposition,
-                                                                                      position: newPosition,
-                                                                                      duration: 15000
-                                                                                  }
-                                                                                  ))
-                            break
+                                project.addActionToCue(newCueName, checkedAction, newPosition)
+
+                                let newCuePlate = cuePlateComponent.createObject(cueView,
+                                                                                 {
+                                                                                     name: newCueName,
+                                                                                     yPosition: newYposition,
+                                                                                     position: newPosition,
+                                                                                     duration: 15000
+                                                                                 }
+                                                                                 )
+                                newCuePlate.loadActions()
+                                cueView.cuePlates.push(newCuePlate)
+                                break
+
+                            }
                         }
                     }
                 }
@@ -996,14 +1005,17 @@ Item
 
                 cuesList.forEach(function(currCue)
                 {
-                    cuePlates.push(cuePlateComponent.createObject(cueView,
-                                                         {
-                                                             name: currCue["name"],
-                                                             yPosition: currCue["yPosition"],
-                                                             position: currCue["position"],
-                                                             duration: currCue["duration"]
-                                                         }
-                                                         ))
+                    let newPlate = cuePlateComponent.createObject(cueView,
+                                                                  {
+                                                                      name: currCue["name"],
+                                                                      yPosition: currCue["yPosition"],
+//                                                                      position: currCue["position"],
+                                                                      duration: currCue["duration"]
+                                                                  }
+                                                                  )
+                    newPlate.loadActions()
+                    cuePlates.push(newPlate)
+
                 })
 
                 updateHeight()
@@ -1257,6 +1269,8 @@ Item
                 width: msecToPixels(duration)
                 height: isExpanded ? cueView.expandedHeight : cueView.collapsedHeight
 
+                clip: true
+
                 property string name: ""
                 property bool isExpanded: false
                 property bool checked: false
@@ -1266,6 +1280,148 @@ Item
                 property int duration  // в мсек
                 property int startMovingY
                 property int startMovingPosition
+
+                property var actionList: []
+
+                function updatePosition()
+                {
+                    if(actionList.length)
+                        position = actionList[0].position
+                    else
+                        return
+
+                    actionList.forEach(function(currActionMarker)
+                    {
+                        if(currActionMarker.prefirePosition() < position)
+                            position = currActionMarker.prefirePosition()
+                    })
+                }
+
+                function loadActions()
+                {
+                    for(var i = 0; i < actionList.length; i++)
+                    {
+                        actionList[i].destroy()
+                    }
+
+                    actionList = []
+
+                    let actions = []
+                    actions = project.cueActions(name)
+
+                    actions.forEach(function(currAction)
+                    {
+                        let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.name,
+                                                                                            position: currAction.properties.position,
+                                                                                            prefire: actionsManager.actionProperties(currAction.name).prefire
+                                                                                 })
+                        actionList.push(newActionMarker)
+                    })
+
+                    updatePosition()
+                }
+
+                Component
+                {
+                    id: actionMarkerComponent
+
+                    Item
+                    {
+                        id: actionMarker
+                        height: cueView.expandedHeight
+                        visible: cuePlate.isExpanded
+
+                        x: msecToPixels(position - cuePlate.position)
+
+                        property string name: ""
+                        property int position: 0 // в мсек
+                        property int prefire: 0 // в мсек
+                        property int duration: 0  // в мсек
+
+                        function prefirePosition()
+                        {
+                            return position - prefire
+                        }
+
+                        Item
+                        {
+                            id: actionStartMarker
+                            height: 9
+                            width: 9
+                            y: cueView.expandedHeight - height
+
+                            Image
+                            {
+                                width: parent.width
+                                height: parent.height
+                                anchors.top: parent.top
+                                anchors.leftMargin: - parent.width / 2
+                                anchors.left: parent.left
+                                source: "qrc:/actionStartMarker"
+                            }
+                        }
+
+                        MfxMouseArea
+                        {
+                            id: actionMarkerMouseArea
+                            anchors.margins: -4
+                            anchors.fill: actionStartMarker
+
+                            onPressed: cueViewFlickable.interactive = false
+
+                            onMouseXChanged:
+                            {
+                                let delta = pixelsToMsec(xAcc)
+                                if(Math.abs(delta) > 0)
+                                {
+                                    xAcc = 0
+                                    if((actionMarker.position + delta) >= cuePlate.position && (actionMarker.position + delta) <= (cuePlate.position + cuePlate.duration))
+                                    {
+                                        actionMarker.position += delta
+                                        cuePlate.updatePosition()
+                                    }
+                                }
+                            }
+
+                            onReleased:
+                            {
+                                cueViewFlickable.interactive = true
+                            }
+                        }
+
+                        Item
+                        {
+                            id: actionPrefireMarker
+                            height: 9
+                            width: 9
+                            x: actionStartMarker.x - msecToPixels(actionMarker.prefire)
+
+                            Image
+                            {
+                                width: parent.width
+                                height: parent.height
+                                anchors.top: parent.top
+                                anchors.leftMargin: - parent.width / 2
+                                anchors.left: parent.left
+                                source: "qrc:/actionPrefireMarker"
+                            }
+                        }
+
+                        Text
+                        {
+                            id: caption
+                            color: "#ffffff"
+                            text: actionMarker.name
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            elide: Text.ElideMiddle
+                            anchors.centerIn: parent
+                            font.family: "Roboto"
+                            font.pixelSize: 8
+                            visible: actionMarkerMouseArea.pressed
+                        }
+                    }
+                }
 
                 states:
                     [

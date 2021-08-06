@@ -28,14 +28,21 @@ QVariantList ActionsManager::getActions() const
     QVariantList actionsList;
     for(auto & action : _actions)
     {
-        QVariantMap actionProperties;
-        for(auto & prop : action.properties)
-        {
-            actionProperties.insert(prop.first, prop.second);
-        }
-
-       actionsList.push_back(actionProperties);
+       actionsList.push_back(action.properties);
     }
 
     return actionsList;
+}
+
+QVariantMap ActionsManager::actionProperties(QString name) const
+{
+    for(auto & action : _actions)
+    {
+        if(action.property("name").toString() == name)
+        {
+            return action.properties;
+        }
+    }
+
+    return QVariantMap();
 }
