@@ -1321,6 +1321,14 @@ Item
                     updatePosition()
                 }
 
+                function moveActions(dt)
+                {
+                    actionList.forEach(function(currAction)
+                    {
+                        currAction.position += dt
+                    })
+                }
+
                 Component
                 {
                     id: actionMarkerComponent
@@ -1466,6 +1474,22 @@ Item
                     font.family: "Roboto"
                     font.pixelSize: 8
                     visible: parent.width > 0
+                }
+
+                DropArea
+                {
+                    id: cuePlateDropArea
+                    anchors.fill: cuePlate
+
+                    onDropped:
+                    {
+                        let checkedAction = mainScreen.checkedActionName()
+                        if(checkedAction)
+                        {
+                            project.addActionToCue(cuePlate.name, checkedAction, cuePlate.position)
+                            cuePlate.loadActions()
+                        }
+                    }
                 }
 
                 MfxMouseArea
@@ -1637,6 +1661,10 @@ Item
                             {
                                 cueView.updateHeight()
                                 cueView.updatePositions()
+                                cueView.movedPlates.forEach(function(currCuePlate)
+                                {
+                                    currCuePlate.moveActions(currCuePlate.position - currCuePlate.startMovingPosition)
+                                })
                             }
                         }
 
