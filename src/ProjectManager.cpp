@@ -15,6 +15,23 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 ProjectManager::~ProjectManager()
 {
 //    saveProject();
+    cleanWorkDirectoty();
+}
+
+void ProjectManager::cleanWorkDirectoty()
+{
+    QDir workDir(_settings.workDirectory());
+    auto fileNamesList = workDir.entryList(QDir::Files);
+
+    for(auto & entry : fileNamesList)
+    {
+        if(entry != "settings.ini" &&
+           entry != "actions.json" &&
+           entry != "default.png")
+        {
+            QFile::remove(_settings.workDirectory() + "/" + entry);
+        }
+    }
 }
 
 QVariant ProjectManager::property(QString name) const
@@ -450,7 +467,7 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
         patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last()});
     }
 
-    patch.properties.push_back({"act", "A1"});
+    patch.properties.push_back({"act", ""});
 
     _patches.push_back(patch);
 

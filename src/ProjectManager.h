@@ -293,6 +293,8 @@ signals:
 
 private:
 
+    void cleanWorkDirectoty();
+
     SettingsManager& _settings;
     QString _currentProjectFile = "";
     QString _currentProjectName = "";
