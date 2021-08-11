@@ -23,11 +23,14 @@ void ProjectManager::cleanWorkDirectoty()
     QDir workDir(_settings.workDirectory());
     auto fileNamesList = workDir.entryList(QDir::Files);
 
+    QStringList exceptionList = {"settings.ini", "default.png"};
+
     for(auto & entry : fileNamesList)
     {
-        if(entry != "settings.ini" &&
-           entry != "actions.json" &&
-           entry != "default.png")
+        if(entry.contains("pattern") && entry.contains(".txt"))
+            continue;
+
+        if(!exceptionList.contains(entry))
         {
             QFile::remove(_settings.workDirectory() + "/" + entry);
         }
