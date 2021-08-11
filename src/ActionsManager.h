@@ -14,35 +14,35 @@ class ActionsManager : public QObject
 
 public:
 
-    struct Action
-    {
-        QVariantMap properties;
+//    struct Action
+//    {
+//        QVariantMap properties;
 
-        Action() {}
+//        Action() {}
 
-        Action(const QJsonObject& actionObject)
-        {
-            properties = actionObject["properties"].toObject().toVariantMap();
-        }
+//        Action(const QJsonObject& actionObject)
+//        {
+//            properties = actionObject["properties"].toObject().toVariantMap();
+//        }
 
-        QJsonObject toJsonObject() const
-        {
-            QJsonObject actionObject;
-            actionObject.fromVariantMap(properties);
+//        QJsonObject toJsonObject() const
+//        {
+//            QJsonObject actionObject;
+//            actionObject.fromVariantMap(properties);
 
-            return actionObject;
-        }
+//            return actionObject;
+//        }
 
-        QVariant property(QString name) const
-        {
-            return properties[name];
-        }
+//        QVariant property(QString name) const
+//        {
+//            return properties[name];
+//        }
 
-        void setProperty(QString name, QVariant value)
-        {
-            properties[name] = value;
-        }
-    };
+//        void setProperty(QString name, QVariant value)
+//        {
+//            properties[name] = value;
+//        }
+//    };
 
     ActionsManager(SettingsManager &settngs, QObject *parent = nullptr);
 
@@ -60,7 +60,7 @@ signals:
 private:
 
     SettingsManager& _settings;
-    QList<Action> _actions;
+    QList<QVariantMap> _actions;
 
 };
 
