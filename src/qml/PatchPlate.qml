@@ -6,7 +6,7 @@ Item
 {
     id: patchPlate
     height: 40
-    width: 392
+    width: showAction ? 442 : 392
 
     property var parentList: null
     property int no: 0
@@ -19,6 +19,9 @@ Item
     property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
     property string imageFile: ""
     property bool isInGroupList: false
+    property bool showAction: applicationWindow.screensLayout.currentIndex === 2
+
+    onShowActionChanged: refreshCells()
 
     function isNeedToShowChecked()
     {
@@ -60,7 +63,14 @@ Item
             let currentPropName = propNamesList[i]
             if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio" && currentPropName !== "checked")
             {
-                cellListModel.append({propName: propNamesList[i], propValue: propValuesList[i]})
+                if(currentPropName === "act")
+                {
+                    if(showAction)
+                        cellListModel.append({propName: propNamesList[i], propValue: String(propValuesList[i])})
+                }
+
+                else
+                    cellListModel.append({propName: propNamesList[i], propValue: String(propValuesList[i])})
             }
         }
 

@@ -47,9 +47,11 @@ Item
         anchors.topMargin: -3
         anchors.top: parent.top
         height: parent.height + 4
-        width: parent.parent ? parent.parent.width : parent.width
+        width: parent.parent ? parent.parent.width + additionalWidth : parent.width + additionalWidth
         color: "transparent"
         radius: 2
+
+        property int additionalWidth: applicationWindow.screensLayout.currentIndex === 2 ? 50 : 0
 
         border.width: 1
         border.color: "transparent"
@@ -316,7 +318,7 @@ Item
         visible: collapseButton.checked
         x: 18
         y: 30
-        width: 360
+        width: applicationWindow.screensLayout.currentIndex === 2 ? 410 : 360
         height: deviceList.contentItem.height + 10
 
         DeviceListWidget

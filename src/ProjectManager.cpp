@@ -449,6 +449,9 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     {
         patch.properties.push_back({prop.toMap().first().toString(), prop.toMap().last()});
     }
+
+    patch.properties.push_back({"act", "A1"});
+
     _patches.push_back(patch);
 
     for(int i = 0; i < 20; i++)

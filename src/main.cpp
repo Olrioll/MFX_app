@@ -6,6 +6,7 @@
 
 #include "SettingsManager.h"
 #include "ProjectManager.h"
+#include "ProjectManager2.h"
 #include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
@@ -19,6 +20,7 @@ int main(int argc, char** argv)
 
     SettingsManager settings;
     ProjectManager project(settings);
+//    ProjectManager2 project2(settings);
     ActionsManager actionsManager(settings);
     actionsManager.loadActions();
     CursorManager cursorManager;

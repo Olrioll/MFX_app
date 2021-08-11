@@ -146,7 +146,7 @@ Item
             id: rightWidget
 
             z: 1
-            width: 440
+            width: 490
             anchors.topMargin: 2
             anchors.top: cueContentButton.bottom
             anchors.bottom: parent.bottom

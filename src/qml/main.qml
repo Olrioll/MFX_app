@@ -28,6 +28,7 @@ ApplicationWindow
     property bool isMouseCursorVisible: true
 
     property alias projectSettingsWidget: projectSettingsWidget
+    property alias screensLayout: screensLayout
 
     function childWidgetsArea()
     {
