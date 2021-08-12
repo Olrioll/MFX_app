@@ -558,6 +558,11 @@ void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant val
             {
                 emit patchCheckedChanged(id, value.toBool());
             }
+
+            else
+            {
+                emit patchListChanged();
+            }
         }
     }
 }
@@ -568,6 +573,11 @@ void ProjectManager::setPatchPropertyForIndex(int index, QString propertyName, Q
     if(propertyName == "checked")
     {
         emit patchCheckedChanged(patchPropertyForIndex(index, "ID").toInt(), value.toBool());
+    }
+
+    else
+    {
+        emit patchListChanged();
     }
 }
 
@@ -784,13 +794,24 @@ void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVari
     }
 }
 
-void ProjectManager::addActionToCue(QString cueName, QString actionName, int position)
+void ProjectManager::addActionToCue(QString cueName, QString actionName, int patchId, int position)
 {
     for(auto & cue : _cues)
     {
         if(cue.property("name") == cueName)
         {
-            cue.addAction(actionName, position);
+            cue.addAction(actionName, patchId, position);
+        }
+    }
+}
+
+void ProjectManager::setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
+{
+    for(auto & cue : _cues)
+    {
+        if(cue.property("name") == cueName)
+        {
+            cue.setActionProperty(actionName, patchId, propertyName, value);
         }
     }
 }

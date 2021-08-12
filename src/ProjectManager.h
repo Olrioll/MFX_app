@@ -190,11 +190,38 @@ public:
             properties.push_back({name, value});
         }
 
-        void addAction(QString actionName, int position)
+        void addAction(QString actionName, int patchId, int position)
         {
             QVariantMap newActionProperties;
             newActionProperties.insert("position", position);
+            newActionProperties.insert("patchId", patchId);
             actions.push_back({actionName, newActionProperties});
+        }
+
+        void setActionProperty(QString actionName, int patchId, QString propertyName, QVariant value)
+        {
+            int idx = -1;
+            int counter = -1;
+            for(auto & action : actions)
+            {
+                counter++;
+                if(action.first == actionName && action.second.toMap()["patchId"].toInt() == patchId)
+                {
+                    idx = counter;
+                    break;
+                }
+            }
+
+            if(idx == -1)
+                return;
+
+            QString newActionName = actions[idx].first;
+            QVariantMap newActionProperties;
+            newActionProperties.insert("position", actions[idx].second.toMap()["position"]);
+            newActionProperties.insert("patchId", actions[idx].second.toMap()["patchId"]);
+            newActionProperties[propertyName] = value;
+
+            actions.replace(idx, {newActionName, newActionProperties});
         }
     };
 
@@ -268,7 +295,8 @@ public slots:
     QVariant getCueProperties(QString name) const;
     QVariantList getCues() const;
     void setCueProperty(QString cueName, QString propertyName, QVariant value);
-    void addActionToCue(QString cueName, QString actionName, int position);
+    void addActionToCue(QString cueName, QString actionName, int patchId, int position);
+    void setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
     QVariantList cueActions(QString cueName) const;
 
     int currentGroupIndex() const;

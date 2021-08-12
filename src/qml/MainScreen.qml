@@ -1134,6 +1134,8 @@ Item
 
                         anchors.fill: parent
 
+//                        signal actionChecked(string actionName)
+
                         onClicked:
                         {
                             let clickedItemName = actionView.itemAt(mouseX, mouseY).name
@@ -1141,9 +1143,22 @@ Item
                             {
                                 for(let i = 0; i < actionListModel.count; i++)
                                 {
-                                    actionListModel.get(i).actionName === clickedItemName ?
-                                                actionListModel.setProperty(i, "checkedState", true) : actionListModel.setProperty(i, "checkedState", false)
-                                }
+                                    if(actionListModel.get(i).actionName === clickedItemName)
+                                    {
+                                        actionListModel.setProperty(i, "checkedState", true)
+                                        let checkedPatches = project.checkedPatchesList()
+
+                                        checkedPatches.forEach(function(patchId)
+                                        {
+                                           project.setPatchProperty(patchId, "act", clickedItemName);
+                                        })
+                                    }
+
+                                    else
+                                    {
+                                        actionListModel.setProperty(i, "checkedState", false)
+                                    }
+                                }                                
                             }
                         }
                     }

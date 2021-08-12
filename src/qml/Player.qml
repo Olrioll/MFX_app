@@ -928,18 +928,35 @@ Item
 
                         if(isNameFree)
                         {
-                            let checkedAction = mainScreen.checkedActionName()
-                            if(checkedAction)
+                            let checkedIDs = drag.source.checkedIDs
+
+                            let hasAction = false
+                            checkedIDs.forEach(function(currId)
+                            {
+                                if(project.patchProperty(currId, "act"))
+                                {
+                                    hasAction = true
+                                    return
+                                }
+                            })
+
+                            if(hasAction)
                             {
                                 project.addCue(
                                             [
                                                 {propName: "name", propValue: newCueName},
                                                 {propName: "yPosition", propValue: newYposition},
-//                                                {propName: "position", propValue: newPosition},
                                                 {propName: "duration", propValue: 15000}
                                             ])
 
-                                project.addActionToCue(newCueName, checkedAction, newPosition)
+                                checkedIDs.forEach(function(currId)
+                                {
+                                    if(project.patchProperty(currId, "act"))
+                                    {
+                                        project.addActionToCue(newCueName, project.patchProperty(currId, "act"), currId, newPosition)
+                                    }
+                                })
+
 
                                 let newCuePlate = cuePlateComponent.createObject(cueView,
                                                                                  {
@@ -947,13 +964,12 @@ Item
                                                                                      yPosition: newYposition,
                                                                                      position: newPosition,
                                                                                      duration: 15000
-                                                                                 }
-                                                                                 )
+                                                                                 })
                                 newCuePlate.loadActions()
                                 cueView.cuePlates.push(newCuePlate)
                                 break
-
                             }
+
                         }
                     }
                 }
@@ -1269,7 +1285,7 @@ Item
                 width: msecToPixels(duration)
                 height: isExpanded ? cueView.expandedHeight : cueView.collapsedHeight
 
-                clip: true
+                clip: width > 30 ? true : false
 
                 property string name: ""
                 property bool isExpanded: false
@@ -1282,11 +1298,17 @@ Item
                 property int startMovingPosition
 
                 property var actionList: []
+                property alias caption: caption
 
                 function updatePosition()
                 {
+                    let actions = project.cueActions(cuePlate.name)
+                    let endPosition = 0
                     if(actionList.length)
+                    {
                         position = actionList[0].position
+                        endPosition = actionList[0].position + actionsManager.actionProperties(actions[0].name).duration
+                    }
                     else
                         return
 
@@ -1294,7 +1316,17 @@ Item
                     {
                         if(currActionMarker.prefirePosition() < position)
                             position = currActionMarker.prefirePosition()
+
+                        let currPosition = currActionMarker.position
+                        let currDuration = actionsManager.actionProperties(currActionMarker.name).duration
+                        if(currPosition + currDuration > endPosition)
+                        {
+                            endPosition = currPosition + currDuration
+                        }
+
                     })
+
+                    duration = endPosition - position
                 }
 
                 function loadActions()
@@ -1312,6 +1344,8 @@ Item
                     actions.forEach(function(currAction)
                     {
                         let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.name,
+                                                                                            displayedName: currAction.name + " - P" + currAction.properties.patchId,
+                                                                                            patchId: currAction.properties.patchId,
                                                                                             position: currAction.properties.position,
                                                                                             prefire: actionsManager.actionProperties(currAction.name).prefire
                                                                                  })
@@ -1342,9 +1376,16 @@ Item
                         x: msecToPixels(position - cuePlate.position)
 
                         property string name: ""
+                        property string displayedName: ""
+                        property int patchId
                         property int position: 0 // в мсек
                         property int prefire: 0 // в мсек
                         property int duration: 0  // в мсек
+
+                        onPositionChanged:
+                        {
+                            project.setActionProperty(cuePlate.name, name, patchId, "position", position)
+                        }
 
                         function prefirePosition()
                         {
@@ -1375,7 +1416,11 @@ Item
                             anchors.margins: -4
                             anchors.fill: actionStartMarker
 
-                            onPressed: cueViewFlickable.interactive = false
+                            onPressed:
+                            {
+                                cueViewFlickable.interactive = false
+                                cuePlate.caption.visible = false
+                            }
 
                             onMouseXChanged:
                             {
@@ -1394,6 +1439,7 @@ Item
                             onReleased:
                             {
                                 cueViewFlickable.interactive = true
+                                cuePlate.caption.visible = true
                             }
                         }
 
@@ -1419,7 +1465,7 @@ Item
                         {
                             id: caption
                             color: "#ffffff"
-                            text: actionMarker.name
+                            text: actionMarker.displayedName
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             elide: Text.ElideMiddle
@@ -1483,10 +1529,28 @@ Item
 
                     onDropped:
                     {
-                        let checkedAction = mainScreen.checkedActionName()
-                        if(checkedAction)
+                        let checkedIDs = drag.source.checkedIDs
+
+                        let hasAction = false
+                        checkedIDs.forEach(function(currId)
                         {
-                            project.addActionToCue(cuePlate.name, checkedAction, cuePlate.position)
+                            if(project.patchProperty(currId, "act"))
+                            {
+                                hasAction = true
+                                return
+                            }
+                        })
+
+                        if(hasAction)
+                        {
+                            checkedIDs.forEach(function(currId)
+                            {
+                                if(project.patchProperty(currId, "act"))
+                                {
+                                    project.addActionToCue(cuePlate.name, project.patchProperty(currId, "act"), currId, cuePlate.position)
+                                }
+                            })
+
                             cuePlate.loadActions()
                         }
                     }
