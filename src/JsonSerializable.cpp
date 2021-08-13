@@ -27,9 +27,19 @@ QVariant JsonSerializable::property(const QString &name) const
     return _properties.value(name);
 }
 
+QVariantMap &JsonSerializable::properties()
+{
+    return _properties;
+}
+
 void JsonSerializable::addChild(const QString &name)
 {
     _namedChildren.insert(name, new JsonSerializable());
+}
+
+void JsonSerializable::addChild(JsonSerializable *child)
+{
+    _childrenList.push_back(child);
 }
 
 void JsonSerializable::addChild()

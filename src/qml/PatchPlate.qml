@@ -61,7 +61,7 @@ Item
         for(let i = 0; i < propNamesList.length; i++)
         {
             let currentPropName = propNamesList[i]
-            if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio" && currentPropName !== "checked")
+            if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio" && currentPropName !== "checked" && currentPropName !== "type")
             {
                 if(currentPropName === "act")
                 {

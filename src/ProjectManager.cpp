@@ -15,6 +15,30 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
     addChild("Groups");
 }
 
+ProjectManager::~ProjectManager()
+{
+    cleanWorkDirectory();
+}
+
+void ProjectManager::cleanWorkDirectory()
+{
+    QDir workDir(_settings.workDirectory());
+    auto fileNamesList = workDir.entryList(QDir::Files);
+
+    QStringList exceptionList = {"settings.ini", "default.png"};
+
+    for(auto & entry : fileNamesList)
+    {
+        if(entry.contains("pattern") && entry.contains(".txt"))
+            continue;
+
+        if(!exceptionList.contains(entry))
+        {
+            QFile::remove(_settings.workDirectory() + "/" + entry);
+        }
+    }
+}
+
 void ProjectManager::loadProject(QString fileName)
 {
     QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
@@ -175,7 +199,7 @@ QVariant ProjectManager::patchProperty(int id, QString propertyName) const
     auto patches = getChild("Patches")->listedChildren();
     for(auto patch : patches)
     {
-        if(patch->property("id").toInt() == id)
+        if(patch->property("ID").toInt() == id)
         {
             return patch->property(propertyName);
         }
@@ -184,12 +208,32 @@ QVariant ProjectManager::patchProperty(int id, QString propertyName) const
     return 0;
 }
 
+QVariant ProjectManager::patchPropertyForIndex(int index, QString propertyName) const
+{
+    return getChild("Patches")->listedChildren().at(index)->property(propertyName);
+}
+
+QString ProjectManager::patchType(int index) const
+{
+    return getChild("Patches")->listedChildren().at(index)->property("type").toString();
+}
+
+QStringList ProjectManager::patchPropertiesNames(int index) const
+{
+    return getChild("Patches")->listedChildren().at(index)->properties().keys();
+}
+
+QList<QVariant> ProjectManager::patchPropertiesValues(int index) const
+{
+    return getChild("Patches")->listedChildren().at(index)->properties().values();
+}
+
 void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant value)
 {
     auto patches = getChild("Patches")->listedChildren();
     for(auto patch : patches)
     {
-        if(patch->property("id").toInt() == id)
+        if(patch->property("ID").toInt() == id)
         {
             return patch->setProperty(propertyName, value);
         }
@@ -205,6 +249,75 @@ QVariant ProjectManager::property(QString name) const
 {
     return JsonSerializable::property(name);
 }
+
+int ProjectManager::lastPatchId() const
+{
+    int id = 0;
+    auto patches = getChild("Patches")->listedChildren();
+    foreach(auto patch, patches)
+    {
+        if(patch->property("ID").toInt() > id)
+            id = patch->property("ID").toInt();
+    }
+
+    return id;
+}
+
+void ProjectManager::addPatch(QString type, QVariantList properties)
+{
+    JsonSerializable* patch = new JsonSerializable;
+    patch->setProperty("type", type);
+    patch->setProperty("act", "");
+    patch->setProperty("checked", false);
+
+    foreach(auto prop, properties)
+    {
+        patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
+    }
+
+
+    getChild("Patches")->addChild(patch);
+
+    for(int i = 0; i < 20; i++)
+    {
+        bool hasUnplacedPatch = false;
+        for(auto & currPatch : getChild("Patches")->listedChildren())
+        {
+            if(currPatch->property("posXRatio").toDouble() == (0.05 + 0.01 * i) &&
+                    currPatch->property("posYRatio").toDouble() == (0.05 + 0.01 * i))
+            {
+                hasUnplacedPatch = true;
+            }
+        }
+
+        if(!hasUnplacedPatch)
+        {
+             getChild("Patches")->listedChildren().last()->setProperty("posXRatio", (0.05 + 0.01 * i));
+            getChild("Patches")->listedChildren().last()->setProperty("posYRatio", (0.05 + 0.01 * i));
+            emit patchListChanged();
+            return;
+        }
+    }
+
+    getChild("Patches")->listedChildren().last()->setProperty("posXRatio", 0.05);
+    getChild("Patches")->listedChildren().last()->setProperty("posXRatio", 0.05);
+    emit patchListChanged();
+}
+
+int ProjectManager::patchIndexForId(int id) const
+{
+    int counter = 0;
+    for(auto & patch : getChild("Patches")->listedChildren())
+    {
+        if(patch->property("ID").toInt() == id)
+            return counter;
+
+        counter++;
+    }
+
+    return -1;
+}
+
 
 QVariantList ProjectManager::patchesIdList(QString groupName) const
 {

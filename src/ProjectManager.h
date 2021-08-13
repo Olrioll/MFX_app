@@ -15,6 +15,7 @@ class ProjectManager : public QObject, public JsonSerializable
 public:
 
     ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
+    virtual ~ProjectManager();
 
 public slots:
 
@@ -43,9 +44,16 @@ public slots:
     void setProperty(QString name, QVariant value);
     QVariant property(QString name) const;
 
+    int lastPatchId() const;
+    void addPatch(QString type, QVariantList properties);
     QVariant patchProperty(int id, QString propertyName) const;
+    QVariant patchPropertyForIndex(int index, QString propertyName) const;
+    QString patchType(int index) const;
+    QStringList patchPropertiesNames(int index) const;
+    QList<QVariant> patchPropertiesValues(int index) const;
     void setPatchProperty(int id, QString propertyName, QVariant value);
     QVariantList patchesIdList(QString groupName) const;
+    int patchIndexForId(int id) const;
 
     QString currentGroup() const;
     void setCurrentGroup(QString name);
@@ -64,6 +72,8 @@ signals:
     void sceneFrameWidthChanged(double sceneFrameWidth);
 
 private:
+
+    void cleanWorkDirectory();
 
     SettingsManager& _settings;
     QString _currentProjectFile = "";
