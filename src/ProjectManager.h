@@ -35,6 +35,9 @@ public slots:
     QStringList groupNames() const;
     bool isGroupVisible(QString groupName) const;
     void setGroupVisible(QString groupName, bool state);
+    bool addGroup(QString name);
+    void removeGroup(QString name);
+    bool renameGroup(QString newName);
     int patchCount() const;
 
     void setProperty(QString name, QVariant value);
@@ -52,7 +55,7 @@ signals:
     void audioTrackFileChanged();
 
     void currentGroupChanged(QString name);
-    void groupChanged(int index);
+    void groupChanged(QString name);
     void groupCountChanged();
     void patchListChanged();
     void patchCheckedChanged(int id, bool checked);

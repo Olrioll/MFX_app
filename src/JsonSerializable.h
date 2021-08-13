@@ -17,6 +17,8 @@ public:
     QVariant property(const QString& name) const;
     void addChild(const QString& name);
     void addChild();
+    void removeChild(const QString& name);
+    void renameChild(const QString& name, const QString& newName);
 
     JsonSerializable* getChild(const QString& name) const;
     QStringList childrenNames() const;

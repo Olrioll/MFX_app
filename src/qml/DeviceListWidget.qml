@@ -156,14 +156,14 @@ ListView
         }
     }
 
-    Connections
-    {
-        target: project
-        function onGroupChanged()
-        {
-            loadDeviceList()
-        }
-    }
+//    Connections
+//    {
+//        target: project
+//        function onGroupChanged()
+//        {
+//            loadDeviceList()
+//        }
+//    }
 
     Connections
     {

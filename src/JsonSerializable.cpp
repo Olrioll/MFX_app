@@ -37,6 +37,18 @@ void JsonSerializable::addChild()
     _childrenList.push_back(new JsonSerializable());
 }
 
+void JsonSerializable::removeChild(const QString &name)
+{
+    delete _namedChildren.value(name);
+    _namedChildren.remove(name);
+}
+
+void JsonSerializable::renameChild(const QString &name, const QString &newName)
+{
+    auto oldValue = _namedChildren.take(name);
+    _namedChildren.insert(newName, oldValue);
+}
+
 JsonSerializable *JsonSerializable::getChild(const QString &name) const
 {
     return _namedChildren.value(name);

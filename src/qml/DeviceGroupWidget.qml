@@ -208,4 +208,13 @@ Item
             groupListView.loadGroups();
         }
     }
+
+    Connections
+    {
+        target: project
+        function onGroupChanged()
+        {
+            groupListView.loadGroups();
+        }
+    }
 }

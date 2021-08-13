@@ -296,3 +296,30 @@ void ProjectManager::setGroupVisible(QString groupName, bool state)
     auto groups = getChild("Groups")->namedChildren();
     groups.value(groupName)->setProperty("visible", state);
 }
+
+bool ProjectManager::addGroup(QString name)
+{
+    if(getChild("Groups")->childrenNames().contains(name))
+        return false;
+
+    getChild("Groups")->addChild(name);
+    emit groupCountChanged();
+    return true;
+}
+
+void ProjectManager::removeGroup(QString name)
+{
+    getChild("Groups")->removeChild(name);
+    emit groupCountChanged();
+}
+
+bool ProjectManager::renameGroup(QString newName)
+{
+    if(getChild("Groups")->childrenNames().contains(newName))
+        return false;
+
+   getChild("Groups")->renameChild(currentGroup(), newName);
+
+   emit groupChanged(currentGroup());
+   return true;
+}
