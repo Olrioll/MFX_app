@@ -183,10 +183,19 @@ Item
     Connections
     {
         target: project
-        function onCurrentGroupIndexChanged(index)
+        function onCurrentGroupChanged(groupName)
         {
             groupListView.itemAtIndex(groupListView.currentIndex).checked = false
-            groupListView.currentIndex = index
+
+            for(let i = 0; i < groupListView.count; i++)
+            {
+                if(groupListView.itemAtIndex(i).name === groupName)
+                {
+                    groupListView.currentIndex = i
+                    break
+                }
+            }
+
             groupListView.itemAtIndex(groupListView.currentIndex).checked = true
         }
     }

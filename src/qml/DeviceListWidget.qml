@@ -168,7 +168,7 @@ ListView
     Connections
     {
         target: project
-        function onCurrentGroupIndexChanged()
+        function onCurrentGroupChanged()
         {
             loadDeviceList()
         }
