@@ -39,6 +39,10 @@ public slots:
     bool addGroup(QString name);
     void removeGroup(QString name);
     bool renameGroup(QString newName);
+    void addPatchesToGroup(QString groupName, QList<int> patchIDs);
+    void removePatchesFromGroup(QString groupName, QList<int> patchIDs);
+    bool isGroupContainsPatch(QString groupName, int patchId) const;
+    bool isPatchHasGroup(int patchId) const;
     int patchCount() const;
 
     void setProperty(QString name, QVariant value);
@@ -46,9 +50,11 @@ public slots:
 
     int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
+    void editPatch(QVariantList properties);
     QVariant patchProperty(int id, QString propertyName) const;
     QVariant patchPropertyForIndex(int index, QString propertyName) const;
     QString patchType(int index) const;
+    QVariantMap patchProperties(int index) const;
     QStringList patchPropertiesNames(int index) const;
     QList<QVariant> patchPropertiesValues(int index) const;
     void setPatchProperty(int id, QString propertyName, QVariant value);

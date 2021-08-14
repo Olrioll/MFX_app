@@ -218,6 +218,12 @@ QString ProjectManager::patchType(int index) const
     return getChild("Patches")->listedChildren().at(index)->property("type").toString();
 }
 
+QVariantMap ProjectManager::patchProperties(int index) const
+{
+    QVariantMap props = getChild("Patches")->listedChildren().at(index)->properties();
+    return props;
+}
+
 QStringList ProjectManager::patchPropertiesNames(int index) const
 {
     return getChild("Patches")->listedChildren().at(index)->properties().keys();
@@ -235,7 +241,12 @@ void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant val
     {
         if(patch->property("ID").toInt() == id)
         {
-            return patch->setProperty(propertyName, value);
+            patch->setProperty(propertyName, value);
+            if(propertyName == "checked")
+            {
+                emit patchCheckedChanged(id, value.toBool());
+            }
+            return;
         }
     }
 }
@@ -302,6 +313,37 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     getChild("Patches")->listedChildren().last()->setProperty("posXRatio", 0.05);
     getChild("Patches")->listedChildren().last()->setProperty("posXRatio", 0.05);
     emit patchListChanged();
+}
+
+void ProjectManager::editPatch(QVariantList properties)
+{
+    JsonSerializable* patch = new JsonSerializable;
+//    patch->setProperty("type", type);
+//    patch->setProperty("act", "");
+//    patch->setProperty("checked", false);
+
+    foreach(auto prop, properties)
+    {
+        patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
+    }
+
+    for(auto & p : getChild("Patches")->listedChildren())
+    {
+        if(p->property("ID") == patch->property("ID"))
+        {
+            patch->setProperty("type", p->property("type"));
+            patch->setProperty("act", p->property("act"));
+            patch->setProperty("checked", p->property("checked"));
+            patch->setProperty("posXRatio", p->property("posXRatio"));
+            patch->setProperty("posYRatio", p->property("posYRatio"));
+
+            getChild("Patches")->replaceChild(p, patch);
+            emit patchListChanged();
+            return;
+        }
+    }
+
+    delete patch;
 }
 
 int ProjectManager::patchIndexForId(int id) const
@@ -416,6 +458,10 @@ bool ProjectManager::addGroup(QString name)
         return false;
 
     getChild("Groups")->addChild(name);
+    auto groups = getChild("Groups")->namedChildren();
+    groups.value(name)->setProperty("visible", true);
+    groups.value(name)->setProperty("patches", QVariantList());
+
     emit groupCountChanged();
     return true;
 }
@@ -435,4 +481,52 @@ bool ProjectManager::renameGroup(QString newName)
 
    emit groupChanged(currentGroup());
    return true;
+}
+
+void ProjectManager::addPatchesToGroup(QString groupName, QList<int> patchIDs)
+{
+    QVariantList patchesList = getChild("Groups")->getChild(groupName)->property("patches").toList();
+    for(auto i : patchIDs)
+    {
+        if(!patchesList.contains(i))
+        {
+            patchesList.append(i);
+        }
+    }
+
+    getChild("Groups")->getChild(groupName)->setProperty("patches", patchesList);
+
+    emit groupChanged(currentGroup());
+}
+
+void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> patchIDs)
+{
+    QVariantList patchesList = getChild("Groups")->getChild(groupName)->property("patches").toList();
+    for(auto i : patchIDs)
+    {
+        if(patchesList.contains(i))
+        {
+            patchesList.removeOne(i);
+        }
+    }
+
+    getChild("Groups")->getChild(groupName)->setProperty("patches", patchesList);
+
+    emit groupChanged(currentGroup());
+}
+
+bool ProjectManager::isGroupContainsPatch(QString groupName, int patchId) const
+{
+    return getChild("Groups")->getChild(groupName)->property("patches").toList().contains(patchId);
+}
+
+bool ProjectManager::isPatchHasGroup(int patchId) const
+{
+    for(auto & groupName : getChild("Groups")->childrenNames())
+    {
+        if(isGroupContainsPatch(groupName, patchId))
+            return true;
+    }
+
+    return false;
 }

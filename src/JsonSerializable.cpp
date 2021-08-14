@@ -42,6 +42,12 @@ void JsonSerializable::addChild(JsonSerializable *child)
     _childrenList.push_back(child);
 }
 
+void JsonSerializable::replaceChild(JsonSerializable *child, JsonSerializable *newChild)
+{
+    _childrenList.replace(_childrenList.indexOf(child), newChild);
+    delete child;
+}
+
 void JsonSerializable::addChild()
 {
     _childrenList.push_back(new JsonSerializable());

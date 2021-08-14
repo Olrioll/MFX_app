@@ -56,25 +56,40 @@ Item
             return
 
         cellListModel.clear()
-        var propNamesList = project.patchPropertiesNames(project.patchIndexForId(patchId))
-        var propValuesList = project.patchPropertiesValues(project.patchIndexForId(patchId))
-        for(let i = 0; i < propNamesList.length; i++)
-        {
-            let currentPropName = propNamesList[i]
-            if(currentPropName !== "posXRatio" && currentPropName !== "posYRatio" && currentPropName !== "checked" && currentPropName !== "type")
-            {
-                if(currentPropName === "act")
-                {
-                    if(showAction)
-                        cellListModel.append({propName: propNamesList[i], propValue: String(propValuesList[i])})
-                }
+        var patchProperties = project.patchProperties(project.patchIndexForId(patchId))
 
-                else
-                    cellListModel.append({propName: propNamesList[i], propValue: String(propValuesList[i])})
-            }
-        }
 
-        patchPlate.type = project.patchType(project.patchIndexForId(patchId))
+        if("ID" in patchProperties)
+            cellListModel.append({propName: "ID", propValue: patchProperties["ID"]})
+
+        if("DMX" in patchProperties)
+            cellListModel.append({propName: "DMX", propValue: patchProperties["DMX"]})
+
+        if("RF ch" in patchProperties)
+            cellListModel.append({propName: "RF ch", propValue: patchProperties["RF ch"]})
+
+        if("RF pos" in patchProperties)
+            cellListModel.append({propName: "RF pos", propValue: patchProperties["RF pos"]})
+
+        if("max ang" in patchProperties)
+            cellListModel.append({propName: "max ang", propValue: patchProperties["max ang"]})
+
+        if("min ang" in patchProperties)
+            cellListModel.append({propName: "min ang", propValue: patchProperties["min ang"]})
+
+        if("angle" in patchProperties)
+            cellListModel.append({propName: "angle", propValue: patchProperties["angle"]})
+
+        if("channel" in patchProperties)
+            cellListModel.append({propName: "channel", propValue: patchProperties["channel"]})
+
+        if("height" in patchProperties)
+            cellListModel.append({propName: "height", propValue: patchProperties["height"]})
+
+        if("act" in patchProperties && showAction)
+            cellListModel.append({propName: "act", propValue: patchProperties["act"]})
+
+        patchPlate.type = patchProperties.type
 
         switch (patchPlate.type)
         {
@@ -197,6 +212,7 @@ Item
             model: ListModel
             {
                 id: cellListModel
+                dynamicRoles: true
             }
 
             Component.onCompleted:
@@ -227,7 +243,6 @@ Item
 
             onPressed:
             {
-//                console.log("here")
             }
         }
     }

@@ -18,6 +18,7 @@ public:
     QVariantMap& properties();
     void addChild(const QString& name);
     void addChild(JsonSerializable* child);
+    void replaceChild(JsonSerializable* child, JsonSerializable* newChild);
     void addChild();
     void removeChild(const QString& name);
     void renameChild(const QString& name, const QString& newName);
