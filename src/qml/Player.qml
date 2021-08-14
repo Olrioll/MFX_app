@@ -942,12 +942,14 @@ Item
 
                             if(hasAction)
                             {
-                                project.addCue(
-                                            [
-                                                {propName: "name", propValue: newCueName},
-                                                {propName: "yPosition", propValue: newYposition},
-                                                {propName: "duration", propValue: 15000}
-                                            ])
+//                                project.addCue(
+//                                            [
+//                                                {propName: "name", propValue: newCueName},
+//                                                {propName: "yPosition", propValue: newYposition},
+//                                                {propName: "duration", propValue: 15000}
+//                                            ])
+
+                                project.addCue({name: newCueName, yPosition: newYposition})
 
                                 checkedIDs.forEach(function(currId)
                                 {
@@ -1307,7 +1309,7 @@ Item
                     if(actionList.length)
                     {
                         position = actionList[0].position
-                        endPosition = actionList[0].position + actionsManager.actionProperties(actions[0].name).duration
+                        endPosition = actionList[0].position + actionsManager.actionProperties(actions[0].actionName).duration
                     }
                     else
                         return
@@ -1343,10 +1345,10 @@ Item
 
                     actions.forEach(function(currAction)
                     {
-                        let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.name,
-                                                                                            displayedName: currAction.name + " - P" + currAction.properties.patchId,
-                                                                                            patchId: currAction.properties.patchId,
-                                                                                            position: currAction.properties.position,
+                        let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
+                                                                                            displayedName: currAction.actionName + " - P" + currAction.patchId,
+                                                                                            patchId: currAction.patchId,
+                                                                                            position: currAction.position,
                                                                                             prefire: actionsManager.actionProperties(currAction.name).prefire
                                                                                  })
                         actionList.push(newActionMarker)

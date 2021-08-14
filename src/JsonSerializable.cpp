@@ -22,6 +22,11 @@ void JsonSerializable::setProperty(const QString &name, QVariant value)
     _properties.insert(name, value);
 }
 
+void JsonSerializable::setProperties(const QVariantMap &props)
+{
+    _properties = props;
+}
+
 QVariant JsonSerializable::property(const QString &name) const
 {
     return _properties.value(name);

@@ -44,6 +44,7 @@ public slots:
     bool isGroupContainsPatch(QString groupName, int patchId) const;
     bool isPatchHasGroup(int patchId) const;
     int patchCount() const;
+    QList<int> checkedPatchesList() const;
 
     void setProperty(QString name, QVariant value);
     QVariant property(QString name) const;
@@ -63,6 +64,12 @@ public slots:
 
     QString currentGroup() const;
     void setCurrentGroup(QString name);
+
+    void addCue(QVariantMap properties);
+    QVariantList getCues() const;
+    void addActionToCue(QString cueName, QString actionName, int patchId, int position);
+    QVariantList cueActions(QString cueName) const;
+    void setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
 
 signals:
 

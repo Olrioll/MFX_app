@@ -194,6 +194,18 @@ int ProjectManager::patchCount() const
     return getChild("Patches")->listedChildrenCount();
 }
 
+QList<int> ProjectManager::checkedPatchesList() const
+{
+    QList<int> checkedIDs;
+    for(auto & patch : getChild("Patches")->listedChildren())
+    {
+        if(patch->property("checked").toBool())
+            checkedIDs.push_back(patch->property("ID").toInt());
+    }
+
+    return checkedIDs;
+}
+
 QVariant ProjectManager::patchProperty(int id, QString propertyName) const
 {
     auto patches = getChild("Patches")->listedChildren();
@@ -245,6 +257,10 @@ void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant val
             if(propertyName == "checked")
             {
                 emit patchCheckedChanged(id, value.toBool());
+            }
+            else
+            {
+                emit patchListChanged();
             }
             return;
         }
@@ -529,4 +545,51 @@ bool ProjectManager::isPatchHasGroup(int patchId) const
     }
 
     return false;
+}
+
+void ProjectManager::addCue(QVariantMap properties)
+{
+    auto newCueName = properties.value("name").toString();
+    getChild("Cues")->addChild(newCueName);
+    getChild("Cues")->getChild(newCueName)->setProperties(properties);
+}
+
+QVariantList ProjectManager::getCues() const
+{
+    QVariantList cueList;
+    for(auto & cue : getChild("Cues")->namedChildren())
+    {
+        cueList.push_back(cue->properties());
+    }
+
+    return cueList;
+}
+
+void ProjectManager::addActionToCue(QString cueName, QString actionName, int patchId, int position)
+{
+    JsonSerializable* newAction = new JsonSerializable;
+    newAction->setProperties({{"actionName", actionName}, {"patchId", patchId}, {"position", position}});
+    getChild("Cues")->getChild(cueName)->addChild(newAction);
+}
+
+QVariantList ProjectManager::cueActions(QString cueName) const
+{
+    QVariantList actionList;
+    for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
+    {
+        actionList.push_back(action->properties());
+    }
+
+    return actionList;
+}
+
+void ProjectManager::setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
+{
+    for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
+    {
+        if(action->property("actionName").toString() == actionName && action->property("patchId").toInt() == patchId)
+        {
+            action->setProperty(propertyName, value);
+        }
+    }
 }

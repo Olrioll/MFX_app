@@ -14,6 +14,7 @@ public:
     ~JsonSerializable();
 
     void setProperty(const QString& name, QVariant value = QVariant());
+    void setProperties(const QVariantMap& props);
     QVariant property(const QString& name) const;
     QVariantMap& properties();
     void addChild(const QString& name);
