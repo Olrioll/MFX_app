@@ -565,6 +565,11 @@ QVariantList ProjectManager::getCues() const
     return cueList;
 }
 
+void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVariant value)
+{
+    getChild("Cues")->getChild(cueName)->setProperty(propertyName, value);
+}
+
 void ProjectManager::addActionToCue(QString cueName, QString actionName, int patchId, int position)
 {
     JsonSerializable* newAction = new JsonSerializable;

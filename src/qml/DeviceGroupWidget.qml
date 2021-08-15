@@ -35,7 +35,7 @@ Item
                 right: groupListView.right
                 top: groupListView.top
                 bottom: groupListView.bottom
-                rightMargin: -3
+                rightMargin: patchScreenMode ? -3 : -58
             }
         }
 
@@ -97,7 +97,7 @@ Item
     {
         id: buttonsBackground
         height: 40
-        width: parent.width
+        width: patchScreenMode ? parent.width : parent.width + 40
         anchors.left: parent.left
         anchors.bottomMargin: parent.patchScreenMode ? -2 : -16
         anchors.bottom: parent.bottom

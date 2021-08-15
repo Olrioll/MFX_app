@@ -68,6 +68,8 @@ public slots:
     void addCue(QVariantMap properties);
     QVariantList getCues() const;
     void addActionToCue(QString cueName, QString actionName, int patchId, int position);
+    void setCueProperty(QString cueName, QString propertyName, QVariant value);
+
     QVariantList cueActions(QString cueName) const;
     void setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
 
