@@ -32,7 +32,6 @@ Item
     Item
     {
         id: leftPanel
-//        width: parent.width * 0.67
         anchors.margins: 2
         anchors.top: parent.top
         anchors.left: parent.left
@@ -57,8 +56,6 @@ Item
                 if(sceneWidget)
                     checked ? sceneWidget.visible = true : sceneWidget.visible = false
             }
-
-            ButtonGroup.group: leftButtonsGroup
         }
 
         MfxButton
@@ -74,7 +71,13 @@ Item
             anchors.top: parent.top
             anchors.left: visualizationButton.right
 
-            ButtonGroup.group: leftButtonsGroup
+            onCheckedChanged:
+            {
+                if(checked)
+                {
+                    deviceListButton1.checked = false
+                }
+            }
         }
 
         MfxButton
@@ -90,14 +93,16 @@ Item
             anchors.top: parent.top
             anchors.left: cueListButton.right
 
-            ButtonGroup.group: leftButtonsGroup
-        }
 
-        ButtonGroup
-        {
-            id: leftButtonsGroup
-            checkedButton: visualizationButton
-
+            onCheckedChanged:
+            {
+                if(checked)
+                {
+                    mainScreenDeviceListWidget.parent = leftWidget
+                    deviceListButton2.checked = false
+                    cueListButton.checked = false
+                }
+            }
         }
 
         MfxButton
@@ -113,7 +118,7 @@ Item
             anchors.top: parent.top
             anchors.right: deviceListButton2.left
 
-            onClicked:
+            onCheckedChanged:
             {
                 if(checked)
                     deviceListButton2.checked = false
@@ -134,10 +139,42 @@ Item
             anchors.top: parent.top
             anchors.right: parent.right
 
-            onClicked:
+            onCheckedChanged:
             {
                 if(checked)
+                {
                     cueContentButton.checked = false
+                    mainScreenDeviceListWidget.parent = rightWidget
+                    deviceListButton1.checked = false
+                }
+            }
+        }
+
+        Item
+        {
+            id: leftWidget
+
+            z: 1
+            width: 490
+            anchors.topMargin: 2
+            anchors.top: cueContentButton.bottom
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 2
+            anchors.left: parent.left
+            visible: cueListButton.checked || deviceListButton1.checked
+
+            Rectangle
+            {
+                id: mainScreenCueListWidget
+                anchors.fill: parent
+                color: "black"
+                radius: 2
+                clip: true
+
+                border.width: 2
+                border.color: "#444444"
+
+                visible: cueListButton.checked
             }
         }
 
@@ -156,7 +193,7 @@ Item
 
             Rectangle
             {
-                id: rightWidgetFrame
+                id: mainScreenCueContentWidget
                 anchors.fill: parent
                 color: "black"
                 radius: 2
@@ -164,6 +201,22 @@ Item
 
                 border.width: 2
                 border.color: "#444444"
+
+                visible: cueContentButton.checked
+            }
+
+            Rectangle
+            {
+                id: mainScreenDeviceListWidget
+                anchors.fill: parent
+                color: "black"
+                radius: 2
+                clip: true
+
+                border.width: 2
+                border.color: "#444444"
+
+                visible: deviceListButton1.checked || deviceListButton2.checked
 
                 MfxButton
                 {
