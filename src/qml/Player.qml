@@ -1300,6 +1300,7 @@ Item
                 property int startMovingPosition
 
                 property var actionList: []
+                property var firstAction: null
                 property alias caption: caption
 
                 function updatePosition()
@@ -1308,6 +1309,7 @@ Item
                     let endPosition = 0
                     if(actionList.length)
                     {
+                        firstAction = actionList[0]
                         position = actionList[0].position
                         endPosition = actionList[0].position + actionsManager.actionProperties(actions[0].actionName).duration
                     }
@@ -1317,7 +1319,10 @@ Item
                     actionList.forEach(function(currActionMarker)
                     {
                         if(currActionMarker.prefirePosition() < position)
+                        {
+                            firstAction = currActionMarker
                             position = currActionMarker.prefirePosition()
+                        }
 
                         let currPosition = currActionMarker.position
                         let currDuration = actionsManager.actionProperties(currActionMarker.name).duration
@@ -1740,6 +1745,7 @@ Item
 //                        }
 
                         cueView.movedPlates = []
+                        cueView.updateHeight()
                     }
 
                     onWasPressedAndMovedChanged:
@@ -1763,9 +1769,20 @@ Item
 
                     onMouseXChanged:
                     {
-                        let delta = pixelsToMsec(dx)
-                        if(cuePlate.duration + delta > 0)
-                            cuePlate.duration += delta
+//                        let delta = pixelsToMsec(dx)
+//                        if(cuePlate.duration + delta > 0)
+//                        {
+////                            cuePlate.duration += delta
+//                            cuePlate.actionList.forEach(function(currAction, i)
+//                            {
+//                                console.log(cuePlate.firstAction.patchId)
+//                                if(currAction === cuePlate.firstAction)
+//                                    return
+
+//                                project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", currAction.position * (cuePlate.duration + delta) / cuePlate.duration)
+//                                cuePlate.loadActions();
+//                            })
+//                        }
                     }
 
                     onReleased:
