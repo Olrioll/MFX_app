@@ -1772,7 +1772,6 @@ Item
                         let delta = pixelsToMsec(dx)
                         if(cuePlate.duration + delta > 0)
                         {
-//                            cuePlate.duration += delta
                             cuePlate.actionList.forEach(function(currAction, i)
                             {
                                 if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)

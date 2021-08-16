@@ -29,6 +29,28 @@ Item
         return actionView.checkedActionName()
     }
 
+    function adjustBackgroundImageOnX()
+    {
+        sceneWidget.adjustBackgroundImageOnX()
+
+        if((cueListButton.checked || deviceListButton1.checked) && (cueContentButton.checked || deviceListButton2.checked))
+        {
+
+        }
+
+        else if((cueListButton.checked || deviceListButton1.checked) && !(cueContentButton.checked || deviceListButton2.checked))
+        {
+
+            sceneWidget.backgroundImage.x += leftWidget.width / 2
+        }
+
+        else if(!(cueListButton.checked || deviceListButton1.checked) && (cueContentButton.checked || deviceListButton2.checked))
+        {
+
+            sceneWidget.backgroundImage.x -= rightWidget.width / 2
+        }
+    }
+
     Item
     {
         id: leftPanel
@@ -42,6 +64,7 @@ Item
         {
             id: visualizationButton
             checkable: true
+            checked: true
             width: 100
             z: 1
             text: qsTr("Visualization")
@@ -77,6 +100,8 @@ Item
                 {
                     deviceListButton1.checked = false
                 }
+
+                mainScreen.adjustBackgroundImageOnX()
             }
         }
 
@@ -102,6 +127,8 @@ Item
                     deviceListButton2.checked = false
                     cueListButton.checked = false
                 }
+
+                mainScreen.adjustBackgroundImageOnX()
             }
         }
 
@@ -122,6 +149,8 @@ Item
             {
                 if(checked)
                     deviceListButton2.checked = false
+
+                mainScreen.adjustBackgroundImageOnX()
             }
         }
 
@@ -147,6 +176,8 @@ Item
                     mainScreenDeviceListWidget.parent = rightWidget
                     deviceListButton1.checked = false
                 }
+
+                mainScreen.adjustBackgroundImageOnX()
             }
         }
 
