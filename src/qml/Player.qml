@@ -1769,20 +1769,23 @@ Item
 
                     onMouseXChanged:
                     {
-//                        let delta = pixelsToMsec(dx)
-//                        if(cuePlate.duration + delta > 0)
-//                        {
-////                            cuePlate.duration += delta
-//                            cuePlate.actionList.forEach(function(currAction, i)
-//                            {
-//                                console.log(cuePlate.firstAction.patchId)
-//                                if(currAction === cuePlate.firstAction)
-//                                    return
+                        let delta = pixelsToMsec(dx)
+                        if(cuePlate.duration + delta > 0)
+                        {
+//                            cuePlate.duration += delta
+                            cuePlate.actionList.forEach(function(currAction, i)
+                            {
+                                if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
+                                {
+                                    return
+                                }
 
-//                                project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", currAction.position * (cuePlate.duration + delta) / cuePlate.duration)
-//                                cuePlate.loadActions();
-//                            })
-//                        }
+                                let newPosition = currAction.position + delta * ((currAction.position - cuePlate.firstAction.position) / cuePlate.duration)
+
+                                project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
+                                cuePlate.loadActions();
+                            })
+                        }
                     }
 
                     onReleased:
