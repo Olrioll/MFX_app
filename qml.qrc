@@ -70,5 +70,6 @@
         <file>src/qml/Player.qml</file>
         <file alias="actionPrefireMarker">src/img/actionPrefireMarker.png</file>
         <file alias="actionStartMarker">src/img/actionStartMarker.png</file>
+        <file>src/qml/MfxTable.qml</file>
     </qresource>
 </RCC>

@@ -194,17 +194,10 @@ Item
             anchors.left: parent.left
             visible: cueListButton.checked || deviceListButton1.checked
 
-            Rectangle
+            MfxTable
             {
-                id: mainScreenCueListWidget
+                id: cueListWidget
                 anchors.fill: parent
-                color: "black"
-                radius: 2
-                clip: true
-
-                border.width: 2
-                border.color: "#444444"
-
                 visible: cueListButton.checked
             }
         }
@@ -969,57 +962,57 @@ Item
             }
 
 
-            MfxButton
-            {
-                id: lingericButton
-                checkable: true
-                width: 72
-                height: 26
-                text: qsTr("Lingeric")
-                textSize: 10
+//            MfxButton
+//            {
+//                id: lingericButton
+//                checkable: true
+//                width: 72
+//                height: 26
+//                text: qsTr("Lingeric")
+//                textSize: 10
 
-                anchors.top: parent.top
-                anchors.left: parent.left
+//                anchors.top: parent.top
+//                anchors.left: parent.left
 
-                ButtonGroup.group: actionTypesGroup
-            }
+//                ButtonGroup.group: actionTypesGroup
+//            }
 
-            MfxButton
-            {
-                id: dynamicButton
-                checkable: true
-                width: 72
-                height: 26
-                text: qsTr("Dynamic")
-                textSize: 10
+//            MfxButton
+//            {
+//                id: dynamicButton
+//                checkable: true
+//                width: 72
+//                height: 26
+//                text: qsTr("Dynamic")
+//                textSize: 10
 
-                anchors.top: parent.top
-                anchors.left: lingericButton.right
+//                anchors.top: parent.top
+//                anchors.left: lingericButton.right
 
-                ButtonGroup.group: actionTypesGroup
-            }
+//                ButtonGroup.group: actionTypesGroup
+//            }
 
-            MfxButton
-            {
-                id: staticButton
-                checkable: true
-                width: 72
-                height: 26
-                text: qsTr("Static")
-                textSize: 10
+//            MfxButton
+//            {
+//                id: staticButton
+//                checkable: true
+//                width: 72
+//                height: 26
+//                text: qsTr("Static")
+//                textSize: 10
 
-                anchors.top: parent.top
-                anchors.left: dynamicButton.right
+//                anchors.top: parent.top
+//                anchors.left: dynamicButton.right
 
-                ButtonGroup.group: actionTypesGroup
-            }
+//                ButtonGroup.group: actionTypesGroup
+//            }
 
-            ButtonGroup
-            {
-                id: actionTypesGroup
-                checkedButton: lingericButton
+//            ButtonGroup
+//            {
+//                id: actionTypesGroup
+//                checkedButton: lingericButton
 
-            }
+//            }
 
             Rectangle
             {
