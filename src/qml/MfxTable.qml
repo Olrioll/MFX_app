@@ -17,11 +17,6 @@ Item
         columns.push(columnObject)
     }
 
-    function addColumns(columnList)
-    {
-        columns.concat(columnList)
-    }
-
     Rectangle
     {
         id: mainBackground
