@@ -8,6 +8,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
+set(QML_IMPORT_PATH "qml/"
+    CACHE STRING "QML import paths"
+    FORCE
+)
+
 add_executable(${PROJECT_NAME} WIN32 "build/packaging/windows/appIcon.rc" "qml/qml.qrc" "resources/resources.qrc" "src/main.cpp" "src/AudioTrackRepresentation.cpp" "src/WaveformWidget.cpp"
                                         "src/SettingsManager.cpp" "src/JsonSerializable.cpp" "src/ProjectManager.cpp" "src/CursorManager.cpp" "src/ActionsManager.cpp")
 

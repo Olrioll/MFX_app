@@ -13,7 +13,7 @@
         <file>MFX/UI/DeviceListWidget.qml</file>
         <file>MFX/UI/DevicePlate.qml</file>
         <file>MFX/UI/GeneralDeviceListWidget.qml</file>
-        <file>MFX/UI/main.qml</file>
+        <file>MFX/UI/MFXApplicationWindow.qml</file>
         <file>MFX/UI/MainScreen.qml</file>
         <file>MFX/UI/MfxButton.qml</file>
         <file>MFX/UI/MfxHilightedButton.qml</file>
@@ -37,5 +37,10 @@
         <file>MFX/UI/TypeGroup.qml</file>
         <file>MFX/UI/UtilityWindow.qml</file>
         <file>MFX/UI/ZoomingMouseArea.qml</file>
+        <file>MFX/UI/Pages/qmldir</file>
+        <file>MFX/UI/Components/qmldir</file>
+        <file>MFX/UI/Styles/Fonts.qml</file>
+        <file>MFX/UI/Styles/qmldir</file>
+        <file>MFX/UI/Styles/Theme.qml</file>
     </qresource>
 </RCC>

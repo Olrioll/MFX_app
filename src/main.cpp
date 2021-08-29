@@ -31,11 +31,16 @@ int main(int argc, char** argv)
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
     QQmlApplicationEngine engine;
+
+    engine.addImportPath("qrc:/");
+
     engine.rootContext()->setContextProperty("settingsManager", &settings);
     engine.rootContext()->setContextProperty("project", &project);
     engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
-    engine.load(QUrl(QStringLiteral("qrc:/MFX/main.qml")));
+
+    engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/MFXApplicationWindow.qml")));
+
     return app.exec();
 }
