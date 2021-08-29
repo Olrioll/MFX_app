@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/actionPrefireMarker.png</file>
+        <file>images/actionStartMarker.png</file>
+        <file>images/apply.png</file>
+        <file>images/cancelButton.png</file>
+        <file>images/changeViewButton.png</file>
+        <file>images/checked.png</file>
+        <file>images/device_dimmer.png</file>
+        <file>images/device_pyro.png</file>
+        <file>images/device_sequences.png</file>
+        <file>images/device_shot.png</file>
+        <file>images/dockedWindow_collapseButton.png</file>
+        <file>images/dockedWindow_expandButton.png</file>
+        <file>images/fitButton.png</file>
+        <file>images/imagePlaceholder.png</file>
+        <file>images/menu_closeButton.png</file>
+        <file>images/menu_fullButton.png</file>
+        <file>images/menu_hideButton.png</file>
+        <file>images/menu_itemArrow.png</file>
+        <file>images/menu_itemArrow_hovered.png</file>
+        <file>images/menu_logo.png</file>
+        <file>images/menu_prevSizeButton.png</file>
+        <file>images/player_pauseButton.png</file>
+        <file>images/player_playPauseButton.png</file>
+        <file>images/player_recordButton.png</file>
+        <file>images/player_repeatButton.png</file>
+        <file>images/player_repeatButtonChecked.png</file>
+        <file>images/player_settingsButton.png</file>
+        <file>images/player_stopButton.png</file>
+        <file>images/resize.png</file>
+        <file>images/sceneSettingsButton.png</file>
+        <file>images/startScreenLogo.png</file>
+        <file>images/trackPlaceholder.png</file>
+        <file>images/utilityWindow_closeButton.png</file>
+        <file>images/zoom.png</file>
+        <file>images/zoom_old.png</file>
+        <file>images/zoom_old2.png</file>
+        <file>translations/russian.qm</file>
+    </qresource>
+</RCC>

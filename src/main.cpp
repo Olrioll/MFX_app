@@ -1,16 +1,16 @@
 ﻿#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QTranslator>
 #include <QSharedPointer>
+#include <QTranslator>
 
-#include "SettingsManager.h"
 #include "ProjectManager.h"
+#include "SettingsManager.h"
 //#include "ProjectManager2.h"
 #include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
-#include "cursormanager.h"
+#include "CursorManager.h"
 
 int main(int argc, char** argv)
 {
@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     CursorManager cursorManager;
 
     QTranslator translator;
-    translator.load(settings.value("workDirectory").toString() + "/translations/russian.qm");
+    translator.load("qrc:/translations/russian.qm");
     qApp->installTranslator(&translator);
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
@@ -36,6 +36,6 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
-    engine.load(QUrl(QStringLiteral("qrc:/src/qml/main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/MFX/main.qml")));
     return app.exec();
 }

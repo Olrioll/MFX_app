@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>MFX/AddDimmerWidget.qml</file>
+        <file>MFX/AddGroupWindow.qml</file>
+        <file>MFX/AddPyroWidget.qml</file>
+        <file>MFX/AddSequencesWidget.qml</file>
+        <file>MFX/AddShotWidget.qml</file>
+        <file>MFX/CalcWidget.qml</file>
+        <file>MFX/ConfirmationDialog.qml</file>
+        <file>MFX/DeviceGroup.qml</file>
+        <file>MFX/DeviceGroupWidget.qml</file>
+        <file>MFX/DeviceLibWidget.qml</file>
+        <file>MFX/DeviceListWidget.qml</file>
+        <file>MFX/DevicePlate.qml</file>
+        <file>MFX/GeneralDeviceListWidget.qml</file>
+        <file>MFX/main.qml</file>
+        <file>MFX/MainScreen.qml</file>
+        <file>MFX/MfxButton.qml</file>
+        <file>MFX/MfxHilightedButton.qml</file>
+        <file>MFX/MfxMenu.qml</file>
+        <file>MFX/MfxMouseArea.qml</file>
+        <file>MFX/MfxTable.qml</file>
+        <file>MFX/MouseAreaWithHidingCursor.qml</file>
+        <file>MFX/OutputScreen.qml</file>
+        <file>MFX/PatchIcon.qml</file>
+        <file>MFX/PatchPlate.qml</file>
+        <file>MFX/PatchPlateCell.qml</file>
+        <file>MFX/PatchScreen.qml</file>
+        <file>MFX/Player.qml</file>
+        <file>MFX/ProjectSettingsWidget.qml</file>
+        <file>MFX/RenameGroupWindow.qml</file>
+        <file>MFX/SceneSettingsWidget.qml</file>
+        <file>MFX/SceneWidget.qml</file>
+        <file>MFX/SideDockedWindow.qml</file>
+        <file>MFX/SortedDeviceListWidget.qml</file>
+        <file>MFX/StartScreen.qml</file>
+        <file>MFX/TypeGroup.qml</file>
+        <file>MFX/UtilityWindow.qml</file>
+        <file>MFX/ZoomingMouseArea.qml</file>
+    </qresource>
+</RCC>
