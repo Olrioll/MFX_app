@@ -38,10 +38,14 @@ project(${MFX_PROJECT_NAME}
 )
 
 find_package(Qt5 COMPONENTS
-    Widgets
+    Core
+    Gui
+    Network
     Multimedia
     Qml
     Quick
+    QuickControls2
+    Svg
     REQUIRED
 )
 
