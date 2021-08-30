@@ -50,5 +50,54 @@
         <file>fonts/Roboto/Roboto-Regular.ttf</file>
         <file>fonts/Roboto/Roboto-Thin.ttf</file>
         <file>fonts/Roboto/Roboto-ThinItalic.ttf</file>
+        <file>icons/common/app_menu_logo.svg</file>
+        <file>icons/common/app_window_close_icon.svg</file>
+        <file>icons/common/app_window_maximize_icon.svg</file>
+        <file>icons/common/app_window_minimize_icon.svg</file>
+        <file>icons/common/devices_dimmer_icon.svg</file>
+        <file>icons/common/devices_flame_icon.svg</file>
+        <file>icons/common/devices_pyro_icon.svg</file>
+        <file>icons/common/devices_shot_icon.svg</file>
+        <file>icons/common/mfx_logo_main.svg</file>
+        <file>icons/components/checkbox_indicator_icon.svg</file>
+        <file>icons/components/combobox_dropdown_indicator.svg</file>
+        <file>icons/components/menu_selected_row_indicator_icon.svg</file>
+        <file>icons/components/popup_close_icon.svg</file>
+        <file>icons/components/selected_item_state_icon.svg</file>
+        <file>icons/components/table_header_sort_ascending_icon.svg</file>
+        <file>icons/components/table_header_sort_descending_icon.svg</file>
+        <file>icons/main_screen/main_screen_add_device_icon.svg</file>
+        <file>icons/main_screen/main_screen_empty_item_icon.svg</file>
+        <file>icons/main_screen/main_screen_player_current_state_indicator.svg</file>
+        <file>icons/main_screen/main_screen_player_left_cue_range_indicator.svg</file>
+        <file>icons/main_screen/main_screen_player_left_repeat_range_indicator.svg</file>
+        <file>icons/main_screen/main_screen_player_loop_setting_icon.svg</file>
+        <file>icons/main_screen/main_screen_player_play_icon.svg</file>
+        <file>icons/main_screen/main_screen_player_record_icon.svg</file>
+        <file>icons/main_screen/main_screen_player_right_cue_range_indicator.svg</file>
+        <file>icons/main_screen/main_screen_player_right_repeat_range_indicator.svg</file>
+        <file>icons/main_screen/main_screen_player_settings_icon.svg</file>
+        <file>icons/main_screen/main_screen_player_stop_icon.svg</file>
+        <file>icons/output_screen/output_screen_cloud_icon.svg</file>
+        <file>icons/output_screen/output_screen_file_icon.svg</file>
+        <file>icons/output_screen/output_screen_folder_icon.svg</file>
+        <file>icons/patch_screen/patch_screen_compact_control_panel.svg</file>
+        <file>icons/patch_screen/patch_screen_maximize_control_panel.svg</file>
+        <file>icons/patch_screen/patch_screen_maximize_group_icon.svg</file>
+        <file>icons/patch_screen/patch_screen_minimize_control_panel.svg</file>
+        <file>icons/patch_screen/patch_screen_minimize_group_icon.svg</file>
+        <file>icons/patch_screen/patch_screen_scene_fit_in_bounds_icon.svg</file>
+        <file>icons/patch_screen/patch_screen_scene_settings_button_icon.svg</file>
+        <file>icons/patch_screen/patch_screen_scene_zoom_in_icon.svg</file>
+        <file>icons/patch_screen/patch_screen_scene_zoom_out_icon.svg</file>
+        <file>icons/preferences/preferences_cloud_login_icon.svg</file>
+        <file>icons/preferences/preferences_email_icon.svg</file>
+        <file>icons/preferences/preferences_language_settings_english_flag_icon.svg</file>
+        <file>icons/preferences/preferences_language_settings_russian_flag_icon.svg</file>
+        <file>icons/project_screen/new_project_popup_add_scene_cover_icon.svg</file>
+        <file>icons/project_screen/new_project_popup_add_soundclip_icon.svg</file>
+        <file>icons/project_screen/new_project_popup_remove_asset_icon.svg</file>
+        <file>icons/project_screen/new_project_popup_selected_soundclip_icon.svg</file>
+        <file>icons/preferences/preferences_list_selected_row_indicator_icon.svg</file>
     </qresource>
 </RCC>
