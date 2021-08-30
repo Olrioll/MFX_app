@@ -38,9 +38,10 @@
         <file>MFX/UI/UtilityWindow.qml</file>
         <file>MFX/UI/ZoomingMouseArea.qml</file>
         <file>MFX/UI/Pages/qmldir</file>
-        <file>MFX/UI/Components/qmldir</file>
         <file>MFX/UI/Styles/Fonts.qml</file>
         <file>MFX/UI/Styles/qmldir</file>
         <file>MFX/UI/Styles/Theme.qml</file>
+        <file>MFX/UI/Components/Basic/qmldir</file>
+        <file>MFX/UI/Components/Templates/qmldir</file>
     </qresource>
 </RCC>
