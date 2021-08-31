@@ -23,7 +23,7 @@ Item
 
         sceneWidget.parent = leftPanel
         sceneWidget.anchors.fill = leftPanel
-        sceneWidget.visible = visualizationButton.checked
+        sceneWidget.visible = true// Временно закомментировали - сцена всегда должна быть видима = visualizationButton.checked
     }
 
     function checkedActionName()
@@ -76,6 +76,8 @@ Item
             anchors.top: parent.top
             anchors.left: parent.left
 
+            visible: false // Временно закомментировали - сцена всегда должна быть видима = visualizationButton.checked
+
             onCheckedChanged:
             {
                 if(sceneWidget)
@@ -94,7 +96,7 @@ Item
             anchors.topMargin: 6
             anchors.leftMargin: 2
             anchors.top: parent.top
-            anchors.left: visualizationButton.right
+            anchors.left: parent.left
 
             onCheckedChanged:
             {
