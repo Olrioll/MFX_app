@@ -3,6 +3,7 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
+import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Styles 1.0 as MFXUIS
 
 import "qrc:/"
@@ -194,6 +195,7 @@ Item
             anchors.topMargin: 2
             anchors.top: cueContentButton.bottom
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: 6
             anchors.leftMargin: 2
             anchors.left: parent.left
             visible: cueListButton.checked || deviceListButton1.checked
@@ -215,22 +217,623 @@ Item
             anchors.topMargin: 2
             anchors.top: cueContentButton.bottom
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: 6
             anchors.rightMargin: 2
             anchors.right: parent.right
             visible: cueContentButton.checked || deviceListButton2.checked
+
+            Rectangle {
+                id: cueContentCalculatorWidget
+
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: mainScreenCueContentWidget.left
+                anchors.rightMargin: 2
+
+                width: 176
+
+                color: "#444444"
+                radius:2
+
+                visible: mainScreenCueContentWidget.visible
+
+                Flickable {
+                    anchors.fill: parent
+                    anchors.topMargin: 8
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    anchors.bottomMargin: 8
+
+                    contentHeight: calculatorContentLayout.height
+
+                    clip: true
+
+                    ColumnLayout {
+                        id: calculatorContentLayout
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        height: childrenRect.height
+
+                        spacing: 0
+
+                        Item {
+                            id: calculatorTextInputItem
+
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 30
+                            Layout.maximumHeight: 30
+                            Layout.minimumHeight: 30
+
+                            property var operationApplying
+                            property int value: 0
+                            property var unitMultiplierType: ""
+                            property var unitMultiplier: 1
+
+                            Rectangle {
+                                anchors.fill: parent
+
+                                radius: 2
+
+                                color: "#222222"
+                            }
+
+                            Text {
+                                anchors.fill: parent
+                                anchors.leftMargin: 4
+                                anchors.rightMargin: 4
+
+                                font.family: MFXUIS.Fonts.robotoMedium.objectName
+                                font.pixelSize: 12
+
+                                lineHeightMode: Text.FixedHeight
+                                lineHeight: 14
+
+                                horizontalAlignment: Qt.AlignRight
+                                verticalAlignment: Qt.AlignVCenter
+
+                                color: "#FFFFFF"
+
+                                text: "0"
+                            }
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 4
+                        }
+
+                        Grid {
+                            id: calculatorButtons
+
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 156
+                            Layout.maximumHeight: 156
+                            Layout.minimumHeight: 156
+
+                            columns: 4
+                            rows: 4
+
+                            rowSpacing: 4
+                            columnSpacing: 4
+
+                            Repeater {
+                                model: ListModel {
+                                    ListElement {
+                                        text: "1"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "2"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "3"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "*"
+                                        operation: function(){}
+                                        highlighted: false
+                                    }
+                                    ListElement {
+                                        text: "4"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "5"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "6"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "/"
+                                        operation: function(){}
+                                        highlighted: false
+                                    }
+                                    ListElement {
+                                        text: "7"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "8"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "9"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "%"
+                                        operation: function(){}
+                                        highlighted: false
+                                    }
+                                    ListElement {
+                                        text: "-"
+                                        operation: function(){}
+                                        highlighted: false
+                                    }
+                                    ListElement {
+                                        text: "0"
+                                        operation: function(){}
+                                        highlighted: true
+                                    }
+                                    ListElement {
+                                        text: "+"
+                                        operation: function(){}
+                                        highlighted: false
+                                    }
+                                    ListElement {
+                                        text: "C"
+                                        operation: function(){}
+                                        highlighted: false
+                                    }
+                                }
+
+                                delegate: Button {
+                                    id: calculatorButton
+
+                                    width: 36
+                                    height: 36
+
+                                    background: Rectangle {
+                                        color: model.highlighted ? calculatorButton.enabled ? "#888888" : "#80888888" : calculatorButton.enabled ? "#666666" : "#80666666"
+
+                                        radius: 2
+
+                                        layer.enabled: true
+                                        layer.effect: DropShadow {
+                                            horizontalOffset: 0
+                                            verticalOffset: 1
+                                            radius: 4
+                                            samples: 9
+                                            spread: 0
+                                            color: "#40000000"
+                                        }
+
+                                        Rectangle {
+                                            anchors.fill: parent
+
+                                            radius: parent.radius
+
+                                            color: "#24FFFFFF"
+
+                                            visible: calculatorButton.pressed
+                                        }
+                                    }
+
+                                    contentItem: Text {
+                                        font.family: MFXUIS.Fonts.robotoMedium.name
+                                        font.pixelSize: 10
+
+                                        lineHeightMode: Text.FixedHeight
+                                        lineHeight: 12
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        color: calculatorButton.enabled ? "#FFFFFF" : "#80FFFFFF"
+
+                                        text: model.text
+                                    }
+
+                                    onClicked: {
+                                        model.operation()
+                                    }
+                                }
+                            }
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 6
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 24
+                            Layout.maximumHeight: 24
+                            Layout.minimumHeight: 24
+
+                            spacing: 3
+
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+
+                                MfxButton
+                                {
+                                    id: minutesButton
+
+                                    anchors.fill: parent
+
+                                    checkable: false
+
+                                    fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                                    enableShadow: true
+                                    textSize: 10
+                                    color: "#888888"
+                                    pressedColor: "#ababab"
+
+                                    text: qsTr("min")
+
+                                    onClicked: {
+                                        //TODO реализовать
+                                    }
+                                }
+                            }
+
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+
+                                MfxButton
+                                {
+                                    id: secondsButton
+
+                                    anchors.fill: parent
+
+                                    checkable: false
+
+                                    fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                                    enableShadow: true
+                                    textSize: 10
+                                    color: "#888888"
+                                    pressedColor: "#ababab"
+
+                                    text: qsTr("sec")
+
+                                    onClicked: {
+                                        //TODO реализовать
+                                    }
+                                }
+                            }
+
+                            Item {
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+
+                                MfxButton
+                                {
+                                    id: msecondsButton
+
+                                    anchors.fill: parent
+
+                                    checkable: false
+
+                                    fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                                    enableShadow: true
+                                    textSize: 10
+                                    color: "#888888"
+                                    pressedColor: "#ababab"
+
+                                    text: qsTr("ms")
+
+                                    onClicked: {
+                                        //TODO реализовать
+                                    }
+                                }
+                            }
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 20
+                        }
+
+                        Grid {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: childrenRect.height
+                            Layout.maximumHeight: childrenRect.height
+                            Layout.minimumHeight: childrenRect.height
+
+                            columns: 2
+                            rows: children.length / 2
+
+                            rowSpacing: 4
+                            columnSpacing: 4
+
+                            Repeater {
+                                model: ListModel {
+                                    id: propertyModel
+
+                                    ListElement { text: qsTr("Delay"); callback: function() {}; enabled: true}
+                                    ListElement { text: qsTr("Between"); callback: function() {}; enabled: false }
+                                    ListElement { text: qsTr("Action"); callback: function() {}; enabled: true }
+                                    ListElement { text: qsTr("Time"); callback: function() {}; enabled: true }
+                                }
+
+                                delegate: MfxButton {
+                                    width: 76
+                                    height: 24
+
+                                    checkable: false
+
+                                    fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                                    textSize: 10
+                                    color: "#2F80ED"
+                                    pressedColor: "#649ce8"
+                                    disabledColor: "#80649ce8"
+                                    disabledTextColor: "#80ffffff"
+
+                                    enabled: model.enabled
+
+                                    text: model.text
+
+                                    onClicked: {
+                                        model.callback()
+                                    }
+                                }
+                            }
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 20
+                        }
+
+                        Grid {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: childrenRect.height
+                            Layout.maximumHeight: childrenRect.height
+                            Layout.minimumHeight: childrenRect.height
+
+                            columns: 2
+                            rows: children.length / 2
+
+                            rowSpacing: 4
+                            columnSpacing: 4
+
+                            Repeater {
+                                model: ListModel {
+                                    ListElement { text: qsTr("Forward"); callback: function() {}; }
+                                    ListElement { text: qsTr("Backward"); callback: function() {};  }
+                                    ListElement { text: qsTr("Inside"); callback: function() {};  }
+                                    ListElement { text: qsTr("Outside"); callback: function() {};  }
+                                    ListElement { text: qsTr("Mirror"); callback: function() {};  }
+                                    ListElement { text: qsTr("Random"); callback: function() {};  }
+                                }
+
+                                delegate: MfxButton {
+                                    width: 76
+                                    height: 24
+
+                                    checkable: false
+
+                                    fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                                    enableShadow: true
+                                    textSize: 10
+                                    color: "#888888"
+                                    pressedColor: "#ababab"
+
+                                    text: model.text
+
+                                    onClicked: {
+                                        model.callback()
+                                    }
+                                }
+                            }
+                        }
+
+                        MFXUICT.LayoutSpacer {}
+                    }
+
+                }
+            }
 
             Rectangle
             {
                 id: mainScreenCueContentWidget
                 anchors.fill: parent
-                color: "black"
+                color: "#444444"
                 radius: 2
                 clip: true
 
-                border.width: 2
-                border.color: "#444444"
-
                 visible: cueContentButton.checked
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.topMargin: 32
+                    anchors.bottomMargin: 2
+                    anchors.leftMargin: 2
+                    anchors.rightMargin: 2
+
+                    radius: 2
+
+                    color: "#222222"
+
+                    RowLayout {
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottomMargin: 2
+                        anchors.leftMargin: 2
+                        anchors.rightMargin: 2
+
+                        height: 20
+
+                        spacing: 2
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            MfxButton
+                            {
+                                id: leftButton
+
+                                anchors.fill: parent
+                                checkable: false
+
+                                text: qsTr("Left")
+
+                                onClicked: {
+                                    //TODO реализовать
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            MfxButton
+                            {
+                                id: unevenButton
+
+                                anchors.fill: parent
+
+                                checkable: false
+
+                                text: qsTr("Uneven")
+
+                                onClicked: {
+                                    //TODO реализовать
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            MfxButton
+                            {
+                                id: allButton
+
+                                anchors.fill: parent
+
+                                checkable: false
+
+                                text: qsTr("All")
+
+                                onClicked: {
+                                    //TODO реализовать
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            MfxButton
+                            {
+                                id: evenButton
+
+                                anchors.fill: parent
+
+                                checkable: false
+
+                                text: qsTr("Even")
+
+                                onClicked: {
+                                    //TODO реализовать
+                                }
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            MfxButton
+                            {
+                                id: rightButton
+
+                                anchors.fill: parent
+
+                                checkable: false
+
+                                text: qsTr("Right")
+
+                                onClicked: {
+                                    //TODO реализовать
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ListView {
+                    id: cueContentTableListView
+
+                    anchors.fill: parent
+                    anchors.leftMargin: 2
+                    anchors.rightMargin: 2
+                    anchors.bottomMargin: 26
+
+                    clip: true
+
+                    headerPositioning: ListView.OverlayHeader
+
+                    header: Item {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: 30
+
+                        z: 2
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.bottomMargin: -2
+                            radius: 2
+
+                            color: "#444444"
+                        }
+                    }
+
+                    model: 9
+
+                    delegate: Item {
+                        id: cueContentTableListViewRow
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        height: 30
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: 2
+                            anchors.rightMargin: 2
+
+                            height: 1
+
+                            color: "#66000000"
+                        }
+                    }
+                }
             }
 
             Rectangle
