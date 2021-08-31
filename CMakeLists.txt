@@ -17,7 +17,7 @@ set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED)
 
-set(QT_MIN_VERSION 5.15)
+set(QT_VERSION 5.15.2)
 
 set(MFX_PROJECT_NAME "MFX" CACHE STRING "Название проекта")
 set(MFX_LAUNCHER_PROJECT_NAME "MFXLauncher" CACHE STRING "Название лаунчера для проекта MFX")
@@ -37,7 +37,7 @@ project(${MFX_PROJECT_NAME}
     LANGUAGES CXX
 )
 
-find_package(Qt5 COMPONENTS
+find_package(Qt5 ${QT_VERSION} COMPONENTS
     Core
     Gui
     Network
@@ -46,7 +46,7 @@ find_package(Qt5 COMPONENTS
     Quick
     QuickControls2
     Svg
-    REQUIRED
+    EXACT REQUIRED
 )
 
 add_executable(${MFX_PROJECT_NAME} WIN32
