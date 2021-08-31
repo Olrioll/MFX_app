@@ -7,12 +7,11 @@ import MFX.UI.Styles 1.0 as MFXUIS
 QtObject {
 	id: _theme
 
-    property font regularFont
-    regularFont.family: MFXUIS.Fonts.robotoRegular
+    //ApplicationWindow
+    readonly property color applicationWindowBackgroundColor: "#222222"
+    readonly property color applicationWindowMenuBarBackgroundColor: "#111111"
 
-    property font mediumFont
-    mediumFont.family: MFXUIS.Fonts.robotoMedium
+    //StartScreen
+    readonly property color startScreenContentBackgroundColor: "#000000"
 
-    property font boldFont
-    boldFont.family: MFXUIS.Fonts.robotoBold
 }

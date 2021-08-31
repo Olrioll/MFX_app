@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QSharedPointer>
 #include <QTranslator>
+#include <QQuickStyle>
 
 #include "ProjectManager.h"
 #include "SettingsManager.h"
@@ -40,7 +41,7 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
 
-    engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/MFXApplicationWindow.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 
     return app.exec();
 }

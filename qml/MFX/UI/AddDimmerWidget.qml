@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: addDimmerWidget
@@ -252,7 +254,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
             topPadding: 9
         }
@@ -311,7 +313,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
 
             visible: !(changedIdList.length > 1)
         }
@@ -568,7 +570,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -581,7 +583,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -594,7 +596,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -608,7 +610,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         CalcWidget

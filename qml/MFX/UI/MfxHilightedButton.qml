@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Button
 {
     id: button
@@ -34,7 +36,7 @@ Button
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
-        font.family: "Roboto"
+        font.family: MFXUIS.Fonts.robotoRegular.name
         font.pixelSize: button.textSize
     }
 }

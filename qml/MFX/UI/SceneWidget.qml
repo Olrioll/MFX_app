@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 import "qrc:/"
 
 Item
@@ -736,7 +738,7 @@ Item
                 anchors.centerIn: parent
                 text: qsTr("SCENE")
                 color: "#ffffff"
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 12
             }
 
@@ -828,7 +830,7 @@ Item
             anchors.verticalCenter: sceneFrame.verticalCenter
             text: project.property("sceneFrameHeight") + " m"
             color: "#507FE6"
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
         }
 
@@ -840,7 +842,7 @@ Item
             anchors.horizontalCenter: sceneFrame.horizontalCenter
             text: project.property("sceneFrameWidth") + " m"
             color: "#507FE6"
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
         }
 
@@ -883,7 +885,7 @@ Item
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             leftPadding: 16
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
         }
 
@@ -948,7 +950,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 16
             }
 
@@ -989,7 +991,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 20
             }
 

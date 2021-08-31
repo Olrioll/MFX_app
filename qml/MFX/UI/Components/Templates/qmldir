@@ -1,3 +1,6 @@
 module MFX.UI.Components.Templates
 
 #Шаблоны с примитивами компонентов - как правило наследуются от QtQuick.Templates или являются самостоятельными элементами
+FramelessApplicationWindow 1.0 FramelessApplicationWindow.qml
+LayoutSpacer 1.0 LayoutSpacer.qml
+RoundedRectangleShape 1.0 RoundedRectangleShape.qml

@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 import "qrc:/"
 
 Item
@@ -195,7 +197,7 @@ Item
                 {
                     anchors.centerIn: parent
                     color: "#ffffff"
-                    font.family: "Roboto"
+                    font.family: MFXUIS.Fonts.robotoRegular.name
                     font.pixelSize: 12
                     text: parent.infoText
                 }

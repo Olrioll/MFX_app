@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: devicePlate
@@ -56,7 +58,7 @@ Item
             y: 2
             color: "#ffffff"
             text: qsTr("Name")
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 10
         }
 
@@ -66,7 +68,7 @@ Item
             y: 20
             color: "#ffffff"
             text: devicePlate.name
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
         }
     }

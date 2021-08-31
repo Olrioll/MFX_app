@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: addShotWidget
@@ -255,7 +257,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
             topPadding: 9
         }
@@ -317,7 +319,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
 
             visible: !(changedIdList.length > 1)
         }
@@ -577,7 +579,7 @@ Item
             minimumPixelSize: 10
             anchors.leftMargin: 3
             anchors.rightMargin: 261
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -593,7 +595,7 @@ Item
             anchors.leftMargin: 43
             anchors.rightMargin: 221
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -609,7 +611,7 @@ Item
             anchors.leftMargin: 83
             anchors.rightMargin: 181
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -625,7 +627,7 @@ Item
             anchors.leftMargin: 124
             anchors.rightMargin: 140
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         CalcWidget
@@ -783,7 +785,7 @@ Item
             anchors.rightMargin: 4
             anchors.leftMargin: -4
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         TextField
@@ -846,7 +848,7 @@ Item
             anchors.leftMargin: 79
             anchors.rightMargin: 207
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -863,7 +865,7 @@ Item
             anchors.leftMargin: 86
             anchors.rightMargin: 200
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -880,7 +882,7 @@ Item
             anchors.leftMargin: -6
             anchors.rightMargin: 288
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -897,7 +899,7 @@ Item
             anchors.leftMargin: 154
             anchors.rightMargin: 126
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -914,7 +916,7 @@ Item
             anchors.leftMargin: 5
             anchors.rightMargin: 281
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -931,7 +933,7 @@ Item
             anchors.leftMargin: 165
             anchors.rightMargin: 120
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -948,7 +950,7 @@ Item
             minimumPixelSize: 10
             anchors.rightMargin: 199
             anchors.leftMargin: 87
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -965,7 +967,7 @@ Item
             minimumPixelSize: 10
             anchors.rightMargin: 208
             anchors.leftMargin: 74
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Rectangle
@@ -1025,7 +1027,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         ButtonGroup

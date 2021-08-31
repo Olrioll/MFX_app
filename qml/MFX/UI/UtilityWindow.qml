@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: utilityWindow
@@ -50,7 +52,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             topPadding: 8
         }
 

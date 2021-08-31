@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: plateCell
@@ -17,7 +19,7 @@ Item
         anchors.horizontalCenter: parent.horizontalCenter
         color: "#ffffff"
         text: plateCell.propertyName
-        font.family: "Roboto"
+        font.family: MFXUIS.Fonts.robotoRegular.name
         font.pixelSize: 10
     }
 
@@ -27,7 +29,7 @@ Item
         anchors.horizontalCenter: parent.horizontalCenter
         color: "#ffffff"
         text: (plateCell.propertyName === "DMX" && Number(plateCell.propertyValue) === 0) ? "-" : plateCell.propertyValue
-        font.family: "Roboto"
+        font.family: MFXUIS.Fonts.robotoRegular.name
         font.pixelSize: 12
     }
 

@@ -1,3 +1,4 @@
 module MFX.UI.Pages
 
 #Основные экраны приложения
+StartScreen 1.0 StartScreen.qml

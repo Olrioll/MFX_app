@@ -1,41 +1,39 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/actionPrefireMarker.png</file>
-        <file>images/actionStartMarker.png</file>
-        <file>images/apply.png</file>
-        <file>images/cancelButton.png</file>
-        <file>images/changeViewButton.png</file>
-        <file>images/checked.png</file>
-        <file>images/device_dimmer.png</file>
-        <file>images/device_pyro.png</file>
-        <file>images/device_sequences.png</file>
-        <file>images/device_shot.png</file>
-        <file>images/dockedWindow_collapseButton.png</file>
-        <file>images/dockedWindow_expandButton.png</file>
-        <file>images/fitButton.png</file>
-        <file>images/imagePlaceholder.png</file>
-        <file>images/menu_closeButton.png</file>
-        <file>images/menu_fullButton.png</file>
-        <file>images/menu_hideButton.png</file>
-        <file>images/menu_itemArrow.png</file>
-        <file>images/menu_itemArrow_hovered.png</file>
-        <file>images/menu_logo.png</file>
-        <file>images/menu_prevSizeButton.png</file>
-        <file>images/player_pauseButton.png</file>
-        <file>images/player_playPauseButton.png</file>
-        <file>images/player_recordButton.png</file>
-        <file>images/player_repeatButton.png</file>
-        <file>images/player_repeatButtonChecked.png</file>
-        <file>images/player_settingsButton.png</file>
-        <file>images/player_stopButton.png</file>
-        <file>images/resize.png</file>
-        <file>images/sceneSettingsButton.png</file>
-        <file>images/startScreenLogo.png</file>
-        <file>images/trackPlaceholder.png</file>
-        <file>images/utilityWindow_closeButton.png</file>
-        <file>images/zoom.png</file>
-        <file>images/zoom_old.png</file>
-        <file>images/zoom_old2.png</file>
+        <file alias="closeButton">images/menu_closeButton.png</file>
+        <file alias="hideButton">images/menu_hideButton.png</file>
+        <file alias="fullButton">images/menu_fullButton.png</file>
+        <file alias="menuLogo">images/menu_logo.png</file>
+        <file alias="utilityCloseButton">images/utilityWindow_closeButton.png</file>
+        <file alias="itemArrow">images/menu_itemArrow.png</file>
+        <file alias="itemArrow_hovered">images/menu_itemArrow_hovered.png</file>
+        <file alias="prevSizeButton">images/menu_prevSizeButton.png</file>
+        <file alias="expandButton">images/dockedWindow_expandButton.png</file>
+        <file alias="collapseButton">images/dockedWindow_collapseButton.png</file>
+        <file alias="device_dimmer">images/device_dimmer.png</file>
+        <file alias="device_pyro">images/device_pyro.png</file>
+        <file alias="device_sequences">images/device_sequences.png</file>
+        <file alias="device_shot">images/device_shot.png</file>
+        <file alias="checked">images/checked.png</file>
+        <file alias="fit">images/fitButton.png</file>
+        <file alias="apply">images/apply.png</file>
+        <file alias="cancel">images/cancelButton.png</file>
+        <file alias="sceneSettings">images/sceneSettingsButton.png</file>
+        <file alias="imagePlaceholder">images/imagePlaceholder.png</file>
+        <file alias="changeView">images/changeViewButton.png</file>
+        <file alias="stopButton">images/player_stopButton.png</file>
+        <file alias="playButton">images/player_playPauseButton.png</file>
+        <file alias="pauseButton">images/player_pauseButton.png</file>
+        <file alias="recordButton">images/player_recordButton.png</file>
+        <file alias="settingsButton">images/player_settingsButton.png</file>
+        <file alias="repeatButton">images/player_repeatButton.png</file>
+        <file alias="repeatButtonChecked">images/player_repeatButtonChecked.png</file>
+        <file alias="zoom">images/zoom.png</file>
+        <file alias="resize">images/resize.png</file>
+        <file alias="startScreenLogo">images/startScreenLogo.png</file>
+        <file alias="trackPlaceholder">images/trackPlaceholder.png</file>
+        <file alias="actionPrefireMarker">images/actionPrefireMarker.png</file>
+        <file alias="actionStartMarker">images/actionStartMarker.png</file>
         <file>translations/russian.qm</file>
         <file>fonts/Roboto/LICENSE.txt</file>
         <file>fonts/Roboto/Roboto-Black.ttf</file>

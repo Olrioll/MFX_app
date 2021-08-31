@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: deviceGroup
@@ -191,7 +193,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 14
         }
 
@@ -226,9 +228,8 @@ Item
             horizontalAlignment: Text.AlignHLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
-            font.family: "Roboto"
+            font.family: deviceGroup.checked? MFXUIS.Fonts.robotoBold.name : MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
-            font.bold: deviceGroup.checked
         }
 
         MfxMouseArea

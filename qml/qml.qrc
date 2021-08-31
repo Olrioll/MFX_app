@@ -13,7 +13,7 @@
         <file>MFX/UI/DeviceListWidget.qml</file>
         <file>MFX/UI/DevicePlate.qml</file>
         <file>MFX/UI/GeneralDeviceListWidget.qml</file>
-        <file>MFX/UI/MFXApplicationWindow.qml</file>
+        <file>MFX/UI/ApplicationWindow.qml</file>
         <file>MFX/UI/MainScreen.qml</file>
         <file>MFX/UI/MfxButton.qml</file>
         <file>MFX/UI/MfxHilightedButton.qml</file>
@@ -43,5 +43,13 @@
         <file>MFX/UI/Styles/Theme.qml</file>
         <file>MFX/UI/Components/Basic/qmldir</file>
         <file>MFX/UI/Components/Templates/qmldir</file>
+        <file>MFX/UI/Components/Templates/FramelessApplicationWindow.qml</file>
+        <file>MFX/UI/Components/Basic/FramelessApplicationWindow.qml</file>
+        <file>MFX/UI/MFXApplicationWindow.qml</file>
+        <file>MFX/UI/Components/Templates/RoundedRectangleShape.qml</file>
+        <file>MFX/UI/MFXApplicationWindowMenuBar.qml</file>
+        <file>MFX/UI/qmldir</file>
+        <file>MFX/UI/Components/Templates/LayoutSpacer.qml</file>
+        <file>MFX/UI/Pages/StartScreen.qml</file>
     </qresource>
 </RCC>

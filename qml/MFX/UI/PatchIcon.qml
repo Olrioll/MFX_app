@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: patchIcon
@@ -61,7 +63,7 @@ Item
             anchors.centerIn: parent
             color: "#ffffff"
             text:  patchIcon.patchId
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
         }
     }

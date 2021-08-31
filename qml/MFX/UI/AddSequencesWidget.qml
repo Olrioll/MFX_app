@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: addSequWindow
@@ -258,7 +260,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 12
             topPadding: 9
         }
@@ -320,7 +322,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
 
             visible: !(changedIdList.length > 1)
         }
@@ -580,7 +582,7 @@ Item
             minimumPixelSize: 10
             anchors.leftMargin: 8
             anchors.rightMargin: 256
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -596,7 +598,7 @@ Item
             anchors.leftMargin: 48
             anchors.rightMargin: 216
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -612,7 +614,7 @@ Item
             anchors.leftMargin: 88
             anchors.rightMargin: 176
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -628,7 +630,7 @@ Item
             anchors.leftMargin: 128
             anchors.rightMargin: 136
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         CalcWidget
@@ -818,7 +820,7 @@ Item
             anchors.leftMargin: 39
             anchors.rightMargin: 218
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -834,7 +836,7 @@ Item
             anchors.leftMargin: 90
             anchors.rightMargin: 167
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         TextField
@@ -943,7 +945,7 @@ Item
             anchors.leftMargin: 79
             anchors.rightMargin: 207
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -960,7 +962,7 @@ Item
             anchors.leftMargin: 86
             anchors.rightMargin: 200
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -977,7 +979,7 @@ Item
             anchors.leftMargin: 4
             anchors.rightMargin: 278
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -994,7 +996,7 @@ Item
             anchors.leftMargin: 144
             anchors.rightMargin: 136
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -1011,7 +1013,7 @@ Item
             anchors.leftMargin: 19
             anchors.rightMargin: 267
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Text {
@@ -1028,7 +1030,7 @@ Item
             anchors.leftMargin: 161
             anchors.rightMargin: 125
             minimumPixelSize: 10
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         Rectangle
@@ -1126,7 +1128,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
         ButtonGroup

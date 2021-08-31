@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 Item
 {
     id: sceneSettingsWidget
@@ -45,7 +47,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: "Roboto"
+            font.family: MFXUIS.Fonts.robotoRegular.name
             topPadding: 8
         }
 
@@ -113,7 +115,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
             }
 
             TextField
@@ -177,7 +179,7 @@ Item
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
             }
 
@@ -192,7 +194,7 @@ Item
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
             }
 
@@ -208,7 +210,7 @@ Item
                 font.pixelSize: 10
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
             }
 
             Text {
@@ -223,7 +225,7 @@ Item
                 font.pixelSize: 10
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
             }
         }
 
@@ -254,7 +256,7 @@ Item
                 horizontalAlignment: Text.AlignHRight
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
             }
 
             Rectangle
@@ -287,7 +289,7 @@ Item
                     elide: Text.ElideMiddle
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
-                    font.family: "Roboto"
+                    font.family: MFXUIS.Fonts.robotoRegular.name
                     font.pixelSize: 10
                 }
 

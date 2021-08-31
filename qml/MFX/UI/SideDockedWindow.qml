@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
+import MFX.UI.Styles 1.0 as MFXUIS
+
 import "qrc:/"
 
 Item
@@ -96,7 +98,7 @@ Item
                 text: sideDockedWindow.caption
                 elide: Text.ElideMiddle
                 anchors.centerIn: rotatedTextRect
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 12
                 rotation: 90
             }
@@ -153,7 +155,7 @@ Item
                 elide: Text.ElideMiddle
                 anchors.left: parent.left
                 anchors.leftMargin: 10
-                font.family: "Roboto"
+                font.family: MFXUIS.Fonts.robotoRegular.name
                 topPadding: 6
                 leftPadding: 10
             }
