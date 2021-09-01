@@ -25,7 +25,7 @@ InfoAfterFile=info_after.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=.
-OutputBaseFilename=MFX_installer
+OutputBaseFilename=MFXSetup
 SetupIconFile=appIcon.ico
 WizardImageFile=finish.bmp
 WizardImageStretch=no
