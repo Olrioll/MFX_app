@@ -41,6 +41,12 @@ Item {
 
                     currentIndex: 0
 
+                    onCurrentIndexChanged: {
+                        if((currentIndex === 3) && cloudLoginPage.recoverState) {
+                            cloudLoginPage.recoverState = false
+                        }
+                    }
+
                     interactive: height < contentHeight
 
                     contentHeight: childrenRect.height
@@ -482,7 +488,9 @@ Item {
 
                     visible: menuListView.currentIndex === 3
 
-                    property bool errorState: true
+                    property bool errorState: false
+                    property bool recoverState: false
+
 
                     ColumnLayout {
                         anchors.fill: parent
@@ -492,6 +500,8 @@ Item {
                         anchors.bottomMargin: 10
 
                         spacing: 0
+
+                        visible: !cloudLoginPage.recoverState
 
                         MFXUICT.LayoutSpacer {
                             fixedHeight: 6
@@ -519,7 +529,7 @@ Item {
                             Layout.maximumHeight: implicitHeight
                             Layout.minimumHeight: implicitHeight
 
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
 
                             font.family: MFXUIS.Fonts.robotoRegular.name
@@ -542,6 +552,8 @@ Item {
 
                             text: ""
                             placeholderText: qsTr("Email or Login")
+
+                            errorState: cloudLoginPage.errorState
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -556,6 +568,8 @@ Item {
 
                             text: ""
                             placeholderText: qsTr("Password")
+
+                            errorState: cloudLoginPage.errorState
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -681,10 +695,130 @@ Item {
                             color: "#2F80ED"
 
                             text: qsTr("Forgot password")
+
+                            MouseArea {
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    cloudLoginPage.recoverState = true
+                                }
+                            }
                         }
 
                     }
 
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 5
+                        anchors.rightMargin: 5
+                        anchors.topMargin: 10
+                        anchors.bottomMargin: 10
+
+                        spacing: 0
+
+                        visible: cloudLoginPage.recoverState
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 6
+                        }
+
+                        MFXUICT.ColoredIcon {
+                            Layout.preferredWidth: 38
+                            Layout.maximumWidth: 38
+                            Layout.minimumWidth: 38
+                            Layout.preferredHeight: 38
+                            Layout.maximumHeight: 38
+                            Layout.minimumHeight: 38
+                            Layout.alignment: Qt.AlignHCenter
+
+                            source: "qrc:/icons/preferences/preferences_email_icon.svg"
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 6
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: implicitHeight
+                            Layout.maximumHeight: implicitHeight
+                            Layout.minimumHeight: implicitHeight
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            font.pixelSize: 8
+
+                            wrapMode: Text.WordWrap
+
+                            color: "#FFFFFF"
+
+                            text: qsTr("Enter your mail. Password recovery instructions will be sent there.")
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 8
+                        }
+
+                        MFXUICT.TextField {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: implicitHeight
+                            Layout.maximumHeight: implicitHeight
+                            Layout.minimumHeight: implicitHeight
+
+                            text: ""
+                            placeholderText: qsTr("Email")
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 8
+                        }
+
+                        MfxButton {
+
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 20
+                            Layout.maximumHeight: 20
+                            Layout.minimumHeight: 20
+
+                            checkable: false
+
+                            fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                            textSize: 8
+                            color: "#2F80ED"
+                            pressedColor: "#649ce8"
+
+                            text: qsTr("Send")
+                        }
+
+                        MFXUICT.LayoutSpacer {
+                            fixedHeight: 8
+                        }
+
+                        MfxButton {
+
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 20
+                            Layout.maximumHeight: 20
+                            Layout.minimumHeight: 20
+
+                            checkable: false
+
+                            fontFamilyName: MFXUIS.Fonts.robotoMedium.name
+                            textSize: 8
+                            color: "#888888"
+                            pressedColor: "#ababab"
+
+                            text: qsTr("Cancel")
+
+                            onClicked: {
+                                cloudLoginPage.recoverState = false
+                            }
+                        }
+
+                        MFXUICT.LayoutSpacer { }
+                    }
                 }
 
                 Item {

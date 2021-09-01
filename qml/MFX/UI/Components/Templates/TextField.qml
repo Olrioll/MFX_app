@@ -11,6 +11,8 @@ FocusScope {
     property alias text: _text.text
     property alias placeholderText: _placeholder.text
     property color placeholderColor: "#80FFFFFF"
+    property bool errorState: false
+    property color errorStateColor: "#EB5757"
 
     implicitHeight: 18
 
@@ -22,6 +24,9 @@ FocusScope {
         radius: 2
 
         color: _textfield.backgroundColor
+
+        border.width: errorState ? 1 : 0
+        border.color: _textfield.errorStateColor
     }
 
     Text {
@@ -54,7 +59,7 @@ FocusScope {
         anchors.bottomMargin: 5
 
         focus: true
-        color: _textfield.textColor
+        color: _textfield.errorState ? _textfield.errorStateColor : _textfield.textColor
         font.family: MFXUIS.Fonts.robotoRegular.name
         font.pixelSize: 8
 
