@@ -390,10 +390,15 @@ ApplicationWindow
                         text: qsTr("Preferences")
                         onTriggered:
                         {
-                            var test = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
-                            test.x = 100
-                            test.y = 100
-                            test.caption = qsTr("Preferences")
+                            var preferencesPopup = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
+                            preferencesPopup.addContentItem("PreferencesPopup.qml");
+
+                            preferencesPopup.width = 220
+                            preferencesPopup.height = 298
+                            preferencesPopup.workAreaColor = "#444444"
+                            preferencesPopup.x = applicationWindow.width / 2 - preferencesPopup.width / 2
+                            preferencesPopup.y = applicationWindow.height / 2 - preferencesPopup.height / 2
+                            preferencesPopup.caption = qsTr("Preferences")
                         }
                     }
 

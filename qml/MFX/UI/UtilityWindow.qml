@@ -12,6 +12,7 @@ Item
 
     property string caption
     property var contentItem
+    property color workAreaColor: "#222222"
 
     function addContentItem(itemFilename)
     {
@@ -52,7 +53,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: MFXUIS.Fonts.robotoMedium.name
             topPadding: 8
         }
 
@@ -92,7 +93,7 @@ Item
             anchors.rightMargin: 2
             anchors.fill: parent
 
-            color: "#222222"
+            color: utilityWindow.workAreaColor
         }
     }
 }

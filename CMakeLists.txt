@@ -51,7 +51,8 @@ find_package(Qt5 ${QT_VERSION} COMPONENTS
 
 add_executable(${MFX_PROJECT_NAME} WIN32
     "build/packaging/windows/appIcon.rc"
-    "qml/qml.qrc" "resources/resources.qrc"
+    "qml/qml.qrc"
+    "resources/resources.qrc"
     "src/main.cpp"
     "src/AudioTrackRepresentation.cpp"
     "src/WaveformWidget.cpp"

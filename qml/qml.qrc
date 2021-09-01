@@ -51,5 +51,9 @@
         <file>MFX/UI/qmldir</file>
         <file>MFX/UI/Components/Templates/LayoutSpacer.qml</file>
         <file>MFX/UI/Pages/StartScreen.qml</file>
+        <file>MFX/UI/PreferencesPopup.qml</file>
+        <file>MFX/UI/Components/Templates/ComboBox.qml</file>
+        <file>MFX/UI/Components/Templates/ColoredIcon.qml</file>
+        <file>MFX/UI/Components/Templates/TextField.qml</file>
     </qresource>
 </RCC>
