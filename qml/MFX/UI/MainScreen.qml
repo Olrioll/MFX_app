@@ -200,11 +200,279 @@ Item
             anchors.left: parent.left
             visible: cueListButton.checked || deviceListButton1.checked
 
-            MfxTable
+            Rectangle
             {
                 id: cueListWidget
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
                 visible: cueListButton.checked
+
+                width: 280
+
+                color: "#444444"
+                radius: 2
+
+                Rectangle {
+                    anchors.fill: parent
+                    anchors.topMargin: 32
+                    anchors.bottomMargin: 2
+                    anchors.leftMargin: 2
+                    anchors.rightMargin: 2
+
+                    radius: 2
+
+                    color: "#222222"
+                }
+
+                //TODO должно поставляться из логики бекенда - перенести в c++ часть
+                enum CueListViewItemTypes {
+                    GlobalOffset, //Эта роль подразумевает элемент GlobalOffset - он не редактируется
+                    Normal // Обычный элемент CUE
+                }
+
+                ListView {
+                    id: cueListView
+
+                    anchors.fill: parent
+
+                    anchors.leftMargin: 2
+                    anchors.rightMargin: 2
+                    anchors.bottomMargin: 2
+
+                    property int columnsCount: 4
+                    property var columnProportions: [1, 3, 2, 2]
+
+                    clip: true
+
+                    headerPositioning: ListView.OverlayHeader
+
+                    header: Item {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: 30
+
+                        z: 2
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.bottomMargin: -2
+                            radius: 2
+
+                            color: "#444444"
+                        }
+
+
+                        RowLayout {
+                            anchors.fill: parent
+
+                            spacing: 0
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: "#FFFFFF"
+
+                                text: qsTr("№")
+                            }
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: "#FFFFFF"
+
+                                text: qsTr("Cue")
+                            }
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: "#FFFFFF"
+
+                                text: qsTr("Start time")
+                            }
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: "#FFFFFF"
+
+                                text: qsTr("Total time")
+                            }
+                        }
+
+                    }
+
+                    model: ListModel {
+                        ListElement { number: 0; cue: "Global offset"; startTime: 0; totalTime: 0; selected: false}
+                        ListElement { number: 1; cue: "Red shot"; startTime: 2; totalTime: 4; selected: false }
+                        ListElement { number: 2; cue: "Green shot"; startTime: 13; totalTime: 5; selected: false }
+                        ListElement { number: 3; cue: "cue 22"; startTime: 25; totalTime: 4; selected: false }
+                        ListElement { number: 4; cue: "cue 23"; startTime: 28; totalTime: 5; selected: false }
+                        ListElement { number: 5; cue: "cue 24"; startTime: 36; totalTime: 7; selected: false }
+                    }
+
+                    delegate: Item {
+                        id: cueListViewDelegate
+
+                        property color selectedBackgroundColor: "#1AFFFAFA"
+                        property color selectedTextColor: "#F2C94C"
+                        property color textColor: "#FFFFFF"
+
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        height: 30
+
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.leftMargin: 6
+                            anchors.rightMargin: 6
+
+                            visible: model.selected
+
+                            color: cueListViewDelegate.selectedBackgroundColor
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            anchors.leftMargin: 6
+                            anchors.rightMargin: 6
+
+                            height: 1
+
+                            color: "#80000000"
+                        }
+
+                        RowLayout {
+                            anchors.fill: parent
+
+                            spacing: 0
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+
+                                text: model.number
+                            }
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+
+                                text: model.cue
+                            }
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+
+                                text: model.startTime
+                            }
+
+                            Text {
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 10
+
+                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+
+                                text: model.totalTime
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked: {
+                                model.selected = !model.selected
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1802,6 +2070,7 @@ Item
                         target: actionsManager
                         function onActionsLoaded()
                         {
+                            console.log("ACTIONS MANAGER")
                             let actionsList = actionsManager.getActions()
 
                             actionListModel.clear()

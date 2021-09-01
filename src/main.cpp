@@ -7,7 +7,6 @@
 
 #include "ProjectManager.h"
 #include "SettingsManager.h"
-//#include "ProjectManager2.h"
 #include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
