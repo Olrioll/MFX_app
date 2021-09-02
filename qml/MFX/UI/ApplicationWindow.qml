@@ -518,8 +518,9 @@ ApplicationWindow
 
                 onCheckedChanged:
                 {
-                    if(checked)
-                        screensLayout.currentIndex = 2
+                    if(checked) {
+                        screensLayout.currentIndex = 3
+                    }
                 }
 
                 ButtonGroup.group: mainMenuButtons
