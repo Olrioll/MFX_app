@@ -28,7 +28,6 @@ set(CMAKE_AUTOUIC ON)
 
 set(QML_IMPORT_PATH ${CMAKE_SOURCE_DIR}/qml/ CACHE STRING "Директория импорта QML-модулей" FORCE)
 
-
 set(QSUPERMACROS_USE_QT_SIGNALS ON)
 set(QSUPERMACROS_USE_QT_GETTERS_GET ON)
 set(QSUPERMACROS_USE_QT_GETTERS ON)
@@ -58,6 +57,8 @@ find_package(Qt5 ${QT_VERSION} COMPONENTS
     Core
     Gui
     Network
+    NetworkAuth
+    SerialPort
     Multimedia
     Qml
     Quick
@@ -87,6 +88,9 @@ target_link_libraries(${MFX_PROJECT_NAME}
     Qt5::Quick
     Qt5::QuickControls2
     Qt5::Multimedia
+    Qt5::SerialPort
+    Qt5::Network
+    Qt5::NetworkAuth
     QSuperMacros
 )
 
