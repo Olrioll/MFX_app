@@ -4,6 +4,9 @@
 #include <QObject>
 #include <QSettings>
 
+#include <QSuperMacros.h>
+#include <QQmlConstRefPropertyHelpers.h>
+
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
 
@@ -11,6 +14,8 @@ class ProjectManager : public QObject, public JsonSerializable
 {
 
     Q_OBJECT
+
+    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectName, CurrentProjectName, "")
 
 public:
 
@@ -32,7 +37,6 @@ public slots:
     void setAudioTrack(QString fileName);
 
     bool hasUnsavedChanges() const;
-    QString currentProjectName() const;
     QStringList groupNames() const;
     bool isGroupVisible(QString groupName) const;
     void setGroupVisible(QString groupName, bool state);
@@ -92,7 +96,6 @@ private:
 
     SettingsManager& _settings;
     QString _currentProjectFile = "";
-    QString _currentProjectName = "";
     bool _hasUnsavedChanges = false;
     QString _currentGroup;
 };

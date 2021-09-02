@@ -279,7 +279,7 @@ Item
                 y: 43
                 width: 140
                 height: 18
-                text: project.currentProjectName()
+
                 color: "#ffffff"
                 horizontalAlignment: Text.AlignHCenter
                 padding: 0
@@ -290,6 +290,12 @@ Item
                 {
                     color: "#000000"
                     radius: 2
+                }
+
+                text: project.currentProjectName
+
+                onEditingFinished: () => {
+                    project.currentProjectName = text
                 }
             }
         }

@@ -179,11 +179,6 @@ bool ProjectManager::hasUnsavedChanges() const
     return _hasUnsavedChanges;
 }
 
-QString ProjectManager::currentProjectName() const
-{
-    return _currentProjectName;
-}
-
 QStringList ProjectManager::groupNames() const
 {
     return getChild("Groups")->childrenNames();
