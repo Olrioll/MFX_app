@@ -28,6 +28,23 @@ set(CMAKE_AUTOUIC ON)
 
 set(QML_IMPORT_PATH ${CMAKE_SOURCE_DIR}/qml/ CACHE STRING "Директория импорта QML-модулей" FORCE)
 
+
+set(QSUPERMACROS_USE_QT_SIGNALS ON)
+set(QSUPERMACROS_USE_QT_GETTERS_GET ON)
+set(QSUPERMACROS_USE_QT_GETTERS ON)
+set(QSUPERMACROS_USE_QT_SETTERS ON)
+set(QSUPERMACROS_USE_QT_RESETS ON)
+set(QSUPERMACROS_BUILD_SHARED OFF)
+set(QSUPERMACROS_BUILD_STATIC ON)
+set(QSUPERMACROS_BUILD_DOC OFF)
+
+# ┌──────────────────────────────────────────────────────────────────┐
+# │                       Зависимости                                │
+# └──────────────────────────────────────────────────────────────────┘
+
+include(build/cmake/Dependencies.cmake)
+include(build/cmake/FetchQSuperMacros.cmake)
+
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Сборка                                     │
 # └──────────────────────────────────────────────────────────────────┘
@@ -70,6 +87,7 @@ target_link_libraries(${MFX_PROJECT_NAME}
     Qt5::Quick
     Qt5::QuickControls2
     Qt5::Multimedia
+    QSuperMacros
 )
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32
