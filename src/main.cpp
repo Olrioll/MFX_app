@@ -10,7 +10,8 @@
 #include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
-#include "CursorManager.h"
+#include "cursormanager.h"
+#include "PatchPositionController.h"
 
 int main(int argc, char** argv)
 {
@@ -39,6 +40,7 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
+    engine.rootContext()->setContextProperty("patchPositionController", &project._patchPositionController);
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 

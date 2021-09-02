@@ -41,6 +41,7 @@ Item
     onPositionChanged:
     {
         positionCursor.position = position
+        patchPositionController.playerPosition = position
     }
 
     onWidthChanged: updatePlayerElements()

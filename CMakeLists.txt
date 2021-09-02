@@ -79,6 +79,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/ProjectManager.cpp"
     "src/CursorManager.cpp"
     "src/ActionsManager.cpp"
+	"src/PatchPositionController.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}

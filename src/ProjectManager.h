@@ -9,6 +9,7 @@
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
+#include "PatchPositionController.h"
 
 class ProjectManager : public QObject, public JsonSerializable
 {
@@ -21,6 +22,7 @@ public:
 
     ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
     virtual ~ProjectManager();
+	PatchPositionController _patchPositionController;
 
 public slots:
 

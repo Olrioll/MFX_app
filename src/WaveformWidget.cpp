@@ -76,7 +76,7 @@ void WaveformWidget::paint(QPainter *painter)
                 painter->setBrush(brush1);
                 painter->drawLine(x, y1,  x, y2);
 
-                float average = sqrtf(acc / framesPerPixel);
+                float average = qSqrt(acc / framesPerPixel);
                 float height = average / maxAmplitude * maxHeight;
 
                 y1 = (maxHeight - height) / 2;

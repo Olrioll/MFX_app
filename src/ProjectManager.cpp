@@ -592,4 +592,7 @@ void ProjectManager::setActionProperty(QString cueName, QString actionName, int 
             action->setProperty(propertyName, value);
         }
     }
+	if(propertyName == "position") {
+        _patchPositionController.onSetPatch(cueName, patchId, value.toInt());
+    }
 }
