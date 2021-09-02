@@ -59,7 +59,7 @@ void ProjectManager::loadProject(QString fileName)
     {
         _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
         _settings.setValue("lastProject", fileName);
-        _currentProjectFile = fileName;
+        setCurrentProjectFile(fileName);
         fromJsonObject(QJsonDocument::fromJson(file.readAll()).object());
 
         emit groupCountChanged();
@@ -76,7 +76,7 @@ void ProjectManager::newProject()
 
     clear();
 
-    _currentProjectFile = "";
+    setCurrentProjectFile("");
     setProperty("backgroundImageFile", "");
     setProperty("audioTrackFile", "");
     setProperty("sceneFrameX", 0.1);
@@ -99,7 +99,7 @@ void ProjectManager::saveProject()
 {
     if(_currentProjectFile == "")
     {
-        _currentProjectFile = saveProjectDialog();
+        setCurrentProjectFile(saveProjectDialog());
     }
 
     if(_currentProjectFile == "")

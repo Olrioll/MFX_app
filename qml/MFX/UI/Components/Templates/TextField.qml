@@ -13,10 +13,13 @@ FocusScope {
     property color placeholderColor: "#80FFFFFF"
     property bool errorState: false
     property color errorStateColor: "#EB5757"
+    property int textSize: 8
 
     implicitHeight: 18
 
     height: implicitHeight
+
+    clip: true
 
     Rectangle {
         anchors.fill: parent
@@ -42,7 +45,7 @@ FocusScope {
         verticalAlignment: Text.AlignVCenter
 
         font.family: MFXUIS.Fonts.robotoRegular.name
-        font.pixelSize: 8
+        font.pixelSize: _textfield.textSize
 
         color: _textfield.placeholderColor
 
@@ -61,7 +64,7 @@ FocusScope {
         focus: true
         color: _textfield.errorState ? _textfield.errorStateColor : _textfield.textColor
         font.family: MFXUIS.Fonts.robotoRegular.name
-        font.pixelSize: 8
+        font.pixelSize: _textfield.textSize
 
         verticalAlignment: TextInput.AlignVCenter
         horizontalAlignment: TextInput.AlignLeft

@@ -852,6 +852,7 @@ Item
                                     pressedColor: "#649ce8"
                                     disabledColor: "#80649ce8"
                                     disabledTextColor: "#80ffffff"
+                                    enableShadow: true
 
                                     enabled: model.enabled
 
