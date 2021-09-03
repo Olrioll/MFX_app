@@ -79,7 +79,15 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/ProjectManager.cpp"
     "src/CursorManager.cpp"
     "src/ActionsManager.cpp"
-	"src/PatchPositionController.cpp"
+    "src/PatchPositionController.cpp"
+    "src/Cue.cpp"
+    "src/Action.cpp"
+    "src/PatternModel.cpp"
+    "src/Device.cpp"
+    "src/SequenceDevice.cpp"
+    "src/Group.cpp"
+    "src/DeviceManager.cpp"
+    "src/CueManager.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
