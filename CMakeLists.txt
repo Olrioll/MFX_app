@@ -89,6 +89,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/DeviceManager.cpp"
     "src/CueManager.cpp"
     "src/QQmlObjectListModel.h"
+    "src/ComPortModel"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
