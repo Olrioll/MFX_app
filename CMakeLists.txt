@@ -79,7 +79,6 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/ProjectManager.cpp"
     "src/CursorManager.cpp"
     "src/ActionsManager.cpp"
-    "src/PatchPositionController.cpp"
     "src/Cue.cpp"
     "src/Action.cpp"
     "src/PatternModel.cpp"

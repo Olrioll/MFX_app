@@ -9,7 +9,7 @@
 
 class Device  : public QObject {
     Q_OBJECT
-    QSM_READONLY_CSTREF_PROPERTY(QUuid, id, Id) //Уникальный идентификатор устройства
+    QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор устройства
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, name, Name, "") //Имя устройства
     QSM_WRITABLE_VAR_PROPERTY(int, x, X) //X-Координата устройства на картинке сцены
     QSM_WRITABLE_VAR_PROPERTY(int, y, Y) //Y-Координата устройства на картинке сцены

@@ -41,7 +41,7 @@ Item
     onPositionChanged:
     {
         positionCursor.position = position
-        patchPositionController.playerPosition = position
+        cueManager.playerPosition = position
     }
 
     onWidthChanged: updatePlayerElements()
@@ -953,6 +953,7 @@ Item
 //                                            ])
 
                                 project.addCue({name: newCueName, yPosition: newYposition})
+                                cueManager.addCue({name: newCueName, newYposition: newYposition})
 
                                 checkedIDs.forEach(function(currId)
                                 {
@@ -1395,6 +1396,7 @@ Item
                         onPositionChanged:
                         {
                             project.setActionProperty(cuePlate.name, name, patchId, "position", position)
+                            cueManager.setActionProperty(cuePlate.name, name, patchId, position)
                         }
 
                         function prefirePosition()
@@ -1785,6 +1787,7 @@ Item
                                 let newPosition = currAction.position + delta * ((currAction.position - cuePlate.firstAction.position) / cuePlate.duration)
 
                                 project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
+                                cueManager.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                                 cuePlate.loadActions();
                             })
                         }

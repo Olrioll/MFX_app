@@ -2,5 +2,11 @@
 
 Cue::Cue(QObject *parent) : QObject(parent)
 {
-    setId(QUuid::createUuid());
+    setUuid(QUuid::createUuid());
+    m_actions = new QQmlObjectListModel<Action>(this);
+}
+
+QQmlObjectListModel<Action> *Cue::getActionsModel()
+{
+    return m_actions;
 }

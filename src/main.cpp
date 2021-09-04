@@ -11,7 +11,7 @@
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
 #include "cursormanager.h"
-#include "PatchPositionController.h"
+#include "CueManager.h"
 
 int main(int argc, char** argv)
 {
@@ -24,6 +24,7 @@ int main(int argc, char** argv)
     ActionsManager actionsManager(settings);
     actionsManager.loadActions();
     CursorManager cursorManager;
+    CueManager cueManager;
 
     QTranslator translator;
     translator.load("qrc:/translations/russian.qm");
@@ -40,7 +41,7 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
-    engine.rootContext()->setContextProperty("patchPositionController", &project._patchPositionController);
+    engine.rootContext()->setContextProperty("cueManager", &cueManager);
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 
