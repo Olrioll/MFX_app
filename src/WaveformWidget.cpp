@@ -15,7 +15,18 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
     connect(&_valueForPositionTimer, &QTimer::timeout, [this]()
     {
         emit timerValueChanged((QTime(0, 0).addMSecs(_player.position()).toString("hh:mm:ss.zzz")).chopped(1));
-        emit positionChanged(_player.position());
+        quint64 pos = _player.position() / 10; // the least meaningful time interval is 10 ms
+        static quint64 prevPos;
+        if(prevPos == pos) { // our time signals should't repeat
+            return;
+        }
+        quint64 diff = pos - prevPos;
+        if((diff > 0) && (diff < 10)) { // in case no more than 100 ms was skipped
+            for(quint64 i = prevPos; i < pos; i++) {
+                emit positionChanged(10 * i); // generate missing signals to ensure our time is consistent and ticks every 10 ms
+            }
+        }
+        prevPos = pos;
     });
 }
 

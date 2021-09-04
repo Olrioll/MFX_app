@@ -13,13 +13,9 @@ void PatchPositionController::onSetPatch(QString cue, int num, int pos)
 
 void PatchPositionController::setPlayerPosition(int playerPosition)
 {
-    if(playerPosition == _playerPosition) {
-        return;
-    }
     foreach(int pos, _positions) {
-        if((playerPosition - pos <= 10) && (playerPosition - pos >= 0)) {
+        if(pos == playerPosition) {
             qDebug() << "fire!";
         }
     }
-    _playerPosition = playerPosition;
 }
