@@ -1,6 +1,7 @@
-#include "group.h"
+#include "Group.h"
 
-Group::Group(QObject *parent) : QObject(parent)
+Group::Group(QObject* parent)
+    : QObject(parent)
 {
-
+    setId(QUuid::createUuid());
 }
