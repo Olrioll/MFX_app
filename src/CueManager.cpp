@@ -4,6 +4,14 @@ CueManager::CueManager(QObject *parent) : QObject(parent)
 {
     connect(this, &CueManager::playerPositionChanged, this, &CueManager::onPlaybackTimeChanged);
     m_cues = new QQmlObjectListModel<Cue>(this);
+
+    initConnections();
+}
+
+CueManager::~CueManager()
+{
+    m_cues->clear();
+    m_cues->deleteLater();
 }
 
 Cue *CueManager::getCue(QString name)
@@ -68,6 +76,10 @@ void CueManager::setActionProperty(QString cueName, QString pattern, int patchId
     //action->setPatternName(pattern);
     action->setId(patchId);
     action->setstartTime(newPosition);
+}
+
+void CueManager::initConnections()
+{
 }
 
 void CueManager::onPlaybackTimeChanged(quint64 time)

@@ -343,14 +343,7 @@ Item
 
                     }
 
-                    model: ListModel {
-                        ListElement { number: 0; cue: "Global offset"; startTime: 0; totalTime: 0; selected: false}
-                        ListElement { number: 1; cue: "Red shot"; startTime: 2; totalTime: 4; selected: false }
-                        ListElement { number: 2; cue: "Green shot"; startTime: 13; totalTime: 5; selected: false }
-                        ListElement { number: 3; cue: "cue 22"; startTime: 25; totalTime: 4; selected: false }
-                        ListElement { number: 4; cue: "cue 23"; startTime: 28; totalTime: 5; selected: false }
-                        ListElement { number: 5; cue: "cue 24"; startTime: 36; totalTime: 7; selected: false }
-                    }
+                    model: cueManager.cues
 
                     delegate: Item {
                         id: cueListViewDelegate

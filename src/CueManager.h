@@ -13,8 +13,12 @@ class CueManager : public QObject
 
 public:
     explicit CueManager(QObject *parent = nullptr);
+    ~CueManager();
+
     Q_INVOKABLE void addCue(QVariantMap properties);
     Q_INVOKABLE void setActionProperty(QString cueName, QString pattern, int patchId, quint64 newPosition);
+
+    void initConnections();
 
 public slots:
     void onPlaybackTimeChanged(quint64 time);
