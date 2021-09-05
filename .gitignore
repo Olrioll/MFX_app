@@ -3,5 +3,5 @@
 /installer/MFXLauncher.exe
 /installer/files/MFX.exe
 
-CMakeLists.txt.user
+CMakeLists.txt.*
 CMakeSettings.json
