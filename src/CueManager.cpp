@@ -78,6 +78,24 @@ void CueManager::setActionProperty(QString cueName, QString pattern, int patchId
     action->setstartTime(newPosition);
 }
 
+void CueManager::cueNameChangeRequest(const QUuid &id, const QString &name)
+{
+    if(auto * cue = cueById(id); cue != nullptr) {
+        cue->setName(name);
+    }
+}
+
+Cue *CueManager::cueById(const QUuid &id) const
+{
+    for(auto * cue : m_cues->toList()) {
+        if(id == cue->uuid()) {
+            return cue;
+        }
+    }
+
+    return nullptr;
+}
+
 void CueManager::initConnections()
 {
 }

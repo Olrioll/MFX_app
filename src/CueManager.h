@@ -18,6 +18,10 @@ public:
     Q_INVOKABLE void addCue(QVariantMap properties);
     Q_INVOKABLE void setActionProperty(QString cueName, QString pattern, int patchId, quint64 newPosition);
 
+    Q_INVOKABLE void cueNameChangeRequest(const QUuid & id, const QString & name); //Обработчик запроса на смену имени из панели списка Cue
+
+    Cue * cueById(const QUuid & id) const;
+
     void initConnections();
 
 public slots:

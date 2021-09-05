@@ -3,17 +3,20 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
+import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Styles 1.0 as MFXUIS
 
 import "qrc:/"
 
-Item
+FocusScope
 {
     id: mainScreen
 
     property var sceneWidget: null
     property alias playerWidget: playerWidget
+
+    focus: true
 
     function setupSceneWidget(widget)
     {
@@ -252,7 +255,10 @@ Item
 
                     Component.onCompleted: {
                         cueListView.columnWidths = cueListView.calculateColumnWidths(cueListView.width)
-                        console.log(columnWidths)
+                    }
+
+                    onWidthChanged: {
+                        cueListView.columnWidths = cueListView.calculateColumnWidths(cueListView.width)
                     }
 
                     clip: true
@@ -357,7 +363,7 @@ Item
 
                     model: cueManager.cues
 
-                    delegate: Item {
+                    delegate: FocusScope {
                         id: cueListViewDelegate
 
 
@@ -458,6 +464,10 @@ Item
 
                                 text: cueListViewDelegate.name
 
+                                onTextEdited: {
+                                    cueManager.cueNameChangeRequest(cueListViewDelegate.id, text)
+                                }
+
                                 Keys.priority: Keys.BeforeItem
                                 Keys.onPressed: (keyEvent) => {
                                                     if((keyEvent === Qt.Key_Escape) || (keyEvent === Qt.Key_Enter)) {
@@ -521,8 +531,15 @@ Item
                         MouseArea {
                             anchors.fill: parent
 
+                            propagateComposedEvents: true
+                            preventStealing: false
+
                             onClicked: {
                                 model.selected = !model.selected
+                            }
+
+                            onDoubleClicked: {
+                                mouse.accepted = false
                             }
                         }
                     }
@@ -530,7 +547,7 @@ Item
             }
         }
 
-        Item
+        FocusScope
         {
             id: rightWidget
 
