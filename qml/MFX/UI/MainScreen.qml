@@ -396,8 +396,8 @@ FocusScope
                                                                                                                           : cueListViewDelegate.textColor
                         }
 
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        anchors.left: cueListView.contentItem.left
+                        anchors.right: cueListView.contentItem.right
 
                         height: 30
 
