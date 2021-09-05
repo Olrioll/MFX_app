@@ -11,7 +11,7 @@ class CueSortingModel : public QSortFilterProxyModel {
 public:
     using CueSourceModel = QQmlObjectListModel<Cue>;
 
-    explicit CueSortingModel(CueSourceModel *cues, QObject* parent = nullptr);
+    explicit CueSortingModel(CueSourceModel &cues, QObject* parent = nullptr);
 
     void initConnections();
     static void qmlRegister();
@@ -19,5 +19,5 @@ protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
 private:
-    CueSourceModel * m_cues;
+    CueSourceModel & m_cues;
 };

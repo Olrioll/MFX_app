@@ -6,30 +6,30 @@ namespace  {
 static constexpr char sortingRole[] = "startTime";
 }
 
-CueSortingModel::CueSortingModel(CueSourceModel* cues, QObject* parent)
+CueSortingModel::CueSortingModel(CueSourceModel &cues, QObject* parent)
     : QSortFilterProxyModel(parent)
     , m_cues(cues)
 {
-    setSourceModel(m_cues);
-    setDynamicSortFilter(false);
-    setSortRole(m_cues->roleForName(QByteArray(::sortingRole)));
+    setSourceModel(&m_cues);
+    //setDynamicSortFilter(false);
+    setSortRole(m_cues.roleForName(QByteArray(::sortingRole)));
 
     initConnections();
 }
 
 void CueSortingModel::initConnections()
 {
-    connect(m_cues, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles){
+    connect(&m_cues, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles){
         Q_UNUSED(topLeft)
         Q_UNUSED(bottomRight)
 
         if(roles.contains(sortRole())) {
-            this->invalidate();
+            //this->invalidate();
             this->sort(0, Qt::AscendingOrder);
         }
     });
-    connect(m_cues, &QQmlObjectListModelBase::countChanged, [=](){
-        this->invalidate();
+    connect(&m_cues, &QQmlObjectListModelBase::countChanged, [=](){
+        //this->invalidate();
         this->sort(0, Qt::AscendingOrder);
     });
 }
@@ -41,10 +41,16 @@ void CueSortingModel::qmlRegister()
 
 bool CueSortingModel::lessThan(const QModelIndex& left, const QModelIndex& right) const
 {
-    if(!left.isValid() || !right.isValid()) return false;
+    if(!left.isValid()) {
+        return false;
+    }
 
-    auto * leftCue = m_cues->at(left.row());
-    auto * rightCue = m_cues->at(right.row());
+    if(!right.isValid()) {
+        return false;
+    }
 
-    return leftCue->startTime() < rightCue->startTime();
+    auto leftCue = sourceModel()->data(left, sortRole());
+    auto rightCue = sourceModel()->data(right, sortRole());
+
+    return leftCue.toULongLong() < rightCue.toULongLong();
 }
