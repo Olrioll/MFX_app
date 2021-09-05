@@ -242,6 +242,18 @@ Item
 
                     property int columnsCount: 4
                     property var columnProportions: [1, 3, 2, 2]
+                    property var columnWidths: [0, 0, 0, 0]
+
+                    function calculateColumnWidths(width) {
+                        return columnProportions.map(function(columnProportion) {
+                            return width * (columnProportion / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                        });
+                    }
+
+                    Component.onCompleted: {
+                        cueListView.columnWidths = cueListView.calculateColumnWidths(cueListView.width)
+                        console.log(columnWidths)
+                    }
 
                     clip: true
 
@@ -271,9 +283,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[0]
+                                Layout.maximumWidth: cueListView.columnWidths[0]
+                                Layout.minimumWidth: cueListView.columnWidths[0]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -289,9 +301,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[1]
+                                Layout.maximumWidth: cueListView.columnWidths[1]
+                                Layout.minimumWidth: cueListView.columnWidths[1]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -307,9 +319,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[2]
+                                Layout.maximumWidth: cueListView.columnWidths[2]
+                                Layout.minimumWidth: cueListView.columnWidths[2]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -325,9 +337,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[3]
+                                Layout.maximumWidth: cueListView.columnWidths[3]
+                                Layout.minimumWidth: cueListView.columnWidths[3]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -348,9 +360,35 @@ Item
                     delegate: Item {
                         id: cueListViewDelegate
 
-                        property color selectedBackgroundColor: "#1AFFFAFA"
-                        property color selectedTextColor: "#F2C94C"
+
+                        property bool active: model.active
+                        property bool selected: model.selected
+                        property var id: model.uuid
+                        property int rowIndex: model.index
+                        property string name: model.name
+                        property var startTime: model.startTime
+                        property var totalTime: model.duration
+
+                        property color activeTextColor: "#F2C94C"
+                        property color activeBackgroundColor: "#1AFFFAFA"
+
+                        property color selectedTextColor: "#80FFFFFF"
+                        property color selectedBackgroundColor: "#80000000"
+
                         property color textColor: "#FFFFFF"
+                        property color backgroundColor: "transparent"
+
+                        QtObject {
+                            id: cueListViewDelegatePrivateProperties
+
+                            property color calculatedBackgroundColor: cueListViewDelegate.active ? cueListViewDelegate.activeBackgroundColor
+                                                                                                 : cueListViewDelegate.selected ? cueListViewDelegate.selectedBackgroundColor
+                                                                                                                                : cueListViewDelegate.backgroundColor
+
+                            property color calculatedTextColor: cueListViewDelegate.active ? cueListViewDelegate.activeTextColor
+                                                                                           : cueListViewDelegate.selected ? cueListViewDelegate.selectedTextColor
+                                                                                                                          : cueListViewDelegate.textColor
+                        }
 
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -362,9 +400,9 @@ Item
                             anchors.leftMargin: 6
                             anchors.rightMargin: 6
 
-                            visible: model.selected
+                            color: cueListViewDelegatePrivateProperties.calculatedBackgroundColor
 
-                            color: cueListViewDelegate.selectedBackgroundColor
+                            Behavior on color { ColorAnimation { duration: 150 } }
                         }
 
                         Rectangle {
@@ -387,9 +425,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[0]
+                                Layout.maximumWidth: cueListView.columnWidths[0]
+                                Layout.minimumWidth: cueListView.columnWidths[0]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -397,17 +435,17 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.index
+                                text: cueListViewDelegate.rowIndex
                             }
 
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[1]
+                                Layout.maximumWidth: cueListView.columnWidths[1]
+                                Layout.minimumWidth: cueListView.columnWidths[1]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -415,17 +453,17 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.name
+                                text: cueListViewDelegate.name
                             }
 
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[2]
+                                Layout.maximumWidth: cueListView.columnWidths[2]
+                                Layout.minimumWidth: cueListView.columnWidths[2]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -433,17 +471,17 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.startTime
+                                text: cueListViewDelegate.startTime
                             }
 
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[3]
+                                Layout.maximumWidth: cueListView.columnWidths[3]
+                                Layout.minimumWidth: cueListView.columnWidths[3]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -451,9 +489,9 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.duration
+                                text: cueListViewDelegate.totalTime
                             }
                         }
 
@@ -2070,7 +2108,7 @@ Item
                             actionListModel.clear()
                             actionsList.forEach(function(currAction, index)
                             {
-                                actionListModel.insert(index, {actionName: currAction["name"]})
+                                actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})
                             })
                         }
                     }
@@ -2112,14 +2150,10 @@ Item
 
                     Component.onCompleted:
                     {
-//                        for (let i = 1; i < 81; i++)
-//                        {
-//                            actionListModel.insert(i - 1, {actionName: "name" + i})
-//                        }
-
                         let actionsList = actionsManager.getActions()
 
                         actionListModel.clear()
+
                         actionsList.forEach(function(currAction, index)
                         {
                             actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})
