@@ -1,9 +1,14 @@
 #include "CueManager.h"
 
+#include <QtCore/QRandomGenerator>
+
+#include "CueSortingModel.h"
+
 CueManager::CueManager(QObject *parent) : QObject(parent)
 {
     connect(this, &CueManager::playerPositionChanged, this, &CueManager::onPlaybackTimeChanged);
     m_cues = new QQmlObjectListModel<Cue>(this);
+    m_cuesSorted = new CueSortingModel(m_cues, this);
 
     initConnections();
 }
@@ -47,6 +52,9 @@ void CueManager::addCue(QVariantMap properties)
     QString name = properties.value("name").toString();
     //double newYposition = properties.value("newYposition").toDouble();
     Cue* newCue = new Cue(this);
+
+    //TODO временно добавил для генерации случайного времени старта кьюшки
+    newCue->setStartTime(QRandomGenerator::global()->generate64() % 100000);
     newCue->setName(name);
     m_cues->append(newCue);
 }
@@ -94,6 +102,11 @@ Cue *CueManager::cueById(const QUuid &id) const
     }
 
     return nullptr;
+}
+
+CueSortingModel *CueManager::cuesSorted()
+{
+    return m_cuesSorted;
 }
 
 void CueManager::initConnections()

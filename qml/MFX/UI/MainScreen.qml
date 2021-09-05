@@ -361,7 +361,7 @@ FocusScope
 
                     }
 
-                    model: cueManager.cues
+                    model: cueManager.cuesSorted
 
                     delegate: FocusScope {
                         id: cueListViewDelegate
