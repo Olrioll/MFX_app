@@ -26,5 +26,4 @@ class Cue : public QObject
 
 public:
     explicit Cue(QObject *parent = nullptr);
-    QQmlObjectListModel<Action> * getActionsModel();
 };

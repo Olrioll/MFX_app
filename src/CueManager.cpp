@@ -58,7 +58,7 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int patchId, q
     if(cue == NULL) {
         return;
     }
-    auto actions = cue->getActionsModel();
+    auto actions = cue->get_actions();
     Action* newAction = new Action(this);
     //newAction->setPatternName(pattern);
     newAction->setId(patchId);
@@ -85,7 +85,7 @@ void CueManager::initConnections()
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
     for(const auto & c : m_cues->toList()) {
-        for(const Action * a : c->getActionsModel()->toList()) {
+        for(const Action * a : c->get_actions()->toList()) {
             if(a->startTime() == time) {
                 qDebug() << "fire!" << time << c->name() << a->id() /*<< a->patternName()*/;
             }
