@@ -399,7 +399,7 @@ Item
 
                                 color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
 
-                                text: model.number
+                                text: model.index
                             }
 
                             Text {
@@ -417,7 +417,7 @@ Item
 
                                 color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
 
-                                text: model.cue
+                                text: model.name
                             }
 
                             Text {
@@ -453,7 +453,7 @@ Item
 
                                 color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
 
-                                text: model.totalTime
+                                text: model.duration
                             }
                         }
 
