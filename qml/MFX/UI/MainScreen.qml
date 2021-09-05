@@ -409,6 +409,16 @@ FocusScope
                             color: cueListViewDelegatePrivateProperties.calculatedBackgroundColor
 
                             Behavior on color { ColorAnimation { duration: 150 } }
+
+                            MouseArea {
+                                id: cueListViewDelegateSelectionMouseArea
+
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    model.selected = !model.selected
+                                }
+                            }
                         }
 
                         Rectangle {
@@ -446,7 +456,6 @@ FocusScope
                                 text: cueListViewDelegate.rowIndex
                             }
 
-
                             MFXUICB.TransparentTextField {
                                 id: cueListViewDelegateNameTextField
 
@@ -465,7 +474,9 @@ FocusScope
                                 text: cueListViewDelegate.name
 
                                 onTextEdited: {
-                                    cueManager.cueNameChangeRequest(cueListViewDelegate.id, text)
+                                    if(text.length > 0) {
+                                        cueManager.cueNameChangeRequest(cueListViewDelegate.id, text)
+                                    }
                                 }
 
                                 Keys.priority: Keys.BeforeItem
@@ -480,13 +491,43 @@ FocusScope
                                                 }
 
                                 MouseArea {
+                                    id: cueListViewDelegateNameTextFieldMouseArea
+
                                     anchors.fill: parent
+
+                                    property bool waitingForASecondClick: false
+                                    property int doubleClickDuration: 300
+
+                                    Timer {
+                                        id: doubleClickTimer
+
+                                        interval: cueListViewDelegateNameTextFieldMouseArea.doubleClickDuration
+                                        running: false
+                                        repeat: false
+
+                                        onTriggered: {
+                                            if(cueListViewDelegateNameTextFieldMouseArea.waitingForASecondClick) {
+                                                cueListViewDelegateNameTextFieldMouseArea.waitingForASecondClick = false;
+                                                cueListViewDelegateSelectionMouseArea.clicked(null)
+                                            }
+                                        }
+                                    }
 
                                     propagateComposedEvents: false
                                     preventStealing: true
 
-                                    onDoubleClicked: {
-                                        cueListViewDelegateNameTextField.forceFocus()
+                                    onClicked: {
+                                        if(waitingForASecondClick) {
+                                            if(doubleClickTimer.running) {
+                                                doubleClickTimer.stop()
+                                                cueListViewDelegateNameTextField.forceFocus()
+                                            }
+                                            waitingForASecondClick = false
+                                        } else {
+                                            doubleClickTimer.start()
+                                            waitingForASecondClick = true;
+                                        }
+                                        mouse.accepted = true
                                     }
                                 }
                             }
@@ -525,21 +566,6 @@ FocusScope
                                 color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
                                 text: cueListViewDelegate.totalTime
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-
-                            propagateComposedEvents: true
-                            preventStealing: false
-
-                            onClicked: {
-                                model.selected = !model.selected
-                            }
-
-                            onDoubleClicked: {
-                                mouse.accepted = false
                             }
                         }
                     }
