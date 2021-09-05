@@ -440,7 +440,9 @@ Item
                                 text: cueListViewDelegate.rowIndex
                             }
 
-                            Text {
+
+                            MFXUICB.TransparentTextField {
+                                id: cueListViewDelegateNameTextField
 
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: cueListView.columnWidths[1]
@@ -450,12 +452,33 @@ Item
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
 
-                                font.family: MFXUIS.Fonts.robotoRegular.name
-                                font.pixelSize: 10
+                                textSize: 10
 
-                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
+                                textColor: cueListViewDelegatePrivateProperties.calculatedTextColor
 
                                 text: cueListViewDelegate.name
+
+                                Keys.priority: Keys.BeforeItem
+                                Keys.onPressed: (keyEvent) => {
+                                                    if((keyEvent === Qt.Key_Escape) || (keyEvent === Qt.Key_Enter)) {
+                                                        cueListViewDelegateNameTextField.focus = false;
+                                                        cueListViewDelegateNameTextField._textItem.focus = false;
+                                                        keyEvent.accepted = true;
+                                                        return;
+                                                    }
+                                                    keyEvent.accepted = false;
+                                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+
+                                    propagateComposedEvents: false
+                                    preventStealing: true
+
+                                    onDoubleClicked: {
+                                        cueListViewDelegateNameTextField.forceFocus()
+                                    }
+                                }
                             }
 
                             Text {

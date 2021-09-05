@@ -55,5 +55,6 @@
         <file>MFX/UI/Components/Templates/ComboBox.qml</file>
         <file>MFX/UI/Components/Templates/ColoredIcon.qml</file>
         <file>MFX/UI/Components/Templates/TextField.qml</file>
+        <file>MFX/UI/Components/Basic/TransparentTextField.qml</file>
     </qresource>
 </RCC>
