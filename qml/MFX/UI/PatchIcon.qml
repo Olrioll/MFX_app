@@ -19,6 +19,8 @@ Item
     property string imageFile
     property real posXRatio: project.patchProperty(patchId, "posXRatio")
     property real posYRatio: project.patchProperty(patchId, "posYRatio")
+    property string patternName
+    signal fire()
 
     Rectangle
     {
@@ -102,8 +104,48 @@ Item
         function onDrawPatternInGui(deviceId, patternName)
         {
             if(deviceId === patchId) {
-                console.log("PatchIcon::onDrawPatternInGui:", patchId, patternName)
+                patchIcon.patternName = patternName
+                patchIcon.fire()
             }
         }
+    }
+    Rectangle {
+        id: fireImage
+        anchors {
+            fill: parent
+            margins: -30
+        }
+        visible: false
+        color: "transparent"
+        border {
+            width: 3
+            color: "red"
+        }
+        Text {
+            anchors {
+                top: parent.top
+                topMargin: 10
+                horizontalCenter: parent.horizontalCenter
+            }
+            text: patchIcon.patternName
+            color: "white"
+            font.pointSize: 10
+        }
+        Timer {
+           id: timer
+           interval: 300
+           repeat: false
+           onTriggered: {
+               visible = false
+           }
+        }
+        onVisibleChanged: {
+            if(visible) {
+                timer.start()
+            }
+        }
+    }
+    onFire: {
+        fireImage.visible = true
     }
 }
