@@ -48,6 +48,10 @@ Item
                                                                                  checked: project.patchPropertyForIndex(i, "checked"),
                                                                                  posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
                                                                                  posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
+            if(deviceType === "Sequences") {
+                deviceManager.setSequenceDeviceProperty(project.patchPropertyForIndex(i, "ID"), project.patchPropertyForIndex(i, "checked"),
+                    project.patchPropertyForIndex(i, "posXRatio"), project.patchPropertyForIndex(i, "posYRatio"));
+            }
         }
     }
 

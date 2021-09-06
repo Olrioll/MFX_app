@@ -31,7 +31,7 @@ Cue *CueManager::getCue(QString name)
     return cue;
 }
 
-Action *CueManager::getAction(QString cueName, int actId)
+Action *CueManager::getAction(QString cueName, int deviceId)
 {
     Action *act = NULL;
     Cue* cue = getCue(cueName);
@@ -39,7 +39,7 @@ Action *CueManager::getAction(QString cueName, int actId)
         return NULL;
     }
     for(const auto & a : cue->get_actions()->toList()) {
-        if(a->id() == actId) {
+        if(a->deviceId() == deviceId) {
             act = a;
             break;
         }
@@ -59,9 +59,8 @@ void CueManager::addCue(QVariantMap properties)
     m_cues->append(newCue);
 }
 
-void CueManager::addActionToCue(QString cueName, QString pattern, int patchId, quint64 newPosition)
+void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, quint64 newPosition)
 {
-    Q_UNUSED(patchId)
     Cue* cue = getCue(cueName);
     if(cue == NULL) {
         return;
@@ -69,20 +68,20 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int patchId, q
     auto actions = cue->get_actions();
     Action* newAction = new Action(this);
     newAction->setPatternName(pattern);
-    newAction->setId(patchId);
+    newAction->setDeviceId(deviceId);
     newAction->setStartTime(newPosition);
     actions->append(newAction);
 }
 
-void CueManager::setActionProperty(QString cueName, QString pattern, int patchId, quint64 newPosition)
+void CueManager::setActionProperty(QString cueName, QString pattern, int deviceId, quint64 newPosition)
 {
-    Action* action = getAction(cueName, patchId);
+    Action* action = getAction(cueName, deviceId);
     if(action == NULL) {
-        addActionToCue(cueName, pattern, patchId, newPosition);
+        addActionToCue(cueName, pattern, deviceId, newPosition);
         return;
     }
     action->setPatternName(pattern);
-    action->setId(patchId);
+    action->setDeviceId(deviceId);
     action->setStartTime(newPosition);
 }
 
@@ -118,7 +117,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
     for(const auto & c : m_cues->toList()) {
         for(const Action * a : c->get_actions()->toList()) {
             if(a->startTime() == time) {
-                qDebug() << "fire!" << time << c->name() << a->id() << a->patternName();
+                emit runPattern(a->deviceId(), a->patternName());
             }
         }
     }

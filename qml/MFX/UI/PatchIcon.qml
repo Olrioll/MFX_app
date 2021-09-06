@@ -96,4 +96,14 @@ Item
                 patchIcon.checked = checked
         }
     }
+    Connections
+    {
+        target: deviceManager
+        function onDrawPatternInGui(deviceId, patternName)
+        {
+            if(deviceId === patchId) {
+                console.log("PatchIcon::onDrawPatternInGui:", patchId, patternName)
+            }
+        }
+    }
 }

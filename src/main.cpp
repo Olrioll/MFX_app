@@ -13,6 +13,7 @@
 #include "cursormanager.h"
 #include "CueManager.h"
 #include "CueSortingModel.h"
+#include "DeviceManager.h"
 
 int main(int argc, char** argv)
 {
@@ -26,6 +27,8 @@ int main(int argc, char** argv)
     actionsManager.loadActions();
     CursorManager cursorManager;
     CueManager cueManager;
+    DeviceManager deviceManager;
+    QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
 
     QTranslator translator;
     translator.load("qrc:/translations/russian.qm");
@@ -45,6 +48,7 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("cueManager", &cueManager);
+    engine.rootContext()->setContextProperty("deviceManager", &deviceManager);
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 

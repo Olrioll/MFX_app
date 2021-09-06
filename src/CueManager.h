@@ -22,7 +22,7 @@ public:
     ~CueManager();
 
     Q_INVOKABLE void addCue(QVariantMap properties);
-    Q_INVOKABLE void setActionProperty(QString cueName, QString pattern, int patchId, quint64 newPosition);
+    Q_INVOKABLE void setActionProperty(QString cueName, QString pattern, int deviceId, quint64 newPosition);
 
     Q_INVOKABLE void cueNameChangeRequest(const QUuid & id, const QString & name); //Обработчик запроса на смену имени из панели списка Cue
 
@@ -35,10 +35,13 @@ public:
 public slots:
     void onPlaybackTimeChanged(quint64 time);
 
+signals:
+    void runPattern(int deviceId, QString patternName);
+
 private:
     Cue* getCue(QString name);
-    Action* getAction(QString cueName, int actId);
-    void addActionToCue(QString cueName, QString pattern, int patchId, quint64 newPosition);
+    Action* getAction(QString cueName, int deviceId);
+    void addActionToCue(QString cueName, QString pattern, int deviceId, quint64 newPosition);
 
 private:
     CueSortingModel * m_cuesSorted = nullptr;
