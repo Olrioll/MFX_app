@@ -10,6 +10,7 @@ class ComPortModel : public QStringListModel
 public:
     explicit ComPortModel(QObject *parent = nullptr);
     Q_INVOKABLE void reload();
+    Q_INVOKABLE int getModelIndexByPortName(QString portName);
 signals:
     void dataReady();
 };

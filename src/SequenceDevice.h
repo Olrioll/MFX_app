@@ -13,7 +13,7 @@
 class SequenceDevice : public Device {
     Q_OBJECT
     //QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(Device::ComPortWinOS, comPort, ComPort, Device::ComPortWinOS::COM_PORT_UNKNOWN) //ComPort устройства
-    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, comport, ComPort, "") //ComPort устройства
+    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, comPort, ComPort, "") //ComPort устройства
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, dmx, Dmx, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, rfChannel, RfChannel, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, rfPosition, RfPosition, 0) //DMX
@@ -24,4 +24,6 @@ public:
     explicit SequenceDevice(QObject* parent = nullptr);
 
     void runPattern(QString patternName) override;
+    QString portName() override;
+    void setPortName(QString portName) override;
 };

@@ -3,6 +3,7 @@
 DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 {
     m_devices = new QQmlObjectListModel<Device>(this);
+    setComPort(m_comPortModel.stringList().at(0));
 }
 
 Device *DeviceManager::getDevice(int id)
@@ -49,6 +50,10 @@ void DeviceManager::onRunPattern(int deviceId, QString patternName)
     if(device == NULL) {
         return;
     }
+    if(device->deviceType() == DEVICE_TYPE_SEQUENCES) {
+        device->setPortName(comPort());
+    }
     device->runPattern(patternName);
     emit drawPatternInGui(deviceId, patternName);
 }
+

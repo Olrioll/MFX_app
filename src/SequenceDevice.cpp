@@ -8,6 +8,15 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
 
 void SequenceDevice::runPattern(QString patternName)
 {
-    qDebug() << "SequenceDevice::runPattern:" << id() << patternName; // todo: send commands to serialport
+    qDebug() << "SequenceDevice::runPattern:" << id() << patternName << portName(); // todo: send commands to serialport
 }
 
+QString SequenceDevice::portName()
+{
+    return comPort();
+}
+
+void SequenceDevice::setPortName(QString portName)
+{
+    setComPort(portName);
+}

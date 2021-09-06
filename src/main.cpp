@@ -49,6 +49,7 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("cueManager", &cueManager);
     engine.rootContext()->setContextProperty("deviceManager", &deviceManager);
+    engine.rootContext()->setContextProperty("comPortModel", &deviceManager.m_comPortModel);
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 

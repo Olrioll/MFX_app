@@ -133,10 +133,10 @@ Item
         }
         Timer {
            id: timer
-           interval: 300
+           interval: 500
            repeat: false
            onTriggered: {
-               visible = false
+               fireImage.visible = false
            }
         }
         onVisibleChanged: {
