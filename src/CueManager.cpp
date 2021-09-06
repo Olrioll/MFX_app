@@ -8,7 +8,7 @@ CueManager::CueManager(QObject *parent) : QObject(parent)
 {
     connect(this, &CueManager::playerPositionChanged, this, &CueManager::onPlaybackTimeChanged);
     m_cues = new QQmlObjectListModel<Cue>(this);
-    m_cuesSorted = new CueSortingModel(m_cues, this);
+    m_cuesSorted = new CueSortingModel(*m_cues, this);
 
     initConnections();
 }
