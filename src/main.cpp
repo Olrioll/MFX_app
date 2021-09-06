@@ -12,6 +12,7 @@
 #include "WaveformWidget.h"
 #include "cursormanager.h"
 #include "CueManager.h"
+#include "CueSortingModel.h"
 
 int main(int argc, char** argv)
 {
@@ -31,6 +32,8 @@ int main(int argc, char** argv)
     qApp->installTranslator(&translator);
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
+
+    CueSortingModel::qmlRegister();
 
     QQmlApplicationEngine engine;
 

@@ -3,17 +3,20 @@ import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
+import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Styles 1.0 as MFXUIS
 
 import "qrc:/"
 
-Item
+FocusScope
 {
     id: mainScreen
 
     property var sceneWidget: null
     property alias playerWidget: playerWidget
+
+    focus: true
 
     function setupSceneWidget(widget)
     {
@@ -242,6 +245,21 @@ Item
 
                     property int columnsCount: 4
                     property var columnProportions: [1, 3, 2, 2]
+                    property var columnWidths: [0, 0, 0, 0]
+
+                    function calculateColumnWidths(width) {
+                        return columnProportions.map(function(columnProportion) {
+                            return width * (columnProportion / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                        });
+                    }
+
+                    Component.onCompleted: {
+                        cueListView.columnWidths = cueListView.calculateColumnWidths(cueListView.width)
+                    }
+
+                    onWidthChanged: {
+                        cueListView.columnWidths = cueListView.calculateColumnWidths(cueListView.width)
+                    }
 
                     clip: true
 
@@ -271,9 +289,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[0]
+                                Layout.maximumWidth: cueListView.columnWidths[0]
+                                Layout.minimumWidth: cueListView.columnWidths[0]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -289,9 +307,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[1]
+                                Layout.maximumWidth: cueListView.columnWidths[1]
+                                Layout.minimumWidth: cueListView.columnWidths[1]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -307,9 +325,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[2]
+                                Layout.maximumWidth: cueListView.columnWidths[2]
+                                Layout.minimumWidth: cueListView.columnWidths[2]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -325,9 +343,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[3]
+                                Layout.maximumWidth: cueListView.columnWidths[3]
+                                Layout.minimumWidth: cueListView.columnWidths[3]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -343,24 +361,43 @@ Item
 
                     }
 
-                    model: ListModel {
-                        ListElement { number: 0; cue: "Global offset"; startTime: 0; totalTime: 0; selected: false}
-                        ListElement { number: 1; cue: "Red shot"; startTime: 2; totalTime: 4; selected: false }
-                        ListElement { number: 2; cue: "Green shot"; startTime: 13; totalTime: 5; selected: false }
-                        ListElement { number: 3; cue: "cue 22"; startTime: 25; totalTime: 4; selected: false }
-                        ListElement { number: 4; cue: "cue 23"; startTime: 28; totalTime: 5; selected: false }
-                        ListElement { number: 5; cue: "cue 24"; startTime: 36; totalTime: 7; selected: false }
-                    }
+                    model: cueManager.cuesSorted
 
-                    delegate: Item {
+                    delegate: FocusScope {
                         id: cueListViewDelegate
 
-                        property color selectedBackgroundColor: "#1AFFFAFA"
-                        property color selectedTextColor: "#F2C94C"
-                        property color textColor: "#FFFFFF"
 
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        property bool active: model.active
+                        property bool selected: model.selected
+                        property var id: model.uuid
+                        property int rowIndex: model.index
+                        property string name: model.name
+                        property var startTime: model.startTime
+                        property var totalTime: model.duration
+
+                        property color activeTextColor: "#F2C94C"
+                        property color activeBackgroundColor: "#1AFFFAFA"
+
+                        property color selectedTextColor: "#80FFFFFF"
+                        property color selectedBackgroundColor: "#80000000"
+
+                        property color textColor: "#FFFFFF"
+                        property color backgroundColor: "transparent"
+
+                        QtObject {
+                            id: cueListViewDelegatePrivateProperties
+
+                            property color calculatedBackgroundColor: cueListViewDelegate.active ? cueListViewDelegate.activeBackgroundColor
+                                                                                                 : cueListViewDelegate.selected ? cueListViewDelegate.selectedBackgroundColor
+                                                                                                                                : cueListViewDelegate.backgroundColor
+
+                            property color calculatedTextColor: cueListViewDelegate.active ? cueListViewDelegate.activeTextColor
+                                                                                           : cueListViewDelegate.selected ? cueListViewDelegate.selectedTextColor
+                                                                                                                          : cueListViewDelegate.textColor
+                        }
+
+                        anchors.left: cueListView.contentItem.left
+                        anchors.right: cueListView.contentItem.right
 
                         height: 30
 
@@ -369,9 +406,19 @@ Item
                             anchors.leftMargin: 6
                             anchors.rightMargin: 6
 
-                            visible: model.selected
+                            color: cueListViewDelegatePrivateProperties.calculatedBackgroundColor
 
-                            color: cueListViewDelegate.selectedBackgroundColor
+                            Behavior on color { ColorAnimation { duration: 150 } }
+
+                            MouseArea {
+                                id: cueListViewDelegateSelectionMouseArea
+
+                                anchors.fill: parent
+
+                                onClicked: {
+                                    model.selected = !model.selected
+                                }
+                            }
                         }
 
                         Rectangle {
@@ -394,9 +441,9 @@ Item
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[0] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[0]
+                                Layout.maximumWidth: cueListView.columnWidths[0]
+                                Layout.minimumWidth: cueListView.columnWidths[0]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -404,17 +451,93 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.number
+                                text: cueListViewDelegate.rowIndex
+                            }
+
+                            MFXUICB.TransparentTextField {
+                                id: cueListViewDelegateNameTextField
+
+                                Layout.fillHeight: true
+                                Layout.preferredWidth: cueListView.columnWidths[1]
+                                Layout.maximumWidth: cueListView.columnWidths[1]
+                                Layout.minimumWidth: cueListView.columnWidths[1]
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                textSize: 10
+
+                                textColor: cueListViewDelegatePrivateProperties.calculatedTextColor
+
+                                text: cueListViewDelegate.name
+
+                                onTextEdited: {
+                                    if(text.length > 0) {
+                                        cueManager.cueNameChangeRequest(cueListViewDelegate.id, text)
+                                    }
+                                }
+
+                                Keys.priority: Keys.BeforeItem
+                                Keys.onPressed: (keyEvent) => {
+                                                    if((keyEvent === Qt.Key_Escape) || (keyEvent === Qt.Key_Enter)) {
+                                                        cueListViewDelegateNameTextField.focus = false;
+                                                        cueListViewDelegateNameTextField._textItem.focus = false;
+                                                        keyEvent.accepted = true;
+                                                        return;
+                                                    }
+                                                    keyEvent.accepted = false;
+                                                }
+
+                                MouseArea {
+                                    id: cueListViewDelegateNameTextFieldMouseArea
+
+                                    anchors.fill: parent
+
+                                    property bool waitingForASecondClick: false
+                                    property int doubleClickDuration: 300
+
+                                    Timer {
+                                        id: doubleClickTimer
+
+                                        interval: cueListViewDelegateNameTextFieldMouseArea.doubleClickDuration
+                                        running: false
+                                        repeat: false
+
+                                        onTriggered: {
+                                            if(cueListViewDelegateNameTextFieldMouseArea.waitingForASecondClick) {
+                                                cueListViewDelegateNameTextFieldMouseArea.waitingForASecondClick = false;
+                                                cueListViewDelegateSelectionMouseArea.clicked(null)
+                                            }
+                                        }
+                                    }
+
+                                    propagateComposedEvents: false
+                                    preventStealing: true
+
+                                    onClicked: {
+                                        if(waitingForASecondClick) {
+                                            if(doubleClickTimer.running) {
+                                                doubleClickTimer.stop()
+                                                cueListViewDelegateNameTextField.forceFocus()
+                                            }
+                                            waitingForASecondClick = false
+                                        } else {
+                                            doubleClickTimer.start()
+                                            waitingForASecondClick = true;
+                                        }
+                                        mouse.accepted = true
+                                    }
+                                }
                             }
 
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[1] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[2]
+                                Layout.maximumWidth: cueListView.columnWidths[2]
+                                Layout.minimumWidth: cueListView.columnWidths[2]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -422,17 +545,17 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.cue
+                                text: cueListViewDelegate.startTime
                             }
 
                             Text {
 
                                 Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[2] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                Layout.preferredWidth: cueListView.columnWidths[3]
+                                Layout.maximumWidth: cueListView.columnWidths[3]
+                                Layout.minimumWidth: cueListView.columnWidths[3]
 
                                 horizontalAlignment: Text.AlignHCenter
                                 verticalAlignment: Text.AlignVCenter
@@ -440,35 +563,9 @@ Item
                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                 font.pixelSize: 10
 
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
+                                color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
-                                text: model.startTime
-                            }
-
-                            Text {
-
-                                Layout.fillHeight: true
-                                Layout.preferredWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.maximumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-                                Layout.minimumWidth: cueListView.width * (cueListView.columnProportions[3] / cueListView.columnProportions.reduce((a, b) => a + b, 0))
-
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-
-                                font.family: MFXUIS.Fonts.robotoRegular.name
-                                font.pixelSize: 10
-
-                                color: model.selected ? cueListViewDelegate.selectedTextColor : cueListViewDelegate.textColor
-
-                                text: model.totalTime
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-
-                            onClicked: {
-                                model.selected = !model.selected
+                                text: cueListViewDelegate.totalTime
                             }
                         }
                     }
@@ -476,7 +573,7 @@ Item
             }
         }
 
-        Item
+        FocusScope
         {
             id: rightWidget
 
@@ -2077,7 +2174,7 @@ Item
                             actionListModel.clear()
                             actionsList.forEach(function(currAction, index)
                             {
-                                actionListModel.insert(index, {actionName: currAction["name"]})
+                                actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})
                             })
                         }
                     }
@@ -2119,14 +2216,10 @@ Item
 
                     Component.onCompleted:
                     {
-//                        for (let i = 1; i < 81; i++)
-//                        {
-//                            actionListModel.insert(i - 1, {actionName: "name" + i})
-//                        }
-
                         let actionsList = actionsManager.getActions()
 
                         actionListModel.clear()
+
                         actionsList.forEach(function(currAction, index)
                         {
                             actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})

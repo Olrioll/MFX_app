@@ -29,7 +29,7 @@ set(CMAKE_AUTOUIC ON)
 set(QML_IMPORT_PATH ${CMAKE_SOURCE_DIR}/qml/ CACHE STRING "Директория импорта QML-модулей" FORCE)
 
 set(QSUPERMACROS_USE_QT_SIGNALS ON)
-set(QSUPERMACROS_USE_QT_GETTERS_GET ON)
+set(QSUPERMACROS_USE_QT_GETTERS_GET OFF)
 set(QSUPERMACROS_USE_QT_GETTERS ON)
 set(QSUPERMACROS_USE_QT_SETTERS ON)
 set(QSUPERMACROS_USE_QT_RESETS ON)
@@ -89,6 +89,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/CueManager.cpp"
     "src/QQmlObjectListModel.h"
     "src/ComPortModel"
+    "src/CueSortingModel.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
