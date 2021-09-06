@@ -1,16 +1,18 @@
 ﻿#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QTranslator>
 #include <QSharedPointer>
+#include <QTranslator>
+#include <QQuickStyle>
 
-#include "SettingsManager.h"
 #include "ProjectManager.h"
-//#include "ProjectManager2.h"
+#include "SettingsManager.h"
 #include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
 #include "cursormanager.h"
+#include "CueManager.h"
+#include "CueSortingModel.h"
 
 int main(int argc, char** argv)
 {
@@ -23,19 +25,28 @@ int main(int argc, char** argv)
     ActionsManager actionsManager(settings);
     actionsManager.loadActions();
     CursorManager cursorManager;
+    CueManager cueManager;
 
     QTranslator translator;
-    translator.load(settings.value("workDirectory").toString() + "/translations/russian.qm");
+    translator.load("qrc:/translations/russian.qm");
     qApp->installTranslator(&translator);
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
+    CueSortingModel::qmlRegister();
+
     QQmlApplicationEngine engine;
+
+    engine.addImportPath("qrc:/");
+
     engine.rootContext()->setContextProperty("settingsManager", &settings);
     engine.rootContext()->setContextProperty("project", &project);
     engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
-    engine.load(QUrl(QStringLiteral("qrc:/src/qml/main.qml")));
+    engine.rootContext()->setContextProperty("cueManager", &cueManager);
+
+    engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
+
     return app.exec();
 }

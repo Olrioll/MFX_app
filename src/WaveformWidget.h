@@ -4,6 +4,7 @@
 #include <QMediaPlayer>
 #include <QQuickPaintedItem>
 #include <QTimer>
+#include <QtMath>
 #include "AudioTrackRepresentation.h"
 
 class WaveformWidget : public QQuickPaintedItem

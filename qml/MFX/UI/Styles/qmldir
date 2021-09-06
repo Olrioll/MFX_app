@@ -1,0 +1,5 @@
+module MFX.UI.Styles
+
+#Модуль отвечает за стилизацию приложения. Здесь должен реализовывыться механизм смены темы
+singleton Theme 1.0 Theme.qml
+singleton Fonts 1.0 Fonts.qml

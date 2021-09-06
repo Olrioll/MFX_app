@@ -1,0 +1,6 @@
+module MFX.UI.Components.Basic
+
+# Компоненты, которые непосредственно используются в построении интерфейса.
+# Являются производными от MFX.UI.Components.Templates или самостоятельными элементами
+FramelessApplicationWindow 1.0 FramelessApplicationWindow.qml
+TransparentTextField 1.0 TransparentTextField.qml

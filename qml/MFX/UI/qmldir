@@ -1,0 +1,5 @@
+module MFX.UI
+
+#Элементы основного окна приложения
+MFXApplicationWindow 1.0 MFXApplicationWindow.qml
+MFXApplicationWindowMenuBar 1.0 MFXApplicationWindowMenuBar.qml
