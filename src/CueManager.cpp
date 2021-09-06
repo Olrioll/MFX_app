@@ -68,9 +68,9 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int patchId, q
     }
     auto actions = cue->get_actions();
     Action* newAction = new Action(this);
-    //newAction->setPatternName(pattern);
+    newAction->setPatternName(pattern);
     newAction->setId(patchId);
-    newAction->setstartTime(newPosition);
+    newAction->setStartTime(newPosition);
     actions->append(newAction);
 }
 
@@ -81,9 +81,9 @@ void CueManager::setActionProperty(QString cueName, QString pattern, int patchId
         addActionToCue(cueName, pattern, patchId, newPosition);
         return;
     }
-    //action->setPatternName(pattern);
+    action->setPatternName(pattern);
     action->setId(patchId);
-    action->setstartTime(newPosition);
+    action->setStartTime(newPosition);
 }
 
 void CueManager::cueNameChangeRequest(const QUuid &id, const QString &name)
@@ -118,7 +118,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
     for(const auto & c : m_cues->toList()) {
         for(const Action * a : c->get_actions()->toList()) {
             if(a->startTime() == time) {
-                qDebug() << "fire!" << time << c->name() << a->id() /*<< a->patternName()*/;
+                qDebug() << "fire!" << time << c->name() << a->id() << a->patternName();
             }
         }
     }
