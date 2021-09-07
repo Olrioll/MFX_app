@@ -28,7 +28,7 @@ public:
 
     Cue * cueById(const QUuid & id) const;
 
-    CueSortingModel * cuesSorted();
+    CueSortingModel * cuesSorted() const;
 
     void initConnections();
 

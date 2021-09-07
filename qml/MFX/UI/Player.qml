@@ -1315,7 +1315,8 @@ Item
                     {
                         firstAction = actionList[0]
                         position = actionList[0].position
-                        endPosition = actionList[0].position + actionsManager.actionProperties(actions[0].actionName).duration
+
+                        endPosition = actionList[0].position + patternManager.patternByName(actions[0].actionName).duration
                     }
                     else
                         return
@@ -1329,7 +1330,8 @@ Item
                         }
 
                         let currPosition = currActionMarker.position
-                        let currDuration = actionsManager.actionProperties(currActionMarker.name).duration
+
+                        let currDuration = patternManager.patternByName(currActionMarker.name).duration
                         if(currPosition + currDuration > endPosition)
                         {
                             endPosition = currPosition + currDuration
@@ -1358,7 +1360,7 @@ Item
                                                                                             displayedName: currAction.actionName + " - P" + currAction.patchId,
                                                                                             patchId: currAction.patchId,
                                                                                             position: currAction.position,
-                                                                                            prefire: actionsManager.actionProperties(currAction.name).prefire
+                                                                                            prefire: patternManager.patternByName(currAction.actionName).prefireDuration
                                                                                  })
                         actionList.push(newActionMarker)
                     })

@@ -30,11 +30,6 @@ FocusScope
         sceneWidget.visible = true// Временно закомментировали - сцена всегда должна быть видима = visualizationButton.checked
     }
 
-    function checkedActionName()
-    {
-        return actionView.checkedActionName()
-    }
-
     function adjustBackgroundImageOnX()
     {
         sceneWidget.adjustBackgroundImageOnX()
@@ -2027,34 +2022,23 @@ FocusScope
                     cellWidth: 60
                     cellHeight: 52
 
-                    function checkedActionName()
-                    {
-                        for(let i = 0; i < actionListModel.count; i++)
-                        {
-                            if(actionListModel.get(i).checkedState)
-                            {
-                                return actionListModel.get(i).actionName
-                            }
-                        }
+                    ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
 
-                        return ""
-                    }
+                    model: patternManager.patternsFiltered
 
-                    model: ListModel
-                    {
-                        id: actionListModel
-                    }
+                    delegate: Item {
+                        id: actionPlate
 
-                    delegate: Component
-                    {
+                        property string name: model.name
+                        property bool checked: model.uuid === patternManager.selectedPatternUuid
+
+                        width: actionView.cellWidth
+                        height: actionView.cellHeight
+
                         Item
                         {
-                            id: actionPlate
-                            width: actionView.cellWidth
-                            height: actionView.cellHeight
 
-                            property string name: actionName
-                            property bool checked: checkedState
+                            anchors.fill: parent
 
                             Rectangle
                             {
@@ -2112,12 +2096,31 @@ FocusScope
                                 border.width: 2
                                 border.color: "#27AE60"
 
-                                visible: parent.checked
+                                visible: actionPlate.checked
+                            }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            onClicked:  {
+                                if(actionPlate.checked) {
+                                    patternManager.cleanPatternSelectionRequest()
+                                } else {
+                                    patternManager.currentPatternChangeRequest(model.uuid)
+
+                                    let checkedPatches = project.checkedPatchesList()
+
+                                    checkedPatches.forEach(function(patchId)
+                                    {
+                                       project.setPatchProperty(patchId, "act", actionPlate.name);
+                                    })
+                                }
                             }
                         }
                     }
 
-                    ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
+
 
                     Item
                     {
@@ -2161,71 +2164,6 @@ FocusScope
                                 GradientStop { position: 0.0; color: "#FF000000" }
                             }
                         }
-                    }
-
-                    Connections
-                    {
-                        target: actionsManager
-                        function onActionsLoaded()
-                        {
-                            console.log("ACTIONS MANAGER")
-                            let actionsList = actionsManager.getActions()
-
-                            actionListModel.clear()
-                            actionsList.forEach(function(currAction, index)
-                            {
-                                actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})
-                            })
-                        }
-                    }
-
-                    MfxMouseArea
-                    {
-                        id: actionsViewMouseArea
-
-                        anchors.fill: parent
-
-//                        signal actionChecked(string actionName)
-
-                        onClicked:
-                        {
-                            let clickedItemName = actionView.itemAt(mouseX, mouseY).name
-                            if(clickedItemName)
-                            {
-                                for(let i = 0; i < actionListModel.count; i++)
-                                {
-                                    if(actionListModel.get(i).actionName === clickedItemName)
-                                    {
-                                        actionListModel.setProperty(i, "checkedState", true)
-                                        let checkedPatches = project.checkedPatchesList()
-
-                                        checkedPatches.forEach(function(patchId)
-                                        {
-                                           project.setPatchProperty(patchId, "act", clickedItemName);
-                                        })
-                                    }
-
-                                    else
-                                    {
-                                        actionListModel.setProperty(i, "checkedState", false)
-                                    }
-                                }                                
-                            }
-                        }
-                    }
-
-                    Component.onCompleted:
-                    {
-                        let actionsList = actionsManager.getActions()
-
-                        actionListModel.clear()
-
-                        actionsList.forEach(function(currAction, index)
-                        {
-                            actionListModel.insert(index, {actionName: currAction["name"], checkedState: false})
-                        })
-
-                        actionsViewMouseArea.parent = actionView.contentItem
                     }
                 }
             }

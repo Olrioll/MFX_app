@@ -97,12 +97,12 @@ void ProjectManager::newProject()
 
 void ProjectManager::saveProject()
 {
-    if(_currentProjectFile == "")
+    if(m_currentProjectFile == "")
     {
         setCurrentProjectFile(saveProjectDialog());
     }
 
-    if(_currentProjectFile == "")
+    if(m_currentProjectFile == "")
         return;
 
     QFile jsonFile(_settings.workDirectory() + "/project.json");
@@ -116,13 +116,13 @@ void ProjectManager::saveProject()
     jsonFile.waitForBytesWritten(30000);
     jsonFile.close();
 
-    QFile::remove(_currentProjectFile);
+    QFile::remove(m_currentProjectFile);
 
     QProcess proc;
     proc.setProgram("7z.exe");
     QStringList args = {};
     args.append("a");
-    args.append(_currentProjectFile);
+    args.append(m_currentProjectFile);
     args.append("-y");
     args.append(_settings.workDirectory() + "/project.json");
 
@@ -139,7 +139,7 @@ void ProjectManager::saveProject()
     QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
     QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
 
-    _settings.setValue("lastProject", _currentProjectFile);
+    _settings.setValue("lastProject", m_currentProjectFile);
 }
 
 QString ProjectManager::saveProjectDialog()

@@ -11,7 +11,6 @@ CueSortingModel::CueSortingModel(CueSourceModel &cues, QObject* parent)
     , m_cues(cues)
 {
     setSourceModel(&m_cues);
-    //setDynamicSortFilter(false);
     setSortRole(m_cues.roleForName(QByteArray(::sortingRole)));
 
     initConnections();
@@ -24,12 +23,10 @@ void CueSortingModel::initConnections()
         Q_UNUSED(bottomRight)
 
         if(roles.contains(sortRole())) {
-            //this->invalidate();
             this->sort(0, Qt::AscendingOrder);
         }
     });
     connect(&m_cues, &QQmlObjectListModelBase::countChanged, [=](){
-        //this->invalidate();
         this->sort(0, Qt::AscendingOrder);
     });
 }
