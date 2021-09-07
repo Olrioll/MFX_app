@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.0
 
 import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Components.Templates 1.0 as MFXUICT
+import MFX.Models 1.0 as MDFM
 import MFX.UI.Styles 1.0 as MFXUIS
 
 import "qrc:/"
@@ -1929,58 +1930,69 @@ FocusScope
                 radius: 2
             }
 
+            MfxButton
+            {
+                id: lingericButton
+                checkable: true
+                width: 72
+                height: 26
+                text: qsTr("Lingeric")
+                textSize: 10
 
-//            MfxButton
-//            {
-//                id: lingericButton
-//                checkable: true
-//                width: 72
-//                height: 26
-//                text: qsTr("Lingeric")
-//                textSize: 10
+                anchors.top: parent.top
+                anchors.left: parent.left
 
-//                anchors.top: parent.top
-//                anchors.left: parent.left
+                ButtonGroup.group: actionTypesGroup
 
-//                ButtonGroup.group: actionTypesGroup
-//            }
+                onClicked: {
+                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Sequential)
+                }
+            }
 
-//            MfxButton
-//            {
-//                id: dynamicButton
-//                checkable: true
-//                width: 72
-//                height: 26
-//                text: qsTr("Dynamic")
-//                textSize: 10
+            MfxButton
+            {
+                id: dynamicButton
+                checkable: true
+                width: 72
+                height: 26
+                text: qsTr("Dynamic")
+                textSize: 10
 
-//                anchors.top: parent.top
-//                anchors.left: lingericButton.right
+                anchors.top: parent.top
+                anchors.left: lingericButton.right
 
-//                ButtonGroup.group: actionTypesGroup
-//            }
+                ButtonGroup.group: actionTypesGroup
 
-//            MfxButton
-//            {
-//                id: staticButton
-//                checkable: true
-//                width: 72
-//                height: 26
-//                text: qsTr("Static")
-//                textSize: 10
+                onClicked: {
+                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Dynamic)
+                }
+            }
 
-//                anchors.top: parent.top
-//                anchors.left: dynamicButton.right
+            MfxButton
+            {
+                id: staticButton
+                checkable: true
+                width: 72
+                height: 26
+                text: qsTr("Static")
+                textSize: 10
 
-//                ButtonGroup.group: actionTypesGroup
-//            }
+                anchors.top: parent.top
+                anchors.left: dynamicButton.right
 
-//            ButtonGroup
-//            {
-//                id: actionTypesGroup
-//                checkedButton: lingericButton
+                ButtonGroup.group: actionTypesGroup
 
-//            }
+                onClicked: {
+                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Static)
+                }
+            }
+
+            ButtonGroup
+            {
+                id: actionTypesGroup
+                checkedButton: lingericButton
+
+            }
 
             Rectangle
             {

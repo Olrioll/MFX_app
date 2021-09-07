@@ -11,7 +11,7 @@
 
 class PatternFilteringModel : public QSortFilterProxyModel {
     Q_OBJECT
-    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, filteringRole, FilteringRole, PatternType::Unknown)
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, filteringType, FilteringType, PatternType::Sequential)
 public:
     using PatternSourceModel = QQmlObjectListModel<Pattern>;
 
@@ -23,7 +23,7 @@ public:
     static void qmlRegister();
 
 protected:
-    bool filterAcceptsRow(int row, const QModelIndex& parent) const override;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const override;
 
 private:
     PatternSourceModel& m_patterns;
