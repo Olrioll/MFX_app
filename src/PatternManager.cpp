@@ -107,20 +107,8 @@ void PatternManager::initPatterns()
 
             auto pattern = new Pattern(this);
             pattern->setName(name);
-
-            //TODO временный генератор случайного типа паттерна
-            switch(QRandomGenerator::global()->generate() % 3) {
-            case 0:
-                pattern->setType(PatternType::Sequential);
-                break;
-            case 1:
-                pattern->setType(PatternType::Dynamic);
-                break;
-            case 2:
-                pattern->setType(PatternType::Static);
-                break;
-            }
-
+            //TODO типы паттернов пока не реализованы, поэтому для всех делаем общий стандарт - Sequential
+            pattern->setType(PatternType::Sequential);
             pattern->setDuration(duration);
             pattern->setPrefireDurarion(prefire);
             m_patterns->append(pattern);

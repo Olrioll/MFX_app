@@ -1930,6 +1930,11 @@ FocusScope
                 radius: 2
             }
 
+            //TODO пока что тип данных для паттерны скрыт, а соответственно, скрыты кнопки фильтрации по типу паттерна
+            //     а также убран отступ для панели с паттернами. После того, как фича будет реализована - достаточно убрать
+            //     эту переменную в местах, где она используется, вернув правильные значения
+            property bool patternTypesFeatureHidden: true
+
             MfxButton
             {
                 id: lingericButton
@@ -1943,6 +1948,8 @@ FocusScope
                 anchors.left: parent.left
 
                 ButtonGroup.group: actionTypesGroup
+
+                visible: !actionViewWidget.patternTypesFeatureHidden
 
                 onClicked: {
                     patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Sequential)
@@ -1963,6 +1970,8 @@ FocusScope
 
                 ButtonGroup.group: actionTypesGroup
 
+                visible: !actionViewWidget.patternTypesFeatureHidden
+
                 onClicked: {
                     patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Dynamic)
                 }
@@ -1981,6 +1990,8 @@ FocusScope
                 anchors.left: dynamicButton.right
 
                 ButtonGroup.group: actionTypesGroup
+
+                visible: !actionViewWidget.patternTypesFeatureHidden
 
                 onClicked: {
                     patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Static)
@@ -2001,7 +2012,7 @@ FocusScope
                 color: "#4f4f4f"
                 radius: 2
 
-                anchors.topMargin: 24
+                anchors.topMargin: !actionViewWidget.patternTypesFeatureHidden ? 24 : 0
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
