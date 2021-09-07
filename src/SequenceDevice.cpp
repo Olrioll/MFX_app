@@ -8,15 +8,5 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
 
 void SequenceDevice::runPattern(QString patternName)
 {
-    qDebug() << "SequenceDevice::runPattern:" << id() << patternName << portName(); // todo: send commands to serialport
-}
-
-QString SequenceDevice::portName()
-{
-    return comPort();
-}
-
-void SequenceDevice::setPortName(QString portName)
-{
-    setComPort(portName);
+    DMXWorker::instance()->write(QByteArray::fromHex(QVariant("DEADBEAF").toByteArray())); // todo: send simple DMX512 commands
 }

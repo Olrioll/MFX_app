@@ -50,10 +50,6 @@ void DeviceManager::onRunPattern(int deviceId, QString patternName)
     if(device == NULL) {
         return;
     }
-    if(device->deviceType() == DEVICE_TYPE_SEQUENCES) {
-        device->setPortName(comPort());
-    }
     device->runPattern(patternName);
     emit drawPatternInGui(deviceId, patternName);
 }
-

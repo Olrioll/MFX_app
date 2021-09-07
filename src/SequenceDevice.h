@@ -9,6 +9,7 @@
 #include <QSuperMacros.h>
 
 #include "Device.h"
+#include "DmxWorker.h"
 
 class SequenceDevice : public Device {
     Q_OBJECT
@@ -24,6 +25,4 @@ public:
     explicit SequenceDevice(QObject* parent = nullptr);
 
     void runPattern(QString patternName) override;
-    QString portName() override;
-    void setPortName(QString portName) override;
 };

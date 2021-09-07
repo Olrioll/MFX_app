@@ -28,6 +28,4 @@ public:
     explicit Device(QObject* parent = nullptr);
 
     virtual void runPattern(QString patternName) = 0;
-    virtual QString portName() = 0;
-    virtual void setPortName(QString portName) = 0;
 };
