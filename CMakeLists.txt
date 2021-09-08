@@ -90,6 +90,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/QQmlObjectListModel.h"
     "src/ComPortModel"
     "src/CueSortingModel.cpp"
+    "src/DmxWorker.cpp"
     "src/Pattern.cpp"
     "src/PatternManager.cpp"
     "src/PatternFilteringModel.cpp"

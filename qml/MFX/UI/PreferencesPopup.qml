@@ -178,6 +178,7 @@ Item {
                             }
 
                             MFXUICT.ComboBox {
+                                id: selectComPortComboBox
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: implicitHeight
                                 Layout.maximumHeight: implicitHeight
@@ -185,18 +186,31 @@ Item {
 
                                 currentIndex: 0
 
-                                model: ListModel {
-                                    ListElement { text: "COM1"; value: 1 }
-                                    ListElement { text: "COM2"; value: 2 }
-                                    ListElement { text: "COM3"; value: 2 }
-                                    ListElement { text: "COM4"; value: 2 }
-                                    ListElement { text: "COM5"; value: 2 }
-                                    ListElement { text: "COM6"; value: 2 }
-                                    ListElement { text: "COM7"; value: 2 }
-                                    ListElement { text: "COM8"; value: 2 }
-                                    ListElement { text: "COM9"; value: 2 }
-                                    ListElement { text: "COM10"; value: 2 }
-                                    ListElement { text: "COM11"; value: 2 }
+                                model: comPortModel
+                                textRole: "display"
+                                delegate: Text {
+                                    x: 4
+                                    width: ListView.view.width - 8
+                                    height: 10
+                                    color: "white"
+
+                                    font.family: MFXUIS.Fonts.robotoRegular.name
+                                    font.pixelSize: 8
+
+                                    text: display
+
+                                    MouseArea {
+                                        anchors.fill: parent
+
+                                        onClicked: {
+                                            selectComPortComboBox.currentIndex = index
+                                            selectComPortComboBox.popup.close()
+                                        }
+                                    }
+                                }
+                                popup.height: delegate.height
+                                Component.onCompleted: {
+                                    currentIndex = comPortModel.getModelIndexByPortName(deviceManager.comPort)
                                 }
                             }
                         }
@@ -966,6 +980,7 @@ Item {
                 text: qsTr("Apply")
 
                 onClicked: {
+                    deviceManager.comPort = selectComPortComboBox.currentText
                 }
             }
         }

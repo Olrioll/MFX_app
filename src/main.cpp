@@ -13,6 +13,7 @@
 #include "CueManager.h"
 #include "CueSortingModel.h"
 #include "DeviceManager.h"
+#include "DmxWorker.h"
 #include "PatternManager.h"
 #include "PatternFilteringModel.h"
 
@@ -30,6 +31,7 @@ int main(int argc, char** argv)
     CueManager cueManager;
     DeviceManager deviceManager;
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
+    QObject::connect(&deviceManager, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged);
 
     QTranslator translator;
     translator.load("qrc:/translations/russian.qm");
@@ -52,6 +54,8 @@ int main(int argc, char** argv)
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("cueManager", &cueManager);
     engine.rootContext()->setContextProperty("deviceManager", &deviceManager);
+    engine.rootContext()->setContextProperty("comPortModel", &deviceManager.m_comPortModel);
+    engine.rootContext()->setContextProperty("dmxWorker", DMXWorker::instance());
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 

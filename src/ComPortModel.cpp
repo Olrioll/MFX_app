@@ -17,3 +17,11 @@ void ComPortModel::reload()
     endResetModel();
     emit dataReady();
 }
+
+int ComPortModel::getModelIndexByPortName(QString portName)
+{
+    if(portName == "") {
+        return 0;
+    }
+    return stringList().indexOf(portName);
+}

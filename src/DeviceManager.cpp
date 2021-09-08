@@ -3,6 +3,7 @@
 DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 {
     m_devices = new QQmlObjectListModel<Device>(this);
+    setComPort(m_comPortModel.stringList().at(0));
 }
 
 Device *DeviceManager::getDevice(int id)
