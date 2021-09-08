@@ -368,8 +368,8 @@ FocusScope
                         property var id: model.uuid
                         property int rowIndex: model.index
                         property string name: model.name
-                        property var startTime: model.startTime
-                        property var totalTime: model.duration
+                        property string startTime: model.startTimeDecorator
+                        property string totalTime: model.durationTimeDecorator
 
                         property color activeTextColor: "#F2C94C"
                         property color activeBackgroundColor: "#1AFFFAFA"

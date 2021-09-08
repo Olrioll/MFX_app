@@ -57,8 +57,9 @@ void CueManager::addCue(QVariantMap properties)
     //double newYposition = properties.value("newYposition").toDouble();
     Cue* newCue = new Cue(this);
 
-    //TODO временно добавил для генерации случайного времени старта кьюшки
+    //TODO временно добавил для генерации случайного времени старта и длины кьюшки
     newCue->setStartTime(QRandomGenerator::global()->generate64() % 100000);
+    newCue->setDurationTime(QRandomGenerator::global()->generate64() % 100);
     newCue->setName(name);
     m_cues->append(newCue);
 }
