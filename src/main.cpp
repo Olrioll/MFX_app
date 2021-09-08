@@ -7,7 +7,6 @@
 
 #include "ProjectManager.h"
 #include "SettingsManager.h"
-#include "ActionsManager.h"
 #include "AudioTrackRepresentation.h"
 #include "WaveformWidget.h"
 #include "cursormanager.h"
@@ -15,6 +14,8 @@
 #include "CueSortingModel.h"
 #include "DeviceManager.h"
 #include "DmxWorker.h"
+#include "PatternManager.h"
+#include "PatternFilteringModel.h"
 
 int main(int argc, char** argv)
 {
@@ -24,8 +25,8 @@ int main(int argc, char** argv)
 
     SettingsManager settings;
     ProjectManager project(settings);
-    ActionsManager actionsManager(settings);
-    actionsManager.loadActions();
+    PatternManager patternManager(settings);
+    patternManager.initPatterns();
     CursorManager cursorManager;
     CueManager cueManager;
     DeviceManager deviceManager;
@@ -39,6 +40,8 @@ int main(int argc, char** argv)
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
     CueSortingModel::qmlRegister();
+    PatternManager::qmlRegister();
+    PatternFilteringModel::qmlRegister();
 
     QQmlApplicationEngine engine;
 
@@ -46,7 +49,7 @@ int main(int argc, char** argv)
 
     engine.rootContext()->setContextProperty("settingsManager", &settings);
     engine.rootContext()->setContextProperty("project", &project);
-    engine.rootContext()->setContextProperty("actionsManager", &actionsManager);
+    engine.rootContext()->setContextProperty("patternManager", &patternManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("cueManager", &cueManager);

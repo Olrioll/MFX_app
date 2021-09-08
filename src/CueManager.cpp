@@ -19,6 +19,10 @@ CueManager::~CueManager()
     m_cues->deleteLater();
 }
 
+void CueManager::initConnections()
+{
+}
+
 Cue *CueManager::getCue(QString name)
 {
     Cue* cue = NULL;
@@ -38,7 +42,7 @@ Action *CueManager::getAction(QString cueName, int deviceId)
     if(cue == NULL) {
         return NULL;
     }
-    for(const auto & a : cue->get_actions()->toList()) {
+    for(const auto & a : cue->actions()->toList()) {
         if(a->deviceId() == deviceId) {
             act = a;
             break;
@@ -53,8 +57,9 @@ void CueManager::addCue(QVariantMap properties)
     //double newYposition = properties.value("newYposition").toDouble();
     Cue* newCue = new Cue(this);
 
-    //TODO временно добавил для генерации случайного времени старта кьюшки
+    //TODO временно добавил для генерации случайного времени старта и длины кьюшки
     newCue->setStartTime(QRandomGenerator::global()->generate64() % 100000);
+    newCue->setDurationTime(QRandomGenerator::global()->generate64() % 100);
     newCue->setName(name);
     m_cues->append(newCue);
 }
@@ -65,7 +70,7 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, 
     if(cue == NULL) {
         return;
     }
-    auto actions = cue->get_actions();
+    auto actions = cue->actions();
     Action* newAction = new Action(this);
     newAction->setPatternName(pattern);
     newAction->setDeviceId(deviceId);
@@ -103,19 +108,15 @@ Cue *CueManager::cueById(const QUuid &id) const
     return nullptr;
 }
 
-CueSortingModel *CueManager::cuesSorted()
+CueSortingModel *CueManager::cuesSorted() const
 {
     return m_cuesSorted;
-}
-
-void CueManager::initConnections()
-{
 }
 
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
     for(const auto & c : m_cues->toList()) {
-        for(const Action * a : c->get_actions()->toList()) {
+        for(const Action * a : c->actions()->toList()) {
             if(a->startTime() == time) {
                 emit runPattern(a->deviceId(), a->patternName());
             }

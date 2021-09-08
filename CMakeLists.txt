@@ -28,11 +28,13 @@ set(CMAKE_AUTOUIC ON)
 
 set(QML_IMPORT_PATH ${CMAKE_SOURCE_DIR}/qml/ CACHE STRING "Директория импорта QML-модулей" FORCE)
 
+
 set(QSUPERMACROS_USE_QT_SIGNALS ON)
 set(QSUPERMACROS_USE_QT_GETTERS_GET OFF)
 set(QSUPERMACROS_USE_QT_GETTERS ON)
 set(QSUPERMACROS_USE_QT_SETTERS ON)
 set(QSUPERMACROS_USE_QT_RESETS ON)
+set(QSUPERMACROS_USE_QT_PREFIX ON)
 set(QSUPERMACROS_BUILD_SHARED OFF)
 set(QSUPERMACROS_BUILD_STATIC ON)
 set(QSUPERMACROS_BUILD_DOC OFF)
@@ -78,10 +80,8 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/JsonSerializable.cpp"
     "src/ProjectManager.cpp"
     "src/CursorManager.cpp"
-    "src/ActionsManager.cpp"
     "src/Cue.cpp"
     "src/Action.cpp"
-    "src/PatternModel.cpp"
     "src/Device.cpp"
     "src/SequenceDevice.cpp"
     "src/Group.cpp"
@@ -91,6 +91,9 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/ComPortModel"
     "src/CueSortingModel.cpp"
     "src/DmxWorker.cpp"
+    "src/Pattern.cpp"
+    "src/PatternManager.cpp"
+    "src/PatternFilteringModel.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
