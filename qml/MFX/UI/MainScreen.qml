@@ -1283,9 +1283,11 @@ FocusScope
                         function loadGroups()
                         {
                             groupListModel.append({groupName: "Sequences"})
-                            groupListModel.append({groupName: "Dimmer"})
-                            groupListModel.append({groupName: "Shot"})
-                            groupListModel.append({groupName: "Pyro"})
+                            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+                            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+//                            groupListModel.append({groupName: "Dimmer"})
+//                            groupListModel.append({groupName: "Shot"})
+//                            groupListModel.append({groupName: "Pyro"})
                         }
 
                         delegate: Item
