@@ -74,7 +74,8 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, 
     Action* newAction = new Action(this);
     newAction->setPatternName(pattern);
     newAction->setDeviceId(deviceId);
-    newAction->setStartTime(newPosition);
+    quint64 position = newPosition / 10;
+    newAction->setStartTime(position * 10);
     actions->append(newAction);
 }
 
@@ -87,7 +88,8 @@ void CueManager::setActionProperty(QString cueName, QString pattern, int deviceI
     }
     action->setPatternName(pattern);
     action->setDeviceId(deviceId);
-    action->setStartTime(newPosition);
+    quint64 position = newPosition / 10;
+    action->setStartTime(position * 10);
 }
 
 void CueManager::cueNameChangeRequest(const QUuid &id, const QString &name)
