@@ -1826,11 +1826,16 @@ FocusScope
             width: 68
             text: qsTr("Sequences")
             textSize: 10
+            color: "#2F80ED"
 
             anchors.top: parent.top
             anchors.left: parent.left
 
             ButtonGroup.group: rightButtonsGroup
+
+            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+            visible: true
         }
 
         MfxButton
@@ -1840,12 +1845,17 @@ FocusScope
             width: 68
             text: qsTr("Dimmer")
             textSize: 10
+            color: "#2F80ED"
 
             anchors.top: parent.top
             anchors.leftMargin: 2
             anchors.left: sequencesButton.right
 
             ButtonGroup.group: rightButtonsGroup
+
+            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+            visible: false
         }
 
         MfxButton
@@ -1855,12 +1865,17 @@ FocusScope
             width: 68
             text: qsTr("Shot")
             textSize: 10
+            color: "#2F80ED"
 
             anchors.top: parent.top
             anchors.leftMargin: 2
             anchors.left: dimmerButton.right
 
             ButtonGroup.group: rightButtonsGroup
+
+            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+            visible: false
         }
 
         MfxButton
@@ -1870,12 +1885,17 @@ FocusScope
             width: 68
             text: qsTr("Pyro")
             textSize: 10
+            color: "#2F80ED"
 
             anchors.top: parent.top
             anchors.leftMargin: 2
             anchors.left: shotButton.right
 
             ButtonGroup.group: rightButtonsGroup
+
+            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+            visible: false
         }
 
         MfxButton
@@ -1891,6 +1911,10 @@ FocusScope
             anchors.left: pyroButton.right
 
             ButtonGroup.group: rightButtonsGroup
+
+            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+            visible: false
         }
 
         ButtonGroup
@@ -1910,6 +1934,9 @@ FocusScope
             anchors.left: cueButton.right
             anchors.right: parent.right
 
+            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+            visible: false
         }
 
         Item
