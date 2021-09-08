@@ -122,5 +122,6 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
             }
         }
     }
+    emit DMXWorker::instance()->playbackTimeChanged();
 }
 

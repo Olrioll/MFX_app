@@ -8,6 +8,7 @@
 #include "QQmlObjectListModel.h"
 
 #include "Cue.h"
+#include "DmxWorker.h"
 
 class CueSortingModel;
 

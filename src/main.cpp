@@ -31,7 +31,6 @@ int main(int argc, char** argv)
     CueManager cueManager;
     DeviceManager deviceManager;
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
-    QObject::connect(&deviceManager, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged);
 
     QTranslator translator;
     translator.load("qrc:/translations/russian.qm");

@@ -2,13 +2,14 @@
 
 DMXWorker::DMXWorker(QObject *parent): QSerialPort(parent)
 {
-    connect(this, &QSerialPort::readyRead, this, &DMXWorker::onReadyRead);
     connect(this, &QSerialPort::bytesWritten, this, &DMXWorker::onBytesWritten);
     connect(this, &QSerialPort::errorOccurred, this, &DMXWorker::onError);
-    connect(this, &DMXWorker::portChanged, this, &DMXWorker::onPortChanged);
-    setBaudRate(250000);
+    connect(this, &DMXWorker::startDMXLoop, this, &DMXWorker::onStartDMXLoop);
+    connect(this, &DMXWorker::stopDMXLoop, this, &DMXWorker::onStopDMXLoop);
+    connect(this, &DMXWorker::playbackTimeChanged, this, &DMXWorker::onPlaybackTimeChanged);
+    setBaudRate(115200/*250000*/);
     setDataBits(DataBits::Data8);
-    setStopBits(StopBits::TwoStop);
+    setStopBits(StopBits::OneStop/*StopBits::TwoStop*/);
     setParity(Parity::NoParity);
     setFlowControl(FlowControl::NoFlowControl);
 }
@@ -21,26 +22,27 @@ DMXWorker *DMXWorker::instance()
 
 void DMXWorker::onComPortChanged(QString port)
 {
-    if(isOpen()) {
-        close();
-    }
     setPortName(port);
-    const bool result = open(QIODevice::ReadWrite);
-    m_port = result ? port: "";
-    emit portChanged(m_port);
 }
 
-void DMXWorker::onPortChanged(QString port)
+void DMXWorker::onPlayerStateChanged(QMediaPlayer::State state)
 {
-    Q_UNUSED(port);
-    // todo: start DMX512 protocol loop
-    QByteArray writeData = QByteArray::fromHex(QVariant("FFFFFFFFFFFF").toByteArray());
+    if(state == QMediaPlayer::PlayingState) {
+        emit startDMXLoop();
+    } else {
+        emit stopDMXLoop();
+    }
+}
+
+void DMXWorker::onPlaybackTimeChanged()
+{
+    QByteArray writeData = QByteArray::fromHex(QVariant("00").toByteArray());
     write(writeData);
 }
 
 void DMXWorker::onBytesWritten(qint64 bytes)
 {
-    qDebug() << "DMXWorker::onBytesWritten:" << tr("%1 bytes written").arg(bytes);
+    //qDebug() << "DMXWorker::onBytesWritten:" << tr("%1 bytes written").arg(bytes);
 }
 
 void DMXWorker::onError(QSerialPort::SerialPortError error)
@@ -50,10 +52,23 @@ void DMXWorker::onError(QSerialPort::SerialPortError error)
     }
 }
 
-void DMXWorker::onReadyRead()
+void DMXWorker::onStartDMXLoop()
 {
-    while(bytesAvailable()) {
-        QByteArray bytes = readAll();
-        qDebug() << "DMXWorker::onReadyRead:" << bytes.toHex();
+    if(!isOpen()) {
+        const bool result = open(QIODevice::ReadWrite);
+        if(!result) {
+            qDebug() << "DMXWorker::onStartDMXLoop:" << tr("Error: %1 (port %2)").arg(errorString()).arg(portName());
+        } else {
+            qDebug() << "DMXWorker::onStartDMXLoop:" << tr("Port %1 opened").arg(portName());
+        }
     }
 }
+
+void DMXWorker::onStopDMXLoop()
+{
+    if(isOpen()) {
+        close();
+    }
+    qDebug() << "DMXWorker::onStopDMXLoop";
+}
+

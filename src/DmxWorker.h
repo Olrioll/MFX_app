@@ -4,6 +4,7 @@
 #include <QSerialPort>
 #include <QTimer>
 #include <QFile>
+#include <QMediaPlayer>
 #include <QDebug>
 
 class DMXWorker : public QSerialPort
@@ -14,19 +15,22 @@ public:
 
 public slots:
     void onComPortChanged(QString port);
+    void onPlayerStateChanged(QMediaPlayer::State state);
+    void onPlaybackTimeChanged();
 
 signals:
-    void portChanged(QString port);
+    void playbackTimeChanged();
+    void startDMXLoop();
+    void stopDMXLoop();
 
 private slots:
-    void onPortChanged(QString port);
     void onBytesWritten(qint64 bytes);
     void onError(QSerialPort::SerialPortError error);
-    void onReadyRead();
 
 private:
+    void onStartDMXLoop();
+    void onStopDMXLoop();
     explicit DMXWorker(QObject *parent = nullptr);
-    QString m_port;
 };
 
 #endif // DMXWORKER_H

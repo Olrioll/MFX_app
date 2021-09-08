@@ -28,6 +28,7 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
         }
         prevPos = pos;
     });
+    connect(&_player, &QMediaPlayer::stateChanged, DMXWorker::instance(), &DMXWorker::onPlayerStateChanged);
 }
 
 void WaveformWidget::paint(QPainter *painter)
