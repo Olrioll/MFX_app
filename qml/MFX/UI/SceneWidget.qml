@@ -19,6 +19,7 @@ Item
     property real minScaleFactor: 0.2
     property int prevWidth
     property int dWidth
+    property bool blockEditions: false //Блокирует изменение позиций устройств
 
     function loadPatches()
     {
@@ -226,37 +227,39 @@ Item
 
             else
             {
-                for(let i = patchIcons.length - 1; i >= 0 ; i--)
-                {
-                    let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
-                    let currWidth = patchIcons[i].width
-                    let currHeight = patchIcons[i].height
-                    if(mouseX > currCoord.x - 10 && mouseX < currCoord.x + currWidth + 10)
+                if(!sceneWidget.blockEditions) {
+                    for(let i = patchIcons.length - 1; i >= 0 ; i--)
                     {
-                        if(mouseY > currCoord.y -10 && mouseY < currCoord.y + currHeight + 10)
+                        let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
+                        let currWidth = patchIcons[i].width
+                        let currHeight = patchIcons[i].height
+                        if(mouseX > currCoord.x - 10 && mouseX < currCoord.x + currWidth + 10)
                         {
-                            isDraggingIcon = true
-
-                            draggingIconsList = []
-                            draggingIconsX = []
-                            draggingIconsY = []
-
-                            draggingIconsList.push(patchIcons[i])
-                            draggingIconsX.push(patchIcons[i].x)
-                            draggingIconsY.push(patchIcons[i].y)
-
-                            //--- Обрабатываем другие выделенные иконки
-                            for(i = 0; i < patchIcons.length; i++)
+                            if(mouseY > currCoord.y -10 && mouseY < currCoord.y + currHeight + 10)
                             {
-                                if(patchIcons[i] !== drag.target && patchIcons[i].checked)
-                                {
-                                    draggingIconsList.push(patchIcons[i])
-                                    draggingIconsX.push(patchIcons[i].x)
-                                    draggingIconsY.push(patchIcons[i].y)
-                                }
-                            }
+                                isDraggingIcon = true
 
-                            break;
+                                draggingIconsList = []
+                                draggingIconsX = []
+                                draggingIconsY = []
+
+                                draggingIconsList.push(patchIcons[i])
+                                draggingIconsX.push(patchIcons[i].x)
+                                draggingIconsY.push(patchIcons[i].y)
+
+                                //--- Обрабатываем другие выделенные иконки
+                                for(i = 0; i < patchIcons.length; i++)
+                                {
+                                    if(patchIcons[i] !== drag.target && patchIcons[i].checked)
+                                    {
+                                        draggingIconsList.push(patchIcons[i])
+                                        draggingIconsX.push(patchIcons[i].x)
+                                        draggingIconsY.push(patchIcons[i].y)
+                                    }
+                                }
+
+                                break;
+                            }
                         }
                     }
                 }

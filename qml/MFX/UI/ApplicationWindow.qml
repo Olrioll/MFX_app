@@ -69,6 +69,8 @@ ApplicationWindow
     SceneWidget
     {
         id: sceneWidget
+
+        blockEditions: screensLayout.currentIndex !== 1
     }
 
     MfxMouseArea
