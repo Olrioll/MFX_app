@@ -7,6 +7,7 @@
 #include "SequenceDevice.h"
 #include "QQmlObjectListModel.h"
 #include "ComPortModel.h"
+#include "PatternManager.h"
 
 class DeviceManager : public QObject
 {
@@ -19,6 +20,7 @@ public:
     void runPatternOnDevice(int deviceId, int patternNum);
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
+    PatternManager *m_patternManager;
 
 signals:
     void drawPatternInGui(int deviceId, QString patternName);

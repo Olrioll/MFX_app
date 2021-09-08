@@ -6,6 +6,7 @@
 #include <QSuperMacros.h>
 #include <QQmlConstRefPropertyHelpers.h>
 #include <QQmlVarPropertyHelpers.h>
+#include "Pattern.h"
 
 enum DeviceType {
     DEVICE_TYPE_SEQUENCES,
@@ -27,5 +28,5 @@ class Device  : public QObject {
 public:
     explicit Device(QObject* parent = nullptr);
 
-    virtual void runPattern(QString patternName) = 0;
+    virtual void runPattern(Pattern* p) = 0;
 };

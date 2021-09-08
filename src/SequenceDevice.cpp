@@ -6,7 +6,8 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
     setImageFile("qrc:/device_sequences");
 }
 
-void SequenceDevice::runPattern(QString patternName)
+void SequenceDevice::runPattern(Pattern *p)
 {
+    qDebug() << p->name() << p->duration() << p->prefireDuration();
     DMXWorker::instance()->write(QByteArray::fromHex(QVariant("DEADBEAF").toByteArray())); // todo: send simple DMX512 commands
 }

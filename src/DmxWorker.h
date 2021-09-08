@@ -16,21 +16,22 @@ public:
 public slots:
     void onComPortChanged(QString port);
     void onPlayerStateChanged(QMediaPlayer::State state);
-    void onPlaybackTimeChanged();
+    void onPlaybackTimeChanged(quint64 time);
+    void onTimer();
 
 signals:
-    void playbackTimeChanged();
-    void startDMXLoop();
-    void stopDMXLoop();
+    void playbackTimeChanged(quint64 time);
 
 private slots:
     void onBytesWritten(qint64 bytes);
     void onError(QSerialPort::SerialPortError error);
 
 private:
-    void onStartDMXLoop();
-    void onStopDMXLoop();
+    QTimer m_timer;
+    quint64 m_playbackTime;
+    bool m_processing = false;
     explicit DMXWorker(QObject *parent = nullptr);
+    void reopenComPort();
 };
 
 #endif // DMXWORKER_H

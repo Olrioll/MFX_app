@@ -30,6 +30,7 @@ int main(int argc, char** argv)
     CursorManager cursorManager;
     CueManager cueManager;
     DeviceManager deviceManager;
+    deviceManager.m_patternManager = &patternManager;
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
 
     QTranslator translator;

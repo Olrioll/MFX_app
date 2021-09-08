@@ -117,13 +117,13 @@ CueSortingModel *CueManager::cuesSorted() const
 
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
+    quint64 t = time / 10;
     for(const auto & c : m_cues->toList()) {
         for(const Action * a : c->actions()->toList()) {
-            if(a->startTime() == time) {
+            if(a->startTime() == t * 10) {
                 emit runPattern(a->deviceId(), a->patternName());
             }
         }
     }
-    emit DMXWorker::instance()->playbackTimeChanged();
+    emit DMXWorker::instance()->playbackTimeChanged(t * 10);
 }
-

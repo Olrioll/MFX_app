@@ -24,5 +24,5 @@ class SequenceDevice : public Device {
 public:
     explicit SequenceDevice(QObject* parent = nullptr);
 
-    void runPattern(QString patternName) override;
+    void runPattern(Pattern* p) override;
 };
