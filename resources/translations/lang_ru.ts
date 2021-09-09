@@ -5,1011 +5,1022 @@
     <name>AddDimmerWidget</name>
     <message>
         <source>Add Dimmer</source>
-        <translation type="unfinished">Открыть Проект</translation>
+        <translation>Открыть Проект</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Количество</translation>
     </message>
     <message>
         <source>DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF поз.</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF кан.</translation>
     </message>
     <message>
         <source>channel</source>
-        <translation type="unfinished"></translation>
+        <translation>канал</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Установить</translation>
     </message>
     <message>
         <source>Edit Dimmer</source>
-        <translation type="unfinished"></translation>
+        <translation>Редакт. Диммер</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Идент. патча</translation>
     </message>
 </context>
 <context>
     <name>AddGroupWindow</name>
     <message>
         <source>Group name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя группы</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить</translation>
     </message>
 </context>
 <context>
     <name>AddPyroWidget</name>
     <message>
         <source>Add Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить Пиро</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Количество</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF поз.</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF кан.</translation>
     </message>
     <message>
         <source>channel</source>
-        <translation type="unfinished"></translation>
+        <translation>канал</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Установить</translation>
     </message>
     <message>
         <source>Edit Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Редакт. Пиро</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Идент. патча</translation>
     </message>
 </context>
 <context>
     <name>AddSequencesWidget</name>
     <message>
         <source>Add Sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить Последовательности</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Количество</translation>
     </message>
     <message>
         <source>DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF поз.</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF кан.</translation>
     </message>
     <message>
         <source>height</source>
-        <translation type="unfinished"></translation>
+        <translation>высота</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Установить</translation>
     </message>
     <message>
         <source>min ang</source>
-        <translation type="unfinished"></translation>
+        <translation>мин. угол</translation>
     </message>
     <message>
         <source>max ang</source>
-        <translation type="unfinished"></translation>
+        <translation>макс. угол</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation>0</translation>
     </message>
     <message>
         <source>o</source>
-        <translation type="unfinished"></translation>
+        <translation>o</translation>
     </message>
     <message>
         <source>-115</source>
-        <translation type="unfinished"></translation>
+        <translation>-115</translation>
     </message>
     <message>
         <source>+115</source>
-        <translation type="unfinished"></translation>
+        <translation>+115</translation>
     </message>
     <message>
         <source>Effect type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип эффекта</translation>
     </message>
     <message>
         <source>Edit sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Редакт. последовательности</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Идент. патча</translation>
     </message>
 </context>
 <context>
     <name>AddShotWidget</name>
     <message>
         <source>Add Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить Выстрел</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Количество</translation>
     </message>
     <message>
         <source>DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF поз.</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF кан.</translation>
     </message>
     <message>
         <source>height</source>
-        <translation type="unfinished"></translation>
+        <translation>высота</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Установить</translation>
     </message>
     <message>
         <source>angle</source>
-        <translation type="unfinished"></translation>
+        <translation>угол</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation>0</translation>
     </message>
     <message>
         <source>o</source>
-        <translation type="unfinished"></translation>
+        <translation>o</translation>
     </message>
     <message>
         <source>-90</source>
-        <translation type="unfinished"></translation>
+        <translation>-90</translation>
     </message>
     <message>
         <source>90</source>
-        <translation type="unfinished"></translation>
+        <translation>90</translation>
     </message>
     <message>
         <source>180</source>
-        <translation type="unfinished"></translation>
+        <translation>180</translation>
     </message>
     <message>
         <source>Effect type</source>
-        <translation type="unfinished"></translation>
+        <translation>Тип эффекта</translation>
     </message>
     <message>
         <source>Edit Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Редакт. Выстрел</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Идент. патча</translation>
     </message>
 </context>
 <context>
     <name>ApplicationWindow</name>
     <message>
         <source>MFX</source>
-        <translation type="unfinished"></translation>
+        <translation>MFX</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Недоступно</translation>
     </message>
     <message>
         <source>Downloading...</source>
-        <translation type="unfinished"></translation>
+        <translation>Загрузка...</translation>
     </message>
     <message>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл</translation>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>Новый</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть</translation>
     </message>
     <message>
         <source>Save project</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить проект</translation>
     </message>
     <message>
         <source>Save changes for the current project?</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить изменения для текущего проекта?</translation>
     </message>
     <message>
         <source>Save changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить изменения</translation>
     </message>
     <message>
         <source>Do not save</source>
-        <translation type="unfinished"></translation>
+        <translation>Не сохранять</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить</translation>
     </message>
     <message>
         <source>Project</source>
-        <translation type="unfinished"></translation>
+        <translation>Проект</translation>
     </message>
     <message>
         <source>Workspace</source>
-        <translation type="unfinished"></translation>
+        <translation>Рабочая папка</translation>
     </message>
     <message>
         <source>Patch</source>
-        <translation type="unfinished"></translation>
+        <translation>Патч</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Экспорт</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки</translation>
     </message>
     <message>
         <source>Main</source>
-        <translation type="unfinished"></translation>
+        <translation>Главный</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Результат</translation>
     </message>
     <message>
         <source>Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Клавиши</translation>
     </message>
     <message>
         <source>DMX out</source>
-        <translation type="unfinished"></translation>
+        <translation>Выход DMX</translation>
     </message>
     <message>
         <source>Save changes before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить изменения перед выходом?</translation>
     </message>
 </context>
 <context>
     <name>CalcWidget</name>
     <message>
         <source>7</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>8</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>9</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>6</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
     <name>ConfirmationDialog</name>
     <message>
         <source>Confirm</source>
-        <translation type="unfinished"></translation>
+        <translation>Подтвердить</translation>
     </message>
     <message>
         <source>cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
     <name>DeviceGroup</name>
     <message>
         <source>Rename group</source>
-        <translation type="unfinished"></translation>
+        <translation>Переименовать группу</translation>
     </message>
     <message>
         <source>Delete group</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить группу</translation>
     </message>
 </context>
 <context>
     <name>DeviceGroupWidget</name>
     <message>
         <source>Add Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить группу</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить</translation>
     </message>
     <message>
         <source>New group</source>
-        <translation type="unfinished"></translation>
+        <translation>Новая группа</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Редактировать</translation>
     </message>
     <message>
         <source>Delete selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить выбранные</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
 </context>
 <context>
     <name>DevicePlate</name>
     <message>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя</translation>
     </message>
 </context>
 <context>
     <name>GeneralDeviceListWidget</name>
     <message>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Редакт.</translation>
     </message>
     <message>
         <source>Delete selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить выбранные</translation>
     </message>
     <message>
         <source>Action confirmation</source>
-        <translation type="unfinished"></translation>
+        <translation>Подтверждение действия</translation>
     </message>
     <message>
         <source>Are you shure you want
 to delete selected patches?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы уверены, что хотите удалить выбранные патчи?</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
 </context>
 <context>
     <name>MainScreen</name>
     <message>
         <source>Visualization</source>
-        <translation type="unfinished"></translation>
+        <translation>Визуализация</translation>
     </message>
     <message>
         <source>Cue List</source>
-        <translation type="unfinished"></translation>
+        <translation>Список CUE</translation>
     </message>
     <message>
         <source>Device List</source>
-        <translation type="unfinished"></translation>
+        <translation>Список Приборов</translation>
     </message>
     <message>
         <source>Cue Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Контент CUE</translation>
     </message>
     <message>
         <source>min</source>
-        <translation type="unfinished"></translation>
+        <translation>мин</translation>
     </message>
     <message>
         <source>sec</source>
-        <translation type="unfinished"></translation>
+        <translation>сек</translation>
     </message>
     <message>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation>мсек</translation>
     </message>
     <message>
         <source>Delay</source>
-        <translation type="unfinished"></translation>
+        <translation>Задержка</translation>
     </message>
     <message>
         <source>Between</source>
-        <translation type="unfinished"></translation>
+        <translation>Между</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Действие</translation>
     </message>
     <message>
         <source>Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Время</translation>
     </message>
     <message>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Последовательно</translation>
     </message>
     <message>
         <source>Backward</source>
-        <translation type="unfinished"></translation>
+        <translation>Обр. Порядок</translation>
     </message>
     <message>
         <source>Inside</source>
-        <translation type="unfinished"></translation>
+        <translation>Внутрь</translation>
     </message>
     <message>
         <source>Outside</source>
-        <translation type="unfinished"></translation>
+        <translation>Наружу</translation>
     </message>
     <message>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>Зеркально</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Случайно</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Слева</translation>
     </message>
     <message>
         <source>Uneven</source>
-        <translation type="unfinished"></translation>
+        <translation>Нечётные</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Все</translation>
     </message>
     <message>
         <source>Even</source>
-        <translation type="unfinished"></translation>
+        <translation>Чётные</translation>
     </message>
     <message>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Справа</translation>
     </message>
     <message>
         <source>Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Приборы</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Группы</translation>
     </message>
     <message>
         <source>№</source>
-        <translation type="unfinished"></translation>
+        <translation>№</translation>
     </message>
     <message>
         <source>Cue</source>
-        <translation type="unfinished"></translation>
+        <translation>Cue</translation>
     </message>
     <message>
         <source>Start time</source>
-        <translation type="unfinished"></translation>
+        <translation>Начальн. время</translation>
     </message>
     <message>
         <source>Total time</source>
-        <translation type="unfinished"></translation>
+        <translation>Сумм. время</translation>
     </message>
     <message>
         <source>Sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Последовательности</translation>
     </message>
     <message>
         <source>Dimmer</source>
-        <translation type="unfinished"></translation>
+        <translation>Диммер</translation>
     </message>
     <message>
         <source>Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Выстрел</translation>
     </message>
     <message>
         <source>Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Пиро</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <source>Lingeric</source>
-        <translation type="unfinished"></translation>
+        <translation>Протяжные</translation>
     </message>
     <message>
         <source>Dynamic</source>
-        <translation type="unfinished"></translation>
+        <translation>Динамика</translation>
     </message>
     <message>
         <source>Static</source>
-        <translation type="unfinished"></translation>
+        <translation>Статика</translation>
     </message>
 </context>
 <context>
     <name>OutputScreen</name>
     <message>
         <source>Project: </source>
-        <translation type="unfinished"></translation>
+        <translation>Проект: </translation>
     </message>
     <message>
         <source>Total time: </source>
-        <translation type="unfinished"></translation>
+        <translation>Сумм. время: </translation>
     </message>
     <message>
         <source>Track: </source>
-        <translation type="unfinished"></translation>
+        <translation>Трек: </translation>
     </message>
     <message>
         <source>Save Audio us.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Сохранить Аудио как</translation>
     </message>
     <message>
         <source>Mount device list</source>
-        <translation type="unfinished"></translation>
+        <translation>Список подкл. приборов</translation>
     </message>
     <message>
         <source>Sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Последовательности</translation>
     </message>
     <message>
         <source>Dimmer</source>
-        <translation type="unfinished"></translation>
+        <translation>Диммер</translation>
     </message>
     <message>
         <source>Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Выстрел</translation>
     </message>
     <message>
         <source>Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Пиро</translation>
     </message>
     <message>
         <source>Edit Layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Редакт. слои</translation>
     </message>
     <message>
         <source>Select Layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите слой</translation>
     </message>
     <message>
         <source>Preview buttons</source>
-        <translation type="unfinished"></translation>
+        <translation>Кнопки превью</translation>
     </message>
     <message>
         <source>Layer Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя обложки</translation>
     </message>
     <message>
         <source>Repeat</source>
-        <translation type="unfinished"></translation>
+        <translation>Повторить</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Выкл</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>Вкл</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Действие</translation>
     </message>
     <message>
         <source>Hold</source>
-        <translation type="unfinished"></translation>
+        <translation>Удержать</translation>
     </message>
     <message>
         <source>Button Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Картинка кнопки</translation>
     </message>
     <message>
         <source>Button Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвет кнопки</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <source>Pyro mount list</source>
-        <translation type="unfinished"></translation>
+        <translation>Список добавл. пиро</translation>
     </message>
     <message>
         <source>Upload to cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>Загрузить в облако</translation>
     </message>
     <message>
         <source>My Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>Моё Облако</translation>
     </message>
     <message>
         <source>/ Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>/ Облако</translation>
+    </message>
+    <message>
+        <source>Save Audio as</source>
+        <translation>Сохранить Аудио как</translation>
     </message>
 </context>
 <context>
     <name>PatchScreen</name>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Библиотека</translation>
     </message>
     <message>
         <source>Devices list</source>
-        <translation type="unfinished"></translation>
+        <translation>Список приборов</translation>
     </message>
     <message>
         <source>Device groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Группы приборов</translation>
     </message>
 </context>
 <context>
     <name>Player</name>
     <message>
         <source>Delete Cues</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить Cue</translation>
     </message>
     <message>
         <source>Delete selected cues from the project?</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить выбранные Cue из проекта?</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Удалить</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <source>reset</source>
-        <translation type="unfinished"></translation>
+        <translation>сброс</translation>
     </message>
     <message>
         <source>Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Громкость</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>Стерео</translation>
     </message>
     <message>
         <source>Mono</source>
-        <translation type="unfinished"></translation>
+        <translation>Моно</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Недоступно</translation>
     </message>
     <message>
         <source>Timeline settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки врем. шкалы</translation>
     </message>
     <message>
         <source>Add before</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить до</translation>
     </message>
     <message>
         <source>Track time</source>
-        <translation type="unfinished"></translation>
+        <translation>Время трека</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation type="unfinished"></translation>
+        <translation>00:00:00</translation>
     </message>
     <message>
         <source>Add after</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить после</translation>
     </message>
     <message>
         <source>Total time</source>
-        <translation type="unfinished"></translation>
+        <translation>Сумм. время</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
 </context>
 <context>
     <name>PreferencesPopup</name>
     <message>
         <source>Com Port DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>Com порт DMX</translation>
     </message>
     <message>
         <source>Ethernet</source>
-        <translation type="unfinished"></translation>
+        <translation>Ethernet</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Язык</translation>
     </message>
     <message>
         <source>Profile Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>Облачный профиль</translation>
     </message>
     <message>
         <source>MIDI connection</source>
-        <translation type="unfinished"></translation>
+        <translation>MIDI подключение</translation>
     </message>
     <message>
         <source>COM port</source>
-        <translation type="unfinished"></translation>
+        <translation>COM порт</translation>
     </message>
     <message>
         <source>IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP адрес</translation>
     </message>
     <message>
         <source>Subnet mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Маска подсети</translation>
     </message>
     <message>
         <source>Gateway</source>
-        <translation type="unfinished"></translation>
+        <translation>Шлюз</translation>
     </message>
     <message>
         <source>Universe</source>
-        <translation type="unfinished"></translation>
+        <translation>Адр. настр. порта</translation>
     </message>
     <message>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>English</translation>
     </message>
     <message>
         <source>Русский</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Русский</translation>
     </message>
     <message>
         <source>Enter your account</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите ваш аккаунт</translation>
     </message>
     <message>
         <source>Email or Login</source>
-        <translation type="unfinished"></translation>
+        <translation>Email или Логин</translation>
     </message>
     <message>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Пароль</translation>
     </message>
     <message>
         <source>Save account</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить аккаунт</translation>
     </message>
     <message>
         <source>Error. Wrong login or password</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка. Неверный логин или пароль</translation>
     </message>
     <message>
         <source>Login</source>
-        <translation type="unfinished"></translation>
+        <translation>Логин</translation>
     </message>
     <message>
         <source>Forgot password</source>
-        <translation type="unfinished"></translation>
+        <translation>Забыли пароль?</translation>
     </message>
     <message>
         <source>Enter your mail. Password recovery instructions will be sent there.</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите вашу почту. Инструкции по восстановлению будут отправлены на нее.</translation>
     </message>
     <message>
         <source>Email</source>
-        <translation type="unfinished"></translation>
+        <translation>Email</translation>
     </message>
     <message>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Отправить</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Отмена</translation>
     </message>
     <message>
         <source>Device name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя прибора</translation>
     </message>
     <message>
         <source>Device input</source>
-        <translation type="unfinished"></translation>
+        <translation>Вход прибора</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
+    </message>
+    <message>
+        <source>Russian</source>
+        <translation>Русский</translation>
     </message>
 </context>
 <context>
     <name>ProjectSettingsWidget</name>
     <message>
         <source>Project settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки проекта</translation>
     </message>
     <message>
         <source>Scene</source>
-        <translation type="unfinished"></translation>
+        <translation>Сцена</translation>
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Ширина</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Высота</translation>
     </message>
     <message>
         <source>m</source>
-        <translation type="unfinished"></translation>
+        <translation>м</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>О проекте</translation>
     </message>
     <message>
         <source>Project Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Имя Проекта</translation>
     </message>
     <message>
         <source>Music Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Трэк</translation>
     </message>
     <message>
         <source>Click on the area
 to load the track</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите на область,
+чтобы загрузить трек</translation>
     </message>
     <message>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Изображение</translation>
     </message>
     <message>
         <source>Click on the area
 to load the image</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите на область,
+чтобы загрузить изображение</translation>
     </message>
     <message>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>Создать</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
     <message>
         <source>Downloading...</source>
-        <translation type="unfinished"></translation>
+        <translation>Загрузка...</translation>
     </message>
 </context>
 <context>
     <name>RenameGroupWindow</name>
     <message>
         <source>Group name</source>
-        <translation type="unfinished"></translation>
+        <translation>Переименовать группу</translation>
     </message>
     <message>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Переименовать</translation>
     </message>
 </context>
 <context>
     <name>SceneSettingsWidget</name>
     <message>
         <source>Scene frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Кадр сцены</translation>
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Ширина</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Высота</translation>
     </message>
     <message>
         <source>m</source>
-        <translation type="unfinished"></translation>
+        <translation>м</translation>
     </message>
     <message>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Изображение</translation>
     </message>
     <message>
         <source>Click on the area
 to load the image</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите на область,
+чтобы загрузить изображение</translation>
     </message>
     <message>
         <source>Click to choose audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Нажмите, чтобы выбрать аудио</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Применить</translation>
     </message>
 </context>
 <context>
     <name>SceneWidget</name>
     <message>
         <source>SCENE</source>
-        <translation type="unfinished"></translation>
+        <translation>СЦЕНА</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>Все</translation>
     </message>
 </context>
 <context>

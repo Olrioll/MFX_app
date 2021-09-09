@@ -387,7 +387,7 @@ Item {
 
                         model: ListModel {
                             ListElement { text: qsTr("English"); icon: "qrc:/icons/preferences/preferences_language_settings_english_flag_icon.svg" }
-                            ListElement { text: qsTr("Русский"); icon: "qrc:/icons/preferences/preferences_language_settings_russian_flag_icon.svg" }
+                            ListElement { text: qsTr("Russian"); icon: "qrc:/icons/preferences/preferences_language_settings_russian_flag_icon.svg" }
                         }
 
                         delegate: Item {

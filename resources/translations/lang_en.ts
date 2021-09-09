@@ -5,1011 +5,1023 @@
     <name>AddDimmerWidget</name>
     <message>
         <source>Add Dimmer</source>
-        <translation type="unfinished">Open Project</translation>
+        <translation>Open Project</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Quantity</translation>
     </message>
     <message>
         <source>DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF pos</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF ch</translation>
     </message>
     <message>
         <source>channel</source>
-        <translation type="unfinished"></translation>
+        <translation>channel</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Set</translation>
     </message>
     <message>
         <source>Edit Dimmer</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit Dimmer</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch ID</translation>
     </message>
 </context>
 <context>
     <name>AddGroupWindow</name>
     <message>
         <source>Group name</source>
-        <translation type="unfinished"></translation>
+        <translation>Group name</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Add</translation>
     </message>
 </context>
 <context>
     <name>AddPyroWidget</name>
     <message>
         <source>Add Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Add Pyro</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Quantity</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF pos</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF ch</translation>
     </message>
     <message>
         <source>channel</source>
-        <translation type="unfinished"></translation>
+        <translation>channel</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Set</translation>
     </message>
     <message>
         <source>Edit Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit Pyro</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch ID</translation>
     </message>
 </context>
 <context>
     <name>AddSequencesWidget</name>
     <message>
         <source>Add Sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Add Sequences</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Quantity</translation>
     </message>
     <message>
         <source>DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF pos</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF ch</translation>
     </message>
     <message>
         <source>height</source>
-        <translation type="unfinished"></translation>
+        <translation>height</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Set</translation>
     </message>
     <message>
         <source>min ang</source>
-        <translation type="unfinished"></translation>
+        <translation>min ang</translation>
     </message>
     <message>
         <source>max ang</source>
-        <translation type="unfinished"></translation>
+        <translation>max ang</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation>0</translation>
     </message>
     <message>
         <source>o</source>
-        <translation type="unfinished"></translation>
+        <translation>o</translation>
     </message>
     <message>
         <source>-115</source>
-        <translation type="unfinished"></translation>
+        <translation>-115</translation>
     </message>
     <message>
         <source>+115</source>
-        <translation type="unfinished"></translation>
+        <translation>+115</translation>
     </message>
     <message>
         <source>Effect type</source>
-        <translation type="unfinished"></translation>
+        <translation>Effect type</translation>
     </message>
     <message>
         <source>Edit sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit sequences</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch ID</translation>
     </message>
 </context>
 <context>
     <name>AddShotWidget</name>
     <message>
         <source>Add Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Add Shot</translation>
     </message>
     <message>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Quantity</translation>
     </message>
     <message>
         <source>DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX</translation>
     </message>
     <message>
         <source>RF pos</source>
-        <translation type="unfinished"></translation>
+        <translation>RF pos</translation>
     </message>
     <message>
         <source>RF ch</source>
-        <translation type="unfinished"></translation>
+        <translation>RF ch</translation>
     </message>
     <message>
         <source>height</source>
-        <translation type="unfinished"></translation>
+        <translation>height</translation>
     </message>
     <message>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>Set</translation>
     </message>
     <message>
         <source>angle</source>
-        <translation type="unfinished"></translation>
+        <translation>angle</translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation>0</translation>
     </message>
     <message>
         <source>o</source>
-        <translation type="unfinished"></translation>
+        <translation>o</translation>
     </message>
     <message>
         <source>-90</source>
-        <translation type="unfinished"></translation>
+        <translation>-90</translation>
     </message>
     <message>
         <source>90</source>
-        <translation type="unfinished"></translation>
+        <translation>90</translation>
     </message>
     <message>
         <source>180</source>
-        <translation type="unfinished"></translation>
+        <translation>180</translation>
     </message>
     <message>
         <source>Effect type</source>
-        <translation type="unfinished"></translation>
+        <translation>Effect type</translation>
     </message>
     <message>
         <source>Edit Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit Shot</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
         <source>Patch ID</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch ID</translation>
     </message>
 </context>
 <context>
     <name>ApplicationWindow</name>
     <message>
         <source>MFX</source>
-        <translation type="unfinished"></translation>
+        <translation>MFX</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Not available</translation>
     </message>
     <message>
         <source>Downloading...</source>
-        <translation type="unfinished"></translation>
+        <translation>Downloading...</translation>
     </message>
     <message>
         <source>File</source>
-        <translation type="unfinished"></translation>
+        <translation>File</translation>
     </message>
     <message>
         <source>New</source>
-        <translation type="unfinished"></translation>
+        <translation>New</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation type="unfinished"></translation>
+        <translation>Open</translation>
     </message>
     <message>
         <source>Save project</source>
-        <translation type="unfinished"></translation>
+        <translation>Save project</translation>
     </message>
     <message>
         <source>Save changes for the current project?</source>
-        <translation type="unfinished"></translation>
+        <translation>Save changes for the current project?</translation>
     </message>
     <message>
         <source>Save changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Save changes</translation>
     </message>
     <message>
         <source>Do not save</source>
-        <translation type="unfinished"></translation>
+        <translation>Do not save</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Save</translation>
     </message>
     <message>
         <source>Project</source>
-        <translation type="unfinished"></translation>
+        <translation>Project</translation>
     </message>
     <message>
         <source>Workspace</source>
-        <translation type="unfinished"></translation>
+        <translation>Workspace</translation>
     </message>
     <message>
         <source>Patch</source>
-        <translation type="unfinished"></translation>
+        <translation>Patch</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Export</translation>
     </message>
     <message>
         <source>Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Preferences</translation>
     </message>
     <message>
         <source>Main</source>
-        <translation type="unfinished"></translation>
+        <translation>Main</translation>
     </message>
     <message>
         <source>Output</source>
-        <translation type="unfinished"></translation>
+        <translation>Output</translation>
     </message>
     <message>
         <source>Key</source>
-        <translation type="unfinished"></translation>
+        <translation>Key</translation>
     </message>
     <message>
         <source>DMX out</source>
-        <translation type="unfinished"></translation>
+        <translation>DMX out</translation>
     </message>
     <message>
         <source>Save changes before quitting?</source>
-        <translation type="unfinished"></translation>
+        <translation>Save changes before quitting?</translation>
     </message>
 </context>
 <context>
     <name>CalcWidget</name>
     <message>
         <source>7</source>
-        <translation type="unfinished"></translation>
+        <translation>7</translation>
     </message>
     <message>
         <source>8</source>
-        <translation type="unfinished"></translation>
+        <translation>8</translation>
     </message>
     <message>
         <source>9</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>4</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>6</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>0</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
 </context>
 <context>
     <name>ConfirmationDialog</name>
     <message>
         <source>Confirm</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirm</translation>
     </message>
     <message>
         <source>cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>cancel</translation>
     </message>
 </context>
 <context>
     <name>DeviceGroup</name>
     <message>
         <source>Rename group</source>
-        <translation type="unfinished"></translation>
+        <translation>Rename group</translation>
     </message>
     <message>
         <source>Delete group</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete group</translation>
     </message>
 </context>
 <context>
     <name>DeviceGroupWidget</name>
     <message>
         <source>Add Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Add Group</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation>Add</translation>
     </message>
     <message>
         <source>New group</source>
-        <translation type="unfinished"></translation>
+        <translation>New group</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit</translation>
     </message>
     <message>
         <source>Delete selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete selected</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete</translation>
     </message>
 </context>
 <context>
     <name>DevicePlate</name>
     <message>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Name</translation>
     </message>
 </context>
 <context>
     <name>GeneralDeviceListWidget</name>
     <message>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit</translation>
     </message>
     <message>
         <source>Delete selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete selected</translation>
     </message>
     <message>
         <source>Action confirmation</source>
-        <translation type="unfinished"></translation>
+        <translation>Action confirmation</translation>
     </message>
     <message>
         <source>Are you shure you want
 to delete selected patches?</source>
-        <translation type="unfinished"></translation>
+        <translation>Are you shure you want
+to delete selected patches?</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
 </context>
 <context>
     <name>MainScreen</name>
     <message>
         <source>Visualization</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualization</translation>
     </message>
     <message>
         <source>Cue List</source>
-        <translation type="unfinished"></translation>
+        <translation>Cue List</translation>
     </message>
     <message>
         <source>Device List</source>
-        <translation type="unfinished"></translation>
+        <translation>Device List</translation>
     </message>
     <message>
         <source>Cue Content</source>
-        <translation type="unfinished"></translation>
+        <translation>Cue Content</translation>
     </message>
     <message>
         <source>min</source>
-        <translation type="unfinished"></translation>
+        <translation>min</translation>
     </message>
     <message>
         <source>sec</source>
-        <translation type="unfinished"></translation>
+        <translation>sec</translation>
     </message>
     <message>
         <source>ms</source>
-        <translation type="unfinished"></translation>
+        <translation>ms</translation>
     </message>
     <message>
         <source>Delay</source>
-        <translation type="unfinished"></translation>
+        <translation>Delay</translation>
     </message>
     <message>
         <source>Between</source>
-        <translation type="unfinished"></translation>
+        <translation>Between</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Action</translation>
     </message>
     <message>
         <source>Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Time</translation>
     </message>
     <message>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>Forward</translation>
     </message>
     <message>
         <source>Backward</source>
-        <translation type="unfinished"></translation>
+        <translation>Backward</translation>
     </message>
     <message>
         <source>Inside</source>
-        <translation type="unfinished"></translation>
+        <translation>Inside</translation>
     </message>
     <message>
         <source>Outside</source>
-        <translation type="unfinished"></translation>
+        <translation>Outside</translation>
     </message>
     <message>
         <source>Mirror</source>
-        <translation type="unfinished"></translation>
+        <translation>Mirror</translation>
     </message>
     <message>
         <source>Random</source>
-        <translation type="unfinished"></translation>
+        <translation>Random</translation>
     </message>
     <message>
         <source>Left</source>
-        <translation type="unfinished"></translation>
+        <translation>Left</translation>
     </message>
     <message>
         <source>Uneven</source>
-        <translation type="unfinished"></translation>
+        <translation>Uneven</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>All</translation>
     </message>
     <message>
         <source>Even</source>
-        <translation type="unfinished"></translation>
+        <translation>Even</translation>
     </message>
     <message>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation>Right</translation>
     </message>
     <message>
         <source>Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Devices</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Groups</translation>
     </message>
     <message>
         <source>№</source>
-        <translation type="unfinished"></translation>
+        <translation>№</translation>
     </message>
     <message>
         <source>Cue</source>
-        <translation type="unfinished"></translation>
+        <translation>Cue</translation>
     </message>
     <message>
         <source>Start time</source>
-        <translation type="unfinished"></translation>
+        <translation>Start time</translation>
     </message>
     <message>
         <source>Total time</source>
-        <translation type="unfinished"></translation>
+        <translation>Total time</translation>
     </message>
     <message>
         <source>Sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Sequences</translation>
     </message>
     <message>
         <source>Dimmer</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimmer</translation>
     </message>
     <message>
         <source>Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Shot</translation>
     </message>
     <message>
         <source>Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Pyro</translation>
     </message>
     <message>
         <source>+</source>
-        <translation type="unfinished"></translation>
+        <translation>+</translation>
     </message>
     <message>
         <source>Lingeric</source>
-        <translation type="unfinished"></translation>
+        <translation>Lingeric</translation>
     </message>
     <message>
         <source>Dynamic</source>
-        <translation type="unfinished"></translation>
+        <translation>Dynamic</translation>
     </message>
     <message>
         <source>Static</source>
-        <translation type="unfinished"></translation>
+        <translation>Static</translation>
     </message>
 </context>
 <context>
     <name>OutputScreen</name>
     <message>
         <source>Project: </source>
-        <translation type="unfinished"></translation>
+        <translation>Project: </translation>
     </message>
     <message>
         <source>Total time: </source>
-        <translation type="unfinished"></translation>
+        <translation>Total time: </translation>
     </message>
     <message>
         <source>Track: </source>
-        <translation type="unfinished"></translation>
+        <translation>Track: </translation>
     </message>
     <message>
         <source>Save Audio us.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Save Audio us</translation>
     </message>
     <message>
         <source>Mount device list</source>
-        <translation type="unfinished"></translation>
+        <translation>Mount device list</translation>
     </message>
     <message>
         <source>Sequences</source>
-        <translation type="unfinished"></translation>
+        <translation>Sequences</translation>
     </message>
     <message>
         <source>Dimmer</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimmer</translation>
     </message>
     <message>
         <source>Shot</source>
-        <translation type="unfinished"></translation>
+        <translation>Shot</translation>
     </message>
     <message>
         <source>Pyro</source>
-        <translation type="unfinished"></translation>
+        <translation>Pyro</translation>
     </message>
     <message>
         <source>Edit Layers</source>
-        <translation type="unfinished"></translation>
+        <translation>Edit Layers</translation>
     </message>
     <message>
         <source>Select Layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Select Layer</translation>
     </message>
     <message>
         <source>Preview buttons</source>
-        <translation type="unfinished"></translation>
+        <translation>Preview buttons</translation>
     </message>
     <message>
         <source>Layer Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Layer Name</translation>
     </message>
     <message>
         <source>Repeat</source>
-        <translation type="unfinished"></translation>
+        <translation>Repeat</translation>
     </message>
     <message>
         <source>Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Off</translation>
     </message>
     <message>
         <source>On</source>
-        <translation type="unfinished"></translation>
+        <translation>On</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Action</translation>
     </message>
     <message>
         <source>Hold</source>
-        <translation type="unfinished"></translation>
+        <translation>Hold</translation>
     </message>
     <message>
         <source>Button Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Button Image</translation>
     </message>
     <message>
         <source>Button Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Button Image</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Pyro mount list</source>
-        <translation type="unfinished"></translation>
+        <translation>Pyro mount list</translation>
     </message>
     <message>
         <source>Upload to cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>Upload to cloud</translation>
     </message>
     <message>
         <source>My Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>My Cloud</translation>
     </message>
     <message>
         <source>/ Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>/ Cloud</translation>
+    </message>
+    <message>
+        <source>Save Audio as</source>
+        <translation>Save Audio as</translation>
     </message>
 </context>
 <context>
     <name>PatchScreen</name>
     <message>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Library</translation>
     </message>
     <message>
         <source>Devices list</source>
-        <translation type="unfinished"></translation>
+        <translation>Devices list</translation>
     </message>
     <message>
         <source>Device groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Device groups</translation>
     </message>
 </context>
 <context>
     <name>Player</name>
     <message>
         <source>Delete Cues</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete Cues</translation>
     </message>
     <message>
         <source>Delete selected cues from the project?</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete selected cues from the project?</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Delete</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <source>reset</source>
-        <translation type="unfinished"></translation>
+        <translation>reset</translation>
     </message>
     <message>
         <source>Volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Volume</translation>
     </message>
     <message>
         <source>Stereo</source>
-        <translation type="unfinished"></translation>
+        <translation>Stereo</translation>
     </message>
     <message>
         <source>Mono</source>
-        <translation type="unfinished"></translation>
+        <translation>Mono</translation>
     </message>
     <message>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Not available</translation>
     </message>
     <message>
         <source>Timeline settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Timeline settings</translation>
     </message>
     <message>
         <source>Add before</source>
-        <translation type="unfinished"></translation>
+        <translation>Add before</translation>
     </message>
     <message>
         <source>Track time</source>
-        <translation type="unfinished"></translation>
+        <translation>Track time</translation>
     </message>
     <message>
         <source>00:00:00</source>
-        <translation type="unfinished"></translation>
+        <translation>00:00:00</translation>
     </message>
     <message>
         <source>Add after</source>
-        <translation type="unfinished"></translation>
+        <translation>Add after</translation>
     </message>
     <message>
         <source>Total time</source>
-        <translation type="unfinished"></translation>
+        <translation>Total time</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
 </context>
 <context>
     <name>PreferencesPopup</name>
     <message>
         <source>Com Port DMX</source>
-        <translation type="unfinished"></translation>
+        <translation>Com Port DMX</translation>
     </message>
     <message>
         <source>Ethernet</source>
-        <translation type="unfinished"></translation>
+        <translation>Ethernet</translation>
     </message>
     <message>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Language</translation>
     </message>
     <message>
         <source>Profile Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation>Profile Cloud</translation>
     </message>
     <message>
         <source>MIDI connection</source>
-        <translation type="unfinished"></translation>
+        <translation>MIDI connection</translation>
     </message>
     <message>
         <source>COM port</source>
-        <translation type="unfinished"></translation>
+        <translation>COM port</translation>
     </message>
     <message>
         <source>IP address</source>
-        <translation type="unfinished"></translation>
+        <translation>IP address</translation>
     </message>
     <message>
         <source>Subnet mask</source>
-        <translation type="unfinished"></translation>
+        <translation>Subnet mask</translation>
     </message>
     <message>
         <source>Gateway</source>
-        <translation type="unfinished"></translation>
+        <translation>Gateway</translation>
     </message>
     <message>
         <source>Universe</source>
-        <translation type="unfinished"></translation>
+        <translation>Universe</translation>
     </message>
     <message>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>English</translation>
     </message>
     <message>
         <source>Русский</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Русский</translation>
     </message>
     <message>
         <source>Enter your account</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter your account</translation>
     </message>
     <message>
         <source>Email or Login</source>
-        <translation type="unfinished"></translation>
+        <translation>Email or Login</translation>
     </message>
     <message>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Password</translation>
     </message>
     <message>
         <source>Save account</source>
-        <translation type="unfinished"></translation>
+        <translation>Save account</translation>
     </message>
     <message>
         <source>Error. Wrong login or password</source>
-        <translation type="unfinished"></translation>
+        <translation>Error. Wrong login or password</translation>
     </message>
     <message>
         <source>Login</source>
-        <translation type="unfinished"></translation>
+        <translation>Login</translation>
     </message>
     <message>
         <source>Forgot password</source>
-        <translation type="unfinished"></translation>
+        <translation>Forgot password</translation>
     </message>
     <message>
         <source>Enter your mail. Password recovery instructions will be sent there.</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter your mail. Password recovery instructions will be sent there.</translation>
     </message>
     <message>
         <source>Email</source>
-        <translation type="unfinished"></translation>
+        <translation>Email</translation>
     </message>
     <message>
         <source>Send</source>
-        <translation type="unfinished"></translation>
+        <translation>Send</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancel</translation>
     </message>
     <message>
         <source>Device name</source>
-        <translation type="unfinished"></translation>
+        <translation>Device name</translation>
     </message>
     <message>
         <source>Device input</source>
-        <translation type="unfinished"></translation>
+        <translation>Device input</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
+    </message>
+    <message>
+        <source>Russian</source>
+        <translation>Русский</translation>
     </message>
 </context>
 <context>
     <name>ProjectSettingsWidget</name>
     <message>
         <source>Project settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Project settings</translation>
     </message>
     <message>
         <source>Scene</source>
-        <translation type="unfinished"></translation>
+        <translation>Scene</translation>
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Width</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Height</translation>
     </message>
     <message>
         <source>m</source>
-        <translation type="unfinished"></translation>
+        <translation>m</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>About</translation>
     </message>
     <message>
         <source>Project Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Project Name</translation>
     </message>
     <message>
         <source>Music Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Music Track</translation>
     </message>
     <message>
         <source>Click on the area
 to load the track</source>
-        <translation type="unfinished"></translation>
+        <translation>Click on the area
+to load the track</translation>
     </message>
     <message>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Image</translation>
     </message>
     <message>
         <source>Click on the area
 to load the image</source>
-        <translation type="unfinished"></translation>
+        <translation>Click on the area
+to load the image</translation>
     </message>
     <message>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>Create</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
     <message>
         <source>Downloading...</source>
-        <translation type="unfinished"></translation>
+        <translation>Downloading...</translation>
     </message>
 </context>
 <context>
     <name>RenameGroupWindow</name>
     <message>
         <source>Group name</source>
-        <translation type="unfinished"></translation>
+        <translation>Group name</translation>
     </message>
     <message>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Rename</translation>
     </message>
 </context>
 <context>
     <name>SceneSettingsWidget</name>
     <message>
         <source>Scene frame</source>
-        <translation type="unfinished"></translation>
+        <translation>Scene frame</translation>
     </message>
     <message>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>Width</translation>
     </message>
     <message>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>Height</translation>
     </message>
     <message>
         <source>m</source>
-        <translation type="unfinished"></translation>
+        <translation>m</translation>
     </message>
     <message>
         <source>Image</source>
-        <translation type="unfinished"></translation>
+        <translation>Image</translation>
     </message>
     <message>
         <source>Click on the area
 to load the image</source>
-        <translation type="unfinished"></translation>
+        <translation>Click on the area
+to load the image</translation>
     </message>
     <message>
         <source>Click to choose audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Click to choose audio</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Apply</translation>
     </message>
 </context>
 <context>
     <name>SceneWidget</name>
     <message>
         <source>SCENE</source>
-        <translation type="unfinished"></translation>
+        <translation>SCENE</translation>
     </message>
     <message>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation>All</translation>
     </message>
 </context>
 <context>
