@@ -118,13 +118,17 @@ Item
 
             Text
             {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.margins: 8
+                anchors.top: parent.top
+                anchors.bottom: acceptButton.top
                 color: "#ffffff"
                 text: dialog.dialogText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideMiddle
-                anchors.left: parent.left
-                anchors.right: parent.right
+                elide: Text.ElideNone
+                wrapMode: Text.WordWrap
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 12
                 topPadding: 20

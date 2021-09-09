@@ -1,7 +1,9 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
+import QtQuick.Shapes 1.15
 
+import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Styles 1.0 as MFXUIS
 
 Item
@@ -108,31 +110,32 @@ Item
 
             Text
             {
-                x: 7
-                y: 5
-                width: 70
-                height: 17
-                color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.topMargin: 8
+                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.pixelSize: 10
+                color: "#A1A1A1"
                 text: qsTr("Scene")
                 horizontalAlignment: Text.AlignHLeft
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
             }
 
             TextField
             {
                 id: widthField
-                x: 8
+                x: 6
                 y: 43
                 width: 50
                 height: 18
                 text: isNewProject ? "" : project.property("sceneFrameWidth")
                 color: "#ffffff"
                 horizontalAlignment: Text.AlignHCenter
-                padding: 0
-                leftPadding: -2
                 font.pointSize: 8
+                padding: 0
 
                 background: Rectangle
                 {
@@ -155,20 +158,19 @@ Item
                 color: "#ffffff"
                 text: isNewProject ? "" : project.property("sceneFrameHeight")
                 horizontalAlignment: Text.AlignHCenter
-                leftPadding: -2
                 font.pointSize: 8
+                padding: 0
                 background: Rectangle {
                     color: "#000000"
                     radius: 2
                 }
-                padding: 0
             }
 
             Text {
                 id: quantityText1
                 x: 0
                 y: 27
-                width: 44
+                width: 50
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
                 text: qsTr("Width")
@@ -183,12 +185,12 @@ Item
                 id: quantityText2
                 x: 85
                 y: 27
-                width: 34
+                width: 50
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
                 text: qsTr("Height")
                 elide: Text.ElideMiddle
-                horizontalAlignment: Text.AlignHCenter
+                horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
@@ -245,16 +247,18 @@ Item
 
             Text
             {
-                x: 7
-                y: 5
-                width: 70
-                height: 17
-                color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.topMargin: 8
+                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.pixelSize: 10
+                color: "#A1A1A1"
                 text: qsTr("About")
                 horizontalAlignment: Text.AlignHLeft
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
             }
 
             Text {
@@ -318,24 +322,27 @@ Item
 
             Text
             {
-                x: 7
-                y: 5
-                width: 70
-                height: 17
-                color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.topMargin: 8
+                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.pixelSize: 10
+                color: "#A1A1A1"
                 text: qsTr("Music Track")
                 horizontalAlignment: Text.AlignHRight
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
             }
 
             Rectangle
             {
-                width: 140
-                height: 90
-                x: 9
-                y: 30
+                anchors.fill: parent
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.bottomMargin: 8
+                anchors.topMargin: 26
 
                 radius: 2
                 color: "#000000"
@@ -358,7 +365,7 @@ Item
 
                     color: "#888888"
                     text: choosenAudioFile
-                    elide: Text.ElideMiddle
+                    elide: Text.ElideLeft
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     font.family: MFXUIS.Fonts.robotoRegular.name
@@ -371,8 +378,11 @@ Item
                     id: defaultTrackButtonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 16
+                    wrapMode: Text.WordWrap
                     color: "#888888"
                     text: qsTr("Click on the area\nto load the track")
                     elide: Text.ElideMiddle
@@ -419,24 +429,30 @@ Item
 
             Text
             {
-                x: 7
-                y: 5
-                width: 70
-                height: 17
-                color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.topMargin: 8
+                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.pixelSize: 10
+                color: "#A1A1A1"
                 text: qsTr("Image")
                 horizontalAlignment: Text.AlignHRight
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
             }
+
+
+
 
             Rectangle
             {
-                width: 140
-                height: 90
-                x: 9
-                y: 30
+                anchors.fill: parent
+                anchors.leftMargin: 8
+                anchors.rightMargin: 8
+                anchors.bottomMargin: 8
+                anchors.topMargin: 26
 
                 radius: 2
                 color: "#000000"
@@ -454,8 +470,11 @@ Item
                     id: buttonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
-
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 16
+                    wrapMode: Text.WordWrap
                     color: "#888888"
                     text: qsTr("Click on the area\nto load the image")
                     elide: Text.ElideMiddle

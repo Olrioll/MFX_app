@@ -282,13 +282,18 @@ Item
                     id: buttonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
 
                     color: "#888888"
                     text: qsTr("Click on the area\nto load the image")
                     elide: Text.ElideMiddle
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                    wrapMode: Text.WordWrap
+                    maximumLineCount: 5
                     font.family: MFXUIS.Fonts.robotoRegular.name
                     font.pixelSize: 10
                 }
@@ -402,9 +407,3 @@ Item
         applicationWindow.isPatchEditorOpened = true
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:2}D{i:17}
-}
-##^##*/

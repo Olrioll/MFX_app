@@ -9,6 +9,7 @@ Shape {
     property int bottomLeftRadius: 0
     property int bottomRightRadius: 0
     property int borderWidth: 0
+    property var borderStyle: ShapePath.SolidLine
     property color fillColor: _privateProperties.defaultFillColor
     property color borderColor: _privateProperties.defaultBorderColor
 
@@ -23,7 +24,7 @@ Shape {
         fillColor: _component.fillColor
 
         strokeWidth: _component.borderWidth
-        strokeStyle: ShapePath.SolidLine
+        strokeStyle: _component.borderStyle
         strokeColor: _component.borderColor
         joinStyle: ShapePath.RoundJoin
         capStyle: ShapePath.RoundCap

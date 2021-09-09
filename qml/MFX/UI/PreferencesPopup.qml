@@ -630,7 +630,7 @@ Item {
                                 anchors.leftMargin: 6
 
                                 height: implicitHeight
-                                width: saveAccountCheckbox.width - 6
+                                width: saveAccountCheckbox.width - 12
 
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignVCenter

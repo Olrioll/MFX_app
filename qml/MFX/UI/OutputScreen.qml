@@ -159,7 +159,7 @@ Item
                                         pressedColor: "#649ce8"
                                         enableShadow: true
 
-                                        text: qsTr("Save Audio us.")
+                                        text: qsTr("Save Audio as")
 
                                         onClicked: {
 
@@ -1464,8 +1464,8 @@ Item
                                 delegate: Item {
                                     id: layerTemplatesListViewDelegate
 
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
+                                    anchors.left: layerTemplatesListView.contentItem.left
+                                    anchors.right: layerTemplatesListView.contentItem.right
 
                                     height: 40
 

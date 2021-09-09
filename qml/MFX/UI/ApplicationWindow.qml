@@ -299,7 +299,7 @@ ApplicationWindow
             {
                 id: fileMenuButton
                 text: qsTr("File")
-                width: 40
+                width: 48
                 height: 28
                 x: logoImage.x + logoImage.width + 10
                 layer.enabled: false
@@ -414,9 +414,10 @@ ApplicationWindow
             {
                 id: patchMenuButton
                 text: qsTr("Patch")
-                width: 40
+                width: 48
                 height: 28
                 anchors.left: fileMenuButton.right
+                anchors.leftMargin: 4
                 layer.enabled: false
                 checkable: true
 
@@ -454,9 +455,10 @@ ApplicationWindow
             {
                 id: mainMenuButton
                 text: qsTr("Main")
-                width: 40
+                width: 48
                 height: 28
                 anchors.left: patchMenuButton.right
+                anchors.leftMargin: 4
                 layer.enabled: false
                 checkable: true
 
@@ -494,9 +496,10 @@ ApplicationWindow
             {
                 id: outputMenuButton
                 text: qsTr("Output")
-                width: 48
+                width: 56
                 height: 28
                 anchors.left: mainMenuButton.right
+                anchors.leftMargin: 7
                 layer.enabled: false
                 checkable: true
 
@@ -534,7 +537,7 @@ ApplicationWindow
                 text: qsTr("Key")
                 width: 60
                 height: 24
-                x: outputMenuButton.x + outputMenuButton.width + 30
+                x: outputMenuButton.x + outputMenuButton.width + 36
                 y: mainMenu.y + 2
                 layer.enabled: false
                 font.pointSize: 12
@@ -572,7 +575,7 @@ ApplicationWindow
                 text: "MIDI"
                 width: 60
                 height: 24
-                x: keyButton.x + keyButton.width + 10
+                x: keyButton.x + keyButton.width + 8
                 y: mainMenu.y + 2
                 layer.enabled: false
                 font.pointSize: 12
@@ -608,7 +611,7 @@ ApplicationWindow
             {
                 id: dmxButton
                 text: qsTr("DMX out")
-                width: 60
+                width: 80
                 height: 24
                 x: midiButton.x + midiButton.width + 64
                 y: mainMenu.y + 2

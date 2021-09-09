@@ -430,7 +430,7 @@
     <name>GeneralDeviceListWidget</name>
     <message>
         <source>Edit</source>
-        <translation>Редакт.</translation>
+        <translation>Редактировать</translation>
     </message>
     <message>
         <source>Delete selected</source>
