@@ -92,20 +92,28 @@ void PatternManager::initPatterns()
             rawActions.push_back(currRawAction);
 
         m_patterns->clear();
-
         for (auto& rawAction : rawActions) {
+            auto pattern = new Pattern(this);
             QString name = rawAction.at(0);
             name.remove(',').chop(1);
-
             int prefire = rawAction.at(1).split(',').at(0).right(2).toInt() * 10;
-
+            Operation op;
+            op.setTime(prefire);
+            op.setAngle(rawAction.at(1).split(',').at(1).toInt());
+            op.setVelocity(rawAction.at(1).split(',').at(2).toInt());
+            int fireOnCode = rawAction.at(1).split(',').at(3).toInt();
+            op.setFireOn(fireOnCode == 255 ? true: false);
+            pattern->m_operationList.append(op);
             int duration = 0;
-
             for (int i = 2; i < rawAction.size(); i++) {
+                op.setTime(rawAction.at(i).split(',').at(0).toInt() * 10);
+                op.setAngle(rawAction.at(i).split(',').at(1).toInt());
+                op.setVelocity(rawAction.at(i).split(',').at(2).toInt());
+                fireOnCode = rawAction.at(i).split(',').at(3).toInt();
+                op.setFireOn(fireOnCode == 255 ? true: false);
+                pattern->m_operationList.append(op);
                 duration += rawAction.at(i).split(',').at(0).toInt() * 10;
             }
-
-            auto pattern = new Pattern(this);
             pattern->setName(name);
             //TODO типы паттернов пока не реализованы, поэтому для всех делаем общий стандарт - Sequential
             pattern->setType(PatternType::Sequential);
