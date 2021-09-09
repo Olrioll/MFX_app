@@ -38,5 +38,5 @@ bool PatternFilteringModel::filterAcceptsRow(int sourceRow, const QModelIndex& s
     auto rowModelIndex = sourceModel()->index(sourceRow, 0, sourceParent);
     auto itemData = qvariant_cast<PatternType::Type>(sourceModel()->data(rowModelIndex, filterRole()));
 
-    return itemData == _filteringType;
+    return itemData == m_filteringType;
 }

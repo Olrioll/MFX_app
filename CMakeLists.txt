@@ -94,6 +94,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/Pattern.cpp"
     "src/PatternManager.cpp"
     "src/PatternFilteringModel.cpp"
+    "src/Operation.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}

@@ -12,9 +12,9 @@ void SequenceDevice::runPattern(Pattern *p)
         return;
     }
     qDebug() << "SequenceDevice::runPattern:" << p->name() << p->duration() << p->prefireDuration();
-    foreach(Operation op, p->m_operationList) {
-        qDebug() << tr("time: %1, angle: %2 (%3°), velocity: %4, fireOn: %5").arg(op.time()).arg(op.angle())
-                    .arg(op.angleDegrees()).arg(op.velocity()).arg(op.fireOn());
+    foreach(auto * op, p->operations()->toList()) {
+        qDebug() << tr("time: %1, angle: %2 (%3°), velocity: %4, active: %5").arg(op->time()).arg(op->angle())
+                    .arg(op->angleDegrees()).arg(op->velocity()).arg(op->active());
     }
     DMXWorker::instance()->write(QByteArray::fromHex(QVariant("DEADBEAF").toByteArray())); // todo: send simple DMX512 commands
 }
