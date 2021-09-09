@@ -37,6 +37,8 @@ set(QSUPERMACROS_USE_QT_RESETS ON CACHE BOOL "")
 set(QSUPERMACROS_BUILD_SHARED OFF CACHE BOOL "")
 set(QSUPERMACROS_BUILD_STATIC ON CACHE BOOL "")
 set(QSUPERMACROS_BUILD_DOC OFF CACHE BOOL "")
+set(UPDATE_TRANSLATIONS OFF CACHE BOOL "Если ON, то просканирует все CPP и QML файлы на наличие строк перевода и создаст/обновит *.ts файлы")
+
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Зависимости                                │
 # └──────────────────────────────────────────────────────────────────┘
@@ -64,13 +66,48 @@ find_package(Qt5 ${QT_VERSION} COMPONENTS
     Quick
     QuickControls2
     Svg
+    LinguistTools
     EXACT REQUIRED
 )
+
+file(GLOB_RECURSE CPP_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/*.h}
+    ${CMAKE_SOURCE_DIR}/src/*.hpp}
+    ${CMAKE_SOURCE_DIR}/src/*.cpp}
+    )
+
+file(GLOB_RECURSE QML_SOURCES
+    ${CMAKE_SOURCE_DIR}/qml/*.qml
+    )
+
+add_custom_target(QML SOURCES ${QML_SOURCES})
+
+#Работа с переводами
+file(GLOB_RECURSE TRANSLATION_TS_FILES
+    resources/translations/*.ts
+    )
+
+set(SCAN_FOR_TRANSLATIONS_FILES
+    ${CPP_SOURCES}
+    ${QML_SOURCES}
+    )
+
+if(UPDATE_TRANSLATIONS)
+    qt5_create_translation(TRANSLATION_QM_FILES
+        ${SCAN_FOR_TRANSLATIONS_FILES}
+        ${TRANSLATION_TS_FILES}
+        )
+else(UPDATE_TRANSLATIONS)
+    qt5_add_translation(TRANSLATION_QM_FILES
+        ${TRANSLATION_TS_FILES}
+        )
+endif(UPDATE_TRANSLATIONS)
 
 add_executable(${MFX_PROJECT_NAME} WIN32
     "build/packaging/windows/appIcon.rc"
     "qml/qml.qrc"
     "resources/resources.qrc"
+    "resources/translations.qrc"
     "src/main.cpp"
     "src/AudioTrackRepresentation.cpp"
     "src/WaveformWidget.cpp"
@@ -118,3 +155,13 @@ target_link_libraries(${MFX_LAUNCHER_PROJECT_NAME}
     Qt5::Widgets
 )
 
+# ┌──────────────────────────────────────────────────────────────────┐
+# │                       Цели сборки                                │
+# └──────────────────────────────────────────────────────────────────┘
+
+add_custom_target(updateTranslations DEPENDS ${TRANSLATION_QM_FILES} ${TRANSLATION_TS_FILES})
+
+add_custom_command(TARGET updateTranslations POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/translations
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRANSLATION_QM_FILES} ${CMAKE_BINARY_DIR}/translations
+    )

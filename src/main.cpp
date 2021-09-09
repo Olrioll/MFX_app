@@ -34,8 +34,12 @@ int main(int argc, char** argv)
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
 
     QTranslator translator;
-    translator.load("qrc:/translations/russian.qm");
-    qApp->installTranslator(&translator);
+    bool translationLoaded = translator.load(qApp->applicationDirPath() + "/translations/lang_ru.qm");
+    if(translationLoaded) {
+        qApp->installTranslator(&translator);
+    } else {
+        qDebug() << "Tranlsations: was not able to load translation file: " << qApp->applicationDirPath() + "/translations/lang_ru.qm";
+    }
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
