@@ -121,7 +121,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
     for(const auto & c : m_cues->toList()) {
         for(const Action * a : c->actions()->toList()) {
             if(a->startTime() == t * 10) {
-                emit runPattern(a->deviceId(), a->patternName());
+                emit runPattern(a->deviceId(), playerPosition(), a->patternName());
             }
         }
     }

@@ -6,15 +6,38 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
     setImageFile("qrc:/device_sequences");
 }
 
-void SequenceDevice::runPattern(Pattern *p)
+void SequenceDevice::runPattern(Pattern *p, quint64 time)
 {
+    if(p == NULL) {
+        return;
+    }
     if(p->type() != PatternType::Sequential) {
         return;
     }
-    qDebug() << "SequenceDevice::runPattern:" << p->name() << p->duration() << p->prefireDuration();
-    foreach(auto * op, p->operations()->toList()) {
-        qDebug() << tr("time: %1, angle: %2 (%3°), velocity: %4, active: %5").arg(op->time()).arg(op->angle())
-                    .arg(op->angleDegrees()).arg(op->velocity()).arg(op->active());
+    m_opStartTime = time;
+    m_operations = p->operations()->toList();
+    if(m_operations.count() == 0) {
+        return;
     }
-    DMXWorker::instance()->write(QByteArray::fromHex(QVariant("DEADBEAF").toByteArray())); // todo: send simple DMX512 commands
+    m_op = m_operations[0]; // first operation of pattern
+    DMXWorker::instance()->setOperation(id(), m_op);
+}
+
+void SequenceDevice::onPlaybackTimeChanged(quint64 time)
+{
+    if(m_op == NULL) {
+        return;
+    }
+    if(time == m_opStartTime + m_op->duration()) {
+        m_opStartTime = time;
+        m_operations.removeFirst();
+        m_op = m_operations[0];
+        DMXWorker::instance()->setOperation(id(), m_op);
+        if(m_operations.count() == 1) {
+            m_operations.clear();
+            m_op = NULL;
+            m_opStartTime = 0;
+            return;
+        }
+    }
 }

@@ -6,7 +6,7 @@ Operation::Operation(QObject* parent)
 }
 
 Operation::Operation(const Operation& operation)
-    : m_time(operation.m_time)
+    : m_duration(operation.m_duration)
     , m_angle(operation.m_angle)
     , m_velocity(operation.m_velocity)
     , m_active(operation.m_active)

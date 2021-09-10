@@ -98,7 +98,7 @@ void PatternManager::initPatterns()
             name.remove(',').chop(1);
             int prefire = rawAction.at(1).split(',').at(0).right(2).toInt() * 10;
             auto * operation = new Operation(this);
-            operation->setTime(prefire);
+            operation->setDuration(prefire);
             operation->setAngle(rawAction.at(1).split(',').at(1).toInt());
             operation->setVelocity(rawAction.at(1).split(',').at(2).toInt());
             int activeCode = rawAction.at(1).split(',').at(3).toInt();
@@ -107,7 +107,7 @@ void PatternManager::initPatterns()
             int duration = 0;
             for (int i = 2; i < rawAction.size(); i++) {
                 auto nextOperation = new Operation(this);
-                nextOperation->setTime(rawAction.at(i).split(',').at(0).toInt() * 10);
+                nextOperation->setDuration(rawAction.at(i).split(',').at(0).toInt() * 10);
                 nextOperation->setAngle(rawAction.at(i).split(',').at(1).toInt());
                 nextOperation->setVelocity(rawAction.at(i).split(',').at(2).toInt());
                 activeCode = rawAction.at(i).split(',').at(3).toInt();

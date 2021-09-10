@@ -26,7 +26,7 @@ signals:
     void drawPatternInGui(int deviceId, QString patternName);
 
 public slots:
-    void onRunPattern(int deviceId, QString patternName);
+    void onRunPattern(int deviceId, quint64 time, QString patternName);
 
 private:
     Device* getDevice(int id);
