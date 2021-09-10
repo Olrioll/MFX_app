@@ -16,6 +16,7 @@
 #include "DmxWorker.h"
 #include "PatternManager.h"
 #include "PatternFilteringModel.h"
+#include "TranslationManager.h"
 
 int main(int argc, char** argv)
 {
@@ -24,6 +25,7 @@ int main(int argc, char** argv)
     app.setOrganizationDomain("mfx.com");
 
     SettingsManager settings;
+    TranslationManager translationManager;
     ProjectManager project(settings);
     PatternManager patternManager(settings);
     patternManager.initPatterns();
@@ -32,14 +34,6 @@ int main(int argc, char** argv)
     DeviceManager deviceManager;
     deviceManager.m_patternManager = &patternManager;
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
-
-    QTranslator translator;
-    bool translationLoaded = translator.load(qApp->applicationDirPath() + "/translations/lang_ru.qm");
-    if(translationLoaded) {
-        qApp->installTranslator(&translator);
-    } else {
-        qDebug() << "Tranlsations: was not able to load translation file: " << qApp->applicationDirPath() + "/translations/lang_ru.qm";
-    }
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
@@ -52,6 +46,7 @@ int main(int argc, char** argv)
     engine.addImportPath("qrc:/");
 
     engine.rootContext()->setContextProperty("settingsManager", &settings);
+    engine.rootContext()->setContextProperty("translationsManager", &translationManager);
     engine.rootContext()->setContextProperty("project", &project);
     engine.rootContext()->setContextProperty("patternManager", &patternManager);
     engine.rootContext()->setContextProperty("cursorManager", &cursorManager);

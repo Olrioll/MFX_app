@@ -385,10 +385,7 @@ Item {
 
                         spacing: 2
 
-                        model: ListModel {
-                            ListElement { text: qsTr("English"); icon: "qrc:/icons/preferences/preferences_language_settings_english_flag_icon.svg" }
-                            ListElement { text: qsTr("Russian"); icon: "qrc:/icons/preferences/preferences_language_settings_russian_flag_icon.svg" }
-                        }
+                        model: translationsManager.languages
 
                         delegate: Item {
                             id: languagesListViewDelegate
@@ -434,7 +431,7 @@ Item {
 
                                     color: "#FFFFFF"
 
-                                    text: model.text
+                                    text: model.name
 
                                     opacity: languagesListViewDelegate.isCurrentItem ? 1.0 : 0.5
                                 }
