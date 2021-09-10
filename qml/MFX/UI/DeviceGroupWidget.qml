@@ -118,7 +118,7 @@ Item
     MfxHilightedButton
     {
         id: addGroupButton
-        text: width > 70 ? qsTr("Add Group") : qsTr("Add")
+        text: translationsManager.translationTrigger + (width > 70 ? qsTr("Add Group") : qsTr("Add"))
         width: (parent.width) / 3 - 4
         color: "#27AE60"
         visible: parent.patchScreenMode
@@ -132,7 +132,7 @@ Item
             addGroupWindow.addContentItem("AddGroupWindow.qml");
             addGroupWindow.x = applicationWindow.width / 2 - addGroupWindow.width / 2
             addGroupWindow.y = applicationWindow.height / 2 - addGroupWindow.height / 2
-            addGroupWindow.caption = qsTr("New group")
+            addGroupWindow.caption = translationsManager.translationTrigger + qsTr("New group")
         }
     }
 
@@ -140,7 +140,7 @@ Item
     MfxHilightedButton
     {
         id: editButton
-        text: qsTr("Edit")
+        text: translationsManager.translationTrigger + qsTr("Edit")
         width: addGroupButton.width
         color: "#2F80ED"
         visible: parent.patchScreenMode
@@ -165,7 +165,7 @@ Item
     MfxHilightedButton
     {
         id: deleteButton
-        text: width > 70 ? qsTr("Delete selected") : qsTr("Delete")
+        text: translationsManager.translationTrigger + (width > 70 ? qsTr("Delete selected") : qsTr("Delete"))
         width: editButton.width
         color: "#EB5757"
         visible: parent.patchScreenMode

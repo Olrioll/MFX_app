@@ -27,7 +27,7 @@ Item
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
         color: "#ffffff"
-        text: qsTr("Group name")
+        text: translationsManager.translationTrigger + qsTr("Group name")
         font.pixelSize: 12
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
@@ -58,7 +58,7 @@ Item
     Button
     {
         id: addGroupButton
-        text: qsTr("Rename")
+        text: translationsManager.translationTrigger + qsTr("Rename")
         height: 24
         width: 100
 
@@ -109,7 +109,7 @@ Item
 //    Button
 //    {
 //        id: cancelButton
-//        text: qsTr("Cancel")
+//        text: translationsManager.translationTrigger + qsTr("Cancel")
 //        height: 24
 //        width: (parent.width - anchors.margins * 3) / 2
 

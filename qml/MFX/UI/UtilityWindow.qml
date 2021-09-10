@@ -47,7 +47,7 @@ Item
         Text
         {
             color: "#ffffff"
-            text: utilityWindow.caption
+            text: translationsManager.translationTrigger + utilityWindow.caption
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle

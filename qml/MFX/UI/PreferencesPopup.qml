@@ -52,11 +52,11 @@ Item {
                     clip: true
 
                     model: [
-                        qsTr("Com Port DMX"),
-                        qsTr("Ethernet"),
-                        qsTr("Language"),
-                        qsTr("Profile Cloud"),
-                        qsTr("MIDI connection")
+                        translationsManager.translationTrigger + qsTr("Com Port DMX"),
+                        translationsManager.translationTrigger + qsTr("Ethernet"),
+                        translationsManager.translationTrigger + qsTr("Language"),
+                        translationsManager.translationTrigger + qsTr("Profile Cloud"),
+                        translationsManager.translationTrigger + qsTr("MIDI connection")
                     ]
 
                     delegate: Item {
@@ -93,7 +93,7 @@ Item {
 
                                 color: menuListViewDelegate.isCurrentItem ? "#FFFFFF" : "#80FFFFFF"
 
-                                text: modelData
+                                text: translationsManager.translationTrigger + modelData
                             }
 
                             MFXUICT.LayoutSpacer {}
@@ -170,7 +170,7 @@ Item {
 
                                 color: "#FFFFFF"
 
-                                text: qsTr("COM port")
+                                text: translationsManager.translationTrigger + qsTr("COM port")
                             }
 
                             MFXUICT.LayoutSpacer {
@@ -245,7 +245,7 @@ Item {
 
                             color: "#FFFFFF"
 
-                            text: qsTr("IP address")
+                            text: translationsManager.translationTrigger + qsTr("IP address")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -279,7 +279,7 @@ Item {
 
                             color: "#FFFFFF"
 
-                            text: qsTr("Subnet mask")
+                            text: translationsManager.translationTrigger + qsTr("Subnet mask")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -313,7 +313,7 @@ Item {
 
                             color: "#FFFFFF"
 
-                            text: qsTr("Gateway")
+                            text: translationsManager.translationTrigger + qsTr("Gateway")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -345,7 +345,7 @@ Item {
 
                             color: "#FFFFFF"
 
-                            text: qsTr("Universe")
+                            text: translationsManager.translationTrigger + qsTr("Universe")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -484,6 +484,7 @@ Item {
 
                                 onClicked: {
                                     languagesListView.currentIndex = index
+                                    translationsManager.setLanguage(model.locale)
                                 }
                             }
                         }
@@ -546,7 +547,7 @@ Item {
 
                             color: "#FFFFFF"
 
-                            text: qsTr("Enter your account")
+                            text: translationsManager.translationTrigger + qsTr("Enter your account")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -560,7 +561,7 @@ Item {
                             Layout.minimumHeight: implicitHeight
 
                             text: ""
-                            placeholderText: qsTr("Email or Login")
+                            placeholderText: translationsManager.translationTrigger + qsTr("Email or Login")
 
                             errorState: cloudLoginPage.errorState
                         }
@@ -576,7 +577,7 @@ Item {
                             Layout.minimumHeight: implicitHeight
 
                             text: ""
-                            placeholderText: qsTr("Password")
+                            placeholderText: translationsManager.translationTrigger + qsTr("Password")
 
                             errorState: cloudLoginPage.errorState
                         }
@@ -640,7 +641,7 @@ Item {
                                 text: saveAccountCheckbox.text
                             }
 
-                            text: qsTr("Save account")
+                            text: translationsManager.translationTrigger + qsTr("Save account")
                         }
 
                         MFXUICT.LayoutSpacer { }
@@ -661,7 +662,7 @@ Item {
 
                             color: "#EB5757"
 
-                            text: qsTr("Error. Wrong login or password")
+                            text: translationsManager.translationTrigger + qsTr("Error. Wrong login or password")
 
                             visible: cloudLoginPage.errorState
                         }
@@ -682,7 +683,7 @@ Item {
                             color: "#2F80ED"
                             pressedColor: "#649ce8"
 
-                            text: qsTr("Login")
+                            text: translationsManager.translationTrigger + qsTr("Login")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -703,7 +704,7 @@ Item {
 
                             color: "#2F80ED"
 
-                            text: qsTr("Forgot password")
+                            text: translationsManager.translationTrigger + qsTr("Forgot password")
 
                             MouseArea {
                                 anchors.fill: parent
@@ -763,7 +764,7 @@ Item {
 
                             color: "#FFFFFF"
 
-                            text: qsTr("Enter your mail. Password recovery instructions will be sent there.")
+                            text: translationsManager.translationTrigger + qsTr("Enter your mail. Password recovery instructions will be sent there.")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -777,7 +778,7 @@ Item {
                             Layout.minimumHeight: implicitHeight
 
                             text: ""
-                            placeholderText: qsTr("Email")
+                            placeholderText: translationsManager.translationTrigger + qsTr("Email")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -798,7 +799,7 @@ Item {
                             color: "#2F80ED"
                             pressedColor: "#649ce8"
 
-                            text: qsTr("Send")
+                            text: translationsManager.translationTrigger + qsTr("Send")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -819,7 +820,7 @@ Item {
                             color: "#888888"
                             pressedColor: "#ababab"
 
-                            text: qsTr("Cancel")
+                            text: translationsManager.translationTrigger + qsTr("Cancel")
 
                             onClicked: {
                                 cloudLoginPage.recoverState = false
@@ -870,7 +871,7 @@ Item {
 
                                 color: "#FFFFFF"
 
-                                text: qsTr("Device name")
+                                text: translationsManager.translationTrigger + qsTr("Device name")
                             }
 
                             MFXUICT.LayoutSpacer {
@@ -918,7 +919,7 @@ Item {
 
                                 color: "#FFFFFF"
 
-                                text: qsTr("Device input")
+                                text: translationsManager.translationTrigger + qsTr("Device input")
                             }
 
                             MFXUICT.LayoutSpacer {
@@ -974,7 +975,7 @@ Item {
                 color: "#2F80ED"
                 pressedColor: "#649ce8"
 
-                text: qsTr("Apply")
+                text: translationsManager.translationTrigger + qsTr("Apply")
 
                 onClicked: {
                     deviceManager.comPort = selectComPortComboBox.currentText

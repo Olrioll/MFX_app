@@ -46,7 +46,7 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Library")
+        caption: translationsManager.translationTrigger + qsTr("Library")
         expandedWidth: 140
 
         contentItem: DeviceLibWidget
@@ -83,7 +83,7 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Devices list")
+        caption: translationsManager.translationTrigger + qsTr("Devices list")
 
         contentItem: GeneralDeviceListWidget
         {
@@ -157,7 +157,7 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Device groups")
+        caption: translationsManager.translationTrigger + qsTr("Device groups")
 
         contentItem: DeviceGroupWidget
         {

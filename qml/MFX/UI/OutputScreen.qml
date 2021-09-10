@@ -77,7 +77,7 @@ Item
 
                                 color: "#FFFFFF"
 
-                                text: qsTr("Project: ") + project.currentProjectName
+                                text: translationsManager.translationTrigger + qsTr("Project: ") + project.currentProjectName
                             }
 
                             MFXUICT.LayoutSpacer {
@@ -103,7 +103,7 @@ Item
 
                                 color: "#FFFFFF"
 
-                                text: qsTr("Total time: ") + project.currentProjectAudioTrackDuration
+                                text: translationsManager.translationTrigger + qsTr("Total time: ") + project.currentProjectAudioTrackDuration
                             }
 
                             MFXUICT.LayoutSpacer {
@@ -129,7 +129,7 @@ Item
 
                                 color: "#FFFFFF"
 
-                                text: qsTr("Track: ") + project.currentProjectAudioTrack
+                                text: translationsManager.translationTrigger + qsTr("Track: ") + project.currentProjectAudioTrack
                             }
 
                             MFXUICT.LayoutSpacer { }
@@ -159,7 +159,7 @@ Item
                                         pressedColor: "#649ce8"
                                         enableShadow: true
 
-                                        text: qsTr("Save Audio as")
+                                        text: translationsManager.translationTrigger + qsTr("Save Audio as")
 
                                         onClicked: {
 
@@ -184,7 +184,7 @@ Item
                                         pressedColor: "#649ce8"
                                         enableShadow: true
 
-                                        text: qsTr("Mount device list")
+                                        text: translationsManager.translationTrigger + qsTr("Mount device list")
 
                                         onClicked: {
 
@@ -328,7 +328,7 @@ Item
                                         text: deviceTypeSequencesButton.text
                                     }
 
-                                    text: qsTr("Sequences")
+                                    text: translationsManager.translationTrigger + qsTr("Sequences")
 
                                     ButtonGroup.group: deviceTypeSelectionTabBarButtonGroup
                                 }
@@ -396,7 +396,7 @@ Item
                                         text: deviceTypeDimmerButton.text
                                     }
 
-                                    text: qsTr("Dimmer")
+                                    text: translationsManager.translationTrigger + qsTr("Dimmer")
 
                                     ButtonGroup.group: deviceTypeSelectionTabBarButtonGroup
                                 }
@@ -464,7 +464,7 @@ Item
                                         text: deviceTypeShotButton.text
                                     }
 
-                                    text: qsTr("Shot")
+                                    text: translationsManager.translationTrigger + qsTr("Shot")
 
                                     ButtonGroup.group: deviceTypeSelectionTabBarButtonGroup
                                 }
@@ -532,7 +532,7 @@ Item
                                         text: deviceTypePyroButton.text
                                     }
 
-                                    text: qsTr("Pyro")
+                                    text: translationsManager.translationTrigger + qsTr("Pyro")
 
                                     ButtonGroup.group: deviceTypeSelectionTabBarButtonGroup
                                 }
@@ -680,7 +680,7 @@ Item
 
                             color: "#FFFFFF"
 
-                            text: qsTr("Edit Layers")
+                            text: translationsManager.translationTrigger + qsTr("Edit Layers")
                         }
                     }
                 }
@@ -717,7 +717,7 @@ Item
 
                             color: "#A1A1A1"
 
-                            text: qsTr("Select Layer")
+                            text: translationsManager.translationTrigger + qsTr("Select Layer")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -800,7 +800,7 @@ Item
 
                             color: "#A1A1A1"
 
-                            text: qsTr("Preview buttons")
+                            text: translationsManager.translationTrigger + qsTr("Preview buttons")
                         }
 
                         MFXUICT.LayoutSpacer {
@@ -1039,7 +1039,7 @@ Item
 
                                 color: "#A1A1A1"
 
-                                text: qsTr("Layer Name")
+                                text: translationsManager.translationTrigger + qsTr("Layer Name")
                             }
 
                             MFXUICT.TextField {
@@ -1093,7 +1093,7 @@ Item
 
                                         color: "#A1A1A1"
 
-                                        text: qsTr("Repeat")
+                                        text: translationsManager.translationTrigger + qsTr("Repeat")
                                     }
 
                                     MFXUICT.LayoutSpacer {}
@@ -1148,7 +1148,7 @@ Item
 
                                                 Behavior on color { ColorAnimation { duration : 175 } }
 
-                                                text: qsTr("Off")
+                                                text: translationsManager.translationTrigger + qsTr("Off")
                                             }
 
                                             Text {
@@ -1170,7 +1170,7 @@ Item
 
                                                 Behavior on color { ColorAnimation { duration : 175 } }
 
-                                                text: qsTr("On")
+                                                text: translationsManager.translationTrigger + qsTr("On")
                                             }
                                         }
 
@@ -1205,7 +1205,7 @@ Item
 
                                         color: "#A1A1A1"
 
-                                        text: qsTr("Action")
+                                        text: translationsManager.translationTrigger + qsTr("Action")
                                     }
 
                                     MFXUICT.LayoutSpacer {}
@@ -1260,7 +1260,7 @@ Item
 
                                                 Behavior on color { ColorAnimation { duration : 175 } }
 
-                                                text: qsTr("Shot")
+                                                text: translationsManager.translationTrigger + qsTr("Shot")
                                             }
 
                                             Text {
@@ -1282,7 +1282,7 @@ Item
 
                                                 Behavior on color { ColorAnimation { duration : 175 } }
 
-                                                text: qsTr("Hold")
+                                                text: translationsManager.translationTrigger + qsTr("Hold")
                                             }
                                         }
 
@@ -1332,7 +1332,7 @@ Item
 
                                         color: "#A1A1A1"
 
-                                        text: qsTr("Button Image")
+                                        text: translationsManager.translationTrigger + qsTr("Button Image")
                                     }
 
                                     MFXUICT.LayoutSpacer { }
@@ -1379,7 +1379,7 @@ Item
 
                                         color: "#A1A1A1"
 
-                                        text: qsTr("Button Color")
+                                        text: translationsManager.translationTrigger + qsTr("Button Color")
                                     }
 
                                     MFXUICT.LayoutSpacer { }
@@ -1562,7 +1562,7 @@ Item
 
                                                 color: deleteButton.pressed ? "#e86f6f" : "#EB5757"
 
-                                                text: qsTr("Delete")
+                                                text: translationsManager.translationTrigger + qsTr("Delete")
                                             }
 
                                             onClicked: {
@@ -1614,7 +1614,7 @@ Item
                                 pressedColor: "#649ce8"
                                 enableShadow: true
 
-                                text: qsTr("Pyro mount list")
+                                text: translationsManager.translationTrigger + qsTr("Pyro mount list")
 
                                 onClicked: {
                                     //TODO реализовать
@@ -1637,7 +1637,7 @@ Item
                                 pressedColor: "#649ce8"
                                 enableShadow: true
 
-                                text: qsTr("Upload to cloud")
+                                text: translationsManager.translationTrigger + qsTr("Upload to cloud")
 
                                 onClicked: {
                                     //TODO реализовать
@@ -1704,7 +1704,7 @@ Item
 
                         color: "#FFFFFF"
 
-                        text: qsTr("My Cloud")
+                        text: translationsManager.translationTrigger + qsTr("My Cloud")
                     }
                 }
 
@@ -1746,7 +1746,7 @@ Item
                             color: "#FFFFFF"
 
                             //TODO заменить до пути до облака
-                            text: qsTr("/ Cloud")
+                            text: translationsManager.translationTrigger + qsTr("/ Cloud")
                         }
 
                         MFXUICT.RoundedRectangleShape {

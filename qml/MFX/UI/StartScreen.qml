@@ -27,7 +27,7 @@ Item
     MfxButton
     {
         id: openProjectButton
-        text: qsTr("Open Project")
+        text: translationsManager.translationTrigger + qsTr("Open Project")
         color: "#2F80ED"
         width: 200
         height: 48
@@ -42,7 +42,7 @@ Item
     MfxButton
     {
         id: createProjectButton
-        text: qsTr("Create Project")
+        text: translationsManager.translationTrigger + qsTr("Create Project")
         color: "#2F80ED"
         width: 200
         height: 48
@@ -58,7 +58,7 @@ Item
     MfxButton
     {
         id: openWorkspaceButton
-        text: qsTr("Open Workspace")
+        text: translationsManager.translationTrigger + qsTr("Open Workspace")
         color: "#2F80ED"
         width: 200
         height: 48

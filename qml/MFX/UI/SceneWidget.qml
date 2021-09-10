@@ -743,7 +743,7 @@ Item
             Text
             {
                 anchors.centerIn: parent
-                text: qsTr("SCENE")
+                text: translationsManager.translationTrigger + qsTr("SCENE")
                 color: "#ffffff"
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 12
@@ -1281,7 +1281,7 @@ Item
         width: 48
 //        checkable: true
         color: isNeedToBeChecked() ? "#444444" : "#222222"
-        text: qsTr("All")
+        text: translationsManager.translationTrigger + qsTr("All")
         anchors.leftMargin: 12
         anchors.bottomMargin: 18
         anchors

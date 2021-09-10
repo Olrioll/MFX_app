@@ -103,7 +103,7 @@ FocusScope
                         checkable: true
                         checked: true
                         //z: 1
-                        text: qsTr("Visualization")
+                        text: translationsManager.translationTrigger + qsTr("Visualization")
 
                         onCheckedChanged:
                         {
@@ -127,7 +127,7 @@ FocusScope
 
                         checkable: true
                         //z: 1
-                        text: qsTr("Cue List")
+                        text: translationsManager.translationTrigger + qsTr("Cue List")
 
                         onCheckedChanged:
                         {
@@ -156,7 +156,7 @@ FocusScope
 
                         checkable: true
                         //z: 1
-                        text: qsTr("Device List")
+                        text: translationsManager.translationTrigger + qsTr("Device List")
 
                         onCheckedChanged:
                         {
@@ -187,7 +187,7 @@ FocusScope
 
                         checkable: true
                         //z: 1
-                        text: qsTr("Cue Content")
+                        text: translationsManager.translationTrigger + qsTr("Cue Content")
 
                         onCheckedChanged:
                         {
@@ -214,7 +214,7 @@ FocusScope
 
                         checkable: true
                         //z: 1
-                        text: qsTr("Device List")
+                        text: translationsManager.translationTrigger + qsTr("Device List")
                         checked: true
 
                         onCheckedChanged:
@@ -494,7 +494,7 @@ FocusScope
                                             color: "#888888"
                                             pressedColor: "#ababab"
 
-                                            text: qsTr("min")
+                                            text: translationsManager.translationTrigger + qsTr("min")
 
                                             onClicked: {
                                                 //TODO реализовать
@@ -520,7 +520,7 @@ FocusScope
                                             color: "#888888"
                                             pressedColor: "#ababab"
 
-                                            text: qsTr("sec")
+                                            text: translationsManager.translationTrigger + qsTr("sec")
 
                                             onClicked: {
                                                 //TODO реализовать
@@ -546,7 +546,7 @@ FocusScope
                                             color: "#888888"
                                             pressedColor: "#ababab"
 
-                                            text: qsTr("ms")
+                                            text: translationsManager.translationTrigger + qsTr("ms")
 
                                             onClicked: {
                                                 //TODO реализовать
@@ -597,7 +597,7 @@ FocusScope
 
                                             enabled: model.enabled
 
-                                            text: model.text
+                                            text: translationsManager.translationTrigger + model.text
 
                                             onClicked: {
                                                 model.callback()
@@ -644,7 +644,7 @@ FocusScope
                                             color: "#888888"
                                             pressedColor: "#ababab"
 
-                                            text: model.text
+                                            text: translationsManager.translationTrigger + model.text
 
                                             onClicked: {
                                                 model.callback()
@@ -704,7 +704,7 @@ FocusScope
                                         anchors.fill: parent
                                         checkable: false
 
-                                        text: qsTr("Left")
+                                        text: translationsManager.translationTrigger + qsTr("Left")
 
                                         onClicked: {
                                             //TODO реализовать
@@ -724,7 +724,7 @@ FocusScope
 
                                         checkable: false
 
-                                        text: qsTr("Uneven")
+                                        text: translationsManager.translationTrigger + qsTr("Uneven")
 
                                         onClicked: {
                                             //TODO реализовать
@@ -744,7 +744,7 @@ FocusScope
 
                                         checkable: false
 
-                                        text: qsTr("All")
+                                        text: translationsManager.translationTrigger + qsTr("All")
 
                                         onClicked: {
                                             //TODO реализовать
@@ -764,7 +764,7 @@ FocusScope
 
                                         checkable: false
 
-                                        text: qsTr("Even")
+                                        text: translationsManager.translationTrigger + qsTr("Even")
 
                                         onClicked: {
                                             //TODO реализовать
@@ -784,7 +784,7 @@ FocusScope
 
                                         checkable: false
 
-                                        text: qsTr("Right")
+                                        text: translationsManager.translationTrigger + qsTr("Right")
 
                                         onClicked: {
                                             //TODO реализовать
@@ -866,7 +866,7 @@ FocusScope
                         {
                             id: devicesButton
                             height: 24
-                            text: qsTr("Devices")
+                            text: translationsManager.translationTrigger + qsTr("Devices")
                             checkable: true
 
                             anchors.topMargin: 4
@@ -884,7 +884,7 @@ FocusScope
                         {
                             id: groupsButton
                             height: 24
-                            text: qsTr("Groups")
+                            text: translationsManager.translationTrigger + qsTr("Groups")
                             checkable: true
 
                             anchors.topMargin: 4
@@ -1524,7 +1524,7 @@ FocusScope
 
                                         color: "#FFFFFF"
 
-                                        text: qsTr("№")
+                                        text: translationsManager.translationTrigger + qsTr("№")
                                     }
 
                                     Text {
@@ -1542,7 +1542,7 @@ FocusScope
 
                                         color: "#FFFFFF"
 
-                                        text: qsTr("Cue")
+                                        text: translationsManager.translationTrigger + qsTr("Cue")
                                     }
 
                                     Text {
@@ -1560,7 +1560,7 @@ FocusScope
 
                                         color: "#FFFFFF"
 
-                                        text: qsTr("Start time")
+                                        text: translationsManager.translationTrigger + qsTr("Start time")
                                     }
 
                                     Text {
@@ -1578,7 +1578,7 @@ FocusScope
 
                                         color: "#FFFFFF"
 
-                                        text: qsTr("Total time")
+                                        text: translationsManager.translationTrigger + qsTr("Total time")
                                     }
                                 }
 
@@ -1980,7 +1980,7 @@ FocusScope
             id: sequencesButton
             checkable: true
             width: 68
-            text: qsTr("Sequences")
+            text: translationsManager.translationTrigger + qsTr("Sequences")
             textSize: 10
             color: "#2F80ED"
 
@@ -1999,7 +1999,7 @@ FocusScope
             id: dimmerButton
             checkable: true
             width: 68
-            text: qsTr("Dimmer")
+            text: translationsManager.translationTrigger + qsTr("Dimmer")
             textSize: 10
             color: "#2F80ED"
 
@@ -2019,7 +2019,7 @@ FocusScope
             id: shotButton
             checkable: true
             width: 68
-            text: qsTr("Shot")
+            text: translationsManager.translationTrigger + qsTr("Shot")
             textSize: 10
             color: "#2F80ED"
 
@@ -2039,7 +2039,7 @@ FocusScope
             id: pyroButton
             checkable: true
             width: 68
-            text: qsTr("Pyro")
+            text: translationsManager.translationTrigger + qsTr("Pyro")
             textSize: 10
             color: "#2F80ED"
 
@@ -2059,7 +2059,7 @@ FocusScope
             id: cueButton
             checkable: true
             width: 60
-            text: qsTr("Cue")
+            text: translationsManager.translationTrigger + qsTr("Cue")
             textSize: 10
 
             anchors.top: parent.top
@@ -2083,7 +2083,7 @@ FocusScope
         MfxButton
         {
             id: addButton
-            text: qsTr("+")
+            text: translationsManager.translationTrigger + qsTr("+")
 
             anchors.top: parent.top
             anchors.leftMargin: 2
@@ -2124,7 +2124,7 @@ FocusScope
                 checkable: true
                 width: 72
                 height: 26
-                text: qsTr("Lingeric")
+                text: translationsManager.translationTrigger + qsTr("Lingeric")
                 textSize: 10
 
                 anchors.top: parent.top
@@ -2145,7 +2145,7 @@ FocusScope
                 checkable: true
                 width: 72
                 height: 26
-                text: qsTr("Dynamic")
+                text: translationsManager.translationTrigger + qsTr("Dynamic")
                 textSize: 10
 
                 anchors.top: parent.top
@@ -2166,7 +2166,7 @@ FocusScope
                 checkable: true
                 width: 72
                 height: 26
-                text: qsTr("Static")
+                text: translationsManager.translationTrigger + qsTr("Static")
                 textSize: 10
 
                 anchors.top: parent.top

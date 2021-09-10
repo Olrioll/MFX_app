@@ -254,7 +254,7 @@ Item
         {
             id: windowTitle
             color: "#ffffff"
-            text: qsTr("Add Sequences")
+            text: translationsManager.translationTrigger + qsTr("Add Sequences")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
@@ -314,7 +314,7 @@ Item
             y: 40
             height: 17
             color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("Quantity")
+            text: translationsManager.translationTrigger + qsTr("Quantity")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.rightMargin: 194
@@ -573,7 +573,7 @@ Item
             y: 64
             height: 17
             color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("DMX")
+            text: translationsManager.translationTrigger + qsTr("DMX")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -589,7 +589,7 @@ Item
             y: 64
             height: 17
             color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("RF pos")
+            text: translationsManager.translationTrigger + qsTr("RF pos")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -605,7 +605,7 @@ Item
             y: 64
             height: 17
             color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("RF ch")
+            text: translationsManager.translationTrigger + qsTr("RF ch")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -621,7 +621,7 @@ Item
             y: 64
             height: 17
             color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("height")
+            text: translationsManager.translationTrigger + qsTr("height")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -649,7 +649,7 @@ Item
             y: 221
             width: 124
             color: "#2F80ED"
-            text: qsTr("Set")
+            text: translationsManager.translationTrigger + qsTr("Set")
             enabled:
             {
                 dmxField.checkValue() &&
@@ -811,7 +811,7 @@ Item
             y: 211
             height: 17
             color: minAngField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("min ang")
+            text: translationsManager.translationTrigger + qsTr("min ang")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -827,7 +827,7 @@ Item
             y: 211
             height: 17
             color: maxAngField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("max ang")
+            text: translationsManager.translationTrigger + qsTr("max ang")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -935,7 +935,7 @@ Item
             y: 107
             height: 17
             color: "#ffffff"
-            text: qsTr("0")
+            text: translationsManager.translationTrigger + qsTr("0")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -952,7 +952,7 @@ Item
             y: 105
             height: 17
             color: "#ffffff"
-            text: qsTr("o")
+            text: translationsManager.translationTrigger + qsTr("o")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -969,7 +969,7 @@ Item
             y: 207
             height: 17
             color: "#ffffff"
-            text: qsTr("-115")
+            text: translationsManager.translationTrigger + qsTr("-115")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -986,7 +986,7 @@ Item
             y: 207
             height: 17
             color: "#ffffff"
-            text: qsTr("+115")
+            text: translationsManager.translationTrigger + qsTr("+115")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1003,7 +1003,7 @@ Item
             y: 201
             height: 17
             color: "#ffffff"
-            text: qsTr("o")
+            text: translationsManager.translationTrigger + qsTr("o")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1020,7 +1020,7 @@ Item
             y: 201
             height: 17
             color: "#ffffff"
-            text: qsTr("o")
+            text: translationsManager.translationTrigger + qsTr("o")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1120,7 +1120,7 @@ Item
             y: 266
             height: 17
             color: "#ffffff"
-            text: qsTr("Effect type")
+            text: translationsManager.translationTrigger + qsTr("Effect type")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.rightMargin: 200
@@ -1278,9 +1278,9 @@ Item
         {
             name: "editMode"
             when: addSequWindow.isEditMode
-            PropertyChanges {target: windowTitle; text: qsTr("Edit sequences")}
-            PropertyChanges {target: setButton; text: qsTr("Apply")}
-            PropertyChanges {target: quantityText; text: qsTr("Patch ID")}
+            PropertyChanges {target: windowTitle; text: translationsManager.translationTrigger + qsTr("Edit sequences")}
+            PropertyChanges {target: setButton; text: translationsManager.translationTrigger + qsTr("Apply")}
+            PropertyChanges {target: quantityText; text: translationsManager.translationTrigger + qsTr("Patch ID")}
             PropertyChanges {target: quantityField; maximumLength: 3}
         }
     ]

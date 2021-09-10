@@ -13,7 +13,7 @@ Item
     height: 286
 
     property bool isNewProject: true
-    property string caption: qsTr("Project settings")
+    property string caption: translationsManager.translationTrigger + qsTr("Project settings")
     property string choosenImageFile
     property string choosenAudioFile
 
@@ -118,7 +118,7 @@ Item
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
                 color: "#A1A1A1"
-                text: qsTr("Scene")
+                text: translationsManager.translationTrigger + qsTr("Scene")
                 horizontalAlignment: Text.AlignHLeft
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -173,7 +173,7 @@ Item
                 width: 50
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Width")
+                text: translationsManager.translationTrigger + qsTr("Width")
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -188,7 +188,7 @@ Item
                 width: 50
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Height")
+                text: translationsManager.translationTrigger + qsTr("Height")
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
@@ -203,7 +203,7 @@ Item
                 width: 20
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("m")
+                text: translationsManager.translationTrigger + qsTr("m")
                 elide: Text.ElideMiddle
                 font.pixelSize: 10
                 horizontalAlignment: Text.AlignHCenter
@@ -218,7 +218,7 @@ Item
                 width: 20
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("m")
+                text: translationsManager.translationTrigger + qsTr("m")
                 elide: Text.ElideMiddle
                 font.pixelSize: 10
                 horizontalAlignment: Text.AlignHCenter
@@ -255,7 +255,7 @@ Item
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
                 color: "#A1A1A1"
-                text: qsTr("About")
+                text: translationsManager.translationTrigger + qsTr("About")
                 horizontalAlignment: Text.AlignHLeft
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -268,7 +268,7 @@ Item
                 width: 140
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Project Name")
+                text: translationsManager.translationTrigger + qsTr("Project Name")
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignHLeft
                 verticalAlignment: Text.AlignVCenter
@@ -330,7 +330,7 @@ Item
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
                 color: "#A1A1A1"
-                text: qsTr("Music Track")
+                text: translationsManager.translationTrigger + qsTr("Music Track")
                 horizontalAlignment: Text.AlignHRight
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -384,7 +384,7 @@ Item
                     anchors.rightMargin: 16
                     wrapMode: Text.WordWrap
                     color: "#888888"
-                    text: qsTr("Click on the area\nto load the track")
+                    text: translationsManager.translationTrigger + qsTr("Click on the area\nto load the track")
                     elide: Text.ElideMiddle
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -437,7 +437,7 @@ Item
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 10
                 color: "#A1A1A1"
-                text: qsTr("Image")
+                text: translationsManager.translationTrigger + qsTr("Image")
                 horizontalAlignment: Text.AlignHRight
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -476,7 +476,7 @@ Item
                     anchors.rightMargin: 16
                     wrapMode: Text.WordWrap
                     color: "#888888"
-                    text: qsTr("Click on the area\nto load the image")
+                    text: translationsManager.translationTrigger + qsTr("Click on the area\nto load the image")
                     elide: Text.ElideMiddle
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -518,7 +518,7 @@ Item
                      (Number(widthField.text) >= Number(heightField.text) ?
                      Number(widthField.text) / Number(heightField.text) <= 10 : Number(heightField.text) / Number(widthField.text) <= 10)
 
-            text: isNewProject ? qsTr("Create") : qsTr("Apply")
+            text: translationsManager.translationTrigger + (isNewProject ? qsTr("Create") : qsTr("Apply"))
 
             onClicked:
             {

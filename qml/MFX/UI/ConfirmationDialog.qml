@@ -124,7 +124,7 @@ Item
                 anchors.top: parent.top
                 anchors.bottom: acceptButton.top
                 color: "#ffffff"
-                text: dialog.dialogText
+                text: translationsManager.translationTrigger + dialog.dialogText
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideNone
@@ -137,7 +137,7 @@ Item
             MfxButton
             {
                 id: acceptButton
-                text: dialog.acceptButtonText
+                text: translationsManager.translationTrigger + dialog.acceptButtonText
                 color: acceptButtonColor
                 width: (workArea.width - 3 * anchors.margins) / 2
                 anchors.margins: 2

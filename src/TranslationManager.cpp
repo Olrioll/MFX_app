@@ -12,12 +12,12 @@ TranslationManager::TranslationManager(QObject* parent)
     : QObject(parent)
     , m_languages(new QQmlObjectListModel<Language>(this))
 {
-    auto * english = new Language();
+    auto* english = new Language();
     english->setName("English");
     english->setLocale("en");
     english->setIcon("qrc:/icons/preferences/preferences_language_settings_english_flag_icon.svg");
     languageDictionary.insert("en", english);
-    auto * russian = new Language();
+    auto* russian = new Language();
     russian->setName("Русский");
     russian->setLocale("ru");
     russian->setIcon("qrc:/icons/preferences/preferences_language_settings_russian_flag_icon.svg");
@@ -26,13 +26,30 @@ TranslationManager::TranslationManager(QObject* parent)
     initLanguages();
 }
 
-void TranslationManager::setLanguage(const QString& name)
+void TranslationManager::setLanguage(const QString& locale)
 {
-    bool translationLoaded = m_translator.load(qApp->applicationDirPath() + "/translations/lang_ru.qm");
-    if (translationLoaded) {
-        qApp->installTranslator(&m_translator);
+    bool languageLocaleExists = false;
+
+    for(auto * language : m_languages->toList()) {
+        if(language->locale().compare(locale) == 0) {
+            languageLocaleExists = true;
+            break;
+        }
+    }
+
+    if (languageLocaleExists) {
+        const QString localePath = qApp->applicationDirPath() + QString("/translations/lang_%1.qm").arg(locale);
+        bool translationLoaded = m_translator.load(localePath);
+        if (translationLoaded) {
+            qInfo() << "Successfully translated";
+            qApp->installTranslator(&m_translator);
+
+            emit translationTriggerChanged("1");
+        } else {
+            qWarning() << "Tranlsations: was not able to load translation file: " << localePath;
+        }
     } else {
-        qWarning() << "Tranlsations: was not able to load translation file: " << qApp->applicationDirPath() + "/translations/lang_ru.qm";
+        qWarning() << "Translations: can't find the selected language in preloaded locales";
     }
 }
 

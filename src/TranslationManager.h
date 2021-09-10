@@ -22,7 +22,7 @@ class TranslationManager : public QObject {
 public:
     explicit TranslationManager(QObject* parent = nullptr);
 
-    Q_INVOKABLE void setLanguage(const QString& name);
+    Q_INVOKABLE void setLanguage(const QString& locale);
 
     void initLanguages();
 

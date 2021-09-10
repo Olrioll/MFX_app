@@ -57,7 +57,7 @@ Item
             x: 52
             y: 2
             color: "#ffffff"
-            text: qsTr("Name")
+            text: translationsManager.translationTrigger + qsTr("Name")
             font.family: MFXUIS.Fonts.robotoRegular.name
             font.pixelSize: 10
         }
