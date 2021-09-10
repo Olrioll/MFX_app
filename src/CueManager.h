@@ -37,7 +37,7 @@ public slots:
     void onPlaybackTimeChanged(quint64 time);
 
 signals:
-    void runPattern(int deviceId, QString patternName);
+    void runPattern(int deviceId, quint64 time, QString patternName);
 
 private:
     Cue* getCue(QString name);

@@ -34,6 +34,14 @@ DMXWorker *DMXWorker::instance()
     return &inst;
 }
 
+void DMXWorker::setOperation(int deviceId, Operation *op)
+{
+    qDebug() << tr("Time: %1, deviceId: %2, duration: %3, angle: %4 (degrees: %5), velocity: %6, active: %7")
+                .arg(m_playbackTime).arg(deviceId).arg(op->duration()).arg(op->angle())
+                .arg(op->angleDegrees()).arg(op->velocity()).arg(op->active());
+    // DMXWorker::instance()->write(QByteArray::fromHex(QVariant("DEADBEAF").toByteArray())); // todo: send simple DMX512 commands
+}
+
 void DMXWorker::onComPortChanged(QString port)
 {
     setPortName(port);

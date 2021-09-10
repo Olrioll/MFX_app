@@ -26,6 +26,7 @@ void DeviceManager::addSequenceDevice(int deviceId, bool checked, qreal posXRati
     newSequenceDevice->setChecked(checked);
     newSequenceDevice->setPosXRatio(posXRatio);
     newSequenceDevice->setPosYRatio(posYRatio);
+    connect(DMXWorker::instance(), &DMXWorker::playbackTimeChanged, reinterpret_cast<SequenceDevice*>(newSequenceDevice), &SequenceDevice::onPlaybackTimeChanged);
     m_devices->append(newSequenceDevice);
 }
 
@@ -45,13 +46,13 @@ void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal 
     device->setPosYRatio(posYRatio);
 }
 
-void DeviceManager::onRunPattern(int deviceId, QString patternName)
+void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName)
 {
     Device *device = getDevice(deviceId);
     if(device == NULL) {
         return;
     }
     Pattern *p = m_patternManager->patternByName(patternName);
-    device->runPattern(p);
+    device->runPattern(p, time);
     emit drawPatternInGui(deviceId, patternName);
 }
