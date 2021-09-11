@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     app.setOrganizationDomain("mfx.com");
 
     SettingsManager settings;
-    TranslationManager translationManager;
+    TranslationManager translationManager(settings);
     ProjectManager project(settings);
     PatternManager patternManager(settings);
     patternManager.initPatterns();

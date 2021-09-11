@@ -6,43 +6,76 @@
 
 namespace {
 static const QString translationFileNamePattern = QStringLiteral("lang_");
+static const QString defaultLocale = QStringLiteral("ru");
+static const QString localeSettingKey = QStringLiteral("locale");
 }
 
-TranslationManager::TranslationManager(QObject* parent)
+TranslationManager::TranslationManager(SettingsManager& settings, QObject* parent)
     : QObject(parent)
     , m_languages(new QQmlObjectListModel<Language>(this))
+    , m_settings(settings)
 {
     auto* english = new Language();
     english->setName("English");
     english->setLocale("en");
     english->setIcon("qrc:/icons/preferences/preferences_language_settings_english_flag_icon.svg");
-    languageDictionary.insert("en", english);
+    m_languageDictionary.insert("en", english);
     auto* russian = new Language();
     russian->setName("Русский");
     russian->setLocale("ru");
     russian->setIcon("qrc:/icons/preferences/preferences_language_settings_russian_flag_icon.svg");
-    languageDictionary.insert("ru", russian);
+    m_languageDictionary.insert("ru", russian);
 
     initLanguages();
+
+    const QString savedLocale = m_settings.value(localeSettingKey).toString();
+
+    if(savedLocale.length() > 0 && checkLocaleExists(savedLocale)) {
+        setLanguage(savedLocale);
+    } else {
+        setLanguage(defaultLocale);
+    }
+
+    initConnections();
 }
 
-void TranslationManager::setLanguage(const QString& locale)
+void TranslationManager::initConnections()
+{
+    connect(this, &TranslationManager::currentLocaleChanged, [=](const QString& newLocale){
+        m_settings.setValue(localeSettingKey, newLocale);
+    });
+}
+
+bool TranslationManager::checkLocaleExists(const QString &locale) const
 {
     bool languageLocaleExists = false;
 
-    for(auto * language : m_languages->toList()) {
-        if(language->locale().compare(locale) == 0) {
+    for (auto* language : m_languages->toList()) {
+        if (language->locale().compare(locale) == 0) {
             languageLocaleExists = true;
             break;
         }
     }
 
-    if (languageLocaleExists) {
+    return languageLocaleExists;
+}
+
+QString TranslationManager::systemLocale() const
+{
+    auto defaultLocale = QLocale::system().name();
+    defaultLocale.truncate(defaultLocale.lastIndexOf('_'));
+    return defaultLocale;
+}
+
+void TranslationManager::setLanguage(const QString& locale)
+{
+    if (checkLocaleExists(locale)) {
         const QString localePath = qApp->applicationDirPath() + QString("/translations/lang_%1.qm").arg(locale);
         bool translationLoaded = m_translator.load(localePath);
         if (translationLoaded) {
-            qInfo() << "Successfully translated";
             qApp->installTranslator(&m_translator);
+
+            setCurrentLocale(locale);
 
             emit translationTriggerChanged("1");
         } else {
@@ -65,8 +98,8 @@ void TranslationManager::initLanguages()
         for (const auto& translationFileName : translationFiles) {
             if (translationFileNameRegexp.indexIn(translationFileName) >= 0) {
                 const auto languageLocale = translationFileNameRegexp.cap(1);
-                if (languageDictionary.contains(languageLocale)) {
-                    m_languages->append(languageDictionary.value(languageLocale));
+                if (m_languageDictionary.contains(languageLocale)) {
+                    m_languages->append(m_languageDictionary.value(languageLocale));
                 }
             }
         }
