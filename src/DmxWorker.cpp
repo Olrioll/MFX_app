@@ -12,7 +12,7 @@ DMXWorker::DMXWorker(QObject *parent): QSerialPort(parent)
     setParity(Parity::NoParity);
     setFlowControl(FlowControl::NoFlowControl);
     m_timer.setInterval(10);
-    m_dmxArray.fill(0x0, 512);
+    m_dmxArray.fill(0xFF, 512);
     m_timer.start();
 }
 
@@ -41,7 +41,7 @@ void DMXWorker::setOperation(int deviceId, Operation *op)
         m_dmxArray[deviceId * 6] = op->angle(); // m_dmxArray[0] is start byte
         m_dmxArray[deviceId * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
     } else {
-        m_dmxArray.fill(0x0, 512);
+        m_dmxArray.fill(0xFF, 512);
     }
 }
 
@@ -80,7 +80,7 @@ void DMXWorker::onTimer()
     if(!isOpen()) {
         openComPort();
     }
-    QByteArray singleZero("\x00",1);
+    QByteArray singleZero("\xFF",1);
     setBaudRate(96000);
     write(singleZero);
     setBaudRate(250000);
