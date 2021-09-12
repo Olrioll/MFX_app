@@ -86,7 +86,7 @@ void DMXWorker::onTimer()
         openComPort();
     }
     QByteArray singleZero("\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",21);
-    setBaudRate(80000);
+    setBaudRate(25000);
     write(singleZero);
     setBaudRate(250000);
     write(m_dmxArray);
