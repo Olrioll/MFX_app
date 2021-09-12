@@ -70,6 +70,11 @@ void DMXWorker::onPlaybackTimeChanged(quint64 time)
 
 void DMXWorker::onTimer()
 {
+    static int counter = 0;
+    if(counter++ != 3) {
+        return;
+    }
+    counter = 0;
 #if defined(Q_OS_LINUX)
     return;
 #endif
