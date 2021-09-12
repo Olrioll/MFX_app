@@ -9,6 +9,7 @@
 
 #include "Cue.h"
 #include "DmxWorker.h"
+#include "CueContentManager.h"
 
 class CueSortingModel;
 
@@ -19,7 +20,7 @@ class CueManager : public QObject
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(quint64, playerPosition, PlayerPosition, 0)
     Q_PROPERTY(CueSortingModel * cuesSorted READ cuesSorted CONSTANT)
 public:
-    explicit CueManager(QObject *parent = nullptr);
+    explicit CueManager(CueContentManager& cueContentManager, QObject *parent = nullptr);
     ~CueManager();
 
     Q_INVOKABLE void addCue(QVariantMap properties);
@@ -46,4 +47,5 @@ private:
 
 private:
     CueSortingModel * m_cuesSorted = nullptr;
+    CueContentManager& m_cueContentManager;
 };

@@ -4,7 +4,7 @@
 
 #include "CueSortingModel.h"
 
-CueManager::CueManager(QObject *parent) : QObject(parent)
+CueManager::CueManager(CueContentManager &cueContentManager, QObject *parent) : QObject(parent), m_cueContentManager(cueContentManager)
 {
     connect(this, &CueManager::playerPositionChanged, this, &CueManager::onPlaybackTimeChanged);
     m_cues = new QQmlObjectListModel<Cue>(this);
@@ -77,6 +77,8 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, 
     quint64 position = newPosition / 10;
     newAction->setStartTime(position * 10);
     actions->append(newAction);
+
+    m_cueContentManager.createCueContentItems(cueName, QString::number(deviceId), pattern);
 }
 
 void CueManager::setActionProperty(QString cueName, QString pattern, int deviceId, quint64 newPosition)

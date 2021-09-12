@@ -822,7 +822,7 @@ FocusScope
                                 }
                             }
 
-                            model: 9
+                            model: cueContentManager.cueContentItems
 
                             delegate: Item {
                                 id: cueContentTableListViewRow
@@ -842,6 +842,19 @@ FocusScope
                                     height: 1
 
                                     color: "#66000000"
+                                }
+
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+
+                                    anchors.leftMargin: 16
+                                    anchors.rightMargin: 16
+
+                                    color: "white"
+
+                                    text: model.device + " " + model.action
                                 }
                             }
                         }

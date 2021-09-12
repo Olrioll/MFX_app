@@ -131,6 +131,8 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/PatternFilteringModel.cpp"
     "src/Operation.cpp"
     "src/TranslationManager.cpp"
+    "src/CueContent.cpp"
+    "src/CueContentManager.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
