@@ -6,12 +6,13 @@ DMXWorker::DMXWorker(QObject *parent): QSerialPort(parent)
     connect(this, &QSerialPort::errorOccurred, this, &DMXWorker::onError);
     connect(this, &DMXWorker::playbackTimeChanged, this, &DMXWorker::onPlaybackTimeChanged);
     connect(&m_timer, &QTimer::timeout, this, &DMXWorker::onTimer);
-    setBaudRate(115200/*250000*/);
+    setBaudRate(250000);
     setDataBits(DataBits::Data8);
-    setStopBits(StopBits::OneStop/*StopBits::TwoStop*/);
+    setStopBits(StopBits::TwoStop);
     setParity(Parity::NoParity);
     setFlowControl(FlowControl::NoFlowControl);
     m_timer.setInterval(10);
+    m_dmxArray.fill(0x0, 512);
     m_timer.start();
 }
 
@@ -36,10 +37,13 @@ DMXWorker *DMXWorker::instance()
 
 void DMXWorker::setOperation(int deviceId, Operation *op)
 {
-    qDebug() << tr("Time: %1, deviceId: %2, duration: %3, angle: %4 (degrees: %5), velocity: %6, active: %7")
-                .arg(m_playbackTime).arg(deviceId).arg(op->duration()).arg(op->angle())
-                .arg(op->angleDegrees()).arg(op->velocity()).arg(op->active());
-    // DMXWorker::instance()->write(QByteArray::fromHex(QVariant("DEADBEAF").toByteArray())); // todo: send simple DMX512 commands
+    if(op != NULL) {
+        m_dmxArray[(deviceId - 1) * 6] = op->angle(); // first channel
+        m_dmxArray[(deviceId - 1) * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
+    } else {
+        m_dmxArray.fill(0x0, 512);
+    }
+    m_activeOperation = true;
 }
 
 void DMXWorker::onComPortChanged(QString port)
@@ -70,13 +74,12 @@ void DMXWorker::onPlaybackTimeChanged(quint64 time)
 void DMXWorker::onTimer()
 {
     QByteArray writeData("\x00",1);
-    QByteArray writeDMXArray = QByteArray::fromHex(QVariant("FF").toByteArray());
     if(!isOpen()) {
         reopenComPort();
     }
-    // m_playbackTime
-    if(m_processing) {
-        write(writeDMXArray);
+    if(m_processing && m_activeOperation) {
+        write(m_dmxArray);
+        m_activeOperation = false;
     } else {
         write(writeData);
     }

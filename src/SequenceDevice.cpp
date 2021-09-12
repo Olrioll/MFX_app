@@ -15,24 +15,30 @@ void SequenceDevice::runPattern(Pattern *p, quint64 time)
         return;
     }
     m_opStartTime = time;
+    m_patternStopTime = time + p->duration() - 10; // time in DMXWorker is 10 ms before time in SequenceDevices
     m_operations = p->operations()->toList();
     if(m_operations.count() == 0) {
         return;
     }
     m_op = m_operations[0]; // first operation of pattern
-    DMXWorker::instance()->setOperation(id(), m_op);
+    setDMXOperation(id(), m_op);
 }
 
 void SequenceDevice::onPlaybackTimeChanged(quint64 time)
 {
+    if(time == m_patternStopTime) {
+        setDMXOperation(id(), NULL);
+        m_patternStopTime = 0;
+        return;
+    }
     if(m_op == NULL) {
         return;
     }
-    if(time == m_opStartTime + m_op->duration()) {
-        m_opStartTime = time;
+    if(time == m_opStartTime + m_op->duration() - 10) {
+        m_opStartTime = time + 10;
         m_operations.removeFirst();
         m_op = m_operations[0];
-        DMXWorker::instance()->setOperation(id(), m_op);
+        setDMXOperation(id(), m_op);
         if(m_operations.count() == 1) {
             m_operations.clear();
             m_op = NULL;
@@ -40,4 +46,16 @@ void SequenceDevice::onPlaybackTimeChanged(quint64 time)
             return;
         }
     }
+}
+
+void SequenceDevice::setDMXOperation(int deviceId, Operation *op)
+{
+    int angle = 0;
+    if(op != NULL) {
+        angle = op->angleDegrees();
+    }
+    if((angle < minAngle()) || (angle > maxAngle())) { // filter operations by angle
+        return;
+    }
+    DMXWorker::instance()->setOperation(deviceId, op);
 }

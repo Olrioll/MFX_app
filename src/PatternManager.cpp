@@ -104,7 +104,7 @@ void PatternManager::initPatterns()
             int activeCode = rawAction.at(1).split(',').at(3).toInt();
             operation->setActive(activeCode == 255 ? true: false);
             pattern->operations()->append(operation);
-            int duration = 0;
+            int duration = prefire;
             for (int i = 2; i < rawAction.size(); i++) {
                 auto nextOperation = new Operation(this);
                 nextOperation->setDuration(rawAction.at(i).split(',').at(0).toInt() * 10);

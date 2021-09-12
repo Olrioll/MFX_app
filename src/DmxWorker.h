@@ -32,6 +32,8 @@ private:
     QTimer m_timer;
     quint64 m_playbackTime;
     bool m_processing = false;
+    bool m_activeOperation = false;
+    QByteArray m_dmxArray;
     explicit DMXWorker(QObject *parent = nullptr);
     void reopenComPort();
 };

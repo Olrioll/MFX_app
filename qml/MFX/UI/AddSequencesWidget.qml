@@ -115,6 +115,16 @@ Item
                               {propName: "max ang", propValue: Number(maxAngField.text)},
                               {propName: "height", propValue: Number(heightField.text)}
                              ])
+            deviceManager.editPatch(
+                                    [
+                                     {propName: "ID", propValue: currentId},
+                                     {propName: "DMX", propValue: currentDmxValue},
+                                     {propName: "RF pos", propValue: currentRfPosValue},
+                                     {propName: "RF ch", propValue: currentRfChValue},
+                                     {propName: "min ang", propValue: Number(minAngField.text)},
+                                     {propName: "max ang", propValue: Number(maxAngField.text)},
+                                     {propName: "height", propValue: Number(heightField.text)}
+                                    ])
 
             if(groupName)
             {
@@ -214,6 +224,16 @@ Item
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "height", propValue: Number(heightField.text)}
                              ])
+            deviceManager.editPatch(
+                        [
+                         {propName: "ID", propValue: changedIdList[i]},
+                         {propName: "DMX", propValue: currentDmxValue},
+                         {propName: "min ang", propValue: Number(minAngField.text)},
+                         {propName: "max ang", propValue: Number(maxAngField.text)},
+                         {propName: "RF pos", propValue: currentRfPosValue},
+                         {propName: "RF ch", propValue: currentRfChValue},
+                         {propName: "height", propValue: Number(heightField.text)}
+                        ])
 
             currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement

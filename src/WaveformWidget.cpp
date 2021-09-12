@@ -176,7 +176,7 @@ void WaveformWidget::paint(QPainter *painter)
             float max = 0.f;
             float min = 0.f;
 
-            for(int i = m_min; i <= m_max; i++)
+            for(int i = m_min; i < m_max; i++)
             {
                 frameCounter++;
                 if(frameCounter < framesPerPixel)

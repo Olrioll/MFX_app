@@ -46,6 +46,43 @@ void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal 
     device->setPosYRatio(posYRatio);
 }
 
+void DeviceManager::editPatch(QVariantList properties)
+{
+    int id = -1;
+    int minAng = -120;
+    int maxAng = -120;
+    int height = -1;
+    foreach(auto prop, properties)
+    {
+        QString stringFirst = prop.toMap().first().toString();
+        QVariant last = prop.toMap().last();
+
+        if(stringFirst == "ID") {
+            id = last.toInt();
+        }
+        if(stringFirst == "min ang") {
+            minAng = last.toInt();
+        }
+        if(stringFirst == "max ang") {
+            maxAng = last.toInt();
+        }
+        if(stringFirst == "height") {
+            height = last.toInt();
+        }
+    }
+    Device *device = getDevice(id);
+    if(device == NULL) {
+        return;
+    }
+    if(device->deviceType() != DEVICE_TYPE_SEQUENCES) {
+        return;
+    }
+    SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);
+    sequenceDevice->setMinAngle(minAng);
+    sequenceDevice->setMaxAngle(maxAng);
+    sequenceDevice->setheight(height);
+}
+
 void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName)
 {
     Device *device = getDevice(deviceId);

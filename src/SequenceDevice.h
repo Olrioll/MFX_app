@@ -13,7 +13,6 @@
 
 class SequenceDevice : public Device {
     Q_OBJECT
-    //QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(Device::ComPortWinOS, comPort, ComPort, Device::ComPortWinOS::COM_PORT_UNKNOWN) //ComPort устройства
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, comPort, ComPort, "") //ComPort устройства
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, dmx, Dmx, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, rfChannel, RfChannel, 0) //DMX
@@ -32,4 +31,6 @@ private:
     QList<Operation*> m_operations;
     Operation* m_op = NULL;
     quint64 m_opStartTime;
+    quint64 m_patternStopTime;
+    void setDMXOperation(int deviceId, Operation* op);
 };
