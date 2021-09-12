@@ -35,7 +35,7 @@ private:
     bool m_activeOperation = false;
     QByteArray m_dmxArray;
     explicit DMXWorker(QObject *parent = nullptr);
-    void reopenComPort();
+    void openComPort();
 };
 
 #endif // DMXWORKER_H

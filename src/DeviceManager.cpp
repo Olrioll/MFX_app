@@ -5,9 +5,6 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
     m_devices = new QQmlObjectListModel<Device>(this);
     connect(this, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged);
 
-    auto comPort = m_comPortModel.rowCount() > 0 ? m_comPortModel.stringList().at(0)
-                                                 : "";
-    setComPort(comPort);
 }
 
 Device *DeviceManager::getDevice(int id)

@@ -16,16 +16,16 @@ DMXWorker::DMXWorker(QObject *parent): QSerialPort(parent)
     m_timer.start();
 }
 
-void DMXWorker::reopenComPort()
+void DMXWorker::openComPort()
 {
-    if(isOpen()) {
-        close();
+    if(portName().isEmpty()) {
+        return;
     }
     const bool result = open(QIODevice::ReadWrite);
     if(!result) {
-        qDebug() << "DMXWorker::reopenComPort:" << tr("Error: %1 (port %2)").arg(errorString()).arg(portName());
+        qDebug() << "DMXWorker::openComPort:" << tr("Error: %1 (port %2)").arg(errorString()).arg(portName());
     } else {
-        qDebug() << "DMXWorker::reopenComPort:" << tr("Port %1 opened").arg(portName());
+        qDebug() << "DMXWorker::openComPort:" << tr("Port %1 opened").arg(portName());
     }
 }
 
@@ -48,8 +48,9 @@ void DMXWorker::setOperation(int deviceId, Operation *op)
 
 void DMXWorker::onComPortChanged(QString port)
 {
+    close();
     setPortName(port);
-    reopenComPort();
+    openComPort();
 }
 
 void DMXWorker::onPlayerStateChanged(QMediaPlayer::State state)
@@ -62,7 +63,6 @@ void DMXWorker::onPlayerStateChanged(QMediaPlayer::State state)
         m_playbackTime = 0;
         m_timer.start();
     }
-    reopenComPort();
 }
 
 void DMXWorker::onPlaybackTimeChanged(quint64 time)
@@ -77,15 +77,17 @@ void DMXWorker::onTimer()
     return;
 #endif
 
-    QByteArray writeData("\x00",1);
+    if(portName().isEmpty()) {
+        return;
+    }
     if(!isOpen()) {
-        reopenComPort();
+        openComPort();
     }
     if(m_processing && m_activeOperation) {
         write(m_dmxArray);
         m_activeOperation = false;
     } else {
-        write(writeData);
+        write(m_dmxArray);
     }
 }
 
@@ -99,6 +101,7 @@ void DMXWorker::onError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::WriteError) {
         qDebug() << "DMXWorker::onError:" << tr("Error: %1 (port %2)").arg(errorString().arg(portName()));
+        close();
     }
 }
 

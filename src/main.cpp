@@ -44,6 +44,10 @@ int main(int argc, char** argv)
     deviceManager.m_patternManager = &patternManager;
 
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
+    QString comPort = settings.value("comPort").toString();
+    if(!comPort.isEmpty()) {
+        deviceManager.setComPort(comPort);
+    }
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
 
