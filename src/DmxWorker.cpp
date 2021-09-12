@@ -38,8 +38,8 @@ DMXWorker *DMXWorker::instance()
 void DMXWorker::setOperation(int deviceId, Operation *op)
 {
     if(op != NULL) {
-        m_dmxArray[(deviceId - 1) * 6] = op->angle(); // first channel
-        m_dmxArray[(deviceId - 1) * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
+        m_dmxArray[deviceId * 6] = op->angle(); // m_dmxArray[0] is start byte
+        m_dmxArray[deviceId * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
     } else {
         m_dmxArray.fill(0x0, 512);
     }
