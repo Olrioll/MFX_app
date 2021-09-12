@@ -835,7 +835,7 @@ to delete selected patches?</translation>
     </message>
     <message>
         <source>English</source>
-        <translation>English</translation>
+        <translation type="vanished">English</translation>
     </message>
     <message>
         <source>Русский</source>
@@ -899,7 +899,7 @@ to delete selected patches?</translation>
     </message>
     <message>
         <source>Russian</source>
-        <translation>Русский</translation>
+        <translation type="vanished">Русский</translation>
     </message>
 </context>
 <context>
@@ -1001,7 +1001,7 @@ to load the image</translation>
     <message>
         <source>Click on the area
 to load the image</source>
-        <translation>Click on the area
+        <translation type="vanished">Click on the area
 to load the image</translation>
     </message>
     <message>
