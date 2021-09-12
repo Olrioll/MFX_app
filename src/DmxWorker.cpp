@@ -43,7 +43,6 @@ void DMXWorker::setOperation(int deviceId, Operation *op)
     } else {
         m_dmxArray.fill(0x0, 512);
     }
-    m_activeOperation = true;
 }
 
 void DMXWorker::onComPortChanged(QString port)
@@ -56,10 +55,8 @@ void DMXWorker::onComPortChanged(QString port)
 void DMXWorker::onPlayerStateChanged(QMediaPlayer::State state)
 {
     if(state == QMediaPlayer::PlayingState) {
-        m_processing = true;
         m_timer.stop();
     } else {
-        m_processing = false;
         m_playbackTime = 0;
         m_timer.start();
     }
@@ -83,12 +80,7 @@ void DMXWorker::onTimer()
     if(!isOpen()) {
         openComPort();
     }
-    if(m_processing && m_activeOperation) {
-        write(m_dmxArray);
-        m_activeOperation = false;
-    } else {
-        write(m_dmxArray);
-    }
+    write(m_dmxArray);
 }
 
 void DMXWorker::onBytesWritten(qint64 bytes)
