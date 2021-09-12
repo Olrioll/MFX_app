@@ -85,12 +85,10 @@ void DMXWorker::onTimer()
     if(!isOpen()) {
         openComPort();
     }
-    setStopBits(StopBits::UnknownStopBits);
-    QByteArray singleZero("\xFF\xFF\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",21);
-    //setBaudRate(96000);
+    QByteArray singleZero("\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",21);
+    setBaudRate(80000);
     write(singleZero);
-    //setBaudRate(250000);
-    setStopBits(StopBits::TwoStop);
+    setBaudRate(250000);
     write(m_dmxArray);
 }
 
