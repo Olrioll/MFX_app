@@ -2512,7 +2512,7 @@ Item
         anchors.left: settingsButton.right
         anchors.bottom: parent.bottom
 
-        text: qsTr("reset")
+        text: translationsManager.translationTrigger + qsTr("reset")
         textSize: 10
 
         onClicked:
@@ -2574,7 +2574,7 @@ Item
         Text
         {
             id: volumeCaption
-            text: qsTr("Volume")
+            text: translationsManager.translationTrigger + qsTr("Volume")
 
             anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin: 8
@@ -2689,7 +2689,7 @@ Item
 
         checkable: true
         color: "#27AE60"
-        text: qsTr("Stereo")
+        text: translationsManager.translationTrigger + qsTr("Stereo")
 
         ButtonGroup.group: modeButtons
     }
@@ -2707,7 +2707,7 @@ Item
 
         checkable: true
         color: "#27AE60"
-        text: qsTr("Mono")
+        text: translationsManager.translationTrigger + qsTr("Mono")
 
         ButtonGroup.group: modeButtons
     }
@@ -2886,7 +2886,7 @@ Item
         elide: Text.ElideRight
         font.family: MFXUIS.Fonts.robotoRegular.name
         font.pixelSize: 14
-        text: qsTr("Not available")
+        text: translationsManager.translationTrigger + qsTr("Not available")
 
         anchors.centerIn: waveformBackground
     }
@@ -2936,7 +2936,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Timeline settings")
+                text: translationsManager.translationTrigger + qsTr("Timeline settings")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -2991,7 +2991,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Add before")
+                text: translationsManager.translationTrigger + qsTr("Add before")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3144,7 +3144,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Track time")
+                text: translationsManager.translationTrigger + qsTr("Track time")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3172,7 +3172,7 @@ Item
                 {
                     id: trackDurationText
                     color: "#ffffff"
-                    text: qsTr("00:00:00")
+                    text: translationsManager.translationTrigger + qsTr("00:00:00")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
@@ -3187,7 +3187,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Add after")
+                text: translationsManager.translationTrigger + qsTr("Add after")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3342,7 +3342,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Total time")
+                text: translationsManager.translationTrigger + qsTr("Total time")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3370,7 +3370,7 @@ Item
                 {
                     id: projectDurationText
                     color: "#ffffff"
-                    text: qsTr("00:00:00")
+                    text: translationsManager.translationTrigger + qsTr("00:00:00")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
@@ -3386,7 +3386,7 @@ Item
             {
                 id: setButton
                 color: "#2F80ED"
-                text: qsTr("Apply")
+                text: translationsManager.translationTrigger + qsTr("Apply")
 
                 anchors.left: trackDurationBackground.left
                 anchors.right: postIntervalBackground.right

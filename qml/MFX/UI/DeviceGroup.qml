@@ -264,7 +264,7 @@ Item
                 id: contextMenu
                 Action
                 {
-                    text: qsTr("Rename group")
+                    text: translationsManager.translationTrigger + qsTr("Rename group")
                     onTriggered:
                     {
                         var renameGroupWindow = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
@@ -277,7 +277,7 @@ Item
                 }
                 Action
                 {
-                    text: qsTr("Delete group")
+                    text: translationsManager.translationTrigger + qsTr("Delete group")
                     onTriggered: project.removeGroup(deviceGroup.name)
                 }
 

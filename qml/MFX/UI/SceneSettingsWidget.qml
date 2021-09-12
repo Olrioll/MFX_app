@@ -111,7 +111,7 @@ Item
                 width: 70
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Scene frame")
+                text: translationsManager.translationTrigger + qsTr("Scene frame")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -175,7 +175,7 @@ Item
                 width: 44
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Width")
+                text: translationsManager.translationTrigger + qsTr("Width")
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -190,7 +190,7 @@ Item
                 width: 34
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Height")
+                text: translationsManager.translationTrigger + qsTr("Height")
                 elide: Text.ElideMiddle
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -205,7 +205,7 @@ Item
                 width: 20
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("m")
+                text: translationsManager.translationTrigger + qsTr("m")
                 elide: Text.ElideMiddle
                 font.pixelSize: 10
                 horizontalAlignment: Text.AlignHCenter
@@ -220,7 +220,7 @@ Item
                 width: 20
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("m")
+                text: translationsManager.translationTrigger + qsTr("m")
                 elide: Text.ElideMiddle
                 font.pixelSize: 10
                 horizontalAlignment: Text.AlignHCenter
@@ -252,7 +252,7 @@ Item
                 width: 70
                 height: 17
                 color: widthField.isActiveInput ? "#27AE60" : "#ffffff"
-                text: qsTr("Image")
+                text: translationsManager.translationTrigger + qsTr("Image")
                 horizontalAlignment: Text.AlignHRight
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -282,13 +282,18 @@ Item
                     id: buttonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
 
                     color: "#888888"
-                    text: qsTr("Click on the area\nto load the image")
+                    text: qtranslationsManager.translationTrigger + sTr("Click on the area\nto load the image")
                     elide: Text.ElideMiddle
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
+                    wrapMode: Text.WordWrap
+                    maximumLineCount: 5
                     font.family: MFXUIS.Fonts.robotoRegular.name
                     font.pixelSize: 10
                 }
@@ -325,7 +330,7 @@ Item
                 top: workArea2.bottom
             }
 
-            text: project.property("audioTrackFile") === "" ? qsTr("Click to choose audio") : project.property("audioTrackFile")
+            text: project.property("audioTrackFile") === "" ? translationsManager.translationTrigger + qsTr("Click to choose audio") : project.property("audioTrackFile")
 
             onClicked:
             {
@@ -356,7 +361,7 @@ Item
                      (Number(widthField.text) >= Number(heightField.text) ?
                      Number(widthField.text) / Number(heightField.text) <= 10 : Number(heightField.text) / Number(widthField.text) <= 10)
 
-            text: qsTr("Apply")
+            text: translationsManager.translationTrigger + qsTr("Apply")
 
             onClicked:
             {
@@ -402,9 +407,3 @@ Item
         applicationWindow.isPatchEditorOpened = true
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:2}D{i:17}
-}
-##^##*/

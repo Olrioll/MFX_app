@@ -73,6 +73,10 @@ void DMXWorker::onPlaybackTimeChanged(quint64 time)
 
 void DMXWorker::onTimer()
 {
+#if defined(Q_OS_LINUX)
+    return;
+#endif
+
     QByteArray writeData("\x00",1);
     if(!isOpen()) {
         reopenComPort();
