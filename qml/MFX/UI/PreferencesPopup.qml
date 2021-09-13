@@ -37,6 +37,8 @@ Item {
                     anchors.topMargin: 6
                     anchors.bottomMargin: 6
 
+                    property int lastIndex: 0
+
                     currentIndex: 0
 
                     onCurrentIndexChanged: {
@@ -58,6 +60,10 @@ Item {
                         translationsManager.translationTrigger + qsTr("Profile Cloud"),
                         translationsManager.translationTrigger + qsTr("MIDI connection")
                     ]
+
+                    onModelChanged: {
+                        currentIndex = lastIndex
+                    }
 
                     delegate: Item {
                         id: menuListViewDelegate
@@ -116,7 +122,8 @@ Item {
                             anchors.fill: parent
 
                             onClicked: {
-                                menuListView.currentIndex = index
+                                menuListView.currentIndex = model.index
+                                menuListView.lastIndex = model.index
                             }
                         }
                     }
