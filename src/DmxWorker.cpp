@@ -12,8 +12,8 @@ DMXWorker::DMXWorker(QObject *parent): QSerialPort(parent)
     setParity(Parity::NoParity);
     setFlowControl(FlowControl::NoFlowControl);
     m_timer.setInterval(10);
-    m_dmxArray.fill(0x0, 512);
-    m_timer.start();
+    m_dmxArray.fill(0x00, 512);
+    m_timer.start(); // FF - это низкий сигнал. Меняю на 00 - высокий
 }
 
 void DMXWorker::openComPort()
@@ -38,10 +38,10 @@ DMXWorker *DMXWorker::instance()
 void DMXWorker::setOperation(int deviceId, Operation *op)
 {
     if(op != NULL) {
-        m_dmxArray[(deviceId - 1) * 6] = op->angle(); // first channel
-        m_dmxArray[(deviceId - 1) * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
+        m_dmxArray[deviceId * 6] = op->angle(); // m_dmxArray[0] is start byte
+        m_dmxArray[deviceId * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
     } else {
-        m_dmxArray.fill(0x0, 512);
+        m_dmxArray.fill(0x00, 512);
     }
 }
 
@@ -70,9 +70,11 @@ void DMXWorker::onPlaybackTimeChanged(quint64 time)
 
 void DMXWorker::onTimer()
 {
-#if defined(Q_OS_LINUX)
-    return;
-#endif
+    static int counter = 0;
+    if(counter++ != 3) {
+        return;
+    }
+    counter = 0;
 
     if(portName().isEmpty()) {
         return;
@@ -80,10 +82,9 @@ void DMXWorker::onTimer()
     if(!isOpen()) {
         openComPort();
     }
-    QByteArray singleZero("\x00",1);
-    setBaudRate(96000);
+    QByteArray singleZero("\x01",1);
     write(singleZero);
-    setBaudRate(250000);
+    QThread::usleep(220);
     write(m_dmxArray);
 }
 
