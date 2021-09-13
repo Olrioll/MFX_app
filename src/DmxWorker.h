@@ -7,7 +7,6 @@
 #include <QMediaPlayer>
 #include <QDebug>
 #include "Operation.h"
-#include "QThread"
 
 class DMXWorker : public QSerialPort
 {
