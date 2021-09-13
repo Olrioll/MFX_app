@@ -133,6 +133,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/TranslationManager.cpp"
     "src/CueContent.cpp"
     "src/CueContentManager.cpp"
+    "src/Language.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}

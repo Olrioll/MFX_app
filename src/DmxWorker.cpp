@@ -75,9 +75,6 @@ void DMXWorker::onTimer()
         return;
     }
     counter = 0;
-#if defined(Q_OS_LINUX)
-    return;
-#endif
 
     if(portName().isEmpty()) {
         return;

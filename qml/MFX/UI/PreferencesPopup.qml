@@ -395,13 +395,7 @@ Item {
 
                             height: 20
 
-                            Component.onCompleted: {
-                                if(model.locale === translationsManager.currentLocale) {
-                                    languagesListView.currentIndex = model.index
-                                }
-                            }
-
-                            property bool isCurrentItem: languagesListView.currentIndex === model.index
+                            property bool isCurrentItem: model.selected
 
                             RowLayout {
                                 anchors.fill: parent
@@ -489,7 +483,6 @@ Item {
                                 anchors.fill: parent
 
                                 onClicked: {
-                                    languagesListView.currentIndex = index
                                     translationsManager.setLanguage(model.locale)
                                 }
                             }

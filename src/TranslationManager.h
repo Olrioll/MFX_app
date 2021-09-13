@@ -5,17 +5,11 @@
 
 #include "QQmlObjectListModel.h"
 #include <QQmlConstRefPropertyHelpers.h>
-#include <QQmlPtrPropertyHelpers.h>
 #include <QSuperMacros.h>
 
 #include "SettingsManager.h"
 
-class Language : public QObject {
-    Q_OBJECT
-    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, locale, Locale, "")
-    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, name, Name, "")
-    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, icon, Icon, "")
-};
+class Language;
 
 class TranslationManager : public QObject {
     Q_OBJECT
@@ -32,6 +26,7 @@ private:
     void initConnections();
     bool checkLocaleExists(const QString& locale) const;
     QString systemLocale() const;
+    void updateSelected(const QString& locale);
 private:
     QTranslator m_translator;
     SettingsManager& m_settings;
