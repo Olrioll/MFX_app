@@ -25,4 +25,28 @@ void Cue::initConnections()
         const auto newDurationTimeDecoratedValue = newDurationTime.toString("hh:mm:ss.zzz");
         setDurationTimeDecorator(newDurationTimeDecoratedValue);
     });
+
+    connect(m_actions, &QQmlObjectListModelBase::countChanged, this, &Cue::calculateStartTime);
+
+    connect(m_actions, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) {
+        if(roles.contains(m_actions->roleForName("startTime"))) {
+            calculateStartTime();
+        }
+    });
+}
+
+void Cue::calculateStartTime()
+{
+    if(m_actions->count() > 0) {
+        qulonglong minimalTime = m_actions->at(0)->startTime();
+        for(auto * action : m_actions->toList()) {
+            if(action->startTime() < startTime()) {
+                minimalTime = action->startTime();
+            }
+        }
+
+        setStartTime(minimalTime);
+    } else {
+        setStartTime(0);
+    }
 }

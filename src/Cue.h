@@ -17,7 +17,7 @@ class Cue : public QObject
     QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор Cue
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, name, Name, "") //Имя Cue
     QML_OBJMODEL_PROPERTY(Action, actions) //Список Action внутри Cue
-    QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, startTime, StartTime, 0) //Время начала Cue в миллисекундах
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, startTime, StartTime, 0) //Время начала Cue в миллисекундах(время самого раннего Action)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, durationTime, DurationTime, 0) //Длительность Cue в миллисекундах
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, active, Active, false) //Определяет активен ли Cue (идет проигрывание)
 
@@ -33,4 +33,7 @@ public:
     explicit Cue(QObject *parent = nullptr);
 
     void initConnections();
+
+private:
+    void calculateStartTime();
 };

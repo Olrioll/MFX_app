@@ -23,7 +23,7 @@ void CueManager::initConnections()
 {
 }
 
-Cue *CueManager::getCue(QString name)
+Cue *CueManager::getCue(const QString& name)
 {
     Cue* cue = NULL;
     for(const auto & c : m_cues->toList()) {
@@ -35,13 +35,14 @@ Cue *CueManager::getCue(QString name)
     return cue;
 }
 
-Action *CueManager::getAction(QString cueName, int deviceId)
+Action *CueManager::getAction(const QString& cueName, int deviceId)
 {
     Action *act = NULL;
     Cue* cue = getCue(cueName);
     if(cue == NULL) {
         return NULL;
     }
+
     for(const auto & a : cue->actions()->toList()) {
         if(a->deviceId() == deviceId) {
             act = a;
@@ -55,23 +56,19 @@ void CueManager::addCue(QVariantMap properties)
 {
     QString name = properties.value("name").toString();
     //double newYposition = properties.value("newYposition").toDouble();
-    Cue* newCue = new Cue(this);
-
-    //TODO временно добавил для генерации случайного времени старта и длины кьюшки
-    newCue->setStartTime(QRandomGenerator::global()->generate64() % 100000);
-    newCue->setDurationTime(QRandomGenerator::global()->generate64() % 100);
+    auto * newCue = new Cue(this);
     newCue->setName(name);
     m_cues->append(newCue);
 }
 
-void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, quint64 newPosition)
+void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern, int deviceId, quint64 newPosition)
 {
-    Cue* cue = getCue(cueName);
-    if(cue == NULL) {
+    auto* cue = getCue(cueName);
+    if(cue == nullptr) {
         return;
     }
     auto actions = cue->actions();
-    Action* newAction = new Action(this);
+    auto* newAction = new Action(this);
     newAction->setPatternName(pattern);
     newAction->setDeviceId(deviceId);
     quint64 position = newPosition / 10;
@@ -81,10 +78,10 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, 
     m_cueContentManager.createCueContentItems(cueName, QString::number(deviceId), pattern);
 }
 
-void CueManager::setActionProperty(QString cueName, QString pattern, int deviceId, quint64 newPosition)
+void CueManager::setActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
-    Action* action = getAction(cueName, deviceId);
-    if(action == NULL) {
+    auto* action = getAction(cueName, deviceId);
+    if(action == nullptr) {
         addActionToCue(cueName, pattern, deviceId, newPosition);
         return;
     }
