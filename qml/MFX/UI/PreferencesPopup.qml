@@ -986,6 +986,8 @@ Item {
                 onClicked: {
                     deviceManager.comPort = selectComPortComboBox.currentText
                     settingsManager.setValue("comPort", selectComPortComboBox.currentText)
+
+                    preferences.canBeDestroyed()
                 }
             }
         }
