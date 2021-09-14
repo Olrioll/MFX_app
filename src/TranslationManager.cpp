@@ -80,7 +80,7 @@ void TranslationManager::updateSelected(const QString &locale)
 void TranslationManager::setLanguage(const QString& locale)
 {
     if (checkLocaleExists(locale)) {
-        const QString localePath = qApp->applicationDirPath() + QString("/translations/lang_%1.qm").arg(locale);
+        const QString localePath = QString(":/translations/lang_%1.qm").arg(locale);
         bool translationLoaded = m_translator.load(localePath);
         if (translationLoaded) {
             qApp->installTranslator(&m_translator);
@@ -98,7 +98,7 @@ void TranslationManager::setLanguage(const QString& locale)
 
 void TranslationManager::initLanguages()
 {
-    const QString translationsPath(qApp->applicationDirPath() + "/translations/");
+    const QString translationsPath(":/translations/");
 
     QDir translationsDir(translationsPath);
     auto translationFiles = translationsDir.entryList(QStringList { "*.qm" }, QDir::Files | QDir::NoDotAndDotDot | QDir::Readable);
