@@ -593,3 +593,10 @@ void ProjectManager::setActionProperty(QString cueName, QString actionName, int 
         }
     }
 }
+
+void ProjectManager::deleteCues(QStringList deletedCueNames)
+{
+    for(auto &name: deletedCueNames) {
+        getChild("Cues")->removeChild(name);
+    }
+}

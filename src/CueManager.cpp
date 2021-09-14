@@ -23,7 +23,17 @@ void CueManager::initConnections()
 {
 }
 
-Cue *CueManager::getCue(const QString& name)
+void CueManager::deleteCues(QStringList deletedCueNames)
+{
+    for(auto &name: deletedCueNames) {
+        Cue *cue = getCue(name);
+        if(cue == NULL) {
+            continue;
+        }
+        m_cues->remove(cue);
+    }
+}
+
 {
     Cue* cue = NULL;
     for(const auto & c : m_cues->toList()) {
