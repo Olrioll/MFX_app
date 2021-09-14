@@ -11,6 +11,7 @@ Item
     id: sideDockedWindow
     width: isExpanded ? expandedWidth : collapsedWidth
 
+    property alias expandButton: expandButton
     property bool isExpanded: false
     property int collapsedWidth: 28
     property int expandedWidth: contentItem.width
