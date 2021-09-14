@@ -7,10 +7,10 @@ import "qrc:/"
 ListView
 {
     id: deviceListView
-    anchors.margins: 2
-    anchors.top: parent.top
-    anchors.left: parent.left
-    width: 392
+//    anchors.margins: 2
+//    anchors.top: parent.top
+//    anchors.left: parent.left
+//    width: 392
     height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
     spacing: 2
     ScrollBar.vertical: ScrollBar {}
@@ -128,6 +128,9 @@ ListView
 
     delegate: PatchPlate
     {
+        anchors.left: deviceListView.contentItem.left
+        anchors.right: deviceListView.contentItem.right
+
         no: counter
         patchId: currentId
         parentList: deviceListView

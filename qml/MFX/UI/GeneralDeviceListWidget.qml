@@ -152,6 +152,8 @@ Item
 
             delegate: PatchPlate
             {
+                anchors.left: deviceListView.contentItem.left
+                anchors.right: deviceListView.contentItem.right
                 no: counter
                 patchId: currentId
             }
