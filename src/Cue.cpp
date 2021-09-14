@@ -33,4 +33,27 @@ void Cue::initConnections()
     //Здесь дублировании функционала переменных Selected и Expande, чтобы указать,
     //что они отвечают за разные панели в интерфейсе
     connect(this, &Cue::selectedChanged, this, &Cue::setExpanded);
+    connect(m_actions, &QQmlObjectListModelBase::countChanged, this, &Cue::calculateStartTime);
+
+    connect(m_actions, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) {
+        if(roles.contains(m_actions->roleForName("startTime"))) {
+            calculateStartTime();
+        }
+    });
+}
+
+void Cue::calculateStartTime()
+{
+    if(m_actions->count() > 0) {
+        qulonglong minimalTime = m_actions->at(0)->startTime();
+        for(auto * action : m_actions->toList()) {
+            if(action->startTime() < startTime()) {
+                minimalTime = action->startTime();
+            }
+        }
+
+        setStartTime(minimalTime);
+    } else {
+        setStartTime(0);
+    }
 }

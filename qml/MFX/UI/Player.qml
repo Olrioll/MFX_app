@@ -1381,7 +1381,8 @@ Item
                                                                                             displayedName: currAction.actionName + " - P" + currAction.patchId,
                                                                                             patchId: currAction.patchId,
                                                                                             position: currAction.position,
-                                                                                            prefire: patternManager.patternByName(currAction.actionName).prefireDuration
+                                                                                            prefire: patternManager.patternByName(currAction.actionName).prefireDuration,
+                                                                                            positionCoeff: currAction.positionCoeff
                                                                                  })
                         actionList.push(newActionMarker)
                     })
@@ -1415,6 +1416,7 @@ Item
                         property int position: 0 // в мсек
                         property int prefire: 0 // в мсек
                         property int duration: 0  // в мсек
+                        property double positionCoeff: 0
 
                         onPositionChanged:
                         {
@@ -1468,6 +1470,7 @@ Item
                                         actionMarker.position += delta
                                         cuePlate.updatePosition()
                                     }
+                                    positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
                                 }
                             }
 
@@ -1804,12 +1807,13 @@ Item
                             {
                                 if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
                                 {
-                                    return
+                                    return // this is first action in cue
                                 }
 
-                                let newPosition = currAction.position + delta * ((currAction.position - cuePlate.firstAction.position) / cuePlate.duration)
+                                let newPosition = cuePlate.firstAction.position + delta * currAction.positionCoeff
 
                                 project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
+                                project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "positionCoeff", currAction.positionCoeff)
                                 cueManager.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                                 cuePlate.loadActions();
                             })
