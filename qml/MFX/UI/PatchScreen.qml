@@ -73,6 +73,9 @@ Item
 //                {
 //                    sceneWidget.adjustBackgroundImageOnX(dx)
 //                }
+                if(sceneWidget === null) {
+                    return
+                }
                 sceneWidget.adjustBackgroundImageOnX()
             }
         }
