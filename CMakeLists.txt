@@ -133,6 +133,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/TranslationManager.cpp"
     "src/CueContent.cpp"
     "src/CueContentManager.cpp"
+    "src/Language.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
@@ -164,7 +165,27 @@ target_link_libraries(${MFX_LAUNCHER_PROJECT_NAME}
 
 add_custom_target(updateTranslations DEPENDS ${TRANSLATION_QM_FILES} ${TRANSLATION_TS_FILES})
 
+#Копируем созданные файлы переводов в результурующую папку с артефактами сборки
 add_custom_command(TARGET updateTranslations POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/translations
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRANSLATION_QM_FILES} ${CMAKE_BINARY_DIR}/translations
     )
+
+#Копируем созданные файлы с переводами в папку ресурсов приложения, чтобы поставлять базовые переводы внутри
+add_custom_command(TARGET updateTranslations POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRANSLATION_QM_FILES} ${CMAKE_SOURCE_DIR}/resources/translations
+    )
+
+#Генерируем ресурсный файл переводов
+if(UPDATE_TRANSLATIONS)
+    file(WRITE ${CMAKE_SOURCE_DIR}/resources/translations.qrc "<!DOCTYPE RCC>\n")
+    file(APPEND ${CMAKE_SOURCE_DIR}/resources/translations.qrc "<RCC>\n")
+    file(APPEND ${CMAKE_SOURCE_DIR}/resources/translations.qrc "    <qresource prefix=\"/\">\n")
+    foreach(FILE ${TRANSLATION_QM_FILES})
+        string(REPLACE "${CMAKE_CURRENT_BINARY_DIR}/" "translations/" RELATIVE_PATH ${FILE})
+        file(APPEND ${CMAKE_SOURCE_DIR}/resources/translations.qrc "        <file>${RELATIVE_PATH}</file>\n")
+    endforeach()
+    file(APPEND ${CMAKE_SOURCE_DIR}/resources/translations.qrc "    </qresource>\n")
+    file(APPEND ${CMAKE_SOURCE_DIR}/resources/translations.qrc "</RCC>\n")
+endif()
+

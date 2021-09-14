@@ -4,6 +4,8 @@
 #include <QtCore/QFileInfo>
 #include <QtGui/QGuiApplication>
 
+#include "Language.h"
+
 namespace {
 static const QString translationFileNamePattern = QStringLiteral("lang_");
 static const QString defaultLocale = QStringLiteral("ru");
@@ -27,6 +29,7 @@ TranslationManager::TranslationManager(SettingsManager& settings, QObject* paren
     m_languageDictionary.insert("ru", russian);
 
     initLanguages();
+    initConnections();
 
     const QString savedLocale = m_settings.value(localeSettingKey).toString();
 
@@ -35,8 +38,6 @@ TranslationManager::TranslationManager(SettingsManager& settings, QObject* paren
     } else {
         setLanguage(defaultLocale);
     }
-
-    initConnections();
 }
 
 void TranslationManager::initConnections()
@@ -44,6 +45,8 @@ void TranslationManager::initConnections()
     connect(this, &TranslationManager::currentLocaleChanged, [=](const QString& newLocale){
         m_settings.setValue(localeSettingKey, newLocale);
     });
+
+    connect(this, &TranslationManager::currentLocaleChanged, this, &TranslationManager::updateSelected);
 }
 
 bool TranslationManager::checkLocaleExists(const QString &locale) const
@@ -67,17 +70,24 @@ QString TranslationManager::systemLocale() const
     return defaultLocale;
 }
 
+void TranslationManager::updateSelected(const QString &locale)
+{
+    for(auto * language : m_languages->toList()) {
+        language->setSelected(language->locale().compare(locale) == 0);
+    }
+}
+
 void TranslationManager::setLanguage(const QString& locale)
 {
     if (checkLocaleExists(locale)) {
-        const QString localePath = qApp->applicationDirPath() + QString("/translations/lang_%1.qm").arg(locale);
+        const QString localePath = QString(":/translations/lang_%1.qm").arg(locale);
         bool translationLoaded = m_translator.load(localePath);
         if (translationLoaded) {
             qApp->installTranslator(&m_translator);
 
             setCurrentLocale(locale);
 
-            emit translationTriggerChanged("1");
+            emit translationTriggerChanged("");
         } else {
             qWarning() << "Tranlsations: was not able to load translation file: " << localePath;
         }
@@ -88,7 +98,7 @@ void TranslationManager::setLanguage(const QString& locale)
 
 void TranslationManager::initLanguages()
 {
-    const QString translationsPath(qApp->applicationDirPath() + "/translations/");
+    const QString translationsPath(":/translations/");
 
     QDir translationsDir(translationsPath);
     auto translationFiles = translationsDir.entryList(QStringList { "*.qm" }, QDir::Files | QDir::NoDotAndDotDot | QDir::Readable);

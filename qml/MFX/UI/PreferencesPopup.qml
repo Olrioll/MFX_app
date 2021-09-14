@@ -37,6 +37,8 @@ Item {
                     anchors.topMargin: 6
                     anchors.bottomMargin: 6
 
+                    property int lastIndex: 0
+
                     currentIndex: 0
 
                     onCurrentIndexChanged: {
@@ -58,6 +60,10 @@ Item {
                         translationsManager.translationTrigger + qsTr("Profile Cloud"),
                         translationsManager.translationTrigger + qsTr("MIDI connection")
                     ]
+
+                    onModelChanged: {
+                        currentIndex = lastIndex
+                    }
 
                     delegate: Item {
                         id: menuListViewDelegate
@@ -116,7 +122,8 @@ Item {
                             anchors.fill: parent
 
                             onClicked: {
-                                menuListView.currentIndex = index
+                                menuListView.currentIndex = model.index
+                                menuListView.lastIndex = model.index
                             }
                         }
                     }
@@ -395,13 +402,7 @@ Item {
 
                             height: 20
 
-                            Component.onCompleted: {
-                                if(model.locale === translationsManager.currentLocale) {
-                                    languagesListView.currentIndex = model.index
-                                }
-                            }
-
-                            property bool isCurrentItem: languagesListView.currentIndex === model.index
+                            property bool isCurrentItem: model.selected
 
                             RowLayout {
                                 anchors.fill: parent
@@ -489,7 +490,6 @@ Item {
                                 anchors.fill: parent
 
                                 onClicked: {
-                                    languagesListView.currentIndex = index
                                     translationsManager.setLanguage(model.locale)
                                 }
                             }
@@ -986,6 +986,8 @@ Item {
                 onClicked: {
                     deviceManager.comPort = selectComPortComboBox.currentText
                     settingsManager.setValue("comPort", selectComPortComboBox.currentText)
+
+                    preferences.canBeDestroyed()
                 }
             }
         }
