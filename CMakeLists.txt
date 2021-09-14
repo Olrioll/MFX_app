@@ -171,9 +171,10 @@ add_custom_command(TARGET updateTranslations POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRANSLATION_QM_FILES} ${CMAKE_BINARY_DIR}/translations
     )
 
-#Копируем созданные файлы с переводами в папку ресурсов приложения, чтобы поставлять базовые переводы внутри
+#Копируем созданные файлы с переводами в папку ресурсов приложения, чтобы поставлять базовые переводы внутри, и в инсталлер
 add_custom_command(TARGET updateTranslations POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRANSLATION_QM_FILES} ${CMAKE_SOURCE_DIR}/resources/translations
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${TRANSLATION_QM_FILES} ${CMAKE_SOURCE_DIR}/installer/files/translations
     )
 
 #Генерируем ресурсный файл переводов
