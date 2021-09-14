@@ -15,6 +15,8 @@ enum DeviceType {
     DEVICE_TYPE_PYRO
 };
 
+class DeviceManager;
+
 class Device  : public QObject {
     Q_OBJECT
     QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор устройства
@@ -28,4 +30,5 @@ class Device  : public QObject {
 public:
     explicit Device(QObject* parent = nullptr);
     virtual void runPattern(Pattern* p, quint64 time) = 0;
+    DeviceManager *m_manager;
 };

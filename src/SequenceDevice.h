@@ -10,6 +10,7 @@
 
 #include "Device.h"
 #include "DmxWorker.h"
+#include "DeviceManager.h"
 
 class SequenceDevice : public Device {
     Q_OBJECT

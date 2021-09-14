@@ -21,6 +21,8 @@ Item
     property real posYRatio: project.patchProperty(patchId, "posYRatio")
     property string patternName
     signal fire()
+    signal drawOperation(var duration, var angle, var velocity, var active)
+    signal endOfPattern()
 
     Rectangle
     {
@@ -109,6 +111,25 @@ Item
             }
         }
     }
+    Connections
+    {
+        target: deviceManager
+        function onDrawOperationInGui(deviceId, duration, angle, velocity, active) {
+            if(deviceId === patchId) {
+                patchIcon.drawOperation(duration, angle, velocity, active)
+            }
+        }
+    }
+    Connections
+    {
+        target: deviceManager
+        function onEndOfPattern(deviceId) {
+            if(deviceId === patchId) {
+                patchIcon.endOfPattern()
+            }
+        }
+    }
+
     Rectangle {
         id: fireImage
         anchors {
@@ -147,5 +168,11 @@ Item
     }
     onFire: {
         fireImage.visible = true
+    }
+    onDrawOperation: {
+        console.log(patchId, duration, angle, velocity, active)
+    }
+    onEndOfPattern: {
+        console.log("end of pattern:", patchId)
     }
 }

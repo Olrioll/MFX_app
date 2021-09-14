@@ -57,5 +57,10 @@ void SequenceDevice::setDMXOperation(int deviceId, Operation *op)
     if((angle < minAngle()) || (angle > maxAngle())) { // filter operations by angle
         return;
     }
+    if(op != NULL) {
+        emit m_manager->drawOperationInGui(deviceId, op->duration(), op->angleDegrees(), op->velocity(), op->active());
+    } else {
+        emit m_manager->endOfPattern(deviceId);
+    }
     DMXWorker::instance()->setOperation(deviceId, op);
 }

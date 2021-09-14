@@ -25,6 +25,8 @@ public:
 
 signals:
     void drawPatternInGui(int deviceId, QString patternName);
+    void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, bool active);
+    void endOfPattern(qulonglong deviceId);
 
 public slots:
     void onRunPattern(int deviceId, quint64 time, QString patternName);

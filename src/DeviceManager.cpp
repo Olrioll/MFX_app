@@ -3,7 +3,7 @@
 DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 {
     m_devices = new QQmlObjectListModel<Device>(this);
-    connect(this, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged);
+    // connect(this, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged); // disable comport until we come with working DMX512 library
 
 }
 
@@ -26,6 +26,7 @@ void DeviceManager::addSequenceDevice(int deviceId, bool checked, qreal posXRati
     newSequenceDevice->setChecked(checked);
     newSequenceDevice->setPosXRatio(posXRatio);
     newSequenceDevice->setPosYRatio(posYRatio);
+    newSequenceDevice->m_manager = this;
     connect(DMXWorker::instance(), &DMXWorker::playbackTimeChanged, reinterpret_cast<SequenceDevice*>(newSequenceDevice), &SequenceDevice::onPlaybackTimeChanged);
     m_devices->append(newSequenceDevice);
 }
