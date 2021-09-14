@@ -49,6 +49,8 @@ Item
         caption: translationsManager.translationTrigger + qsTr("Library")
         expandedWidth: 140
 
+        isExpanded: true
+
         contentItem: DeviceLibWidget
         {
 
@@ -59,7 +61,7 @@ Item
             target: deviceLib
             function onWidthChanged()
             {
-                sceneWidget.adjustBackgroundImageOnX()
+
 //                let dx = deviceLib.expandedWidth - deviceLib.collapsedWidth
 
 //                if(deviceLib.width === deviceLib.collapsedWidth)
@@ -71,6 +73,7 @@ Item
 //                {
 //                    sceneWidget.adjustBackgroundImageOnX(dx)
 //                }
+                sceneWidget.adjustBackgroundImageOnX()
             }
         }
     }
@@ -161,7 +164,7 @@ Item
 
         contentItem: DeviceGroupWidget
         {
-
+            width: collapsed ? 184 : 348
         }
 
         Connections

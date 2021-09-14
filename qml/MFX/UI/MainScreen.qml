@@ -907,6 +907,7 @@ FocusScope
                                          wheel.accepted = true
                                      }
                         }
+
                         MfxButton
                         {
                             id: devicesButton
@@ -964,15 +965,33 @@ FocusScope
                                 id: sortedDeviceListView
 
                                 spacing: 10
-                                ScrollBar.vertical: ScrollBar
-                                {
+
+                                ScrollBar.vertical: ScrollBar {
+                                    anchors.right: sortedDeviceListView.contentItem.right
+                                    anchors.rightMargin: 3
+
                                     policy: ScrollBar.AsNeeded
-                                    anchors
-                                    {
-                                        right: sortedDeviceListView.right
-                                        top: sortedDeviceListView.top
-                                        bottom: sortedDeviceListView.bottom
-                                        rightMargin: -3
+
+                                    background: Rectangle {
+                                        id: _background
+
+                                        width: 6
+                                        implicitWidth: 6
+
+                                        radius: 3
+
+                                        color: "#1AFFFFFF"
+                                    }
+
+                                    contentItem: Rectangle {
+                                        id: _indicator
+
+                                        width: 6
+                                        implicitWidth: 6
+
+                                        radius: 3
+
+                                        color: "#80C4C4C4"
                                     }
                                 }
 
@@ -989,6 +1008,10 @@ FocusScope
                                 delegate: Item
                                     {
                                         id: typeGroup
+
+                                        anchors.left: sortedDeviceListView.contentItem.left
+                                        anchors.right: sortedDeviceListView.contentItem.right
+
                                         height: collapseButton.checked ? collapseButton.height + deviceListView.contentItem.height + 20 : collapseButton.height
                                         property string name: groupName
                                         property bool isExpanded: collapseButton.checked
@@ -1055,8 +1078,14 @@ FocusScope
                                         {
                                             id: listArea
                                             visible: collapseButton.checked
-                                            x: 18
-                                            y: 30
+                                            anchors.left: typeGroup.left
+                                            anchors.right: typeGroup.right
+                                            anchors.leftMargin: 18
+                                            anchors.rightMargin: 18
+                                            anchors.top: parent.top
+                                            anchors.topMargin: 30
+
+                                            height: deviceListView.height + 4
 
                                             property alias deviceListView: deviceListView
 
@@ -1066,12 +1095,11 @@ FocusScope
                                                 anchors.margins: 2
                                                 anchors.top: parent.top
                                                 anchors.left: parent.left
-                                                width: 392
+                                                anchors.right: parent.right
+                                                //width: 392
                                                 height: contentItem.height < 10 ? contentItem.height + 30 : contentItem.height
                                                 spacing: 2
                                                 interactive: false
-
-                                                ScrollBar.vertical: ScrollBar {}
 
                                                 property string groupName: typeGroup.name
                                                 property bool held: false
@@ -1102,6 +1130,8 @@ FocusScope
 
                                                 delegate: PatchPlate
                                                 {
+                                                    anchors.left: deviceListView.contentItem.left
+                                                    anchors.right: deviceListView.contentItem.right
                                                     no: counter
                                                     patchId: currentId
                                                 }

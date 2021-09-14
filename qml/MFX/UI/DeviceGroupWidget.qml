@@ -8,7 +8,8 @@ import "qrc:/"
 Item
 {
     id: deviceGroupWidget
-    width: groupListView.width + 10
+
+    property bool collapsed: true
 
     property bool patchScreenMode: true
     property bool dropAreaAvaliable: true
@@ -16,11 +17,12 @@ Item
     ListView
     {
         id: groupListView
-        width: widthNeeded()
-        anchors.topMargin: 2
-        anchors.leftMargin: 2
-        anchors.top: parent.top
         anchors.left: parent.left
+        anchors.leftMargin: 2
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.topMargin: 2
+        anchors.top: parent.top
         anchors.bottomMargin: 10
         anchors.bottom: patchScreenMode ? addGroupButton.top : parent.bottom
         spacing: 10
@@ -39,21 +41,13 @@ Item
             }
         }
 
-        function widthNeeded()
-        {
-
-            for(let i = 0; i < groupListView.count; i++)
-            {
-                if(groupListView.itemAtIndex(i).isExpanded)
-                    return 420
-            }
-
-            return 200
-        }
-
         delegate: DeviceGroup
         {
             id: deviceGroup
+
+            anchors.left: groupListView.contentItem.left
+            anchors.right: groupListView.contentItem.right
+
             name: groupName
             dropAreaAvaliable: dropAreaAval
 
@@ -62,7 +56,7 @@ Item
                 target: deviceGroup
                 function onViewChanged()
                 {
-                    groupListView.width = groupListView.widthNeeded()
+                    deviceGroupWidget.collapsed = !deviceGroup.isExpanded
                 }
             }
         }
@@ -97,20 +91,21 @@ Item
     {
         id: buttonsBackground
         height: 40
-        width: patchScreenMode ? parent.width : parent.width + 40
         anchors.left: parent.left
-        anchors.bottomMargin: parent.patchScreenMode ? -2 : -16
+        anchors.leftMargin: 2
+        anchors.right: parent.right
+        anchors.bottomMargin: parent.patchScreenMode ? 0 : -16
         anchors.bottom: parent.bottom
 
         LinearGradient
         {
             anchors.fill: parent
-            start: Qt.point(0, parent.height / 3)
-            end: Qt.point(0, 0)
+            start: Qt.point(0, 0)
+            end: Qt.point(0, height)
             gradient: Gradient
             {
-                GradientStop { position: 1.0; color: "#00000000" }
-                GradientStop { position: 0.0; color: "#FF000000" }
+                GradientStop { position: 0.0; color: "#00000000" }
+                GradientStop { position: 1.0; color: "#FF000000" }
             }
         }
     }
