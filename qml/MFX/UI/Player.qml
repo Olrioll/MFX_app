@@ -1115,6 +1115,7 @@ Item
                 })
 
                 project.deleteCues(deletedCuesNames)
+                cueManager.deleteCues(deletedCuesNames)
                 loadCues()
 
                 if(!cuePlates.length)
@@ -1469,9 +1470,11 @@ Item
                                     {
                                         actionMarker.position += delta
                                         cuePlate.updatePosition()
+                                        return
                                     }
-                                    positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
                                 }
+                                positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
+                                project.setActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
                             }
 
                             onReleased:
@@ -1810,10 +1813,12 @@ Item
                                     return // this is first action in cue
                                 }
 
-                                let newPosition = cuePlate.firstAction.position + delta * currAction.positionCoeff
+                                let newPosition = currAction.position + delta * currAction.positionCoeff
+                                if(newPosition < cuePlate.firstAction.position) {
+                                    return
+                                }
 
                                 project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
-                                project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "positionCoeff", currAction.positionCoeff)
                                 cueManager.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                                 cuePlate.loadActions();
                             })

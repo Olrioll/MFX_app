@@ -80,6 +80,7 @@ public slots:
 
     QVariantList cueActions(QString cueName) const;
     void setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
+    void deleteCues(QStringList deletedCueNames);
 
 signals:
 

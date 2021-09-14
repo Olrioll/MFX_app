@@ -38,6 +38,8 @@ public:
 
     void initConnections();
 
+    Q_INVOKABLE void deleteCues(QStringList deletedCueNames);
+
 public slots:
     void onPlaybackTimeChanged(quint64 time);
 

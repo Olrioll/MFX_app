@@ -35,7 +35,17 @@ void CueManager::initConnections()
     });
 }
 
-Cue* CueManager::cueByName(const QString& name) const
+void CueManager::deleteCues(QStringList deletedCueNames)
+{
+    for(auto &name: deletedCueNames) {
+        Cue *cue = getCue(name);
+        if(cue == NULL) {
+            continue;
+        }
+        m_cues->remove(cue);
+    }
+}
+
 {
     for (auto* cue : m_cues->toList()) {
         if (cue->name().compare(name) == 0) {
