@@ -20,17 +20,21 @@ class CueManager : public QObject
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(quint64, playerPosition, PlayerPosition, 0)
     Q_PROPERTY(CueSortingModel * cuesSorted READ cuesSorted CONSTANT)
 public:
-    explicit CueManager(CueContentManager& cueContentManager, QObject *parent = nullptr);
+    explicit CueManager(CueContentManager& cueContentManager, QObject* parent = nullptr);
     ~CueManager();
 
     Q_INVOKABLE void addCue(QVariantMap properties);
     Q_INVOKABLE void setActionProperty(QString cueName, QString pattern, int deviceId, quint64 newPosition);
 
-    Q_INVOKABLE void cueNameChangeRequest(const QUuid & id, const QString & name); //Обработчик запроса на смену имени из панели списка Cue
+    Q_INVOKABLE void cueNameChangeRequest(const QUuid& id, const QString& name); //Обработчик запроса на смену имени из панели списка Cue
+    Q_INVOKABLE void collapseCueOnPlayerRequest(const QString& name); //Обработчик запроса из плеера о свертывании(схлопывании) элемента Cue
+    Q_INVOKABLE void expandCueOnPlayerRequest(const QString& name); //Обработчик запроса от плеера, что нужно развернуть конкретный элемент Cue
+    Q_INVOKABLE void cueSelectedOnCueListRequest(const QString& name); //Обработчик запроса от панели списка Cue о том, что была выделена конкретная Cue
+    Q_INVOKABLE void cueDeselectedOnCueListRequest(const QString& name); //Обработчик запроса от панели списка Cue, что у Cue, на которой ранее было выделение, оно снято
+    Cue* cueById(const QUuid& id) const;
+    Cue* cueByName(const QString& name) const;
 
-    Cue * cueById(const QUuid & id) const;
-
-    CueSortingModel * cuesSorted() const;
+    CueSortingModel* cuesSorted() const;
 
     void initConnections();
 
@@ -40,12 +44,14 @@ public slots:
 signals:
     void runPattern(int deviceId, quint64 time, QString patternName);
 
+    void cueExpandedChanged(const QString& name, bool selected); //Сигнал о том, что у Cue с именем name требуется изменить статус схлопывания на плеере
+
 private:
-    Cue* getCue(QString name);
+
     Action* getAction(QString cueName, int deviceId);
     void addActionToCue(QString cueName, QString pattern, int deviceId, quint64 newPosition);
 
 private:
-    CueSortingModel * m_cuesSorted = nullptr;
+    CueSortingModel* m_cuesSorted = nullptr;
     CueContentManager& m_cueContentManager;
 };

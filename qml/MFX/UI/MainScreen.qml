@@ -1725,7 +1725,11 @@ FocusScope
                                         anchors.fill: parent
 
                                         onClicked: {
-                                            model.selected = !model.selected
+                                            if(cueListViewDelegate.selected) {
+                                                cueManager.cueDeselectedOnCueListRequest(cueListViewDelegate.name)
+                                            } else {
+                                                cueManager.cueSelectedOnCueListRequest(cueListViewDelegate.name)
+                                            }
                                         }
                                     }
                                 }

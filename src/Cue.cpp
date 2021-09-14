@@ -25,4 +25,12 @@ void Cue::initConnections()
         const auto newDurationTimeDecoratedValue = newDurationTime.toString("hh:mm:ss.zzz");
         setDurationTimeDecorator(newDurationTimeDecoratedValue);
     });
+
+    //Пришел запрос от плеера, что изменилось развертывание Cue в плеере
+    connect(this, &Cue::expandedChanged, this, &Cue::setSelected);
+
+    //Пришел запрос с панели списка Cue, что изменилось выделение Cue
+    //Здесь дублировании функционала переменных Selected и Expande, чтобы указать,
+    //что они отвечают за разные панели в интерфейсе
+    connect(this, &Cue::selectedChanged, this, &Cue::setExpanded);
 }

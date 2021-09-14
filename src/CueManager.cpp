@@ -4,7 +4,13 @@
 
 #include "CueSortingModel.h"
 
-CueManager::CueManager(CueContentManager &cueContentManager, QObject *parent) : QObject(parent), m_cueContentManager(cueContentManager)
+namespace  {
+static constexpr char playerExpandedRoleName[] = "expanded";
+}
+
+CueManager::CueManager(CueContentManager& cueContentManager, QObject* parent)
+    : QObject(parent)
+    , m_cueContentManager(cueContentManager)
 {
     connect(this, &CueManager::playerPositionChanged, this, &CueManager::onPlaybackTimeChanged);
     m_cues = new QQmlObjectListModel<Cue>(this);
@@ -21,29 +27,33 @@ CueManager::~CueManager()
 
 void CueManager::initConnections()
 {
+    connect(m_cues, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) {
+        if(roles.contains(m_cues->roleForName(playerExpandedRoleName))) {
+            auto * changedCue = m_cues->at(topLeft.row());
+            emit cueExpandedChanged(changedCue->name(), changedCue->expanded());
+        }
+    });
 }
 
-Cue *CueManager::getCue(QString name)
+Cue* CueManager::cueByName(const QString& name) const
 {
-    Cue* cue = NULL;
-    for(const auto & c : m_cues->toList()) {
-        if(c->name() == name) {
-            cue = c;
-            break;
+    for (auto* cue : m_cues->toList()) {
+        if (cue->name().compare(name) == 0) {
+            return cue;
         }
     }
-    return cue;
+    return nullptr;
 }
 
-Action *CueManager::getAction(QString cueName, int deviceId)
+Action* CueManager::getAction(QString cueName, int deviceId)
 {
-    Action *act = NULL;
-    Cue* cue = getCue(cueName);
-    if(cue == NULL) {
+    Action* act = NULL;
+    Cue* cue = cueByName(cueName);
+    if (cue == NULL) {
         return NULL;
     }
-    for(const auto & a : cue->actions()->toList()) {
-        if(a->deviceId() == deviceId) {
+    for (const auto& a : cue->actions()->toList()) {
+        if (a->deviceId() == deviceId) {
             act = a;
             break;
         }
@@ -66,8 +76,8 @@ void CueManager::addCue(QVariantMap properties)
 
 void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, quint64 newPosition)
 {
-    Cue* cue = getCue(cueName);
-    if(cue == NULL) {
+    Cue* cue = cueByName(cueName);
+    if (cue == NULL) {
         return;
     }
     auto actions = cue->actions();
@@ -84,7 +94,7 @@ void CueManager::addActionToCue(QString cueName, QString pattern, int deviceId, 
 void CueManager::setActionProperty(QString cueName, QString pattern, int deviceId, quint64 newPosition)
 {
     Action* action = getAction(cueName, deviceId);
-    if(action == NULL) {
+    if (action == NULL) {
         addActionToCue(cueName, pattern, deviceId, newPosition);
         return;
     }
@@ -94,17 +104,46 @@ void CueManager::setActionProperty(QString cueName, QString pattern, int deviceI
     action->setStartTime(position * 10);
 }
 
-void CueManager::cueNameChangeRequest(const QUuid &id, const QString &name)
+void CueManager::cueNameChangeRequest(const QUuid& id, const QString& name)
 {
-    if(auto * cue = cueById(id); cue != nullptr) {
+    if (auto* cue = cueById(id); cue != nullptr) {
         cue->setName(name);
     }
 }
 
-Cue *CueManager::cueById(const QUuid &id) const
+void CueManager::collapseCueOnPlayerRequest(const QString& name)
+{
+    if(auto* cue = cueByName(name); cue != nullptr) {
+        cue->setExpanded(false);
+    }
+}
+
+void CueManager::expandCueOnPlayerRequest(const QString &name)
+{
+    if(auto* cue = cueByName(name); cue != nullptr) {
+        cue->setExpanded(true);
+    }
+}
+
+void CueManager::cueSelectedOnCueListRequest(const QString &name)
 {
     for(auto * cue : m_cues->toList()) {
-        if(id == cue->uuid()) {
+        bool selectedCue = cue->name().compare(name) == 0;
+        cue->setSelected(selectedCue);
+    }
+}
+
+void CueManager::cueDeselectedOnCueListRequest(const QString &name)
+{
+    if(auto * cue = cueByName(name); cue != nullptr) {
+        cue->setSelected(false);
+    }
+}
+
+Cue* CueManager::cueById(const QUuid& id) const
+{
+    for (auto* cue : m_cues->toList()) {
+        if (id == cue->uuid()) {
             return cue;
         }
     }
@@ -112,7 +151,7 @@ Cue *CueManager::cueById(const QUuid &id) const
     return nullptr;
 }
 
-CueSortingModel *CueManager::cuesSorted() const
+CueSortingModel* CueManager::cuesSorted() const
 {
     return m_cuesSorted;
 }
@@ -120,9 +159,9 @@ CueSortingModel *CueManager::cuesSorted() const
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
     quint64 t = time / 10;
-    for(const auto & c : m_cues->toList()) {
-        for(const Action * a : c->actions()->toList()) {
-            if(a->startTime() == t * 10) {
+    for (const auto& c : m_cues->toList()) {
+        for (const Action* a : c->actions()->toList()) {
+            if (a->startTime() == t * 10) {
                 emit runPattern(a->deviceId(), playerPosition(), a->patternName());
             }
         }

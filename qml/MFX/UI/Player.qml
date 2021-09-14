@@ -1049,6 +1049,7 @@ Item
                 {
                     currCuePlate.isExpanded = false
                     currCuePlate.isAfterExpanded = false
+                    cueManager.collapseCueOnPlayerRequest(currCuePlate.name)
                 })
 
                 updateHeight()
@@ -1062,14 +1063,15 @@ Item
                 {
                     if(currCuePlate.name === name)
                     {
+                        cueManager.expandCueOnPlayerRequest(currCuePlate.name)
                         currCuePlate.isExpanded = true
                         expandedY = currCuePlate.y
                     }
-
                     else
                     {
-                        currCuePlate.checked = false
                         currCuePlate.isExpanded = false
+                        currCuePlate.checked = false
+                        cueManager.collapseCueOnPlayerRequest(currCuePlate.name)
                     }
                 })
 
@@ -1246,6 +1248,25 @@ Item
                 })
             }
 
+            Connections {
+                target: cueManager
+
+                function onCueExpandedChanged(name, expanded) {
+                    if(expanded) {
+                        cueView.expandCuePlate(name)
+                    } else {
+                        cueView.cuePlates.forEach(function(currCuePlate)
+                        {
+                            if(currCuePlate.name === name) {
+                                currCuePlate.isExpanded = false
+                            }
+                        })
+
+                        cueView.updateHeight()
+                    }
+                }
+            }
+
             Rectangle
             {
                 id: selectRect
@@ -1295,7 +1316,7 @@ Item
 
                 property string name: ""
                 property bool isExpanded: false
-                property bool checked: false
+                property bool checked: false //Влияет только на цвет рамки выделения
                 property bool isAfterExpanded: false
                 property int yPosition
                 property int position // в мсек
