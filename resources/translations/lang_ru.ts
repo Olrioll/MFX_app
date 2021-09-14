@@ -794,7 +794,7 @@ to delete selected patches?</source>
     <name>PreferencesPopup</name>
     <message>
         <source>Com Port DMX</source>
-        <translation>Com порт DMX</translation>
+        <translation>Com-порт DMX</translation>
     </message>
     <message>
         <source>Ethernet</source>
@@ -810,15 +810,15 @@ to delete selected patches?</source>
     </message>
     <message>
         <source>MIDI connection</source>
-        <translation>MIDI подключение</translation>
+        <translation>MIDI-подключение</translation>
     </message>
     <message>
         <source>COM port</source>
-        <translation>COM порт</translation>
+        <translation>COM-порт</translation>
     </message>
     <message>
         <source>IP address</source>
-        <translation>IP адрес</translation>
+        <translation>IP-адрес</translation>
     </message>
     <message>
         <source>Subnet mask</source>
