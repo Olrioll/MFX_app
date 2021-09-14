@@ -1113,6 +1113,7 @@ Item
                 })
 
                 project.deleteCues(deletedCuesNames)
+                cueManager.deleteCues(deletedCuesNames)
                 loadCues()
 
                 if(!cuePlates.length)
