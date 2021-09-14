@@ -8,12 +8,12 @@
 
 namespace {
 static const QString translationFileNamePattern = QStringLiteral("lang_");
-static const QString defaultLocale = QStringLiteral("ru");
+static const QString defaultLocale = QStringLiteral("en");
 static const QString localeSettingKey = QStringLiteral("locale");
 }
 
-TranslationManager::TranslationManager(SettingsManager& settings, QObject* parent)
-    : QObject(parent)
+TranslationManager::TranslationManager(SettingsManager& settings, QObject* parent) :
+    QObject(parent)
     , m_languages(new QQmlObjectListModel<Language>(this))
     , m_settings(settings)
 {
@@ -33,7 +33,7 @@ TranslationManager::TranslationManager(SettingsManager& settings, QObject* paren
 
     const QString savedLocale = m_settings.value(localeSettingKey).toString();
 
-    if(savedLocale.length() > 0 && checkLocaleExists(savedLocale)) {
+    if (savedLocale.length() > 0 && checkLocaleExists(savedLocale)) {
         setLanguage(savedLocale);
     } else {
         setLanguage(defaultLocale);
@@ -42,14 +42,14 @@ TranslationManager::TranslationManager(SettingsManager& settings, QObject* paren
 
 void TranslationManager::initConnections()
 {
-    connect(this, &TranslationManager::currentLocaleChanged, [=](const QString& newLocale){
+    connect(this, &TranslationManager::currentLocaleChanged, [=](const QString& newLocale) {
         m_settings.setValue(localeSettingKey, newLocale);
     });
 
     connect(this, &TranslationManager::currentLocaleChanged, this, &TranslationManager::updateSelected);
 }
 
-bool TranslationManager::checkLocaleExists(const QString &locale) const
+bool TranslationManager::checkLocaleExists(const QString& locale) const
 {
     bool languageLocaleExists = false;
 
@@ -70,9 +70,9 @@ QString TranslationManager::systemLocale() const
     return defaultLocale;
 }
 
-void TranslationManager::updateSelected(const QString &locale)
+void TranslationManager::updateSelected(const QString& locale)
 {
-    for(auto * language : m_languages->toList()) {
+    for (auto* language : m_languages->toList()) {
         language->setSelected(language->locale().compare(locale) == 0);
     }
 }

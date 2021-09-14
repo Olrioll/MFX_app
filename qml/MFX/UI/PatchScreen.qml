@@ -49,8 +49,6 @@ Item
         caption: translationsManager.translationTrigger + qsTr("Library")
         expandedWidth: 140
 
-        isExpanded: true
-
         contentItem: DeviceLibWidget
         {
 
