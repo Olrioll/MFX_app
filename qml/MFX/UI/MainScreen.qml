@@ -246,6 +246,17 @@ FocusScope
                         color: "#444444"
                         radius:2
 
+                        MouseArea {
+                            anchors.fill: parent
+
+                            propagateComposedEvents: false
+                            preventStealing: true
+
+                            onWheel: (wheel) => {
+                                         wheel.accepted = true
+                                     }
+                        }
+
                         Flickable {
                             anchors.fill: parent
                             anchors.topMargin: 8
@@ -670,6 +681,17 @@ FocusScope
                         radius: 2
                         clip: true
 
+                        MouseArea {
+                            anchors.fill: parent
+
+                            propagateComposedEvents: false
+                            preventStealing: true
+
+                            onWheel: (wheel) => {
+                                         wheel.accepted = true
+                                     }
+                        }
+
                         Rectangle {
                             anchors.fill: parent
                             anchors.topMargin: 32
@@ -875,6 +897,16 @@ FocusScope
                         border.width: 2
                         border.color: "#444444"
 
+                        MouseArea {
+                            anchors.fill: parent
+
+                            propagateComposedEvents: false
+                            preventStealing: true
+
+                            onWheel: (wheel) => {
+                                         wheel.accepted = true
+                                     }
+                        }
                         MfxButton
                         {
                             id: devicesButton
@@ -1451,6 +1483,17 @@ FocusScope
 
                         color: "#444444"
                         radius: 2
+
+                        MouseArea {
+                            anchors.fill: parent
+
+                            propagateComposedEvents: false
+                            preventStealing: true
+
+                            onWheel: (wheel) => {
+                                         wheel.accepted = true
+                                     }
+                        }
 
                         Rectangle {
                             anchors.fill: parent
