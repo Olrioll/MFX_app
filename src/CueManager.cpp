@@ -38,7 +38,7 @@ void CueManager::initConnections()
 void CueManager::deleteCues(QStringList deletedCueNames)
 {
     for(auto &name: deletedCueNames) {
-        Cue *cue = getCue(name);
+        Cue *cue = cueByName(name);
         if(cue == NULL) {
             continue;
         }
@@ -46,6 +46,7 @@ void CueManager::deleteCues(QStringList deletedCueNames)
     }
 }
 
+Cue* CueManager::cueByName(const QString &name) const
 {
     for (auto* cue : m_cues->toList()) {
         if (cue->name().compare(name) == 0) {
