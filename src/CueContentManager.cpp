@@ -13,8 +13,28 @@ CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* pare
 
 void CueContentManager::onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit)
 {
+    quint64 msecValue = value;
+    switch(selectedRole) {
+    case CueContentSelectedTableRole::Between:
+    case CueContentSelectedTableRole::Action:
+        switch(timeUnit) {
+        case TimeUnit::Minutes:
+            msecValue *=60;
+        case TimeUnit::Seconds:
+            msecValue *= 1000;
+            break;
+        default:
+            break;
+        }
+    default:
+        break;
+    }
     switch (selectedRole) {
     case CueContentSelectedTableRole::Delay:
+        break;
+    case CueContentSelectedTableRole::Between:
+        break;
+    case CueContentSelectedTableRole::Action:
         break;
     }
 }
@@ -51,4 +71,19 @@ void CueContentManager::refrestCueContentModel()
 
         m_cueContentItems->append(cueContent);
     }
+}
+
+void CueContentManager::updateCueContentDelay(CalculatorOperator::Type calculatorOperator, int value)
+{
+
+}
+
+void CueContentManager::updateCueContentBetween(CalculatorOperator::Type calculatorOperator, int value)
+{
+
+}
+
+void CueContentManager::updateCueContentAction(CalculatorOperator::Type calculatorOperator, int patternNum)
+{
+
 }
