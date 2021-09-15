@@ -23,6 +23,8 @@ public:
     Q_INVOKABLE void editPatch(QVariantList properties);
     PatternManager *m_patternManager;
 
+    Device* deviceById(int id);
+
 signals:
     void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, bool active);
     void endOfPattern(qulonglong deviceId);
@@ -31,6 +33,5 @@ public slots:
     void onRunPattern(int deviceId, quint64 time, QString patternName);
 
 private:
-    Device* getDevice(int id);
     void addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
 };

@@ -31,6 +31,10 @@ void CueManager::initConnections()
         if(roles.contains(m_cues->roleForName(playerExpandedRoleName))) {
             auto * changedCue = m_cues->at(topLeft.row());
             emit cueExpandedChanged(changedCue->name(), changedCue->expanded());
+
+            if(changedCue->expanded()) {
+                m_cueContentManager.setCurrentCue(changedCue);
+            }
         }
     });
 }
@@ -96,7 +100,6 @@ void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern
     newAction->setStartTime(position * 10);
     actions->append(newAction);
 
-    m_cueContentManager.createCueContentItems(cueName, QString::number(deviceId), pattern);
     recalculateCueStartAndDuration(cueName);
 }
 

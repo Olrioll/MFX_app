@@ -26,6 +26,10 @@ class CueContent : public QObject
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(int, angle, Angle, 0) //Угол - доступен только для устройст Pyro. В остальных случаях прочерки
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, time, Time, 0) //Время - не редактируемый параметр для Sequnce и Pyro, для Dimmer и Shot - редактируемый
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, prefier, Prefier, 0) //Префайер - не редактируемый параметр для Sequnce и Pyro, для Dimmer и Shot - редактируемый
+
+    //Интерфейс
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Определяет, быбрана ли данная строка в интерфейсе таблицы Cue Content (Либо массовым выделением Even-Uneven, либо вручную)
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, active, active, false) //Определяет статус, активен ли сейчас данный паттерн на данном устройстве
 public:
     explicit CueContent(QObject *parent = nullptr);
 };

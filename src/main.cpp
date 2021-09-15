@@ -37,11 +37,11 @@ int main(int argc, char** argv)
     ProjectManager project(settings);
     PatternManager patternManager(settings);
     patternManager.initPatterns();
-    CursorManager cursorManager;
-    CueContentManager cueContentManager;
-    CueManager cueManager(cueContentManager);
     DeviceManager deviceManager;
     deviceManager.m_patternManager = &patternManager;
+    CursorManager cursorManager;
+    CueContentManager cueContentManager(deviceManager, this);
+    CueManager cueManager(cueContentManager);
     cueManager.m_deviceManager = &deviceManager;
 
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);

@@ -48,7 +48,7 @@ Item
           }
 
         ImageParticle {
-            source: "qrc:/images/fire_particle.png"
+            source: "qrc:///particleresources/glowdot.png"
             system: particleSystem
             color: '#FFD700'
             colorVariation: 0.2
@@ -56,7 +56,7 @@ Item
             rotationVariation: 45
             rotationVelocity: 15
             rotationVelocityVariation: 15
-            entryEffect: ImageParticle.Scale
+            entryEffect: ImageParticle.Fade
         }
 
         Emitter {
@@ -68,16 +68,19 @@ Item
 
             system: particleSystem
 
-            lifeSpan: 1200
-            lifeSpanVariation: 75
-            emitRate: 200
+            enabled: particleEmiter.active
+
+            lifeSpan: 800
+            lifeSpanVariation: 200
+            emitRate: 800
             size: 16
+            sizeVariation: 16
 
             velocity: AngleDirection {
                 angle: -90 + particleEmiter.angle
-                angleVariation: 10
-                magnitude: 50
-                magnitudeVariation: 50
+                angleVariation: 2
+                magnitude: 300
+                magnitudeVariation: 100
             }
         }
     }

@@ -7,7 +7,7 @@ DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 
 }
 
-Device *DeviceManager::getDevice(int id)
+Device *DeviceManager::deviceById(int id)
 {
     Device* device = NULL;
     for(const auto & d : m_devices->toList()) {
@@ -33,7 +33,7 @@ void DeviceManager::addSequenceDevice(int deviceId, bool checked, qreal posXRati
 
 void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio)
 {
-    Device *device = getDevice(deviceId);
+    Device *device = deviceById(deviceId);
     if(device == NULL) {
         addSequenceDevice(deviceId, checked, posXRatio, posYRatio);
         return;
@@ -71,7 +71,7 @@ void DeviceManager::editPatch(QVariantList properties)
             height = last.toInt();
         }
     }
-    Device *device = getDevice(id);
+    Device *device = deviceById(id);
     if(device == NULL) {
         return;
     }
@@ -86,7 +86,7 @@ void DeviceManager::editPatch(QVariantList properties)
 
 void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName)
 {
-    Device *device = getDevice(deviceId);
+    Device *device = deviceById(deviceId);
     if(device == NULL) {
         return;
     }
