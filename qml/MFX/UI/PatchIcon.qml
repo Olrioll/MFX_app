@@ -20,8 +20,6 @@ Item
     property string imageFile
     property real posXRatio: project.patchProperty(patchId, "posXRatio")
     property real posYRatio: project.patchProperty(patchId, "posYRatio")
-    property string patternName
-    signal fire()
     signal drawOperation(var duration, var angle, var velocity, var active)
     signal endOfPattern()
 
@@ -165,17 +163,6 @@ Item
     Connections
     {
         target: deviceManager
-        function onDrawPatternInGui(deviceId, patternName)
-        {
-            if(deviceId === patchId) {
-                patchIcon.patternName = patternName
-                patchIcon.fire()
-            }
-        }
-    }
-    Connections
-    {
-        target: deviceManager
         function onDrawOperationInGui(deviceId, duration, angle, velocity, active) {
             if(deviceId === patchId) {
                 patchIcon.drawOperation(duration, angle, velocity, active)
@@ -190,46 +177,6 @@ Item
                 patchIcon.endOfPattern()
             }
         }
-    }
-
-    Rectangle {
-        id: fireImage
-        anchors {
-            fill: parent
-            margins: -30
-        }
-        visible: false
-        color: "transparent"
-        border {
-            width: 3
-            color: "red"
-        }
-        Text {
-            anchors {
-                top: parent.top
-                topMargin: 10
-                horizontalCenter: parent.horizontalCenter
-            }
-            text: patchIcon.patternName
-            color: "white"
-            font.pointSize: 10
-        }
-        Timer {
-           id: timer
-           interval: 500
-           repeat: false
-           onTriggered: {
-               fireImage.visible = false
-           }
-        }
-        onVisibleChanged: {
-            if(visible) {
-                timer.start()
-            }
-        }
-    }
-    onFire: {
-        fireImage.visible = true
     }
     onEndOfPattern: {
         console.log("end of pattern:", patchId)

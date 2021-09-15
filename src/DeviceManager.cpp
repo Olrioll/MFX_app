@@ -92,5 +92,4 @@ void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName
     }
     Pattern *p = m_patternManager->patternByName(patternName);
     device->runPattern(p, time);
-    emit drawPatternInGui(deviceId, patternName);
 }

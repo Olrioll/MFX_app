@@ -24,7 +24,6 @@ public:
     PatternManager *m_patternManager;
 
 signals:
-    void drawPatternInGui(int deviceId, QString patternName);
     void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, bool active);
     void endOfPattern(qulonglong deviceId);
 
