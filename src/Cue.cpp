@@ -40,6 +40,8 @@ void Cue::initConnections()
             calculateStartTime();
         }
     });
+
+    connect(this, &Cue::activeChanged, this, &Cue::onActiveChanged);
 }
 
 void Cue::calculateStartTime()
@@ -56,4 +58,9 @@ void Cue::calculateStartTime()
     } else {
         setStartTime(0);
     }
+}
+
+void Cue::onActiveChanged(bool active)
+{
+    qDebug() << "Cue::onActiveChanged:" << m_name << m_active;
 }

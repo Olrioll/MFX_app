@@ -29,6 +29,8 @@ class Cue : public QObject
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Выделен ли Cue на панели списка Cue пользователем
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, expanded, Expanded, false) //Развернута ли Cue на плеере
 
+    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(quint64, stopActiveTime, StopActiveTime, 0) //Время, когда заканчивается проигрывание текущего паттерна
+
 public:
     explicit Cue(QObject *parent = nullptr);
 
@@ -36,4 +38,5 @@ public:
 
 private:
     void calculateStartTime();
+    void onActiveChanged(bool active);
 };

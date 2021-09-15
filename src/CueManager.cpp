@@ -201,6 +201,19 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
         for (const Action* a : c->actions()->toList()) {
             if (a->startTime() == t * 10) {
                 emit runPattern(a->deviceId(), playerPosition(), a->patternName());
+                c->setActive(true);
+                auto patternManager = m_deviceManager->m_patternManager;
+                auto pattern = patternManager->patternByName(a->patternName());
+                if(pattern == NULL) {
+                    continue;
+                }
+                quint64 duration = pattern->duration();
+                c->setStopActiveTime(t * 10 + duration);
+            }
+        }
+        if(c->active()) {
+            if(c->stopActiveTime() == t * 10) {
+                c->setActive(false);
             }
         }
     }
