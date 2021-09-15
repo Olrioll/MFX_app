@@ -90,14 +90,74 @@ void CueContentManager::refrestCueContentModel()
     }
 }
 
-void CueContentManager::updateCueContentDelay(CalculatorOperator::Type calculatorOperator, int value)
+void CueContentManager::updateCueContentDelay(CalculatorOperator::Type calculatorOperator, quint64 value)
 {
     qDebug() << "CueContentManager::updateCueContentDelay:" << calculatorOperator << value;
+    for (auto cueContentItem : m_cueContentItems->toList()) {
+        if(cueContentItem->selected()) {
+            quint64 delay = cueContentItem->delay();
+            switch (calculatorOperator) {
+            case CalculatorOperator::Add:
+                delay += value;
+                break;
+            case CalculatorOperator::Substract:
+                delay -= value;
+                break;
+            case CalculatorOperator::Multiply:
+                delay *= value;
+                break;
+            case CalculatorOperator::Divide:
+                delay /= value;
+                break;
+            case CalculatorOperator::Percent:
+                delay = value / delay * 100;
+                break;
+            }
+            if(m_currentCue == NULL) {
+                continue;
+            }
+            auto a = m_cueManager->getAction(m_currentCue->name(), cueContentItem->device());
+            if(a == NULL) {
+                continue;
+            }
+            a->setStartTime(m_currentCue->startTime() + delay);
+        }
+    }
 }
 
-void CueContentManager::updateCueContentBetween(CalculatorOperator::Type calculatorOperator, int value)
+void CueContentManager::updateCueContentBetween(CalculatorOperator::Type calculatorOperator, quint64 value)
 {
     qDebug() << "CueContentManager::updateCueContentBetween:" << calculatorOperator << value;
+    for (auto cueContentItem : m_cueContentItems->toList()) {
+        if(cueContentItem->selected()) {
+            quint64 between = cueContentItem->between();
+            switch (calculatorOperator) {
+            case CalculatorOperator::Add:
+                between += value;
+                break;
+            case CalculatorOperator::Substract:
+                between -= value;
+                break;
+            case CalculatorOperator::Multiply:
+                between *= value;
+                break;
+            case CalculatorOperator::Divide:
+                between /= value;
+                break;
+            case CalculatorOperator::Percent:
+                between = value / between * 100;
+                break;
+            }
+            if(m_currentCue == NULL) {
+                continue;
+            }
+            auto a = m_cueManager->getAction(m_currentCue->name(), cueContentItem->device());
+            if(a == NULL) {
+                continue;
+            }
+            //a->set
+        }
+    }
 }
 
 void CueContentManager::updateCueContentAction(CalculatorOperator::Type calculatorOperator, int value)

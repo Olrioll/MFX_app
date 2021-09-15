@@ -41,8 +41,8 @@ public:
 private:
     void initConnections();
     void refrestCueContentModel();
-    void updateCueContentDelay(CalculatorOperator::Type calculatorOperator, int value);
-    void updateCueContentBetween(CalculatorOperator::Type calculatorOperator, int value);
+    void updateCueContentDelay(CalculatorOperator::Type calculatorOperator, quint64 value);
+    void updateCueContentBetween(CalculatorOperator::Type calculatorOperator, quint64 value);
     void updateCueContentAction(CalculatorOperator::Type calculatorOperator, int value);
 
 private:
