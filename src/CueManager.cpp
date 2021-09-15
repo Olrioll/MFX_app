@@ -97,6 +97,32 @@ void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern
     actions->append(newAction);
 
     m_cueContentManager.createCueContentItems(cueName, QString::number(deviceId), pattern);
+    recalculateCueStartAndDuration(cueName);
+}
+
+void CueManager::recalculateCueStartAndDuration(const QString &cueName)
+{
+    Cue* cue = cueByName(cueName);
+    if(cue == nullptr) {
+        return;
+    }
+    auto patternManager = m_deviceManager->m_patternManager;
+    quint64 cueStart = -1; // very big positive number since type is unsigned
+    quint64 cueStop = 0;
+    for (auto action : cue->actions()->toList()) {
+        Pattern *pattern = patternManager->patternByName(action->patternName());
+        if(pattern == NULL) {
+            continue;
+        }
+        if(cueStart > action->startTime()) {
+            cueStart = action->startTime();
+        }
+        if(cueStop < action->startTime() + pattern->duration()) {
+            cueStop = action->startTime() + pattern->duration();
+        }
+        cue->setStartTime(cueStart);
+        cue->setDurationTime(cueStop-cueStart);
+    }
 }
 
 void CueManager::setActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
@@ -110,6 +136,7 @@ void CueManager::setActionProperty(const QString& cueName, const QString& patter
     action->setDeviceId(deviceId);
     quint64 position = newPosition / 10;
     action->setStartTime(position * 10);
+    recalculateCueStartAndDuration(cueName);
 }
 
 void CueManager::cueNameChangeRequest(const QUuid& id, const QString& name)

@@ -10,6 +10,7 @@
 #include "Cue.h"
 #include "DmxWorker.h"
 #include "CueContentManager.h"
+#include "DeviceManager.h"
 
 class CueSortingModel;
 
@@ -40,6 +41,8 @@ public:
 
     Q_INVOKABLE void deleteCues(QStringList deletedCueNames);
 
+    DeviceManager *m_deviceManager;
+
 public slots:
     void onPlaybackTimeChanged(quint64 time);
 
@@ -52,6 +55,7 @@ private:
 
     Action* getAction(const QString &cueName, int deviceId);
     void addActionToCue(const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition);
+    void recalculateCueStartAndDuration(const QString &cueName);
 
 private:
     CueSortingModel* m_cuesSorted = nullptr;
