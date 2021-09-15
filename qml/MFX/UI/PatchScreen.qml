@@ -136,6 +136,9 @@ Item
             target: deviceList
             function onWidthChanged()
             {
+                if(sceneWidget == null) {
+                    return
+                }
                 sceneWidget.adjustBackgroundImageOnX()
 
 //                let dx = deviceList.expandedWidth - deviceList.collapsedWidth
@@ -173,6 +176,9 @@ Item
             target: groupList
             function onWidthChanged()
             {
+                if(sceneWidget == null) {
+                    return
+                }
                 sceneWidget.adjustBackgroundImageOnX()
 
 //                let dx = groupList.expandedWidth - groupList.collapsedWidth

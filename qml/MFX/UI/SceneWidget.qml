@@ -20,6 +20,7 @@ Item
     property int prevWidth
     property int dWidth
     property bool blockEditions: false //Блокирует изменение позиций устройств
+    signal hideSceneFrame
 
     function loadPatches()
     {
@@ -532,6 +533,8 @@ Item
             if(visible)
             {
                 restorePreviousGeometry();
+            } else {
+                sceneWidget.hideSceneFrame()
             }
         }
 

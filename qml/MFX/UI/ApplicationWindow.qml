@@ -71,6 +71,11 @@ ApplicationWindow
         id: sceneWidget
 
         blockEditions: screensLayout.currentIndex !== 1
+        onHideSceneFrame: {
+            patchScreen.deviceLibWidget.expandButton.clicked()
+            patchScreen.deviceListWidget.expandButton.clicked()
+            patchScreen.groupListWidget.expandButton.clicked()
+        }
     }
 
     MfxMouseArea
