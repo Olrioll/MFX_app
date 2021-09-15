@@ -55,6 +55,7 @@ int main(int argc, char** argv)
     CueSortingModel::qmlRegister();
     PatternManager::qmlRegister();
     PatternFilteringModel::qmlRegister();
+    CueContentManager::qmlRegister();
 
     QQmlApplicationEngine engine;
 

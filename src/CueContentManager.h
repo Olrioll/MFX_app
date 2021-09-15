@@ -11,9 +11,9 @@
 #include "Cue.h"
 #include "DeviceManager.h"
 
-QSM_ENUM_CLASS(CueContentSelectedTableRole, Delay = 0)
-QSM_ENUM_CLASS(CalculatorOperator, Unknown = -1)
-QSM_ENUM_CLASS(TimeUnit, MSec = 0, Sec, Min )
+QSM_ENUM_CLASS(CueContentSelectedTableRole, Delay = 0, Beetween, Action)
+QSM_ENUM_CLASS(CalculatorOperator, Add = 0, Substract, Multiply, Divide, Percent)
+QSM_ENUM_CLASS(TimeUnit, Milliseconds = 0, Seconds, Minutes)
 
 class CueContentManager : public QObject {
     Q_OBJECT
@@ -24,6 +24,7 @@ public:
 
     Q_INVOKABLE void onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit);
 
+    static void qmlRegister();
 private:
     void initConnections();
     void refrestCueContentModel();

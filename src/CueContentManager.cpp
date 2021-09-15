@@ -19,6 +19,13 @@ void CueContentManager::onUpdateCueContentValueRequest(CueContentSelectedTableRo
     }
 }
 
+void CueContentManager::qmlRegister()
+{
+    CueContentSelectedTableRole::registerToQml("MFX.Enums", 1, 0, "CueContentSelectedTableRole", "");
+    CalculatorOperator::registerToQml("MFX.Enums", 1, 0, "CalculatorOperator", "");
+    TimeUnit::registerToQml("MFX.Enums", 1, 0, "TimeUnit", "");
+}
+
 void CueContentManager::initConnections()
 {
     connect(this, &CueContentManager::currentCueChanged, this, &CueContentManager::refrestCueContentModel);
