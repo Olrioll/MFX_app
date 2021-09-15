@@ -16,6 +16,8 @@ QSM_ENUM_CLASS(CueContentSelectedTableRole, Unknown = -1, Delay = 1, Between, Dm
 QSM_ENUM_CLASS(CalculatorOperator, Add = 0, Substract, Multiply, Divide, Percent)
 QSM_ENUM_CLASS(TimeUnit, Milliseconds = 0, Seconds, Minutes)
 
+class CueManager;
+
 class CueContentManager : public QObject {
     Q_OBJECT
     QML_OBJMODEL_PROPERTY(CueContent, cueContentItems) //Модель всех элементов СueContent
@@ -32,6 +34,7 @@ public:
     explicit CueContentManager(DeviceManager& deviceManager, QObject* parent = nullptr);
 
     Q_INVOKABLE void onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit);
+    CueManager *m_cueManager;
 
     static void qmlRegister();
 private:
@@ -39,7 +42,7 @@ private:
     void refrestCueContentModel();
     void updateCueContentDelay(CalculatorOperator::Type calculatorOperator, int value);
     void updateCueContentBetween(CalculatorOperator::Type calculatorOperator, int value);
-    void updateCueContentAction(CalculatorOperator::Type calculatorOperator, int patternNum);
+    void updateCueContentAction(CalculatorOperator::Type calculatorOperator, int value);
 
 private:
     DeviceManager& m_deviceManager;

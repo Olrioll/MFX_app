@@ -41,6 +41,8 @@ public:
 
     Q_INVOKABLE void deleteCues(QStringList deletedCueNames);
 
+    Action* getAction(const QString &cueName, int deviceId);
+
     DeviceManager *m_deviceManager;
 
 public slots:
@@ -53,7 +55,6 @@ signals:
 
 private:
 
-    Action* getAction(const QString &cueName, int deviceId);
     void addActionToCue(const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition);
     void recalculateCueStartAndDuration(const QString &cueName);
 

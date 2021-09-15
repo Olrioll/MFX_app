@@ -43,6 +43,7 @@ int main(int argc, char** argv)
     CueContentManager cueContentManager(deviceManager);
     CueManager cueManager(cueContentManager);
     cueManager.m_deviceManager = &deviceManager;
+    cueContentManager.m_cueManager = &cueManager;
 
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
     QString comPort = settings.value("comPort").toString();
