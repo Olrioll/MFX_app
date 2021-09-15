@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
+import QtQuick.Particles 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 
@@ -23,6 +24,67 @@ Item
     signal fire()
     signal drawOperation(var duration, var angle, var velocity, var active)
     signal endOfPattern()
+
+    onDrawOperation: {
+        console.log(patchId, duration, angle, velocity, active)
+
+        particleEmiter.duration = duration
+        particleEmiter.angle = angle
+        particleEmiter.active = active
+    }
+
+    Item {
+        id: particleEmiter
+
+        anchors.fill: parent
+
+        property int duration: 0
+        property int angle: 0
+        property int velocity: 0
+        property bool active: false
+
+        Behavior on angle { SmoothedAnimation { duration: particleEmiter.duration } }
+
+        ParticleSystem {
+              id: particleSystem
+          }
+
+        ImageParticle {
+            source: "qrc:/images/fire_particle.png"
+            system: particleSystem
+            color: '#FFD700'
+            colorVariation: 0.2
+            rotation: 0
+            rotationVariation: 45
+            rotationVelocity: 15
+            rotationVelocityVariation: 15
+            entryEffect: ImageParticle.Scale
+        }
+
+        Emitter {
+            id: emitter
+            anchors.top: parent.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: 1;
+            height: 1
+
+            system: particleSystem
+
+            lifeSpan: 1200
+            lifeSpanVariation: 75
+            emitRate: 200
+            size: 16
+
+            velocity: AngleDirection {
+                angle: -90 + particleEmiter.angle
+                angleVariation: 10
+                magnitude: 50
+                magnitudeVariation: 50
+            }
+        }
+    }
+
+
 
     Rectangle
     {
@@ -168,9 +230,6 @@ Item
     }
     onFire: {
         fireImage.visible = true
-    }
-    onDrawOperation: {
-        console.log(patchId, duration, angle, velocity, active)
     }
     onEndOfPattern: {
         console.log("end of pattern:", patchId)
