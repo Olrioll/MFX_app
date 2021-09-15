@@ -11,6 +11,14 @@ CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* pare
     initConnections();
 }
 
+void CueContentManager::onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit)
+{
+    switch (selectedRole) {
+    case CueContentSelectedTableRole::Delay:
+        break;
+    }
+}
+
 void CueContentManager::initConnections()
 {
     connect(this, &CueContentManager::currentCueChanged, this, &CueContentManager::refrestCueContentModel);
@@ -29,10 +37,11 @@ void CueContentManager::refrestCueContentModel()
         auto* cueContent = new CueContent(this);
 
         if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
-            cueContent->setDevice(QString::number(device->id()));
+            cueContent->setDevice(device->id());
             cueContent->setDmxSlot(device->dmx());
             cueContent->setRfChannel(device->rfChannel());
         }
 
+        m_cueContentItems->append(cueContent);
     }
 }
