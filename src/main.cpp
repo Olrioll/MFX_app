@@ -40,7 +40,7 @@ int main(int argc, char** argv)
     DeviceManager deviceManager;
     deviceManager.m_patternManager = &patternManager;
     CursorManager cursorManager;
-    CueContentManager cueContentManager(deviceManager, this);
+    CueContentManager cueContentManager(deviceManager);
     CueManager cueManager(cueContentManager);
     cueManager.m_deviceManager = &deviceManager;
 
