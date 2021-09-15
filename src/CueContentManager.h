@@ -34,6 +34,7 @@ public:
     explicit CueContentManager(DeviceManager& deviceManager, QObject* parent = nullptr);
 
     Q_INVOKABLE void onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit);
+    void setActive(QString cueName, int deviceId, bool active);
     CueManager *m_cueManager;
 
     static void qmlRegister();

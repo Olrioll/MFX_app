@@ -199,21 +199,20 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
     quint64 t = time / 10;
     for (const auto& c : m_cues->toList()) {
         for (const Action* a : c->actions()->toList()) {
+            auto patternManager = m_deviceManager->m_patternManager;
+            auto pattern = patternManager->patternByName(a->patternName());
+            if(pattern == NULL) {
+                continue;
+            }
+            quint64 duration = pattern->duration();
             if (a->startTime() == t * 10) {
                 emit runPattern(a->deviceId(), playerPosition(), a->patternName());
+                m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
-                auto patternManager = m_deviceManager->m_patternManager;
-                auto pattern = patternManager->patternByName(a->patternName());
-                if(pattern == NULL) {
-                    continue;
-                }
-                quint64 duration = pattern->duration();
-                c->setStopActiveTime(t * 10 + duration);
             }
-        }
-        if(c->active()) {
-            if(c->stopActiveTime() == t * 10) {
+            if(c->active() && a->startTime() + duration == t * 10) {
                 c->setActive(false);
+                m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }
         }
     }

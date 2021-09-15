@@ -41,6 +41,21 @@ void CueContentManager::onUpdateCueContentValueRequest(CueContentSelectedTableRo
     }
 }
 
+void CueContentManager::setActive(QString cueName, int deviceId, bool active)
+{
+    if(currentCue() == NULL) {
+        return;
+    }
+    if(currentCue()->name() != cueName) {
+        return;
+    }
+    for (auto cueContentItem : m_cueContentItems->toList()) {
+        if(deviceId == cueContentItem->device()) {
+            cueContentItem->setActive(active);
+        }
+    }
+}
+
 void CueContentManager::qmlRegister()
 {
     CueContentSelectedTableRole::registerToQml("MFX.Enums", 1, 0, "CueContentSelectedTableRole", "");
@@ -62,7 +77,7 @@ void CueContentManager::refrestCueContentModel()
     }
 
     for (auto* action : m_currentCue->actions()->toList()) {
-        qInfo() << action->deviceId() << action->patternName();
+        qInfo() << "CueContentManager::refrestCueContentModel:" << action->deviceId() << action->patternName();
         auto* cueContent = new CueContent(this);
 
         if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
@@ -89,7 +104,7 @@ void CueContentManager::updateCueContentAction(CalculatorOperator::Type calculat
 {
     qDebug() << "CueContentManager::updateCueContentAction:" << calculatorOperator << value;
     for (auto cueContentItem : m_cueContentItems->toList()) {
-        if(cueContentItem->active()) {
+        if(cueContentItem->selected()) {
             QString actionStr = cueContentItem->action();
             actionStr.remove(0, 1); // delete "A" from the beginning of the string
             int action = actionStr.toInt();

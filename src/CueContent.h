@@ -30,7 +30,10 @@ class CueContent : public QObject
 
     //Интерфейс
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Определяет, быбрана ли данная строка в интерфейсе таблицы Cue Content (Либо массовым выделением Even-Uneven, либо вручную)
-    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, active, active, false) //Определяет статус, активен ли сейчас данный паттерн на данном устройстве
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, active, Active, false) //Определяет статус, активен ли сейчас данный паттерн на данном устройстве
 public:
     explicit CueContent(QObject *parent = nullptr);
+
+private:
+    void onActiveChanged(bool active);
 };
