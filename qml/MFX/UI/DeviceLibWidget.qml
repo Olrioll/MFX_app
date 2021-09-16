@@ -31,9 +31,11 @@ ListView
     Component.onCompleted:
     {
         deviceListModel.append({id: "Sequences", img: "qrc:/device_sequences"})
-        deviceListModel.append({id: "Dimmer", img: "qrc:/device_dimmer"})
-        deviceListModel.append({id: "Shot", img: "qrc:/device_shot"})
-        deviceListModel.append({id: "Pyro", img: "qrc:/device_pyro"})
+        //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+        //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+//        deviceListModel.append({id: "Dimmer", img: "qrc:/device_dimmer"})
+//        deviceListModel.append({id: "Shot", img: "qrc:/device_shot"})
+//        deviceListModel.append({id: "Pyro", img: "qrc:/device_pyro"})
     }
 
     DevicePlate

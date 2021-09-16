@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
+import QtQml.Models 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 
@@ -8,7 +9,6 @@ Item
 {
     id: patchPlate
     height: 40
-    width: showAction ? 442 : 392
 
     property var parentList: null
     property int no: 0
@@ -192,36 +192,43 @@ Item
             radius: 2
         }
 
-        ListView
-        {
-            id: cellListView
-            width: parent.width
-            anchors.leftMargin: 10
-            anchors.topMargin: 2
-            anchors.bottomMargin: 2
+
+        RowLayout {
             anchors.left: imageRect.right
+            anchors.leftMargin: 10
             anchors.top: parent.top
+            anchors.topMargin: 2
             anchors.bottom: parent.bottom
-            orientation: ListView.Horizontal
-            interactive: false
+            anchors.bottomMargin: 2
+            anchors.right: parent.right
+            anchors.rightMargin: 10
 
-            delegate: PatchPlateCell
+            Repeater
             {
-                propertyName: propName
-                propertyValue: propValue
-            }
+                id: cellListView
 
-            model: ListModel
-            {
-                id: cellListModel
-                dynamicRoles: true
-            }
+                delegate: PatchPlateCell
+                {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    propertyName: propName
+                    propertyValue: propValue
+                }
 
-            Component.onCompleted:
-            {
-                refreshCells()
+                model: ListModel
+                {
+                    id: cellListModel
+                    dynamicRoles: true
+                }
+
+                Component.onCompleted:
+                {
+                    refreshCells()
+                }
             }
         }
+
+
 
         MfxMouseArea
         {

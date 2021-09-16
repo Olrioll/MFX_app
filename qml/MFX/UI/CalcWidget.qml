@@ -31,7 +31,7 @@ Item
             y: 4
             width: 36
             height: 36
-            text: qsTr("7")
+            text: translationsManager.translationTrigger + qsTr("7")
 
             background: Rectangle
             {
@@ -66,7 +66,7 @@ Item
             y: 4
             width: 36
             height: 36
-            text: qsTr("8")
+            text: translationsManager.translationTrigger + qsTr("8")
 
             background: Rectangle
             {
@@ -101,7 +101,7 @@ Item
             y: 4
             width: 36
             height: 36
-            text: qsTr("9")
+            text: translationsManager.translationTrigger + qsTr("9")
 
             background: Rectangle
             {
@@ -136,7 +136,7 @@ Item
             y: 44
             width: 36
             height: 36
-            text: qsTr("4")
+            text: translationsManager.translationTrigger + qsTr("4")
 
             background: Rectangle
             {
@@ -171,7 +171,7 @@ Item
             y: 44
             width: 36
             height: 36
-            text: qsTr("5")
+            text: translationsManager.translationTrigger + qsTr("5")
 
             background: Rectangle
             {
@@ -206,7 +206,7 @@ Item
             y: 44
             width: 36
             height: 36
-            text: qsTr("6")
+            text: translationsManager.translationTrigger + qsTr("6")
 
             background: Rectangle
             {
@@ -241,7 +241,7 @@ Item
             y: 84
             width: 36
             height: 36
-            text: qsTr("1")
+            text: translationsManager.translationTrigger + qsTr("1")
 
             background: Rectangle
             {
@@ -276,7 +276,7 @@ Item
             y: 84
             width: 36
             height: 36
-            text: qsTr("2")
+            text: translationsManager.translationTrigger + qsTr("2")
 
             background: Rectangle
             {
@@ -311,7 +311,7 @@ Item
             y: 84
             width: 36
             height: 36
-            text: qsTr("3")
+            text: translationsManager.translationTrigger + qsTr("3")
 
             background: Rectangle
             {
@@ -381,7 +381,7 @@ Item
             y: 124
             width: 36
             height: 36
-            text: qsTr("0")
+            text: translationsManager.translationTrigger + qsTr("0")
 
             background: Rectangle
             {
@@ -416,7 +416,7 @@ Item
             y: 124
             width: 36
             height: 36
-            text: qsTr("+")
+            text: translationsManager.translationTrigger + qsTr("+")
 
             background: Rectangle
             {

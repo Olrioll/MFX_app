@@ -4,7 +4,13 @@
 
 #include "CueSortingModel.h"
 
-CueManager::CueManager(QObject *parent) : QObject(parent)
+namespace  {
+static constexpr char playerExpandedRoleName[] = "expanded";
+}
+
+CueManager::CueManager(CueContentManager& cueContentManager, QObject* parent)
+    : QObject(parent)
+    , m_cueContentManager(cueContentManager)
 {
     connect(this, &CueManager::playerPositionChanged, this, &CueManager::onPlaybackTimeChanged);
     m_cues = new QQmlObjectListModel<Cue>(this);
@@ -19,27 +25,53 @@ CueManager::~CueManager()
     m_cues->deleteLater();
 }
 
-Cue *CueManager::getCue(QString name)
+void CueManager::initConnections()
 {
-    Cue* cue = NULL;
-    for(const auto & c : m_cues->toList()) {
-        if(c->name() == name) {
-            cue = c;
-            break;
+    connect(m_cues, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) {
+        if(roles.contains(m_cues->roleForName(playerExpandedRoleName))) {
+            auto * changedCue = m_cues->at(topLeft.row());
+            emit cueExpandedChanged(changedCue->name(), changedCue->expanded());
+
+            if(changedCue->expanded()) {
+                m_cueContentManager.setCurrentCue(changedCue);
+            } else {
+                m_cueContentManager.setCurrentCue(nullptr);
+            }
         }
-    }
-    return cue;
+    });
 }
 
-Action *CueManager::getAction(QString cueName, int actId)
+void CueManager::deleteCues(QStringList deletedCueNames)
 {
-    Action *act = NULL;
-    Cue* cue = getCue(cueName);
-    if(cue == NULL) {
+    for(auto &name: deletedCueNames) {
+        Cue *cue = cueByName(name);
+        if(cue == NULL) {
+            continue;
+        }
+        m_cues->remove(cue);
+    }
+}
+
+Cue* CueManager::cueByName(const QString &name) const
+{
+    for (auto* cue : m_cues->toList()) {
+        if (cue->name().compare(name) == 0) {
+            return cue;
+        }
+    }
+    return nullptr;
+}
+
+Action *CueManager::getAction(const QString& cueName, int deviceId)
+{
+    Action* act = NULL;
+    Cue* cue = cueByName(cueName);
+    if (cue == NULL) {
         return NULL;
     }
-    for(const auto & a : cue->get_actions()->toList()) {
-        if(a->id() == actId) {
+
+    for (const auto& a : cue->actions()->toList()) {
+        if (a->deviceId() == deviceId) {
             act = a;
             break;
         }
@@ -51,52 +83,107 @@ void CueManager::addCue(QVariantMap properties)
 {
     QString name = properties.value("name").toString();
     //double newYposition = properties.value("newYposition").toDouble();
-    Cue* newCue = new Cue(this);
-
-    //TODO временно добавил для генерации случайного времени старта кьюшки
-    newCue->setStartTime(QRandomGenerator::global()->generate64() % 100000);
+    auto * newCue = new Cue(this);
     newCue->setName(name);
     m_cues->append(newCue);
 }
 
-void CueManager::addActionToCue(QString cueName, QString pattern, int patchId, quint64 newPosition)
+void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern, int deviceId, quint64 newPosition)
 {
-    Q_UNUSED(patchId)
-    Cue* cue = getCue(cueName);
-    if(cue == NULL) {
+    Cue* cue = cueByName(cueName);
+    if(cue == nullptr) {
         return;
     }
-    auto actions = cue->get_actions();
-    Action* newAction = new Action(this);
-    //newAction->setPatternName(pattern);
-    newAction->setId(patchId);
-    newAction->setstartTime(newPosition);
+    auto actions = cue->actions();
+    auto* newAction = new Action(this);
+    newAction->setPatternName(pattern);
+    newAction->setDeviceId(deviceId);
+    quint64 position = newPosition / 10;
+    newAction->setStartTime(position * 10);
     actions->append(newAction);
+
+    recalculateCueStartAndDuration(cueName);
 }
 
-void CueManager::setActionProperty(QString cueName, QString pattern, int patchId, quint64 newPosition)
+void CueManager::recalculateCueStartAndDuration(const QString &cueName)
 {
-    Action* action = getAction(cueName, patchId);
-    if(action == NULL) {
-        addActionToCue(cueName, pattern, patchId, newPosition);
+    Cue* cue = cueByName(cueName);
+    if(cue == nullptr) {
         return;
     }
-    //action->setPatternName(pattern);
-    action->setId(patchId);
-    action->setstartTime(newPosition);
+    auto patternManager = m_deviceManager->m_patternManager;
+    quint64 cueStart = -1; // very big positive number since type is unsigned
+    quint64 cueStop = 0;
+    for (auto action : cue->actions()->toList()) {
+        Pattern *pattern = patternManager->patternByName(action->patternName());
+        if(pattern == NULL) {
+            continue;
+        }
+        if(cueStart > action->startTime()) {
+            cueStart = action->startTime();
+        }
+        if(cueStop < action->startTime() + pattern->duration()) {
+            cueStop = action->startTime() + pattern->duration();
+        }
+        cue->setStartTime(cueStart);
+        cue->setDurationTime(cueStop-cueStart);
+    }
 }
 
-void CueManager::cueNameChangeRequest(const QUuid &id, const QString &name)
+void CueManager::setActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
-    if(auto * cue = cueById(id); cue != nullptr) {
+    auto* action = getAction(cueName, deviceId);
+    if(action == nullptr) {
+        addActionToCue(cueName, pattern, deviceId, newPosition);
+        return;
+    }
+    action->setPatternName(pattern);
+    action->setDeviceId(deviceId);
+    quint64 position = newPosition / 10;
+    action->setStartTime(position * 10);
+    recalculateCueStartAndDuration(cueName);
+}
+
+void CueManager::cueNameChangeRequest(const QUuid& id, const QString& name)
+{
+    if (auto* cue = cueById(id); cue != nullptr) {
         cue->setName(name);
     }
 }
 
-Cue *CueManager::cueById(const QUuid &id) const
+void CueManager::collapseCueOnPlayerRequest(const QString& name)
+{
+    if(auto* cue = cueByName(name); cue != nullptr) {
+        cue->setExpanded(false);
+    }
+}
+
+void CueManager::expandCueOnPlayerRequest(const QString &name)
+{
+    if(auto* cue = cueByName(name); cue != nullptr) {
+        cue->setExpanded(true);
+    }
+}
+
+void CueManager::cueSelectedOnCueListRequest(const QString &name)
 {
     for(auto * cue : m_cues->toList()) {
-        if(id == cue->uuid()) {
+        bool selectedCue = cue->name().compare(name) == 0;
+        cue->setSelected(selectedCue);
+    }
+}
+
+void CueManager::cueDeselectedOnCueListRequest(const QString &name)
+{
+    if(auto * cue = cueByName(name); cue != nullptr) {
+        cue->setSelected(false);
+    }
+}
+
+Cue* CueManager::cueById(const QUuid& id) const
+{
+    for (auto* cue : m_cues->toList()) {
+        if (id == cue->uuid()) {
             return cue;
         }
     }
@@ -104,23 +191,32 @@ Cue *CueManager::cueById(const QUuid &id) const
     return nullptr;
 }
 
-CueSortingModel *CueManager::cuesSorted()
+CueSortingModel* CueManager::cuesSorted() const
 {
     return m_cuesSorted;
 }
 
-void CueManager::initConnections()
-{
-}
-
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
-    for(const auto & c : m_cues->toList()) {
-        for(const Action * a : c->get_actions()->toList()) {
-            if(a->startTime() == time) {
-                qDebug() << "fire!" << time << c->name() << a->id() /*<< a->patternName()*/;
+    quint64 t = time / 10;
+    for (const auto& c : m_cues->toList()) {
+        for (const Action* a : c->actions()->toList()) {
+            auto patternManager = m_deviceManager->m_patternManager;
+            auto pattern = patternManager->patternByName(a->patternName());
+            if(pattern == NULL) {
+                continue;
+            }
+            quint64 duration = pattern->duration();
+            if (a->startTime() == t * 10) {
+                emit runPattern(a->deviceId(), playerPosition(), a->patternName());
+                m_cueContentManager.setActive(c->name(), a->deviceId(), true);
+                c->setActive(true);
+            }
+            if(c->active() && a->startTime() + duration == t * 10) {
+                c->setActive(false);
+                m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }
         }
     }
+    emit DMXWorker::instance()->playbackTimeChanged(t * 10);
 }
-

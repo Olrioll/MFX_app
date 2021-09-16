@@ -1,10 +1,9 @@
-#include "cursormanager.h"
+#include "CursorManager.h"
+
 #include <QApplication>
-#include <QDebug>
 
-CursorManager::CursorManager(QObject *parent) : QObject(parent)
+CursorManager::CursorManager(QObject* parent) : QObject(parent)
 {
-
 }
 
 void CursorManager::moveCursor(int dx, int dy)
@@ -16,7 +15,6 @@ void CursorManager::moveCursor(int dx, int dy)
 void CursorManager::hideCursor()
 {
     qApp->setOverrideCursor(Qt::BlankCursor);
-
 }
 
 void CursorManager::showCursor()

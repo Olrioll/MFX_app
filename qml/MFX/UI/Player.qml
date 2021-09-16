@@ -1049,6 +1049,7 @@ Item
                 {
                     currCuePlate.isExpanded = false
                     currCuePlate.isAfterExpanded = false
+                    cueManager.collapseCueOnPlayerRequest(currCuePlate.name)
                 })
 
                 updateHeight()
@@ -1062,14 +1063,15 @@ Item
                 {
                     if(currCuePlate.name === name)
                     {
+                        cueManager.expandCueOnPlayerRequest(currCuePlate.name)
                         currCuePlate.isExpanded = true
                         expandedY = currCuePlate.y
                     }
-
                     else
                     {
-                        currCuePlate.checked = false
                         currCuePlate.isExpanded = false
+                        currCuePlate.checked = false
+                        cueManager.collapseCueOnPlayerRequest(currCuePlate.name)
                     }
                 })
 
@@ -1113,6 +1115,7 @@ Item
                 })
 
                 project.deleteCues(deletedCuesNames)
+                cueManager.deleteCues(deletedCuesNames)
                 loadCues()
 
                 if(!cuePlates.length)
@@ -1246,6 +1249,25 @@ Item
                 })
             }
 
+            Connections {
+                target: cueManager
+
+                function onCueExpandedChanged(name, expanded) {
+                    if(expanded) {
+                        cueView.expandCuePlate(name)
+                    } else {
+                        cueView.cuePlates.forEach(function(currCuePlate)
+                        {
+                            if(currCuePlate.name === name) {
+                                currCuePlate.isExpanded = false
+                            }
+                        })
+
+                        cueView.updateHeight()
+                    }
+                }
+            }
+
             Rectangle
             {
                 id: selectRect
@@ -1295,7 +1317,7 @@ Item
 
                 property string name: ""
                 property bool isExpanded: false
-                property bool checked: false
+                property bool checked: false //Влияет только на цвет рамки выделения
                 property bool isAfterExpanded: false
                 property int yPosition
                 property int position // в мсек
@@ -1315,7 +1337,8 @@ Item
                     {
                         firstAction = actionList[0]
                         position = actionList[0].position
-                        endPosition = actionList[0].position + actionsManager.actionProperties(actions[0].actionName).duration
+
+                        endPosition = actionList[0].position + patternManager.patternByName(actions[0].actionName).duration
                     }
                     else
                         return
@@ -1329,7 +1352,8 @@ Item
                         }
 
                         let currPosition = currActionMarker.position
-                        let currDuration = actionsManager.actionProperties(currActionMarker.name).duration
+
+                        let currDuration = patternManager.patternByName(currActionMarker.name).duration
                         if(currPosition + currDuration > endPosition)
                         {
                             endPosition = currPosition + currDuration
@@ -1358,7 +1382,8 @@ Item
                                                                                             displayedName: currAction.actionName + " - P" + currAction.patchId,
                                                                                             patchId: currAction.patchId,
                                                                                             position: currAction.position,
-                                                                                            prefire: actionsManager.actionProperties(currAction.name).prefire
+                                                                                            prefire: patternManager.patternByName(currAction.actionName).prefireDuration,
+                                                                                            positionCoeff: currAction.positionCoeff
                                                                                  })
                         actionList.push(newActionMarker)
                     })
@@ -1392,6 +1417,7 @@ Item
                         property int position: 0 // в мсек
                         property int prefire: 0 // в мсек
                         property int duration: 0  // в мсек
+                        property double positionCoeff: 0
 
                         onPositionChanged:
                         {
@@ -1444,8 +1470,11 @@ Item
                                     {
                                         actionMarker.position += delta
                                         cuePlate.updatePosition()
+                                        return
                                     }
                                 }
+                                positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
+                                project.setActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
                             }
 
                             onReleased:
@@ -1781,10 +1810,13 @@ Item
                             {
                                 if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
                                 {
-                                    return
+                                    return // this is first action in cue
                                 }
 
-                                let newPosition = currAction.position + delta * ((currAction.position - cuePlate.firstAction.position) / cuePlate.duration)
+                                let newPosition = currAction.position + delta * currAction.positionCoeff
+                                if(newPosition < cuePlate.firstAction.position) {
+                                    return
+                                }
 
                                 project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
                                 cueManager.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
@@ -2510,7 +2542,7 @@ Item
         anchors.left: settingsButton.right
         anchors.bottom: parent.bottom
 
-        text: qsTr("reset")
+        text: translationsManager.translationTrigger + qsTr("reset")
         textSize: 10
 
         onClicked:
@@ -2572,7 +2604,7 @@ Item
         Text
         {
             id: volumeCaption
-            text: qsTr("Volume")
+            text: translationsManager.translationTrigger + qsTr("Volume")
 
             anchors.verticalCenter: parent.verticalCenter
             anchors.rightMargin: 8
@@ -2687,7 +2719,7 @@ Item
 
         checkable: true
         color: "#27AE60"
-        text: qsTr("Stereo")
+        text: translationsManager.translationTrigger + qsTr("Stereo")
 
         ButtonGroup.group: modeButtons
     }
@@ -2705,7 +2737,7 @@ Item
 
         checkable: true
         color: "#27AE60"
-        text: qsTr("Mono")
+        text: translationsManager.translationTrigger + qsTr("Mono")
 
         ButtonGroup.group: modeButtons
     }
@@ -2884,7 +2916,7 @@ Item
         elide: Text.ElideRight
         font.family: MFXUIS.Fonts.robotoRegular.name
         font.pixelSize: 14
-        text: qsTr("Not available")
+        text: translationsManager.translationTrigger + qsTr("Not available")
 
         anchors.centerIn: waveformBackground
     }
@@ -2934,7 +2966,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Timeline settings")
+                text: translationsManager.translationTrigger + qsTr("Timeline settings")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -2989,7 +3021,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Add before")
+                text: translationsManager.translationTrigger + qsTr("Add before")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3142,7 +3174,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Track time")
+                text: translationsManager.translationTrigger + qsTr("Track time")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3170,7 +3202,7 @@ Item
                 {
                     id: trackDurationText
                     color: "#ffffff"
-                    text: qsTr("00:00:00")
+                    text: translationsManager.translationTrigger + qsTr("00:00:00")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
@@ -3185,7 +3217,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Add after")
+                text: translationsManager.translationTrigger + qsTr("Add after")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3340,7 +3372,7 @@ Item
             Text
             {
                 color: "#ffffff"
-                text: qsTr("Total time")
+                text: translationsManager.translationTrigger + qsTr("Total time")
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
@@ -3368,7 +3400,7 @@ Item
                 {
                     id: projectDurationText
                     color: "#ffffff"
-                    text: qsTr("00:00:00")
+                    text: translationsManager.translationTrigger + qsTr("00:00:00")
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
@@ -3384,7 +3416,7 @@ Item
             {
                 id: setButton
                 color: "#2F80ED"
-                text: qsTr("Apply")
+                text: translationsManager.translationTrigger + qsTr("Apply")
 
                 anchors.left: trackDurationBackground.left
                 anchors.right: postIntervalBackground.right

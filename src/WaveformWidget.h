@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QtMath>
 #include "AudioTrackRepresentation.h"
+#include "DmxWorker.h"
 
 class WaveformWidget : public QQuickPaintedItem
 {

@@ -196,7 +196,7 @@ Item
         {
             id: windowTitle
             color: "#ffffff"
-            text: qsTr("Add Pyro")
+            text: translationsManager.translationTrigger + qsTr("Add Pyro")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
@@ -257,7 +257,7 @@ Item
             y: 40
             height: 17
             color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("Quantity")
+            text: translationsManager.translationTrigger + qsTr("Quantity")
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
@@ -458,7 +458,7 @@ Item
             y: 63
             height: 17
             color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("RF pos")
+            text: translationsManager.translationTrigger + qsTr("RF pos")
             elide: Text.ElideMiddle
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -471,7 +471,7 @@ Item
             y: 63
             height: 17
             color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("RF ch")
+            text: translationsManager.translationTrigger + qsTr("RF ch")
             elide: Text.ElideMiddle
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -485,7 +485,7 @@ Item
             width: 44
             height: 17
             color: channelField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: qsTr("channel")
+            text: translationsManager.translationTrigger + qsTr("channel")
             elide: Text.ElideMiddle
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -509,7 +509,7 @@ Item
             y: 295
             width: 124
             color: "#2F80ED"
-            text: qsTr("Set")
+            text: translationsManager.translationTrigger + qsTr("Set")
             enabled:
             {
                         rfPosField.checkValue() &&
@@ -540,9 +540,9 @@ Item
         {
             name: "editMode"
             when: addPyroWidget.isEditMode
-            PropertyChanges {target: windowTitle; text: qsTr("Edit Pyro")}
-            PropertyChanges {target: setButton; text: qsTr("Apply")}
-            PropertyChanges {target: quantityText; text: qsTr("Patch ID")}
+            PropertyChanges {target: windowTitle; text: translationsManager.translationTrigger + qsTr("Edit Pyro")}
+            PropertyChanges {target: setButton; text: translationsManager.translationTrigger + qsTr("Apply")}
+            PropertyChanges {target: quantityText; text: translationsManager.translationTrigger + qsTr("Patch ID")}
             PropertyChanges {target: quantityField; maximumLength: 3}
         }
     ]

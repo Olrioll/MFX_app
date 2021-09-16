@@ -34,7 +34,6 @@
         <file alias="trackPlaceholder">images/trackPlaceholder.png</file>
         <file alias="actionPrefireMarker">images/actionPrefireMarker.png</file>
         <file alias="actionStartMarker">images/actionStartMarker.png</file>
-        <file>translations/russian.qm</file>
         <file>fonts/Roboto/LICENSE.txt</file>
         <file>fonts/Roboto/Roboto-Black.ttf</file>
         <file>fonts/Roboto/Roboto-BlackItalic.ttf</file>
@@ -62,8 +61,8 @@
         <file>icons/components/menu_selected_row_indicator_icon.svg</file>
         <file>icons/components/popup_close_icon.svg</file>
         <file>icons/components/selected_item_state_icon.svg</file>
-        <file>icons/components/table_header_sort_ascending_icon.svg</file>
-        <file>icons/components/table_header_sort_descending_icon.svg</file>
+        <file>icons/components/table_header_switch_item_from_top_icon.svg</file>
+        <file>icons/components/table_header_switch_item_from_bottom_icon.svg</file>
         <file>icons/main_screen/main_screen_add_device_icon.svg</file>
         <file>icons/main_screen/main_screen_empty_item_icon.svg</file>
         <file>icons/main_screen/main_screen_player_current_state_indicator.svg</file>
@@ -97,5 +96,6 @@
         <file>icons/project_screen/new_project_popup_remove_asset_icon.svg</file>
         <file>icons/project_screen/new_project_popup_selected_soundclip_icon.svg</file>
         <file>icons/preferences/preferences_list_selected_row_indicator_icon.svg</file>
+        <file>images/fire_particle.png</file>
     </qresource>
 </RCC>

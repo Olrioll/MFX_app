@@ -46,7 +46,7 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Library")
+        caption: translationsManager.translationTrigger + qsTr("Library")
         expandedWidth: 140
 
         contentItem: DeviceLibWidget
@@ -59,7 +59,7 @@ Item
             target: deviceLib
             function onWidthChanged()
             {
-                sceneWidget.adjustBackgroundImageOnX()
+
 //                let dx = deviceLib.expandedWidth - deviceLib.collapsedWidth
 
 //                if(deviceLib.width === deviceLib.collapsedWidth)
@@ -71,6 +71,10 @@ Item
 //                {
 //                    sceneWidget.adjustBackgroundImageOnX(dx)
 //                }
+                if(sceneWidget === null) {
+                    return
+                }
+                sceneWidget.adjustBackgroundImageOnX()
             }
         }
     }
@@ -83,7 +87,7 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Devices list")
+        caption: translationsManager.translationTrigger + qsTr("Devices list")
 
         contentItem: GeneralDeviceListWidget
         {
@@ -132,6 +136,9 @@ Item
             target: deviceList
             function onWidthChanged()
             {
+                if(sceneWidget == null) {
+                    return
+                }
                 sceneWidget.adjustBackgroundImageOnX()
 
 //                let dx = deviceList.expandedWidth - deviceList.collapsedWidth
@@ -157,11 +164,11 @@ Item
         anchors.top: patchScreen.top
         anchors.bottom: patchScreen.bottom
 
-        caption: qsTr("Device groups")
+        caption: translationsManager.translationTrigger + qsTr("Device groups")
 
         contentItem: DeviceGroupWidget
         {
-
+            width: collapsed ? 184 : 348
         }
 
         Connections
@@ -169,6 +176,9 @@ Item
             target: groupList
             function onWidthChanged()
             {
+                if(sceneWidget == null) {
+                    return
+                }
                 sceneWidget.adjustBackgroundImageOnX()
 
 //                let dx = groupList.expandedWidth - groupList.collapsedWidth

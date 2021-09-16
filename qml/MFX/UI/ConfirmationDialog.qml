@@ -118,13 +118,17 @@ Item
 
             Text
             {
-                color: "#ffffff"
-                text: dialog.dialogText
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideMiddle
                 anchors.left: parent.left
                 anchors.right: parent.right
+                anchors.margins: 8
+                anchors.top: parent.top
+                anchors.bottom: acceptButton.top
+                color: "#ffffff"
+                text: translationsManager.translationTrigger + dialog.dialogText
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                elide: Text.ElideNone
+                wrapMode: Text.WordWrap
                 font.family: MFXUIS.Fonts.robotoRegular.name
                 font.pixelSize: 12
                 topPadding: 20
@@ -133,7 +137,7 @@ Item
             MfxButton
             {
                 id: acceptButton
-                text: dialog.acceptButtonText
+                text: translationsManager.translationTrigger + dialog.acceptButtonText
                 color: acceptButtonColor
                 width: (workArea.width - 3 * anchors.margins) / 2
                 anchors.margins: 2

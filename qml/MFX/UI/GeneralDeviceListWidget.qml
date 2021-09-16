@@ -152,6 +152,8 @@ Item
 
             delegate: PatchPlate
             {
+                anchors.left: deviceListView.contentItem.left
+                anchors.right: deviceListView.contentItem.right
                 no: counter
                 patchId: currentId
             }
@@ -559,7 +561,7 @@ Item
     MfxHilightedButton
     {
         id: editButton
-        text: qsTr("Edit")
+        text: translationsManager.translationTrigger + qsTr("Edit")
         width: (parent.width - 10) / 2
         color: "#2F80ED"
 
@@ -575,7 +577,7 @@ Item
     MfxHilightedButton
     {
         id: deleteButton
-        text: qsTr("Delete selected")
+        text: translationsManager.translationTrigger + qsTr("Delete selected")
         width: editButton.width
         color: "#EB5757"
 

@@ -28,6 +28,7 @@ WaveformWidget::WaveformWidget(QQuickItem *parent) : QQuickPaintedItem(parent), 
         }
         prevPos = pos;
     });
+    connect(&_player, &QMediaPlayer::stateChanged, DMXWorker::instance(), &DMXWorker::onPlayerStateChanged);
 }
 
 void WaveformWidget::paint(QPainter *painter)
@@ -175,7 +176,7 @@ void WaveformWidget::paint(QPainter *painter)
             float max = 0.f;
             float min = 0.f;
 
-            for(int i = m_min; i <= m_max; i++)
+            for(int i = m_min; i < m_max; i++)
             {
                 frameCounter++;
                 if(frameCounter < framesPerPixel)

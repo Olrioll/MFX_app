@@ -15,7 +15,7 @@ ApplicationWindow
     y: 70
     visible: true
     color: "#222222"
-    title: qsTr("MFX")
+    title: translationsManager.translationTrigger + qsTr("MFX")
     flags: Qt.Window | Qt.FramelessWindowHint
 
     property int previousX
@@ -69,6 +69,13 @@ ApplicationWindow
     SceneWidget
     {
         id: sceneWidget
+
+        blockEditions: screensLayout.currentIndex !== 1
+        onHideSceneFrame: {
+            patchScreen.deviceLibWidget.expandButton.clicked()
+            patchScreen.deviceListWidget.expandButton.clicked()
+            patchScreen.groupListWidget.expandButton.clicked()
+        }
     }
 
     MfxMouseArea
@@ -296,8 +303,8 @@ ApplicationWindow
             Button
             {
                 id: fileMenuButton
-                text: qsTr("File")
-                width: 40
+                text: translationsManager.translationTrigger + qsTr("File")
+                width: 48
                 height: 28
                 x: logoImage.x + logoImage.width + 10
                 layer.enabled: false
@@ -333,7 +340,7 @@ ApplicationWindow
 
                     Action
                     {
-                        text: qsTr("New")
+                        text: translationsManager.translationTrigger + qsTr("New")
                         onTriggered:
                         {
                             applicationWindow.createNewProject()
@@ -342,7 +349,7 @@ ApplicationWindow
 
                     Action
                     {
-                        text: qsTr("Open")
+                        text: translationsManager.translationTrigger + qsTr("Open")
                         onTriggered:
                         {
                             if(project.hasUnsavedChanges())
@@ -379,15 +386,15 @@ ApplicationWindow
                         title: qsTr("Save")
                         id: saveSubMenu
 
-                        Action { text: qsTr("Project") }
-                        Action { text: qsTr("Workspace") }
-                        Action { text: qsTr("Patch") }
+                        Action { text: translationsManager.translationTrigger + qsTr("Project") }
+                        Action { text: translationsManager.translationTrigger + qsTr("Workspace") }
+                        Action { text: translationsManager.translationTrigger + qsTr("Patch") }
                     }
 
-                    Action { text: qsTr("Export") }
+                    Action { text: translationsManager.translationTrigger + qsTr("Export") }
                     Action
                     {
-                        text: qsTr("Preferences")
+                        text: translationsManager.translationTrigger + qsTr("Preferences")
                         onTriggered:
                         {
                             var preferencesPopup = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
@@ -411,10 +418,11 @@ ApplicationWindow
             Button
             {
                 id: patchMenuButton
-                text: qsTr("Patch")
-                width: 40
+                text: translationsManager.translationTrigger + qsTr("Patch")
+                width: 48
                 height: 28
                 anchors.left: fileMenuButton.right
+                anchors.leftMargin: 4
                 layer.enabled: false
                 checkable: true
 
@@ -451,10 +459,11 @@ ApplicationWindow
             Button
             {
                 id: mainMenuButton
-                text: qsTr("Main")
-                width: 40
+                text: translationsManager.translationTrigger + qsTr("Main")
+                width: 48
                 height: 28
                 anchors.left: patchMenuButton.right
+                anchors.leftMargin: 4
                 layer.enabled: false
                 checkable: true
 
@@ -491,10 +500,11 @@ ApplicationWindow
             Button
             {
                 id: outputMenuButton
-                text: qsTr("Output")
-                width: 48
+                text: translationsManager.translationTrigger + qsTr("Output")
+                width: 56
                 height: 28
                 anchors.left: mainMenuButton.right
+                anchors.leftMargin: 7
                 layer.enabled: false
                 checkable: true
 
@@ -529,10 +539,10 @@ ApplicationWindow
             Button
             {
                 id: keyButton
-                text: qsTr("Key")
+                text: translationsManager.translationTrigger + qsTr("Key")
                 width: 60
                 height: 24
-                x: outputMenuButton.x + outputMenuButton.width + 30
+                x: outputMenuButton.x + outputMenuButton.width + 36
                 y: mainMenu.y + 2
                 layer.enabled: false
                 font.pointSize: 12
@@ -570,7 +580,7 @@ ApplicationWindow
                 text: "MIDI"
                 width: 60
                 height: 24
-                x: keyButton.x + keyButton.width + 10
+                x: keyButton.x + keyButton.width + 8
                 y: mainMenu.y + 2
                 layer.enabled: false
                 font.pointSize: 12
@@ -605,8 +615,8 @@ ApplicationWindow
             Button
             {
                 id: dmxButton
-                text: qsTr("DMX out")
-                width: 60
+                text: translationsManager.translationTrigger + qsTr("DMX out")
+                width: 80
                 height: 24
                 x: midiButton.x + midiButton.width + 64
                 y: mainMenu.y + 2

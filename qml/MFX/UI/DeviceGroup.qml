@@ -49,11 +49,9 @@ Item
         anchors.topMargin: -3
         anchors.top: parent.top
         height: parent.height + 4
-        width: parent.parent ? parent.parent.width + additionalWidth : parent.width + additionalWidth
+        width: parent.width
         color: "transparent"
         radius: 2
-
-        property int additionalWidth: applicationWindow.screensLayout.currentIndex === 2 ? 50 : 0
 
         border.width: 1
         border.color: "transparent"
@@ -78,23 +76,6 @@ Item
             color: "black"
             visible: deviceGroup.checked
         }
-
-
-
-//        LinearGradient
-//        {
-//            id: groupBackgroundGradient
-//            anchors.fill: parent
-//            start: Qt.point(0, parent.height + 2)
-//            end: Qt.point(0, 0)
-//            visible: deviceGroup.checked
-
-//            gradient: Gradient
-//            {
-//                GradientStop { position: 1.0; color: "#802F4C8A" }
-//                GradientStop { position: 0.0; color: "#202F4C8A" }
-//            }
-//        }
 
         DropArea
         {
@@ -264,7 +245,7 @@ Item
                 id: contextMenu
                 Action
                 {
-                    text: qsTr("Rename group")
+                    text: translationsManager.translationTrigger + qsTr("Rename group")
                     onTriggered:
                     {
                         var renameGroupWindow = Qt.createComponent("UtilityWindow.qml").createObject(applicationWindow);
@@ -277,7 +258,7 @@ Item
                 }
                 Action
                 {
-                    text: qsTr("Delete group")
+                    text: translationsManager.translationTrigger + qsTr("Delete group")
                     onTriggered: project.removeGroup(deviceGroup.name)
                 }
 
@@ -317,14 +298,20 @@ Item
     {
         id: listArea
         visible: collapseButton.checked
-        x: 18
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
         y: 30
-        width: applicationWindow.screensLayout.currentIndex === 2 ? 410 : 360
-        height: deviceList.contentItem.height + 10
+        height: deviceList.contentItem.height
 
         DeviceListWidget
         {
             id: deviceList
+
+            width: parent.width
+
             groupName: deviceGroup.name
         }
     }
