@@ -4,3 +4,4 @@ module MFX.UI.Components.Basic
 # Являются производными от MFX.UI.Components.Templates или самостоятельными элементами
 FramelessApplicationWindow 1.0 FramelessApplicationWindow.qml
 TransparentTextField 1.0 TransparentTextField.qml
+SelectableTableHeaderItem 1.0 SelectableTableHeaderItem.qml

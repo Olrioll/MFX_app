@@ -34,6 +34,8 @@ void CueManager::initConnections()
 
             if(changedCue->expanded()) {
                 m_cueContentManager.setCurrentCue(changedCue);
+            } else {
+                m_cueContentManager.setCurrentCue(nullptr);
             }
         }
     });

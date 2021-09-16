@@ -19,6 +19,7 @@
 #include "PatternFilteringModel.h"
 #include "TranslationManager.h"
 #include "CueContentManager.h"
+#include "CueContentSortingModel.h"
 
 int main(int argc, char** argv)
 {
@@ -57,6 +58,7 @@ int main(int argc, char** argv)
     PatternManager::qmlRegister();
     PatternFilteringModel::qmlRegister();
     CueContentManager::qmlRegister();
+    CueContentSortingModel::qmlRegister();
 
     QQmlApplicationEngine engine;
 

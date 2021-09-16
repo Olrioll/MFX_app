@@ -10,13 +10,7 @@
 class CueContent : public QObject
 {
     Q_OBJECT
-    //Должны быть
-    //Указатель на SequenceDevice - можем достать свойства DMX, Device, RFChannel. Time и Prefier мы не испльзуем для SequenceDevice, но как я понял, эти проперти должны быть зашиты там
-    //Delay, Between берем это связь конкретной Cue и операций (Operation), то есть понадобится либо сюда давать список операций, либо какой-то OperationManager
-    //То есть в итоге нужно:
-    //1. SequenceDevice и его ID (только не уникальный, а id)
-    //2. Cue - чтобы знать начало
-    //3. Operation - конкретная операция, принадлежащая кьюшке
+
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, delay, Delay, 0) //Задержка от начала Cue до конкретной Operation (В терминологии домена Action). Редактируется.
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, between, Between, 0) //Задержка от начала Cue до конретной Operation за вычетом Delay предыдущей точки. Редактируется.
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(int, rfChannel, RfChannel, 0) //RfChannel для конкретного устройства. Не редактируется.
@@ -26,7 +20,13 @@ class CueContent : public QObject
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, effect, Effect, "") //То же самое, что и action, только для устройств Pyro - в остальных случаях заблокировано
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(int, angle, Angle, 0) //Угол - доступен только для устройст Pyro. В остальных случаях прочерки
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, time, Time, 0) //Время - не редактируемый параметр для Sequnce и Pyro, для Dimmer и Shot - редактируемый
-    QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, prefier, Prefier, 0) //Префайер - не редактируемый параметр для Sequnce и Pyro, для Dimmer и Shot - редактируемый
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, prefire, Prefire, 0) //Префайер - не редактируемый параметр для Sequnce и Pyro, для Dimmer и Shot - редактируемый
+
+    //Декораторы
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, delayTimeDecorator, DelayTimeDecorator, "") //Декоратор для времени delay
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, betweenTimeDecorator, DurationTimeDecorator, "") //Декоратор для времени between
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, timeTimeDecorator, TimeTimeDecorator, "") //Декоратор для времени time
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, prefireTimeDecorator, PrefireTimeDecorator, "") //Декоратор для времени prefire
 
     //Интерфейс
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Определяет, быбрана ли данная строка в интерфейсе таблицы Cue Content (Либо массовым выделением Even-Uneven, либо вручную)
@@ -35,5 +35,6 @@ public:
     explicit CueContent(QObject *parent = nullptr);
 
 private:
+    void initConnections();
     void onActiveChanged(bool active);
 };

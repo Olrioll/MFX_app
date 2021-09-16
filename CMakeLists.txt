@@ -134,6 +134,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/CueContent.cpp"
     "src/CueContentManager.cpp"
     "src/Language.cpp"
+    "src/CueContentSortingModel.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}

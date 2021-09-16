@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.0
 
 import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Components.Templates 1.0 as MFXUICT
+import MFX.Enums 1.0 as MFXE
 import MFX.Models 1.0 as MDFM
 import MFX.UI.Styles 1.0 as MFXUIS
 
@@ -286,10 +287,10 @@ FocusScope
                                     Layout.maximumHeight: 30
                                     Layout.minimumHeight: 30
 
+                                    property var operationApplyingText: ""
                                     property var operationApplying
-                                    property int value: 0
-                                    property var unitMultiplierType: ""
-                                    property var unitMultiplier: 1
+                                    property string value: "0"
+                                    property string unitMultiplierType: ""
 
                                     Rectangle {
                                         anchors.fill: parent
@@ -315,7 +316,7 @@ FocusScope
 
                                         color: "#FFFFFF"
 
-                                        text: "0"
+                                        text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value + " " + calculatorTextInputItem.unitMultiplierType
                                     }
                                 }
 
@@ -341,82 +342,161 @@ FocusScope
                                         model: ListModel {
                                             ListElement {
                                                 text: "1"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "1"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "1"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "2"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "2"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "2"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "3"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "3"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "3"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "*"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    calculatorTextInputItem.operationApplyingText = "*"
+                                                    calculatorTextInputItem.operationApplying = MFXE.CalculatorOperator.Multiply
+                                                }
                                                 highlighted: false
                                             }
                                             ListElement {
                                                 text: "4"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "4"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "4"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "5"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "5"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "5"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "6"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "6"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "6"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "/"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    calculatorTextInputItem.operationApplyingText = "/"
+                                                    calculatorTextInputItem.operationApplying = MFXE.CalculatorOperator.Divide
+                                                }
                                                 highlighted: false
                                             }
                                             ListElement {
                                                 text: "7"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "7"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "7"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "8"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "8"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "8"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "9"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length === 1) && (calculatorTextInputItem.value[0] === "0")) {
+                                                        calculatorTextInputItem.value = "9"
+                                                    } else {
+                                                        calculatorTextInputItem.value += "9"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "%"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    calculatorTextInputItem.operationApplyingText = "%"
+                                                    calculatorTextInputItem.operationApplying = MFXE.CalculatorOperator.Percent
+                                                    calculatorTextInputItem.unitMultiplierType = ""
+                                                }
                                                 highlighted: false
                                             }
                                             ListElement {
                                                 text: "-"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    calculatorTextInputItem.operationApplyingText = "-"
+                                                    calculatorTextInputItem.operationApplying = MFXE.CalculatorOperator.Substract
+                                                }
                                                 highlighted: false
                                             }
                                             ListElement {
                                                 text: "0"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    if((calculatorTextInputItem.value.length > 0) && (calculatorTextInputItem.value[0] !== "0")) {
+                                                        calculatorTextInputItem.value += "0"
+                                                    }
+                                                }
                                                 highlighted: true
                                             }
                                             ListElement {
                                                 text: "+"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    calculatorTextInputItem.operationApplyingText = "+"
+                                                    calculatorTextInputItem.operationApplying = MFXE.CalculatorOperator.Add
+                                                }
                                                 highlighted: false
                                             }
                                             ListElement {
                                                 text: "C"
-                                                operation: function(){}
+                                                operation: function(){
+                                                    calculatorTextInputItem.value = 0
+                                                    calculatorTextInputItem.operationApplying = undefined
+                                                    calculatorTextInputItem.operationApplyingText = ""
+                                                    calculatorTextInputItem.unitMultiplierType = ""
+                                                }
                                                 highlighted: false
                                             }
                                         }
@@ -508,7 +588,7 @@ FocusScope
                                             text: translationsManager.translationTrigger + qsTr("min")
 
                                             onClicked: {
-                                                //TODO реализовать
+                                                calculatorTextInputItem.unitMultiplierType = qsTr("min")
                                             }
                                         }
                                     }
@@ -534,7 +614,7 @@ FocusScope
                                             text: translationsManager.translationTrigger + qsTr("sec")
 
                                             onClicked: {
-                                                //TODO реализовать
+                                                calculatorTextInputItem.unitMultiplierType = qsTr("sec")
                                             }
                                         }
                                     }
@@ -560,7 +640,7 @@ FocusScope
                                             text: translationsManager.translationTrigger + qsTr("ms")
 
                                             onClicked: {
-                                                //TODO реализовать
+                                                calculatorTextInputItem.unitMultiplierType = qsTr("ms")
                                             }
                                         }
                                     }
@@ -729,7 +809,7 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("Left")
 
                                         onClicked: {
-                                            //TODO реализовать
+                                            cueContentManager.onSelectLeftItemsRequest();
                                         }
                                     }
                                 }
@@ -749,7 +829,7 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("Uneven")
 
                                         onClicked: {
-                                            //TODO реализовать
+                                            cueContentManager.onSelectUnevenItemsRequest();
                                         }
                                     }
                                 }
@@ -769,7 +849,7 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("All")
 
                                         onClicked: {
-                                            //TODO реализовать
+                                            cueContentManager.onSelectAllItemsRequest();
                                         }
                                     }
                                 }
@@ -789,7 +869,7 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("Even")
 
                                         onClicked: {
-                                            //TODO реализовать
+                                            cueContentManager.onSelectEvenItemsRequest();
                                         }
                                     }
                                 }
@@ -809,7 +889,7 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("Right")
 
                                         onClicked: {
-                                            //TODO реализовать
+                                            cueContentManager.onSelectRightItemsRequest();
                                         }
                                     }
                                 }
@@ -824,11 +904,31 @@ FocusScope
                             anchors.rightMargin: 2
                             anchors.bottomMargin: 26
 
+                            property int columnsCount: 5
+                            property var columnProportions: [1, 2, 2, 2, 2]
+                            property var columnWidths: [0, 0, 0, 0, 0]
+
+                            function calculateColumnWidths(width) {
+                                return columnProportions.map(function(columnProportion) {
+                                    return width * (columnProportion / cueContentTableListView.columnProportions.reduce((a, b) => a + b, 0))
+                                });
+                            }
+
+                            Component.onCompleted: {
+                                cueContentTableListView.columnWidths = cueContentTableListView.calculateColumnWidths(cueContentTableListView.width)
+                            }
+
+                            onWidthChanged: {
+                                cueContentTableListView.columnWidths = cueContentTableListView.calculateColumnWidths(cueContentTableListView.width)
+                            }
+
                             clip: true
 
                             headerPositioning: ListView.OverlayHeader
 
                             header: Item {
+                                id: headerItem
+
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 height: 30
@@ -842,15 +942,191 @@ FocusScope
 
                                     color: "#444444"
                                 }
+
+                                RowLayout {
+                                    anchors.fill: parent
+
+                                    spacing: 0
+
+                                    MFXUICB.SelectableTableHeaderItem {
+                                        id: cueContentNumber
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[0]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[0]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[0]
+
+                                        currentIndex: 0
+
+                                        model: ListModel {
+                                            ListElement { value: 0; text: qsTr("№") }
+                                        }
+                                    }
+
+                                    MFXUICB.SelectableTableHeaderItem {
+                                        id: timingTypeHeaderItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[1]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[1]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[1]
+
+                                        model: ListModel {
+                                            id: timingTypeHeaderModel
+                                        }
+
+                                        property bool isLoading: true
+
+                                        onCurrentIndexChanged: {
+                                            if(!isLoading) {
+                                                cueContentManager.onTimingTypeSelectedTableRoleChangeRequest(timingTypeHeaderItem.value)
+                                            }
+                                        }
+
+                                        Component.onCompleted: {
+                                            timingTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Delay, "text": qsTr("Delay") })
+                                            timingTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Between, "text": qsTr("Between") })
+                                            timingTypeHeaderItem.setValue(cueContentManager.timingTypeSelectedTableRole)
+
+                                            isLoading = false;
+                                        }
+                                    }
+
+                                    MFXUICB.SelectableTableHeaderItem {
+                                        id: deviceTypeHeaderItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[2]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[2]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[2]
+
+                                        model: ListModel {
+                                            id: deviceTypeHeaderModel
+                                        }
+
+                                        property bool isLoading: true
+
+                                        onCurrentIndexChanged: {
+                                            if(!isLoading) {
+                                                cueContentManager.onDeviceTypeSelectedTableRoleChangeRequest(deviceTypeHeaderItem.value)
+                                            }
+                                        }
+
+                                        Component.onCompleted: {
+                                            deviceTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.RfChannel, "text": qsTr("RF ch") })
+                                            deviceTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Device, "text": qsTr("Device") })
+                                            deviceTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.DmxChannel, "text": qsTr("DMX ch") })
+                                            deviceTypeHeaderItem.setValue(cueContentManager.deviceTypeSelectedTableRole)
+
+                                            isLoading = false;
+                                        }
+                                    }
+
+                                    MFXUICB.SelectableTableHeaderItem {
+                                        id: actionTypeHeaderItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[3]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[3]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[3]
+
+                                        model: ListModel {
+                                            id: actionTypeHeaderModel
+                                        }
+
+                                        property bool isLoading: true
+
+                                        onCurrentIndexChanged: {
+                                            if(!isLoading) {
+                                                cueContentManager.onActionTypeSelectedTableRoleChangeRequest(actionTypeHeaderItem.value)
+                                            }
+                                        }
+
+                                        Component.onCompleted: {
+                                            actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Effect, "text": qsTr("Effect") })
+                                            actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Action, "text": qsTr("Action") })
+                                            actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Angle, "text": qsTr("Angle") })
+                                            actionTypeHeaderItem.setValue(cueContentManager.actionTypeSelectedTableRole)
+
+                                            isLoading = false;
+                                        }
+                                    }
+
+                                    MFXUICB.SelectableTableHeaderItem {
+                                        id: durationTypeHeaderItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[4]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[4]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[4]
+
+                                        model: ListModel {
+                                            id: durationTypeHeaderModel
+                                        }
+
+                                        property bool isLoading: true
+
+                                        onCurrentIndexChanged: {
+                                            if(!isLoading) {
+                                                cueContentManager.onDurationTypeSelectedTableRoleChangeRequest(durationTypeHeaderItem.value)
+                                            }
+                                        }
+
+                                        Component.onCompleted: {
+                                            durationTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Time, "text": qsTr("Time") })
+                                            durationTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Prefire, "text": qsTr("Prefire") })
+                                            durationTypeHeaderItem.setValue(cueContentManager.durationTypeSelectedTableRole)
+
+                                            isLoading = false;
+                                        }
+                                    }
+                                }
                             }
 
-                            model: cueContentManager.cueContentItems
+                            model: cueContentManager.cueContentSorted
 
                             delegate: Item {
-                                id: cueContentTableListViewRow
+                                id: cueContentListViewDelegate
 
-                                anchors.left: parent.left
-                                anchors.right: parent.right
+                                property int rowIndex: model.index
+                                property int rowNumber: rowIndex + 1
+                                property string delay: model.delayTimeDecorator
+                                property string between: model.betweenTimeDecorator
+                                property var rfChannel: model.rfChannel
+                                property var device: model.device
+                                property var dmxSlot: model.dmxSlot
+                                property var action: model.action
+                                property var effect: model.effect
+                                property var angle: model.angle
+                                property string time: model.timeTimeDecorator
+                                property string prefire: model.prefireTimeDecorator
+
+                                property bool active: model.active
+                                property bool selected: model.selected
+
+                                property color activeTextColor: "#F2C94C"
+                                property color activeBackgroundColor: "#1AFFFAFA"
+
+                                property color selectedTextColor: "#27AE60"
+                                property color selectedBackgroundColor: "transparent"
+
+                                property color textColor: "#FFFFFF"
+                                property color backgroundColor: "transparent"
+
+                                QtObject {
+                                    id: cueContentListViewDelegatePrivateProperties
+
+                                    property color calculatedBackgroundColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeBackgroundColor
+                                                                                                                : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedBackgroundColor
+                                                                                                                                                      : cueContentListViewDelegate.backgroundColor
+
+                                    property color calculatedTextColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
+                                                                                                          : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedTextColor
+                                                                                                                                                : cueContentListViewDelegate.textColor
+                                }
+
+                                anchors.left: cueContentTableListView.contentItem.left
+                                anchors.right: cueContentTableListView.contentItem.right
 
                                 height: 30
 
@@ -866,17 +1142,151 @@ FocusScope
                                     color: "#66000000"
                                 }
 
-                                Text {
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
+                                Rectangle {
+                                    anchors.fill: parent
 
-                                    anchors.leftMargin: 16
-                                    anchors.rightMargin: 16
+                                    color: cueContentListViewDelegatePrivateProperties.calculatedBackgroundColor
 
-                                    color: "white"
+                                    Behavior on color { ColorAnimation { duration: 150 } }
 
-                                    text: model.device + " " + model.action
+                                    //TODO когда заканчивается Cue, только одна строка теряет выделение - остальные нет
+                                    visible: false
+                                }
+
+                                RowLayout {
+                                    anchors.fill: parent
+
+                                    spacing: 0
+
+                                    Text {
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[0]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[0]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[0]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+
+                                        text: cueContentListViewDelegate.rowNumber
+                                    }
+
+                                    Text {
+                                        id: timingTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[1]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[1]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[1]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+
+                                        text: {
+                                            switch(cueContentManager.timingTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.Delay:
+                                                return cueContentListViewDelegate.delay
+                                            case MFXE.CueContentSelectedTableRole.Between:
+                                                return cueContentListViewDelegate.between
+                                            }
+                                            return qsTr("---")
+                                        }
+                                    }
+
+                                    Text {
+                                        id: deviceTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[2]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[2]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[2]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+
+                                        text: {
+                                            switch(cueContentManager.deviceTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.RfChannel:
+                                                return cueContentListViewDelegate.rfChannel
+                                            case MFXE.CueContentSelectedTableRole.Device:
+                                                return cueContentListViewDelegate.device
+                                            case MFXE.CueContentSelectedTableRole.DmxChannel:
+                                                return cueContentListViewDelegate.dmxSlot
+                                            }
+                                            return qsTr("---")
+                                        }
+                                    }
+
+                                    Text {
+                                        id: actionTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[3]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[3]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[3]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+
+                                        text: {
+                                            switch(cueContentManager.actionTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.Action:
+                                                return cueContentListViewDelegate.action
+                                            case MFXE.CueContentSelectedTableRole.Angle:
+                                                return cueContentListViewDelegate.angle
+                                            case MFXE.CueContentSelectedTableRole.Effect:
+                                                return cueContentListViewDelegate.effect
+                                            }
+                                            return qsTr("---")
+                                        }
+                                    }
+
+                                    Text {
+                                        id: durationTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[4]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[4]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[4]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+
+                                        text: {
+                                            switch(cueContentManager.durationTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.Time:
+                                                return cueContentListViewDelegate.time
+                                            case MFXE.CueContentSelectedTableRole.Prefire:
+                                                return cueContentListViewDelegate.prefire
+                                            }
+                                            return qsTr("---")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1674,7 +2084,6 @@ FocusScope
 
                             delegate: FocusScope {
                                 id: cueListViewDelegate
-
 
                                 property bool active: model.active
                                 property bool selected: model.selected

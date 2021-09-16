@@ -61,8 +61,8 @@
         <file>icons/components/menu_selected_row_indicator_icon.svg</file>
         <file>icons/components/popup_close_icon.svg</file>
         <file>icons/components/selected_item_state_icon.svg</file>
-        <file>icons/components/table_header_sort_ascending_icon.svg</file>
-        <file>icons/components/table_header_sort_descending_icon.svg</file>
+        <file>icons/components/table_header_switch_item_from_top_icon.svg</file>
+        <file>icons/components/table_header_switch_item_from_bottom_icon.svg</file>
         <file>icons/main_screen/main_screen_add_device_icon.svg</file>
         <file>icons/main_screen/main_screen_empty_item_icon.svg</file>
         <file>icons/main_screen/main_screen_player_current_state_indicator.svg</file>

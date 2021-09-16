@@ -56,5 +56,6 @@
         <file>MFX/UI/Components/Templates/ColoredIcon.qml</file>
         <file>MFX/UI/Components/Templates/TextField.qml</file>
         <file>MFX/UI/Components/Basic/TransparentTextField.qml</file>
+        <file>MFX/UI/Components/Basic/SelectableTableHeaderItem.qml</file>
     </qresource>
 </RCC>

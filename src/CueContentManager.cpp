@@ -1,13 +1,17 @@
 #include "CueContentManager.h"
+
+#include <QtCore/QtMath>
+
 #include "SequenceDevice.h"
 #include "CueManager.h"
+#include "CueContentSortingModel.h"
 
 CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* parent)
     : QObject(parent)
     , m_deviceManager(deviceManager)
 {
     m_cueContentItems = new QQmlObjectListModel<CueContent>(this);
-
+    m_cueContentSorted = new CueContentSortingModel(*m_cueContentItems, this);
     initConnections();
 }
 
@@ -41,7 +45,70 @@ void CueContentManager::onUpdateCueContentValueRequest(CueContentSelectedTableRo
     }
 }
 
-void CueContentManager::setActive(QString cueName, int deviceId, bool active)
+void CueContentManager::onTimingTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type &role)
+{
+    setTimingTypeSelectedTableRole(role);
+}
+
+void CueContentManager::onDeviceTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type &role)
+{
+    setDeviceTypeSelectedTableRole(role);
+}
+
+void CueContentManager::onActionTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type &role)
+{
+    setActionTypeSelectedTableRole(role);
+}
+
+void CueContentManager::onDurationTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type &role)
+{
+    setDurationTypeSelectedTableRole(role);
+}
+
+void CueContentManager::onSelectAllItemsRequest()
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        cueContentItem->setSelected(true);
+    }
+}
+
+void CueContentManager::onSelectEvenItemsRequest()
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        const int index = m_cueContentItems->indexOf(cueContentItem);
+
+        cueContentItem->setSelected((index % 2) != 0);
+    }
+}
+
+void CueContentManager::onSelectUnevenItemsRequest()
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        const int index = m_cueContentItems->indexOf(cueContentItem);
+
+        cueContentItem->setSelected((index % 2) == 0);
+    }
+}
+
+void CueContentManager::onSelectLeftItemsRequest()
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        const int index = m_cueContentItems->indexOf(cueContentItem);
+
+        cueContentItem->setSelected(index < qFloor(m_cueContentItems->count() / 2));
+    }
+}
+
+void CueContentManager::onSelectRightItemsRequest()
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        const int index = m_cueContentItems->indexOf(cueContentItem);
+
+        cueContentItem->setSelected(index >= qCeil(m_cueContentItems->count() / 2));
+    }
+}
+
+void CueContentManager::setActive(const QString& cueName, int deviceId, bool active)
 {
     if(currentCue() == NULL) {
         return;
@@ -56,11 +123,16 @@ void CueContentManager::setActive(QString cueName, int deviceId, bool active)
     }
 }
 
+CueContentSortingModel *CueContentManager::cueContentSorted() const
+{
+    return m_cueContentSorted;
+}
+
 void CueContentManager::qmlRegister()
 {
-    CueContentSelectedTableRole::registerToQml("MFX.Enums", 1, 0, "CueContentSelectedTableRole", "");
-    CalculatorOperator::registerToQml("MFX.Enums", 1, 0, "CalculatorOperator", "");
-    TimeUnit::registerToQml("MFX.Enums", 1, 0, "TimeUnit", "");
+    CueContentSelectedTableRole::registerToQml("MFX.Enums", 1, 0);
+    CalculatorOperator::registerToQml("MFX.Enums", 1, 0);
+    TimeUnit::registerToQml("MFX.Enums", 1, 0);
 }
 
 void CueContentManager::initConnections()
@@ -77,14 +149,24 @@ void CueContentManager::refrestCueContentModel()
     }
 
     for (auto* action : m_currentCue->actions()->toList()) {
-        qInfo() << "CueContentManager::refrestCueContentModel:" << action->deviceId() << action->patternName();
         auto* cueContent = new CueContent(this);
+
+        cueContent->setDelay(10);
+        cueContent->setBetween(10);
+        cueContent->setTime(10);
+        cueContent->setPrefire(10);
+        cueContent->setDelay(0);
+        cueContent->setBetween(0);
+        cueContent->setTime(0);
+        cueContent->setPrefire(0);
 
         if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
             cueContent->setDevice(device->id());
             cueContent->setDmxSlot(device->dmx());
             cueContent->setRfChannel(device->rfChannel());
         }
+
+        cueContent->setAction(action->patternName());
 
         m_cueContentItems->append(cueContent);
     }
