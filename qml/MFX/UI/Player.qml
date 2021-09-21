@@ -952,8 +952,8 @@ Item
 //                                                {propName: "duration", propValue: 15000}
 //                                            ])
 
-                                project.addCue({name: newCueName, yPosition: newYposition})
-                                cueManager.addCue({name: newCueName, newYposition: newYposition})
+                                project.onAddCue({name: newCueName, yPosition: newYposition})
+                                cueManager.onAddCue({name: newCueName, newYposition: newYposition})
 
                                 checkedIDs.forEach(function(currId)
                                 {
@@ -1421,8 +1421,8 @@ Item
 
                         onPositionChanged:
                         {
-                            project.setActionProperty(cuePlate.name, name, patchId, "position", position)
-                            cueManager.setActionProperty(cuePlate.name, name, patchId, position)
+                            project.onSetActionProperty(cuePlate.name, name, patchId, "position", position)
+                            cueManager.onSetActionProperty(cuePlate.name, name, patchId, position)
                         }
 
                         function prefirePosition()
@@ -1474,7 +1474,7 @@ Item
                                     }
                                 }
                                 positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
-                                project.setActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
+                                project.onSetActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
                             }
 
                             onReleased:
@@ -1818,8 +1818,8 @@ Item
                                     return
                                 }
 
-                                project.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
-                                cueManager.setActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
+                                project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
+                                cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                                 cuePlate.loadActions();
                             })
                         }

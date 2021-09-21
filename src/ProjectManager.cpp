@@ -66,6 +66,16 @@ void ProjectManager::loadProject(QString fileName)
         emit patchListChanged();
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
+        for(auto cue : getChild("Cues")->namedChildren()) {
+            QString cueName = cue->properties().value("name").toString();
+            emit addCue(cue->properties());
+            foreach(auto action, cue->listedChildren()) {
+                QString pattern = action->properties().value("actionName").toString();
+                quint64 deviceId = action->properties().value("patchId").toUInt();
+                quint64 position = action->properties().value("position").toUInt();
+                emit setActionProperty(cueName, pattern, deviceId, position);
+            }
+        }
     }
 }
 
@@ -542,7 +552,7 @@ bool ProjectManager::isPatchHasGroup(int patchId) const
     return false;
 }
 
-void ProjectManager::addCue(QVariantMap properties)
+void ProjectManager::onAddCue(QVariantMap properties)
 {
     auto newCueName = properties.value("name").toString();
     getChild("Cues")->addChild(newCueName);
@@ -583,7 +593,7 @@ QVariantList ProjectManager::cueActions(QString cueName) const
     return actionList;
 }
 
-void ProjectManager::setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
+void ProjectManager::onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
 {
     for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
     {

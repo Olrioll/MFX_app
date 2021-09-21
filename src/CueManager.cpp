@@ -79,7 +79,7 @@ Action *CueManager::getAction(const QString& cueName, int deviceId)
     return act;
 }
 
-void CueManager::addCue(QVariantMap properties)
+void CueManager::onAddCue(QVariantMap properties)
 {
     QString name = properties.value("name").toString();
     //double newYposition = properties.value("newYposition").toDouble();
@@ -130,7 +130,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
     }
 }
 
-void CueManager::setActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
+void CueManager::onSetActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
     auto* action = getAction(cueName, deviceId);
     if(action == nullptr) {

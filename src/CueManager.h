@@ -24,9 +24,6 @@ public:
     explicit CueManager(CueContentManager& cueContentManager, QObject* parent = nullptr);
     ~CueManager();
 
-    Q_INVOKABLE void addCue(QVariantMap properties);
-    Q_INVOKABLE void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition);
-
     Q_INVOKABLE void cueNameChangeRequest(const QUuid& id, const QString& name); //Обработчик запроса на смену имени из панели списка Cue
     Q_INVOKABLE void collapseCueOnPlayerRequest(const QString& name); //Обработчик запроса из плеера о свертывании(схлопывании) элемента Cue
     Q_INVOKABLE void expandCueOnPlayerRequest(const QString& name); //Обработчик запроса от плеера, что нужно развернуть конкретный элемент Cue
@@ -46,6 +43,8 @@ public:
     DeviceManager *m_deviceManager;
 
 public slots:
+    void onAddCue(QVariantMap properties);
+    void onSetActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition);
     void onPlaybackTimeChanged(quint64 time);
 
 signals:

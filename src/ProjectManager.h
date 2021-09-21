@@ -73,13 +73,13 @@ public slots:
     QString currentGroup() const;
     void setCurrentGroup(QString name);
 
-    void addCue(QVariantMap properties);
+    void onAddCue(QVariantMap properties);
     QVariantList getCues() const;
     void addActionToCue(QString cueName, QString actionName, int patchId, int position);
     void setCueProperty(QString cueName, QString propertyName, QVariant value);
 
     QVariantList cueActions(QString cueName) const;
-    void setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
+    void onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
     void deleteCues(QStringList deletedCueNames);
 
 signals:
@@ -94,6 +94,8 @@ signals:
     void backgroundImageChanged();
 
     void sceneFrameWidthChanged(double sceneFrameWidth);
+    void addCue(QVariantMap properties);
+    void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
 
 private:
 
