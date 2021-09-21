@@ -59,7 +59,7 @@ public slots:
 
     int lastPatchId() const;
     void addPatch(QString type, QVariantList properties);
-    void editPatch(QVariantList properties);
+    void onEditPatch(QVariantList properties);
     QVariant patchProperty(int id, QString propertyName) const;
     QVariant patchPropertyForIndex(int index, QString propertyName) const;
     QString patchType(int index) const;
@@ -96,6 +96,7 @@ signals:
     void sceneFrameWidthChanged(double sceneFrameWidth);
     void addCue(QVariantMap properties);
     void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
+    void editPatch(QVariantList properties);
 
 private:
 

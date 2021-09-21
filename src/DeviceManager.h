@@ -20,7 +20,7 @@ public:
     void runPatternOnDevice(int deviceId, int patternNum);
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
-    Q_INVOKABLE void editPatch(QVariantList properties);
+
     PatternManager *m_patternManager;
 
     Device* deviceById(int id);
@@ -31,6 +31,7 @@ signals:
 
 public slots:
     void onRunPattern(int deviceId, quint64 time, QString patternName);
+    void onEditPatch(QVariantList properties);
 
 private:
     void addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);

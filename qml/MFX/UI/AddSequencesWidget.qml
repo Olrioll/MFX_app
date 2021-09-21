@@ -115,7 +115,7 @@ Item
                               {propName: "max ang", propValue: Number(maxAngField.text)},
                               {propName: "height", propValue: Number(heightField.text)}
                              ])
-            deviceManager.editPatch(
+            deviceManager.onEditPatch(
                                     [
                                      {propName: "ID", propValue: currentId},
                                      {propName: "DMX", propValue: currentDmxValue},
@@ -214,7 +214,7 @@ Item
 
         for(let i = 0; i < changedIdList.length; i++)
         {
-            project.editPatch(
+            project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
                               {propName: "DMX", propValue: currentDmxValue},
@@ -224,7 +224,7 @@ Item
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "height", propValue: Number(heightField.text)}
                              ])
-            deviceManager.editPatch(
+            deviceManager.onEditPatch(
                         [
                          {propName: "ID", propValue: changedIdList[i]},
                          {propName: "DMX", propValue: currentDmxValue},

@@ -54,9 +54,9 @@ void SequenceDevice::setDMXOperation(int deviceId, Operation *op)
     if(op != NULL) {
         angle = op->angleDegrees();
     }
-//    if((angle < minAngle()) || (angle > maxAngle())) { // filter operations by angle
-//        return;
-//    }
+    if((angle < minAngle()) || (angle > maxAngle())) { // filter operations by angle
+        return;
+    }
     if(op != NULL) {
         emit m_manager->drawOperationInGui(deviceId, op->duration(), op->angleDegrees(), op->velocity(), op->active());
     } else {

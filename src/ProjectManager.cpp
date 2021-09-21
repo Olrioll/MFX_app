@@ -76,6 +76,32 @@ void ProjectManager::loadProject(QString fileName)
                 emit setActionProperty(cueName, pattern, deviceId, position);
             }
         }
+        for(auto patch : getChild("Patches")->listedChildren()) {
+            QVariantList properties;
+            QVariantMap propertiesMap;
+            propertiesMap["propName"] = "ID";
+            propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "DMX";
+            propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "min ang";
+            propertiesMap["propValue"] = patch->properties().value("min ang").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "max ang";
+            propertiesMap["propValue"] = patch->properties().value("max ang").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "RF pos";
+            propertiesMap["propValue"] = patch->properties().value("RF pos").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "RF ch";
+            propertiesMap["propValue"] = patch->properties().value("RF ch").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "height";
+            propertiesMap["propValue"] = patch->properties().value("height").toInt();
+            properties.append(propertiesMap);
+            emit editPatch(properties);
+        }
     }
 }
 
@@ -336,7 +362,7 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     emit patchListChanged();
 }
 
-void ProjectManager::editPatch(QVariantList properties)
+void ProjectManager::onEditPatch(QVariantList properties)
 {
     JsonSerializable* patch = new JsonSerializable;
 //    patch->setProperty("type", type);
