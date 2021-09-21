@@ -940,7 +940,7 @@ FocusScope
 
                             function calculateColumnWidths(width) {
                                 return columnProportions.map(function(columnProportion) {
-                                    return width * (columnProportion / cueContentTableListView.columnProportions.reduce((a, b) => a + b, 0))
+                                    return (width - (columnsCount - 1)) * (columnProportion / cueContentTableListView.columnProportions.reduce((a, b) => a + b, 0))
                                 });
                             }
 
@@ -955,6 +955,8 @@ FocusScope
                             clip: true
 
                             headerPositioning: ListView.OverlayHeader
+                            spacing: 1
+                            orientation: Qt.Vertical
 
                             header: Item {
                                 id: headerItem
@@ -993,6 +995,17 @@ FocusScope
                                         }
                                     }
 
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
+                                    }
+
                                     MFXUICB.SelectableTableHeaderItem {
                                         id: timingTypeHeaderItem
 
@@ -1020,6 +1033,17 @@ FocusScope
 
                                             isLoading = false;
                                         }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     MFXUICB.SelectableTableHeaderItem {
@@ -1052,6 +1076,17 @@ FocusScope
                                         }
                                     }
 
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
+                                    }
+
                                     MFXUICB.SelectableTableHeaderItem {
                                         id: actionTypeHeaderItem
 
@@ -1080,6 +1115,17 @@ FocusScope
 
                                             isLoading = false;
                                         }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     MFXUICB.SelectableTableHeaderItem {
@@ -1138,7 +1184,7 @@ FocusScope
                                 property color activeBackgroundColor: "#1AFFFAFA"
 
                                 property color selectedTextColor: "#27AE60"
-                                property color selectedBackgroundColor: "transparent"
+                                property color selectedBackgroundColor: "#802F80ED"
 
                                 property color textColor: "#FFFFFF"
                                 property color backgroundColor: "transparent"
@@ -1177,10 +1223,7 @@ FocusScope
 
                                     color: cueContentListViewDelegatePrivateProperties.calculatedBackgroundColor
 
-                                    Behavior on color { ColorAnimation { duration: 150 } }
-
-                                    //TODO когда заканчивается Cue, только одна строка теряет выделение - остальные нет
-                                    visible: false
+                                    Behavior on color { ColorAnimation { duration: 250 } }
                                 }
 
                                 RowLayout {
@@ -1204,6 +1247,19 @@ FocusScope
                                         color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
 
                                         text: cueContentListViewDelegate.rowNumber
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     Text {
@@ -1231,6 +1287,19 @@ FocusScope
                                             }
                                             return qsTr("---")
                                         }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     Text {
@@ -1260,6 +1329,19 @@ FocusScope
                                             }
                                             return qsTr("---")
                                         }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     Text {
@@ -1289,6 +1371,19 @@ FocusScope
                                             }
                                             return qsTr("---")
                                         }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     Text {
@@ -1316,6 +1411,8 @@ FocusScope
                                             }
                                             return qsTr("---")
                                         }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
                                     }
                                 }
                             }

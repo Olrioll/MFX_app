@@ -9,9 +9,13 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item {
     id: control
 
+    property int sorting: Qt.AscendingOrder
     property alias currentIndex: valueStack.currentIndex
     property alias model: contentRepeater.model
     property var value
+
+    signal selectRequest()
+    signal sortRequest(var sortingOrder)
 
     onCurrentIndexChanged: {
         value = contentRepeater.model.get(currentIndex).value
@@ -38,6 +42,8 @@ Item {
             id: contentRepeater
 
             Text {
+                id: headerText
+
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
 
@@ -52,6 +58,18 @@ Item {
                 color: "#FFFFFF"
 
                 text: model ? model.text : ""
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        control.selectRequest()
+                    }
+
+                    onDoubleClicked: {
+                        control.sortRequest(control.sorting === Qt.AscendingOrder ? Qt.DescendingOrder : Qt.AscendingOrder)
+                    }
+                }
             }
         }
     }
@@ -67,26 +85,47 @@ Item {
 
         visible: control.model.count > 1
 
-        MFXUICT.ColoredIcon {
+        MouseArea {
+            anchors.fill: parent
 
-            anchors.top: parent.top
-            anchors.topMargin: 8
-            anchors.horizontalCenter: parent.horizontalCenter
+            propagateComposedEvents: false
+            preventStealing: true
+        }
 
-            width: 6
-            height: 6
+        ColumnLayout {
+            anchors.fill: parent
 
-            source: "qrc:/icons/components/table_header_switch_item_from_top_icon.svg"
+            spacing: 0
 
-            color: "#80FFFFFF"
+            Button {
+                id: topButton
 
-            MouseArea {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: parent.top
-                anchors.topMargin: -8
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                width: 16
-                height: 15
+                contentItem: Item {
+                    anchors.fill: parent
+
+                    MFXUICT.ColoredIcon {
+                        anchors.top: parent.top
+                        anchors.topMargin: 4
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        width: 6
+                        height: 6
+
+                        source: "qrc:/icons/components/table_header_switch_item_from_top_icon.svg"
+
+                        color: pressed ? "#2F80ED"
+                                       : "#80FFFFFF"
+
+                        onClicked: {
+                            topButton.clicked()
+                        }
+                    }
+                }
+
+                background: Item {}
 
                 onClicked: {
                     if(control.currentIndex < control.model.count - 1) {
@@ -94,28 +133,38 @@ Item {
                     }
                 }
             }
-        }
 
-        MFXUICT.ColoredIcon {
+            Button {
+                id: bottomButton
 
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 8
-            anchors.horizontalCenter: parent.horizontalCenter
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-            width: 6
-            height: 6
+                contentItem: Item {
+                    anchors.fill: parent
 
-            source: "qrc:/icons/components/table_header_switch_item_from_bottom_icon.svg"
+                    MFXUICT.ColoredIcon {
+                        id: bottomButtonIcon
 
-            color: "#80FFFFFF"
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 4
+                        anchors.horizontalCenter: parent.horizontalCenter
 
-            MouseArea {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: -8
+                        width: 6
+                        height: 6
 
-                width: 16
-                height: 15
+                        source: "qrc:/icons/components/table_header_switch_item_from_bottom_icon.svg"
+
+                        color: pressed ? "#2F80ED"
+                                       : "#80FFFFFF"
+
+                        onClicked: {
+                            bottomButton.clicked()
+                        }
+                    }
+                }
+
+                background: Item {}
 
                 onClicked: {
                     if(control.currentIndex > 0) {

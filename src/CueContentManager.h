@@ -61,6 +61,7 @@ private:
     void updateCueContentBetween(CalculatorOperator::Type calculatorOperator, quint64 value);
     void updateCueContentAction(CalculatorOperator::Type calculatorOperator, int value);
 
+
 private:
     DeviceManager& m_deviceManager;
     CueContentSortingModel * m_cueContentSorted = nullptr;

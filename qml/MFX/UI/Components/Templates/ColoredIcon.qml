@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.0
 
-Control {
+Button {
     id: _coloredIcon
 
     property string source: ""
@@ -19,9 +19,7 @@ Control {
         }
     }
 
-    background: Item { }
-
-    contentItem: Item {
+    background: Item {
         Image {
             id: _icon
 
@@ -53,24 +51,7 @@ Control {
             color: enabled ? _coloredIcon.color : "transparent"
             opacity: color.a
         }
-
-        MouseArea {
-            anchors.fill: parent
-
-            propagateComposedEvents: true
-            preventStealing: false
-
-            onClicked: (mouse) => {
-                           mouse.accepted = false
-                       }
-
-            onPressAndHold: (mouse) => {
-                                mouse.accepted = false
-                            }
-
-            onDoubleClicked: (mouse) => {
-                                 mouse.accepted = false
-                             }
-        }
     }
+
+    contentItem: Item { }
 }

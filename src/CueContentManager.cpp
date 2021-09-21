@@ -12,6 +12,7 @@ CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* pare
 {
     m_cueContentItems = new QQmlObjectListModel<CueContent>(this);
     m_cueContentSorted = new CueContentSortingModel(*m_cueContentItems, this);
+
     initConnections();
 }
 
@@ -151,14 +152,11 @@ void CueContentManager::refrestCueContentModel()
     for (auto* action : m_currentCue->actions()->toList()) {
         auto* cueContent = new CueContent(this);
 
+        cueContent->setId(m_currentCue->actions()->count() + 1);
         cueContent->setDelay(10);
         cueContent->setBetween(10);
         cueContent->setTime(10);
         cueContent->setPrefire(10);
-        cueContent->setDelay(0);
-        cueContent->setBetween(0);
-        cueContent->setTime(0);
-        cueContent->setPrefire(0);
 
         if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
             cueContent->setDevice(device->id());

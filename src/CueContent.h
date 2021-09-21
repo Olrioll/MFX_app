@@ -11,6 +11,7 @@ class CueContent : public QObject
 {
     Q_OBJECT
 
+    QSM_READONLY_VAR_PROPERTY(uint, id, Id)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, delay, Delay, 0) //Задержка от начала Cue до конкретной Operation (В терминологии домена Action). Редактируется.
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, between, Between, 0) //Задержка от начала Cue до конретной Operation за вычетом Delay предыдущей точки. Редактируется.
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(int, rfChannel, RfChannel, 0) //RfChannel для конкретного устройства. Не редактируется.
