@@ -292,32 +292,62 @@ FocusScope
                                     property string value: "0"
                                     property string unitMultiplierType: ""
 
-                                    Rectangle {
+                                    RowLayout {
                                         anchors.fill: parent
 
-                                        radius: 2
+                                        spacing: 8
 
-                                        color: "#222222"
+                                        Item {
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+
+                                            MFXUICB.TextFieldWithBackground {
+                                                anchors.fill: parent
+
+                                                color: "#FFFFFF"
+                                                activeStateOnFocus: true
+                                                backgroundColor: "#222222"
+                                                borderWidth: 2
+
+                                                text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value
+                                            }
+                                        }
+
+                                        Item {
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+
+                                            MFXUICB.TextFieldWithBackground {
+                                                anchors.fill: parent
+
+                                                color: "#FFFFFF"
+                                                activeStateOnFocus: true
+                                                backgroundColor: "#222222"
+                                                borderWidth: 2
+
+                                                text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value
+                                            }
+
+                                        }
+
+                                        Item {
+                                            Layout.fillWidth: true
+                                            Layout.fillHeight: true
+
+                                            MFXUICB.TextFieldWithBackground {
+                                                anchors.fill: parent
+
+                                                color: "#FFFFFF"
+                                                activeStateOnFocus: true
+                                                backgroundColor: "#222222"
+                                                borderWidth: 2
+
+                                                text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value
+                                            }
+                                        }
                                     }
 
-                                    Text {
-                                        anchors.fill: parent
-                                        anchors.leftMargin: 4
-                                        anchors.rightMargin: 4
 
-                                        font.family: MFXUIS.Fonts.robotoMedium.objectName
-                                        font.pixelSize: 12
-
-                                        lineHeightMode: Text.FixedHeight
-                                        lineHeight: 14
-
-                                        horizontalAlignment: Qt.AlignRight
-                                        verticalAlignment: Qt.AlignVCenter
-
-                                        color: "#FFFFFF"
-
-                                        text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value + " " + calculatorTextInputItem.unitMultiplierType
-                                    }
                                 }
 
                                 MFXUICT.LayoutSpacer {

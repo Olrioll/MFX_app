@@ -4,7 +4,7 @@ import QtQuick.Controls 2.15
 import MFX.UI.Styles 1.0 as MFXUIS
 
 FocusScope {
-    id: _textfield
+    id: _textField
 
     property alias text: _text.text
     property int textSize: 8
@@ -17,6 +17,12 @@ FocusScope {
 
     property bool errorState: false
     property color errorStateColor: "#EB5757"
+
+    property bool activeStateOnFocus: false
+    property bool activeState: false
+    property color activeStateColor: "#2F80ED"
+
+    property int borderWidth: 1
 
     property alias inputMask: _text.inputMask
     property alias acceptableInput: _text.acceptableInput
@@ -46,10 +52,12 @@ FocusScope {
 
         radius: 2
 
-        color: _textfield.backgroundColor
+        color: _textField.backgroundColor
 
-        border.width: errorState ? 1 : 0
-        border.color: _textfield.errorStateColor
+        border.width: (_textField.errorState || (_textField.activeStateOnFocus && _textField.activeState)) ? _textField.borderWidth : 0
+        border.color: _textField.errorState ? _textField.errorStateColor
+                                            : (_textField.activeStateOnFocus && _textField.activeState) ? _textField.activeStateColor
+                                                                                                        : "transparent"
     }
 
     Text {
@@ -65,9 +73,9 @@ FocusScope {
         verticalAlignment: Text.AlignVCenter
 
         font.family: MFXUIS.Fonts.robotoRegular.name
-        font.pixelSize: _textfield.textSize
+        font.pixelSize: _textField.textSize
 
-        color: _textfield.placeholderColor
+        color: _textField.placeholderColor
 
         visible: _text.text.length === 0
     }
@@ -86,16 +94,22 @@ FocusScope {
         wrapMode: TextInput.NoWrap
         selectionColor: "#444444"
 
+        onActiveFocusChanged: {
+            if(_textField.activeStateOnFocus) {
+                _textField.activeState = activeFocus
+            }
+        }
+
         focus: true
-        color: _textfield.errorState ? _textfield.errorStateColor : _textfield.textColor
+        color: _textField.errorState ? _textField.errorStateColor : _textField.textColor
         font.family: MFXUIS.Fonts.robotoRegular.name
-        font.pixelSize: _textfield.textSize
+        font.pixelSize: _textField.textSize
 
         verticalAlignment: TextInput.AlignVCenter
         horizontalAlignment: TextInput.AlignLeft
 
-        onAccepted: () => { _textfield.accepted(); }
-        onEditingFinished: () => { _textfield.editingFinished(); }
-        onTextEdited: () => { _textfield.textEdited(); }
+        onAccepted: () => { _textField.accepted(); }
+        onEditingFinished: () => { _textField.editingFinished(); }
+        onTextEdited: () => { _textField.textEdited(); }
     }
 }

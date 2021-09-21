@@ -1042,7 +1042,7 @@ Item
                                 text: translationsManager.translationTrigger + qsTr("Layer Name")
                             }
 
-                            MFXUICT.TextField {
+                            MFXUICT.TextInputField {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
 
