@@ -959,7 +959,10 @@ Item
                                 {
                                     if(project.patchProperty(currId, "act"))
                                     {
+                                        var actionNumber = project.cueActions(newCueName).length
+                                        var actionCount = checkedIDs.length - 1
                                         project.addActionToCue(newCueName, project.patchProperty(currId, "act"), currId, newPosition)
+                                        project.onSetActionProperty(newCueName, project.patchProperty(currId, "act"), currId, "positionCoeff", actionNumber / actionCount)
                                     }
                                 })
 
