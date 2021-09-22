@@ -1,6 +1,8 @@
 #include "AudioTrackRepresentation.h"
 #include <QAudioBuffer>
 
+#include <cmath>
+
 #include <QDebug>
 
 
@@ -42,8 +44,8 @@ FrameBlock* WaveFormChannel::incrementFramePos(FramePos* pos, size_t numSamples)
 	if (pos->mBlockIdx >= m_blocks.size())
 		return nullptr;
 
-	FrameBlock* block = &m_blocks[pos->mBlockIdx];
-	assert(pos->m_sampleIdx < block->m_len && "invalid position");
+    FrameBlock* block = &m_blocks[pos->mBlockIdx];
+    assert(pos->mSampleIdx < block->mLen && "invalid position");
 
 	while (numSamples)
 	{
@@ -195,7 +197,7 @@ void WaveFormChannel::calculateWaveForm(const size_t startSampleIdx, qint16* min
 {
 	FramePos pos = getFramePosFromSampleIdx(startSampleIdx);
 
-	const double widthErrorPerPixel = samplesPerPixel - floor(samplesPerPixel);
+    const double widthErrorPerPixel = samplesPerPixel - std::floor(samplesPerPixel);
 	double error = 0;
 	for (size_t x = 0; x < widthInPixels; x++)
 	{
@@ -257,7 +259,10 @@ void AudioTrackRepresentation::initAudioDecoder()
 	_decoder = new QAudioDecoder(this);
 	connect(_decoder, SIGNAL(bufferReady()), this, SLOT(createBuffer()));
 	connect(_decoder, SIGNAL(bufferReady()), &_trackDownloadingTimer, SLOT(start()));
+    connect(_decoder, SIGNAL(error(QAudioDecoder::Error)), this, SLOT(decodeError()));
 	connect(_decoder, &QAudioDecoder::finished, this, &AudioTrackRepresentation::decodeFinished);
+
+
 }
 
 void AudioTrackRepresentation::deleteAudioDecoder()
@@ -269,8 +274,13 @@ void AudioTrackRepresentation::deleteAudioDecoder()
 		disconnect(_decoder, SIGNAL(bufferReady()), &_trackDownloadingTimer, SLOT(start()));
 		disconnect(_decoder, &QAudioDecoder::finished, this, &AudioTrackRepresentation::decodeFinished);
 		delete _decoder;
-		_decoder = nullptr;
-	}
+        _decoder = nullptr;
+    }
+}
+
+void AudioTrackRepresentation::decodeError()
+{
+    qWarning() << "Decoding error:" << _decoder->errorString();
 }
 
 
@@ -304,7 +314,7 @@ void AudioTrackRepresentation::loadFile(const QString& fileName)
 
 	_decoder->setSourceFilename(fileName);
 	_decoder->start();
-	//    _trackDownloadingTimer.start(1000);
+    //    _trackDownloadingTimer.start(1000);
 }
 
 

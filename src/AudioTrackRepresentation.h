@@ -7,6 +7,7 @@
 #include <QColor>
 #include <array>
 #include <execution>
+#include <cstring>
 
 
 #define FRAMES_MIN(a,b) ((a) < (b) ? (a) : (b))
@@ -23,8 +24,9 @@ struct FrameBlock
     qint16 mSamples[MAX_FRAMES]{};
 	qint16 mMaxLut[LUT_SIZE]{};
 	qint16 mMinLut[LUT_SIZE]{};
-	float mRms[LUT_SIZE]{};
-	size_t mLen = 0;
+    float mRms[LUT_SIZE]{};
+
+    size_t mLen = 0;
 
 	FrameBlock() = default;
 	FrameBlock(const FrameBlock&) = delete;
@@ -33,8 +35,8 @@ struct FrameBlock
 	FrameBlock& operator=(FrameBlock&& other) noexcept = default;
 
 	explicit FrameBlock(const size_t len)
-	{
-		std::memset(mSamples, 0, sizeof mSamples);
+    {
+        std::memset(mSamples, 0, sizeof mSamples);
 		std::memset(mMaxLut, 0, sizeof mMaxLut);
 		std::memset(mMinLut, 0, sizeof mMinLut);
 		std::memset(mRms, 0, sizeof mRms);
@@ -154,6 +156,7 @@ public slots:
 	[[nodiscard]] size_t samplesCount() const { return m_SampleSize; }
 	void decodeFinished();
 	void deleteAudioDecoder();
+    void decodeError();
 signals:
 	void bufferCreated();
 	void trackDownloaded();
