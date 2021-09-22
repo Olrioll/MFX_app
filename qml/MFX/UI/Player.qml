@@ -13,10 +13,10 @@ Item
 
     property int minHeight: 200
     property int maxHeight: 600
-    property int min
-    property int max
+    property real min
+    property real max
 
-    property int position: startPositionMarker.position
+    property real position: startPositionMarker.position
     property alias waitingText: waitingText
     property alias cueView: cueView
 
@@ -106,7 +106,8 @@ Item
 
     function pixelsToMsec(pixels)
     {
-        return Math.round(Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width) / 10) * 10
+//        return Math.round(Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width) * 10) / 10
+        return pixels * (playerWidget.max - playerWidget.min) / playerWidget.width
     }
 
     function zoom(delta)
@@ -132,8 +133,8 @@ Item
         {
             if((waveformWidget.maxSample() - waveformWidget.minSample()) / waveformWidget.width > 4) // максимальный масштаб - 4 сэмпла на пиксель
             {
-                playerWidget.min += Math.round(leftShift / 10) * 10
-                playerWidget.max -= Math.round(rightShift / 10) * 10
+                playerWidget.min += leftShift
+                playerWidget.max -= rightShift
             }
         }
 
@@ -141,8 +142,8 @@ Item
         {
             if((playerWidget.min - leftShift) >= 0 && (playerWidget.max + rightShift) <= playerWidget.projectDuration())
             {
-                playerWidget.min -= Math.round(leftShift / 10) * 10
-                playerWidget.max += Math.round(rightShift / 10) * 10
+                playerWidget.min -= leftShift
+                playerWidget.max += rightShift
             }
 
             else
@@ -202,16 +203,26 @@ Item
             {
                 if(playerWidget.max + dX <= playerWidget.projectDuration())
                 {
-                    playerWidget.max += dX
-                    playerWidget.min += dX
+                    let msecPerPx1 = (playerWidget.max - playerWidget.min) / playerWidget.width
+
+                    playerWidget.max += Math.floor(dX/msecPerPx1)*msecPerPx1
+                    playerWidget.min += Math.floor(dX/msecPerPx1)*msecPerPx1
 
                     if(resizingCenterMarker.x - Math.abs(dx) * coeff > 0)
                     {
-                        resizingCenterMarker.x -= Math.abs(dx) * coeff
+//                        resizingCenterMarker.x -= Math.abs(dx) * coeff
+                        let max1 = playerWidget.max
+                        let min1 = playerWidget.min
+                        let msecPerPx = (max1 - min1) / playerWidget.width
+                        resizingCenterMarker.x = Math.round((resizingCenterMarker.oldXposition - min1)/msecPerPx)
                     }
 
                     else
                     {
+                        let max1 = playerWidget.max
+                        let min1 = playerWidget.min
+                        let msecPerPx = (max1 - min1) / playerWidget.width
+                        resizingCenterMarker.oldXposition = (1 * msecPerPx) + min;
                         resizingCenterMarker.x = 1
                     }
                 }
@@ -221,25 +232,46 @@ Item
             {
                 if(playerWidget.min - dX >= 0)
                 {
-                    playerWidget.max -= dX
-                    playerWidget.min -= dX
+                    let msecPerPx1 = (playerWidget.max - playerWidget.min) / playerWidget.width
+                    playerWidget.max -= Math.floor(dX/msecPerPx1)*msecPerPx1
+                    playerWidget.min -= Math.floor(dX/msecPerPx1)*msecPerPx1
 
                     if(resizingCenterMarker.x + Math.abs(dx) * coeff < width - 9)
                     {
-                        resizingCenterMarker.x += Math.abs(dx) * coeff
+//                        resizingCenterMarker.x += Math.abs(dx) * coeff
+                        let max1 = playerWidget.max
+                        let min1 = playerWidget.min
+                        let msecPerPx = (max1 - min1) / playerWidget.width
+                        resizingCenterMarker.x = Math.round((resizingCenterMarker.oldXposition - min1)/msecPerPx)
                     }
 
                     else
                     {
-                        resizingCenterMarker.x = width - 12
+                        let max1 = playerWidget.max
+                        let min1 = playerWidget.min
+                        let msecPerPx = (max1 - min1) / playerWidget.width
+                        resizingCenterMarker.oldXposition = ((width - 1) * msecPerPx) + min;
+                        resizingCenterMarker.x = Math.round(width - 1)
                     }
                 }
             }
         }
 
-        else // Работаем с зумом
+        else if(Math.abs(dy)>1) // Работаем с зумом
         {
+
+            let max1 = playerWidget.max
+            let min1 = playerWidget.min
+            let msecPerPx = (max1 - min1) / playerWidget.width
+            resizingCenterMarker.x = (resizingCenterMarker.oldXposition - min1)/msecPerPx
+
             playerWidget.zoom(dy)
+
+            max1 = playerWidget.max
+            min1 = playerWidget.min
+            msecPerPx = (max1 - min1) / playerWidget.width
+            resizingCenterMarker.x = Math.round((resizingCenterMarker.oldXposition - min1)/msecPerPx)
+            let old = (resizingCenterMarker.x * msecPerPx) + min;
         }
     }
 
@@ -406,8 +438,38 @@ Item
 
                 var stepMsec = 0 // шаг делений в мсек
 
+                if(msecPerPx >= 100000)
+                {
+                    let r = Math.round(msecPerPx * 0.00001);
+                    if(r % 2 == 0)
+                    stepMsec =  r * 2000000
+                    else stepMsec = r>2?(r-1)*2000000 : 2000000
+                }
+                else if(msecPerPx >= 10000)
+                {
+                    let r = Math.round(msecPerPx * 0.0001)
+                    if(r % 2 == 0)
+                    stepMsec = r * 200000
+                    else stepMsec = r>2?(r-1)*200000 : 200000
+                }
+                else if(msecPerPx >= 1000)
+                {
+                    let r = Math.round(msecPerPx * 0.001)
+                    if(r % 2 == 0)
+                    stepMsec = r * 20000
+                    else stepMsec = r>2?(r-1)*20000 : 20000
+
+                }
+                else if(msecPerPx >= 100)
+                {
+                    let r = Math.round(msecPerPx * 0.01)
+
+                    if(r % 2 == 0)
+                    stepMsec = r * 2000;
+                    else stepMsec = r>2?(r-1)*2000 : 2000
+                }
  // малое деление будет равно 1 сек
-                if(msecPerPx >= 50)
+                else if(msecPerPx >= 50)
                 {
                     stepMsec = 1000
                 }
@@ -525,6 +587,7 @@ Item
                 anchors.top: parent.bottom
                 height: waveformWidget.height
                 visible: false
+                property real oldXposition
             }
 
             onEntered:
@@ -551,6 +614,10 @@ Item
                 mainScreen.sceneWidget.enabled = false
                 cursorImageForTimeScale.visible = false
                 resizingCenterMarker.x = mouseX
+                let max1 = playerWidget.max
+                let min1 = playerWidget.min
+                let msecPerPx = (max1 - min1) / playerWidget.width
+                resizingCenterMarker.oldXposition = (mouseX * msecPerPx) + min;
                 resizingCenterMarker.visible = true
             }
 
@@ -604,23 +671,26 @@ Item
         {
             if(playerWidget.min >= project.property("prePlayInterval"))
             {
-                waveformWidget.setMin(playerWidget.min - project.property("prePlayInterval"))
+                if(playerWidget.max <= project.property("prePlayInterval") + waveformWidget.duration())
+                {
+                    waveformWidget.setMinMax(playerWidget.min - project.property("prePlayInterval"),
+                                             playerWidget.max - project.property("prePlayInterval"))
+                }else{
+                    waveformWidget.setMinMax(playerWidget.min - project.property("prePlayInterval"),
+                                             waveformWidget.duration())
+                }
             }
-
             else
             {
                 waveformWidget.setMin(0)
+                if(playerWidget.max <= project.property("prePlayInterval") + waveformWidget.duration())
+                {
+                    waveformWidget.setMinMax(0,playerWidget.max - project.property("prePlayInterval"))
+                }else{
+                    waveformWidget.setMinMax(0,waveformWidget.duration())
+                }
             }
 
-            if(playerWidget.max <= project.property("prePlayInterval") + waveformWidget.duration())
-            {
-                waveformWidget.setMax(playerWidget.max - project.property("prePlayInterval"))
-            }
-
-            else
-            {
-                waveformWidget.setMax(waveformWidget.duration())
-            }
         }
 
         Connections
@@ -651,6 +721,8 @@ Item
             }
         }
     }
+
+
 
     Rectangle
     {
@@ -1925,7 +1997,7 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        property int position: 0
+        property real position: 0
 
         function updateVisiblePosition()
         {
@@ -2010,7 +2082,7 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        property int position: 0
+        property real position: 0
 
         function updateVisiblePosition()
         {
@@ -2300,7 +2372,7 @@ Item
         height: mainBackground.height + 12
         anchors.top: mainBackground.top
 
-        property int position: playerWidget.position
+        property real position: playerWidget.position
 
         function updateVisiblePosition()
         {
@@ -2743,6 +2815,21 @@ Item
         text: translationsManager.translationTrigger + qsTr("Mono")
 
         ButtonGroup.group: modeButtons
+    }
+
+    Connections
+    {
+        target: waveformWidget;
+        function onChannelAudioChanged(isStereoTrack){
+            if(isStereoTrack){
+                stereoModeButton.enabled = true;
+            }else
+            {
+                monoModeButton.checked = true;
+                stereoModeButton.checked = false;
+                stereoModeButton.enabled = false;
+            }
+        }
     }
 
     Rectangle
@@ -3450,7 +3537,7 @@ Item
         target: waveformWidget
         function onTrackDownloaded()
         {
-            scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+            // scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
             waitingText.visible = false
             showPlayerElements()
 

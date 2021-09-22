@@ -20,6 +20,8 @@
 #include "TranslationManager.h"
 #include "CueContentManager.h"
 #include "CueContentSortingModel.h"
+#include <QSurfaceFormat>
+#include <QQuickWindow>
 
 int main(int argc, char** argv)
 {
@@ -56,6 +58,13 @@ int main(int argc, char** argv)
     }
 
     qmlRegisterType<WaveformWidget>("WaveformWidget", 1, 0, "WaveformWidget");
+
+#ifdef USEOPENGL
+QQuickWindow::setSceneGraphBackend(QSGRendererInterface::OpenGL);
+QSurfaceFormat format/*(QSurfaceFormat::defaultFormat())*/;
+format.setSamples(16);
+QSurfaceFormat::setDefaultFormat(format);
+#endif
 
     CueSortingModel::qmlRegister();
     PatternManager::qmlRegister();
