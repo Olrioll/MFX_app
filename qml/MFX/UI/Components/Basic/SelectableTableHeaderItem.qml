@@ -13,6 +13,7 @@ Item {
     property alias currentIndex: valueStack.currentIndex
     property alias model: contentRepeater.model
     property var value
+    property bool switchable: true
 
     signal selectRequest()
     signal sortRequest(var sortingOrder)
@@ -83,7 +84,7 @@ Item {
 
         width: 16
 
-        visible: control.model.count > 1
+        visible: control.switchable && (control.model.count > 1)
 
         MouseArea {
             anchors.fill: parent

@@ -35,6 +35,7 @@ class CueContentManager : public QObject {
 public:
     explicit CueContentManager(DeviceManager& deviceManager, QObject* parent = nullptr);
 
+    //Вызовы из интерфейса
     Q_INVOKABLE void onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit);
 
     Q_INVOKABLE void onTimingTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
@@ -42,11 +43,18 @@ public:
     Q_INVOKABLE void onActionTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDurationTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
 
+    Q_INVOKABLE void onSelectItemRequest(const uint id);
+    Q_INVOKABLE void onDeselectItemRequest(const uint id);
     Q_INVOKABLE void onSelectAllItemsRequest();
     Q_INVOKABLE void onSelectEvenItemsRequest();
     Q_INVOKABLE void onSelectUnevenItemsRequest();
     Q_INVOKABLE void onSelectLeftItemsRequest();
     Q_INVOKABLE void onSelectRightItemsRequest();
+    Q_INVOKABLE void cleanSelectionRequest();
+    Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
+    Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, Qt::SortOrder sortOrder);
+
+    CueContent * cueContentById(uint id) const;
 
     void setActive(const QString &cueName, int deviceId, bool active);
     CueManager *m_cueManager;

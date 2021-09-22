@@ -66,6 +66,24 @@ void CueContentManager::onDurationTypeSelectedTableRoleChangeRequest(const CueCo
     setDurationTypeSelectedTableRole(role);
 }
 
+void CueContentManager::onSelectItemRequest(const uint id)
+{
+    if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
+        cueContent->setSelected(true);
+    } else {
+        qWarning() << "Item with requested id" << id << "doesn not exist";
+    }
+}
+
+void CueContentManager::onDeselectItemRequest(const uint id)
+{
+    if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
+        cueContent->setSelected(false);
+    } else {
+        qWarning() << "Item with requested id" << id << "doesn not exist";
+    }
+}
+
 void CueContentManager::onSelectAllItemsRequest()
 {
     for(auto * cueContentItem : m_cueContentItems->toList()) {
@@ -107,6 +125,32 @@ void CueContentManager::onSelectRightItemsRequest()
 
         cueContentItem->setSelected(index >= qCeil(m_cueContentItems->count() / 2));
     }
+}
+
+void CueContentManager::cleanSelectionRequest()
+{
+    qInfo() << "Clean Selection request";
+}
+
+void CueContentManager::onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type &role)
+{
+    qInfo() << "Select all from header request";
+}
+
+void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, Qt::SortOrder sortOrder)
+{
+    qInfo() << "Sort by" << role << "requested in" << sortOrder << "order";
+}
+
+CueContent *CueContentManager::cueContentById(uint id) const
+{
+    for(auto * cueContent : m_cueContentItems->toList()) {
+        if(cueContent->id() == id) {
+            return cueContent;
+        }
+    }
+
+    return nullptr;
 }
 
 void CueContentManager::setActive(const QString& cueName, int deviceId, bool active)

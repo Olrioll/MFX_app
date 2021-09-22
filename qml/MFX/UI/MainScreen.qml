@@ -836,7 +836,7 @@ FocusScope
                                         anchors.fill: parent
                                         checkable: false
 
-                                        text: translationsManager.translationTrigger + qsTr("Left")
+                                        text: translationsManager.translationTrigger + qsTr("First")
 
                                         onClicked: {
                                             cueContentManager.onSelectLeftItemsRequest();
@@ -916,7 +916,7 @@ FocusScope
 
                                         checkable: false
 
-                                        text: translationsManager.translationTrigger + qsTr("Right")
+                                        text: translationsManager.translationTrigger + qsTr("Last")
 
                                         onClicked: {
                                             cueContentManager.onSelectRightItemsRequest();
@@ -924,6 +924,10 @@ FocusScope
                                     }
                                 }
                             }
+                        }
+
+                        Keys.onEscapePressed: {
+                            cueContentManager.cleanSelectionRequest()
                         }
 
                         ListView {
@@ -958,7 +962,7 @@ FocusScope
                             spacing: 1
                             orientation: Qt.Vertical
 
-                            header: Item {
+                            header: FocusScope {
                                 id: headerItem
 
                                 anchors.left: parent.left
@@ -966,6 +970,10 @@ FocusScope
                                 height: 30
 
                                 z: 2
+
+                                Keys.onEscapePressed: {
+                                    cueContentManager.cleanSelectionRequest()
+                                }
 
                                 Rectangle {
                                     anchors.fill: parent
@@ -992,6 +1000,15 @@ FocusScope
 
                                         model: ListModel {
                                             ListElement { value: 0; text: qsTr("№") }
+                                        }
+
+                                        switchable: false
+
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onDoubleClicked: {
+                                                cueContentManager.cleanSelectionRequest()
+                                            }
                                         }
                                     }
 
@@ -1157,11 +1174,33 @@ FocusScope
                                         }
                                     }
                                 }
+
+                                MouseArea {
+                                    anchors.fill: parent
+
+                                    propagateComposedEvents: true
+                                    preventStealing: false
+
+                                    onClicked: {
+                                        mouse.accepted = false;
+                                        if(!headerItem.activeFocus) {
+                                            headerItem.forceActiveFocus()
+                                        }
+                                    }
+
+                                    onPressed: {
+                                        mouse.accepted = false;
+                                    }
+
+                                    onReleased: {
+                                        mouse.accepted = false;
+                                    }
+                                }
                             }
 
                             model: cueContentManager.cueContentSorted
 
-                            delegate: Item {
+                            delegate: FocusScope {
                                 id: cueContentListViewDelegate
 
                                 property int rowIndex: model.index
@@ -1188,6 +1227,10 @@ FocusScope
 
                                 property color textColor: "#FFFFFF"
                                 property color backgroundColor: "transparent"
+
+                                Keys.onEscapePressed: {
+                                    cueContentManager.cleanSelectionRequest()
+                                }
 
                                 QtObject {
                                     id: cueContentListViewDelegatePrivateProperties
@@ -1413,6 +1456,17 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+
+                                    propagateComposedEvents: true
+                                    preventStealing: false
+
+                                    onClicked: {
+                                        cueContentListViewDelegate.forceActiveFocus()
                                     }
                                 }
                             }
