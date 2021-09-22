@@ -148,17 +148,23 @@ void CueContentManager::refrestCueContentModel()
         return;
     }
 
-    for (auto* action : m_currentCue->actions()->toList()) {
+    quint64 prevStop = m_currentCue->startTime();
+    auto listActions = m_currentCue->actions()->toList();
+    qSort(listActions.begin(), listActions.end(), [](Action* a1, Action *a2) {
+        return a1->startTime() < a2->startTime();
+    });
+    for (auto* action : listActions) {
         auto* cueContent = new CueContent(this);
-
-        cueContent->setDelay(10);
-        cueContent->setBetween(10);
-        cueContent->setTime(10);
-        cueContent->setPrefire(10);
-        cueContent->setDelay(0);
-        cueContent->setBetween(0);
-        cueContent->setTime(0);
-        cueContent->setPrefire(0);
+        cueContent->setDelay(action->startTime() - m_currentCue->startTime());
+        qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
+        cueContent->setBetween(action->startTime() - prevStop);
+        auto pattern = m_deviceManager.m_patternManager->patternByName(action->patternName());
+        prevStop = action->startTime() + pattern->duration();
+        qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
+        cueContent->setTime(action->startTime() + pattern->prefireDuration());
+        qDebug() << tr("CueContentManager::refreshCueContentModel, time = %1").arg(cueContent->time());
+        cueContent->setPrefire(pattern->prefireDuration());
+        qDebug() << tr("CueContentManager::refreshCueContentModel, prefire = %1").arg(cueContent->prefire());
 
         if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
             cueContent->setDevice(device->id());
