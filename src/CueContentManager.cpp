@@ -12,6 +12,7 @@ CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* pare
 {
     m_cueContentItems = new QQmlObjectListModel<CueContent>(this);
     m_cueContentSorted = new CueContentSortingModel(*m_cueContentItems, this);
+
     initConnections();
 }
 
@@ -65,6 +66,24 @@ void CueContentManager::onDurationTypeSelectedTableRoleChangeRequest(const CueCo
     setDurationTypeSelectedTableRole(role);
 }
 
+void CueContentManager::onSelectItemRequest(const uint id)
+{
+    if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
+        cueContent->setSelected(true);
+    } else {
+        qWarning() << "Item with requested id" << id << "doesn not exist";
+    }
+}
+
+void CueContentManager::onDeselectItemRequest(const uint id)
+{
+    if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
+        cueContent->setSelected(false);
+    } else {
+        qWarning() << "Item with requested id" << id << "doesn not exist";
+    }
+}
+
 void CueContentManager::onSelectAllItemsRequest()
 {
     for(auto * cueContentItem : m_cueContentItems->toList()) {
@@ -106,6 +125,32 @@ void CueContentManager::onSelectRightItemsRequest()
 
         cueContentItem->setSelected(index >= qCeil(m_cueContentItems->count() / 2));
     }
+}
+
+void CueContentManager::cleanSelectionRequest()
+{
+    qInfo() << "Clean Selection request";
+}
+
+void CueContentManager::onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type &role)
+{
+    qInfo() << "Select all from header request";
+}
+
+void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, Qt::SortOrder sortOrder)
+{
+    qInfo() << "Sort by" << role << "requested in" << sortOrder << "order";
+}
+
+CueContent *CueContentManager::cueContentById(uint id) const
+{
+    for(auto * cueContent : m_cueContentItems->toList()) {
+        if(cueContent->id() == id) {
+            return cueContent;
+        }
+    }
+
+    return nullptr;
 }
 
 void CueContentManager::setActive(const QString& cueName, int deviceId, bool active)
@@ -157,6 +202,7 @@ void CueContentManager::refrestCueContentModel()
         auto* cueContent = new CueContent(this);
         cueContent->setDelay(action->startTime() - m_currentCue->startTime());
         qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
+        cueContent->setId(m_currentCue->actions()->count() + 1);
         cueContent->setBetween(action->startTime() - prevStop);
         auto pattern = m_deviceManager.m_patternManager->patternByName(action->patternName());
         prevStop = action->startTime() + pattern->duration();

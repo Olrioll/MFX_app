@@ -129,7 +129,7 @@ QSGNode* WaveformWidget::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* 
 
     double framesPerPixel = static_cast<double>(m_max - m_min) / paintWidth;
 
-    if (paintWidth < 4 || isnan(paintWidth) || paintWidth > 5000 || framesPerPixel < 1.0)
+    if (paintWidth < 4 || std::isnan(paintWidth) || paintWidth > 5000 || framesPerPixel < 1.0)
         return oldNode;
 
     auto geometry = dynamic_cast<QSGGeometryNode*>(oldNode->childAtIndex(0))->geometry();

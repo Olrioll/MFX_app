@@ -39,13 +39,24 @@ void CueManager::initConnections()
             }
         }
     });
+
+    connect(m_cues, &QQmlObjectListModelBase::rowsAboutToBeRemoved, [=](const QModelIndex &parent, int first, int last){
+        for(int index = first; index <= last; index++) {
+            auto * cue = m_cues->at(index);
+            if((cue != nullptr) && cue->expanded()) {
+                cue->setExpanded(false);
+                m_cueContentManager.setCurrentCue(nullptr);
+            }
+        }
+    });
 }
 
 void CueManager::deleteCues(QStringList deletedCueNames)
 {
-    for(auto &name: deletedCueNames) {
-        Cue *cue = cueByName(name);
-        if(cue == NULL) {
+    for(const auto &name: deletedCueNames) {
+        auto * cue = cueByName(name);
+        if(cue == nullptr) {
+            qWarning() << "Cue with name" << name << "was not found";
             continue;
         }
         m_cues->remove(cue);
@@ -54,7 +65,7 @@ void CueManager::deleteCues(QStringList deletedCueNames)
 
 Cue* CueManager::cueByName(const QString &name) const
 {
-    for (auto* cue : m_cues->toList()) {
+    for (auto * cue : m_cues->toList()) {
         if (cue->name().compare(name) == 0) {
             return cue;
         }
