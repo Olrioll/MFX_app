@@ -14,6 +14,7 @@ MFXUIT.TextFieldWithBackground {
 
     property color backgroundColor: "#000000"
     property int borderWidth: 1
+    property color borderColor: "#000000"
 
     property bool errorState: false
     property color errorStateColor: "#EB5757"
@@ -32,10 +33,10 @@ MFXUIT.TextFieldWithBackground {
 
         color: _textField.backgroundColor
 
-        border.width: (_textField.errorState || (_textField.activeStateOnFocus && _textField.activeState)) ? _textField.borderWidth : 0
+        border.width: _textField.borderWidth
         border.color: _textField.errorState ? _textField.errorStateColor
                                             : (_textField.activeStateOnFocus && _textField.activeState) ? _textField.activeStateColor
-                                                                                                        : "transparent"
+                                                                                                        : _textField.borderColor
     }
 
     onFocusChanged: {

@@ -8,8 +8,8 @@ Button {
     property string source: ""
     property color color: "transparent"
 
-    implicitWidth: _icon.paintedWidth
-    implicitHeight: _icon.paintedHeight
+    implicitWidth: _icon.width
+    implicitHeight: _icon.width
 
     QtObject {
         id: _privateProperies
@@ -20,6 +20,8 @@ Button {
     }
 
     background: Item {
+        anchors.fill: parent
+
         Image {
             id: _icon
 

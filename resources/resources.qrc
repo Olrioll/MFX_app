@@ -97,5 +97,6 @@
         <file>icons/project_screen/new_project_popup_selected_soundclip_icon.svg</file>
         <file>icons/preferences/preferences_list_selected_row_indicator_icon.svg</file>
         <file>images/fire_particle.png</file>
+        <file>icons/main_screen/main_screen_calculator_clear_icon.svg</file>
     </qresource>
 </RCC>
