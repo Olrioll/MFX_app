@@ -70,6 +70,8 @@ find_package(Qt5 ${QT_VERSION} COMPONENTS
     EXACT REQUIRED
 )
 
+add_subdirectory(quazip-1.1)
+
 file(GLOB_RECURSE CPP_SOURCES
     ${CMAKE_SOURCE_DIR}/src/*.h}
     ${CMAKE_SOURCE_DIR}/src/*.hpp}
@@ -148,6 +150,7 @@ target_link_libraries(${MFX_PROJECT_NAME}
     Qt5::Network
     Qt5::NetworkAuth
     QSuperMacros
+//    QuaZip::QuaZip
 )
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32

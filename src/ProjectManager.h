@@ -6,6 +6,7 @@
 
 #include <QSuperMacros.h>
 #include <QQmlConstRefPropertyHelpers.h>
+//#include <quazipfile.h>
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
