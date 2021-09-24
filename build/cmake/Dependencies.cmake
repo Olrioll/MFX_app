@@ -1,2 +1,6 @@
 set(QSUPERMACROS_REPOSITORY "https://github.com/OlivierLDff/QSuperMacros.git" CACHE STRING "QSuperMacros repository")
 set(QSUPERMACROS_TAG "89f02b5b2cceedc4d9a88519fa883cd8b93477f6" CACHE STRING "Git Tag of QSuperMacros")
+set(ZLIB_REPOSITORY "https://github.com/madler/zlib.git" CACHE STRING "ZLib repository")
+set(ZLIB_TAG "cacf7f1d4e3d44d871b605da3b647f07d718623f" CACHE STRING "Git Tag of ZLib")
+set(QUAZIP_REPOSITORY "https://github.com/stachenov/quazip.git" CACHE STRING "QuaZip repository")
+set(QUAZIP_TAG "100578f686b7da029a19c0bc9ad3c93f80adb2bb" CACHE STRING "Git Tag of QuaZip")

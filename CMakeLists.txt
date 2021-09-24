@@ -45,6 +45,8 @@ set(UPDATE_TRANSLATIONS OFF CACHE BOOL "Если ON, то просканируе
 
 include(build/cmake/Dependencies.cmake)
 include(build/cmake/FetchQSuperMacros.cmake)
+include(build/cmake/FetchZLib.cmake)
+#include(build/cmake/FetchQuaZip.cmake)
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Сборка                                     │
@@ -150,7 +152,8 @@ target_link_libraries(${MFX_PROJECT_NAME}
     Qt5::Network
     Qt5::NetworkAuth
     QSuperMacros
-#    QuaZip::QuaZip
+    #ZLIB::ZLIB
+    #QuaZip::QuaZip
 )
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32
