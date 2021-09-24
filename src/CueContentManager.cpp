@@ -155,6 +155,12 @@ void CueContentManager::onSelectRightItemsRequest()
 void CueContentManager::cleanSelectionRequest()
 {
     qInfo() << "Clean Selection request";
+
+    setSelectedTableRole(CueContentSelectedTableRole::Unknown);
+
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        cueContentItem->setSelected(false);
+    }
 }
 
 void CueContentManager::onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type &role)
