@@ -338,6 +338,8 @@ FocusScope
                                                     borderWidth: 2
 
                                                     text: calculatorTextInputItem.value
+                                                    inputMask: "00"
+                                                    validator: IntValidator { bottom: 0; top: 60 }
 
                                                     onActiveStateChanged: {
                                                         if(activeState) {
@@ -388,6 +390,8 @@ FocusScope
                                                     borderWidth: 2
 
                                                     text: calculatorTextInputItem.value
+                                                    inputMask: "00"
+                                                    validator: IntValidator { bottom: 0; top: 60 }
 
                                                     onActiveStateChanged: {
                                                         if(activeState) {
@@ -439,6 +443,7 @@ FocusScope
 
                                                     text: calculatorTextInputItem.value
                                                     inputMask: "00"
+                                                    validator: IntValidator { bottom: 0; top: 60 }
 
                                                     onActiveStateChanged: {
                                                         if(activeState) {
@@ -522,12 +527,9 @@ FocusScope
                                                         }
                                                     }
                                                 }
-
                                             }
                                         }
                                     }
-
-
                                 }
 
                                 MFXUICT.LayoutSpacer {
@@ -1132,6 +1134,10 @@ FocusScope
                                             }
                                         }
 
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(timingTypeHeaderItem.value)
+                                        }
+
                                         onSortRequest: {
                                             cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value)
                                         }
@@ -1174,6 +1180,10 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onDeviceTypeSelectedTableRoleChangeRequest(deviceTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(deviceTypeHeaderItem.value)
                                         }
 
                                         onSortRequest: {
@@ -1221,6 +1231,10 @@ FocusScope
                                             }
                                         }
 
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(actionTypeHeaderItem.value)
+                                        }
+
                                         onSortRequest: {
                                             cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value)
                                         }
@@ -1264,6 +1278,10 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onDurationTypeSelectedTableRoleChangeRequest(durationTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(durationTypeHeaderItem.value)
                                         }
 
                                         onSortRequest: {

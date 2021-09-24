@@ -160,6 +160,14 @@ void CueContentManager::cleanSelectionRequest()
 void CueContentManager::onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type &role)
 {
     qInfo() << "Select all from header request";
+
+    //Шаги
+    //1. Устанавливаем текущую роль для всей таблицы
+    //3. Очищаем выделение всех ячеек (это интерфейсная часть)
+    //2. По роли пробегаемся по всем выбранным элементам и выделяем их в соответствии с выбранной ролью
+    //3. Если ни одна роль не была выделена хелпером, то автоматически выбираем всё
+
+    setSelectedTableRole(role);
 }
 
 void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role)
