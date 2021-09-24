@@ -925,9 +925,15 @@ FocusScope
                                         id: leftButton
 
                                         anchors.fill: parent
+
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("First")
+
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
 
                                         onClicked: {
                                             cueContentManager.onSelectLeftItemsRequest();
@@ -949,6 +955,11 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Uneven")
 
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
+
                                         onClicked: {
                                             cueContentManager.onSelectUnevenItemsRequest();
                                         }
@@ -968,6 +979,11 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("All")
+
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
 
                                         onClicked: {
                                             cueContentManager.onSelectAllItemsRequest();
@@ -989,6 +1005,11 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Even")
 
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
+
                                         onClicked: {
                                             cueContentManager.onSelectEvenItemsRequest();
                                         }
@@ -1008,6 +1029,11 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Last")
+
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
 
                                         onClicked: {
                                             cueContentManager.onSelectRightItemsRequest();
