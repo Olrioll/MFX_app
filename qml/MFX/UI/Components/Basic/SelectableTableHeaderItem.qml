@@ -60,14 +60,38 @@ Item {
                 text: model ? model.text : ""
 
                 MouseArea {
+                    id: headerTextMouseArea
+
                     anchors.fill: parent
 
-                    onClicked: {
+                    //TODO лучше сделать QQuickItem, чтобы единичный клик срабатывал без задержки
+                    Timer {
+                        id: singleClickTimer
+
+                        running: false
+                        repeat: false
+                        interval: 500 //https://en.wikipedia.org/wiki/Double-click
+
+                        onTriggered: {
+                            headerTextMouseArea.onSingleClick()
+                        }
+                    }
+
+                    function onSingleClick() {
                         control.selectRequest()
                     }
 
-                    onDoubleClicked: {
+                    function onDoubleClick() {
                         control.sortRequest()
+                    }
+
+                    onClicked: {
+                        if(singleClickTimer.running) {
+                            singleClickTimer.stop()
+                            headerTextMouseArea.onDoubleClick()
+                        } else {
+                            singleClickTimer.restart()
+                        }
                     }
                 }
             }
