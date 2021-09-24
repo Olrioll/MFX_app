@@ -161,13 +161,22 @@ void CueContentManager::onSelectAllFromHeaderRequest(const CueContentSelectedTab
 {
     qInfo() << "Select all from header request";
 
-    //Шаги
-    //1. Устанавливаем текущую роль для всей таблицы
-    //3. Очищаем выделение всех ячеек (это интерфейсная часть)
-    //2. По роли пробегаемся по всем выбранным элементам и выделяем их в соответствии с выбранной ролью
-    //3. Если ни одна роль не была выделена хелпером, то автоматически выбираем всё
+    setSelectedTableRole(role);
+
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        cueContentItem->setSelected(true);
+    }
+}
+
+void CueContentManager::onDeselectAllFromHeaderRequest(const CueContentSelectedTableRole::Type &role)
+{
+    qInfo() << "Deselect all from header request";
 
     setSelectedTableRole(role);
+
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        cueContentItem->setSelected(false);
+    }
 }
 
 void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role)
@@ -180,9 +189,9 @@ void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRol
 
 CueContent *CueContentManager::cueContentById(const QUuid& id) const
 {
-    for(auto * cueContent : m_cueContentItems->toList()) {
-        if(cueContent->uuid() == id) {
-            return cueContent;
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        if(cueContentItem->uuid() == id) {
+            return cueContentItem;
         }
     }
 

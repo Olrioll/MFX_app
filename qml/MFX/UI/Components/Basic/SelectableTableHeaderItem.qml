@@ -9,6 +9,7 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item {
     id: control
 
+    property bool allSelected: false
     property alias currentIndex: valueStack.currentIndex
     property alias model: contentRepeater.model
     property var value
@@ -16,6 +17,7 @@ Item {
 
     signal selectRequest()
     signal sortRequest()
+    signal deselectRequest()
 
     onCurrentIndexChanged: {
         value = contentRepeater.model.get(currentIndex).value
@@ -78,7 +80,12 @@ Item {
                     }
 
                     function onSingleClick() {
-                        control.selectRequest()
+                        if(control.allSelected) {
+                            control.deselectRequest()
+                        } else {
+                            control.selectRequest()
+                        }
+                        control.allSelected = !control.allSelected
                     }
 
                     function onDoubleClick() {
@@ -199,5 +206,3 @@ Item {
         }
     }
 }
-
-

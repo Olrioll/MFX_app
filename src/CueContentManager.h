@@ -52,6 +52,7 @@ public:
     Q_INVOKABLE void onSelectRightItemsRequest();
     Q_INVOKABLE void cleanSelectionRequest();
     Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
+    Q_INVOKABLE void onDeselectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
 
     CueContent * cueContentById(const QUuid &id) const;

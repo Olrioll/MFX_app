@@ -1138,6 +1138,10 @@ FocusScope
                                             cueContentManager.onSelectAllFromHeaderRequest(timingTypeHeaderItem.value)
                                         }
 
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(timingTypeHeaderItem.value)
+                                        }
+
                                         onSortRequest: {
                                             cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value)
                                         }
@@ -1184,6 +1188,10 @@ FocusScope
 
                                         onSelectRequest: {
                                             cueContentManager.onSelectAllFromHeaderRequest(deviceTypeHeaderItem.value)
+                                        }
+
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(deviceTypeHeaderItem.value)
                                         }
 
                                         onSortRequest: {
@@ -1235,6 +1243,10 @@ FocusScope
                                             cueContentManager.onSelectAllFromHeaderRequest(actionTypeHeaderItem.value)
                                         }
 
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(actionTypeHeaderItem.value)
+                                        }
+
                                         onSortRequest: {
                                             cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value)
                                         }
@@ -1282,6 +1294,10 @@ FocusScope
 
                                         onSelectRequest: {
                                             cueContentManager.onSelectAllFromHeaderRequest(durationTypeHeaderItem.value)
+                                        }
+
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(durationTypeHeaderItem.value)
                                         }
 
                                         onSortRequest: {
