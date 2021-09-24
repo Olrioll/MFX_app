@@ -33,9 +33,9 @@ void CueManager::initConnections()
             emit cueExpandedChanged(changedCue->name(), changedCue->expanded());
 
             if(changedCue->expanded()) {
-                m_cueContentManager.setCurrentCue(changedCue);
+                m_cueContentManager.changeCurrentCue(changedCue);
             } else {
-                m_cueContentManager.setCurrentCue(nullptr);
+                m_cueContentManager.changeCurrentCue(nullptr);
             }
         }
     });
@@ -45,7 +45,7 @@ void CueManager::initConnections()
             auto * cue = m_cues->at(index);
             if((cue != nullptr) && cue->expanded()) {
                 cue->setExpanded(false);
-                m_cueContentManager.setCurrentCue(nullptr);
+                m_cueContentManager.changeCurrentCue(nullptr);
             }
         }
     });

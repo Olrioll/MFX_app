@@ -283,9 +283,9 @@ FocusScope
                                     id: calculatorTextInputItem
 
                                     Layout.fillWidth: true
-                                    Layout.preferredHeight: 30
-                                    Layout.maximumHeight: 30
-                                    Layout.minimumHeight: 30
+                                    Layout.preferredHeight: 48
+                                    Layout.maximumHeight: 48
+                                    Layout.minimumHeight: 48
 
                                     property var operationApplyingText: ""
                                     property var operationApplying
@@ -295,21 +295,58 @@ FocusScope
                                     RowLayout {
                                         anchors.fill: parent
 
-                                        spacing: 8
+                                        spacing: 4
 
                                         Item {
                                             Layout.fillWidth: true
                                             Layout.fillHeight: true
 
-                                            MFXUICB.TextFieldWithBackground {
+                                            ColumnLayout {
                                                 anchors.fill: parent
 
-                                                color: "#FFFFFF"
-                                                activeStateOnFocus: true
-                                                backgroundColor: "#222222"
-                                                borderWidth: 2
+                                                spacing: 4
 
-                                                text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value
+                                                Text {
+                                                    Layout.fillWidth: true
+                                                    Layout.fillHeight: true
+
+                                                    font.family: MFXUIS.Fonts.robotoRegular.name
+                                                    font.pixelSize: 10
+
+                                                    lineHeightMode: Text.FixedHeight
+                                                    lineHeight: 14
+
+                                                    horizontalAlignment: Text.AlignHCenter
+                                                    verticalAlignment: Text.AlignBottom
+
+                                                    color: "#FFFFFF"
+
+                                                    text: qsTr("min")
+                                                }
+
+
+                                                MFXUICB.TextFieldWithBackground {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: 30
+                                                    Layout.maximumHeight: 30
+                                                    Layout.minimumHeight: 30
+
+                                                    color: "#FFFFFF"
+                                                    activeStateOnFocus: true
+                                                    backgroundColor: "#222222"
+                                                    borderColor: "#222222"
+                                                    borderWidth: 2
+
+                                                    text: calculatorTextInputItem.value
+                                                    inputMask: "00"
+                                                    validator: IntValidator { bottom: 0; top: 60 }
+
+                                                    onActiveStateChanged: {
+                                                        if(activeState) {
+                                                            calculatorTextInputItem.unitMultiplierType = qsTr("min")
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
 
@@ -317,41 +354,186 @@ FocusScope
                                             Layout.fillWidth: true
                                             Layout.fillHeight: true
 
-                                            MFXUICB.TextFieldWithBackground {
+                                            ColumnLayout {
                                                 anchors.fill: parent
 
-                                                color: "#FFFFFF"
-                                                activeStateOnFocus: true
-                                                backgroundColor: "#222222"
-                                                borderWidth: 2
+                                                spacing: 4
 
-                                                text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value
+                                                Text {
+                                                    Layout.fillWidth: true
+                                                    Layout.fillHeight: true
+
+                                                    font.family: MFXUIS.Fonts.robotoRegular.name
+                                                    font.pixelSize: 10
+
+                                                    lineHeightMode: Text.FixedHeight
+                                                    lineHeight: 14
+
+                                                    horizontalAlignment: Text.AlignHCenter
+                                                    verticalAlignment: Text.AlignBottom
+
+                                                    color: "#FFFFFF"
+
+                                                    text: qsTr("sec")
+                                                }
+
+                                                MFXUICB.TextFieldWithBackground {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: 30
+                                                    Layout.maximumHeight: 30
+                                                    Layout.minimumHeight: 30
+
+                                                    color: "#FFFFFF"
+                                                    activeStateOnFocus: true
+                                                    backgroundColor: "#222222"
+                                                    borderColor: "#222222"
+                                                    borderWidth: 2
+
+                                                    text: calculatorTextInputItem.value
+                                                    inputMask: "00"
+                                                    validator: IntValidator { bottom: 0; top: 60 }
+
+                                                    onActiveStateChanged: {
+                                                        if(activeState) {
+                                                            calculatorTextInputItem.unitMultiplierType = qsTr("sec")
+                                                        }
+                                                    }
+                                                }
                                             }
-
                                         }
 
                                         Item {
                                             Layout.fillWidth: true
                                             Layout.fillHeight: true
 
-                                            MFXUICB.TextFieldWithBackground {
+                                            ColumnLayout {
                                                 anchors.fill: parent
 
-                                                color: "#FFFFFF"
-                                                activeStateOnFocus: true
-                                                backgroundColor: "#222222"
-                                                borderWidth: 2
+                                                spacing: 4
 
-                                                text: calculatorTextInputItem.operationApplyingText + " " + calculatorTextInputItem.value
+                                                Text {
+                                                    Layout.fillWidth: true
+                                                    Layout.fillHeight: true
+
+                                                    font.family: MFXUIS.Fonts.robotoRegular.name
+                                                    font.pixelSize: 10
+
+                                                    lineHeightMode: Text.FixedHeight
+                                                    lineHeight: 14
+
+                                                    horizontalAlignment: Text.AlignHCenter
+                                                    verticalAlignment: Text.AlignBottom
+
+                                                    color: "#FFFFFF"
+
+                                                    text: qsTr("x10ms")
+                                                }
+
+                                                MFXUICB.TextFieldWithBackground {
+                                                    Layout.fillWidth: true
+                                                    Layout.preferredHeight: 30
+                                                    Layout.maximumHeight: 30
+                                                    Layout.minimumHeight: 30
+
+                                                    color: "#FFFFFF"
+                                                    activeStateOnFocus: true
+                                                    backgroundColor: "#222222"
+                                                    borderColor: "#222222"
+                                                    borderWidth: 2
+
+                                                    text: calculatorTextInputItem.value
+                                                    inputMask: "00"
+                                                    validator: IntValidator { bottom: 0; top: 60 }
+
+                                                    onActiveStateChanged: {
+                                                        if(activeState) {
+                                                            calculatorTextInputItem.unitMultiplierType = qsTr("ms")
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        Item {
+                                            Layout.fillHeight: true
+                                            Layout.fillWidth: true
+
+                                            ColumnLayout {
+                                                anchors.fill: parent
+                                                Item {
+                                                    Layout.fillWidth: true
+                                                    Layout.fillHeight: true
+                                                }
+
+                                                Item {
+                                                    Layout.preferredHeight: 30
+                                                    Layout.maximumHeight: 30
+                                                    Layout.minimumHeight: 30
+                                                    Layout.fillWidth: true
+
+                                                    Button {
+                                                        id: cleanButton
+
+                                                        anchors.fill: parent
+
+                                                        highlighted: false
+
+                                                        background: Rectangle {
+                                                            color: cleanButton.highlighted ? cleanButton.enabled ? "#888888" : "#80888888" : cleanButton.enabled ? "#666666" : "#80666666"
+
+                                                            radius: 2
+
+                                                            layer.enabled: true
+                                                            layer.effect: DropShadow {
+                                                                horizontalOffset: 0
+                                                                verticalOffset: 1
+                                                                radius: 4
+                                                                samples: 9
+                                                                spread: 0
+                                                                color: "#40000000"
+                                                            }
+
+                                                            Rectangle {
+                                                                anchors.fill: parent
+
+                                                                radius: parent.radius
+
+                                                                color: "#24FFFFFF"
+
+                                                                visible: cleanButton.pressed
+                                                            }
+                                                        }
+
+                                                        contentItem: Item {}
+
+                                                        onClicked: {
+                                                            //TODO
+                                                        }
+                                                    }
+
+                                                    Image {
+                                                        anchors.centerIn: parent
+
+                                                        width: 18
+                                                        height: 18
+
+                                                        sourceSize: Qt.size(18,18)
+
+                                                        source: "qrc:/icons/main_screen/main_screen_calculator_clear_icon.svg"
+
+                                                        layer.enabled: true
+                                                        layer.effect: ColorOverlay {
+                                                            color: "#ffffff"
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
-
-
                                 }
 
                                 MFXUICT.LayoutSpacer {
-                                    fixedHeight: 4
+                                    fixedHeight: 6
                                 }
 
                                 Grid {
@@ -586,97 +768,6 @@ FocusScope
                                 }
 
                                 MFXUICT.LayoutSpacer {
-                                    fixedHeight: 6
-                                }
-
-                                RowLayout {
-                                    Layout.fillWidth: true
-                                    Layout.preferredHeight: 24
-                                    Layout.maximumHeight: 24
-                                    Layout.minimumHeight: 24
-
-                                    spacing: 3
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-
-                                        MfxButton
-                                        {
-                                            id: minutesButton
-
-                                            anchors.fill: parent
-
-                                            checkable: false
-
-                                            fontFamilyName: MFXUIS.Fonts.robotoMedium.name
-                                            enableShadow: true
-                                            textSize: 10
-                                            color: "#888888"
-                                            pressedColor: "#ababab"
-
-                                            text: translationsManager.translationTrigger + qsTr("min")
-
-                                            onClicked: {
-                                                calculatorTextInputItem.unitMultiplierType = qsTr("min")
-                                            }
-                                        }
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-
-                                        MfxButton
-                                        {
-                                            id: secondsButton
-
-                                            anchors.fill: parent
-
-                                            checkable: false
-
-                                            fontFamilyName: MFXUIS.Fonts.robotoMedium.name
-                                            enableShadow: true
-                                            textSize: 10
-                                            color: "#888888"
-                                            pressedColor: "#ababab"
-
-                                            text: translationsManager.translationTrigger + qsTr("sec")
-
-                                            onClicked: {
-                                                calculatorTextInputItem.unitMultiplierType = qsTr("sec")
-                                            }
-                                        }
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                        Layout.fillWidth: true
-
-                                        MfxButton
-                                        {
-                                            id: msecondsButton
-
-                                            anchors.fill: parent
-
-                                            checkable: false
-
-                                            fontFamilyName: MFXUIS.Fonts.robotoMedium.name
-                                            enableShadow: true
-                                            textSize: 10
-                                            color: "#888888"
-                                            pressedColor: "#ababab"
-
-                                            text: translationsManager.translationTrigger + qsTr("ms")
-
-                                            onClicked: {
-                                                calculatorTextInputItem.unitMultiplierType = qsTr("ms")
-                                            }
-                                        }
-                                    }
-                                }
-
-                                MFXUICT.LayoutSpacer {
                                     fixedHeight: 20
                                 }
 
@@ -834,9 +925,15 @@ FocusScope
                                         id: leftButton
 
                                         anchors.fill: parent
+
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("First")
+
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
 
                                         onClicked: {
                                             cueContentManager.onSelectLeftItemsRequest();
@@ -858,6 +955,11 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Uneven")
 
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
+
                                         onClicked: {
                                             cueContentManager.onSelectUnevenItemsRequest();
                                         }
@@ -877,6 +979,11 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("All")
+
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
 
                                         onClicked: {
                                             cueContentManager.onSelectAllItemsRequest();
@@ -898,6 +1005,11 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Even")
 
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
+
                                         onClicked: {
                                             cueContentManager.onSelectEvenItemsRequest();
                                         }
@@ -917,6 +1029,11 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Last")
+
+                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
+                                        disabledColor: "#804f4f4f"
+                                        disabledTextColor: "#30ffffff"
 
                                         onClicked: {
                                             cueContentManager.onSelectRightItemsRequest();
@@ -1003,11 +1120,18 @@ FocusScope
                                         }
 
                                         switchable: false
+                                        allowSorting: false
 
                                         MouseArea {
                                             anchors.fill: parent
                                             onDoubleClicked: {
+                                                cueContentManager.onSortFromHeaderRequest(MFXE.CueContentSelectedTableRole.Delay, MFXE.CueContentSortingType.Ascending)
                                                 cueContentManager.cleanSelectionRequest()
+
+                                                timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                                deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                                actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                                durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                             }
                                         }
                                     }
@@ -1041,6 +1165,22 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onTimingTypeSelectedTableRoleChangeRequest(timingTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(timingTypeHeaderItem.value)
+                                        }
+
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(timingTypeHeaderItem.value)
+                                        }
+
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value, timingTypeHeaderItem.sortingType)
+
+                                            deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {
@@ -1081,6 +1221,22 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onDeviceTypeSelectedTableRoleChangeRequest(deviceTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(deviceTypeHeaderItem.value)
+                                        }
+
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(deviceTypeHeaderItem.value)
+                                        }
+
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(deviceTypeHeaderItem.value, deviceTypeHeaderItem.sortingType)
+
+                                            timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {
@@ -1124,6 +1280,22 @@ FocusScope
                                             }
                                         }
 
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(actionTypeHeaderItem.value)
+                                        }
+
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(actionTypeHeaderItem.value)
+                                        }
+
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value, actionTypeHeaderItem.sortingType)
+
+                                            timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                        }
+
                                         Component.onCompleted: {
                                             actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Effect, "text": qsTr("Effect") })
                                             actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Action, "text": qsTr("Action") })
@@ -1163,6 +1335,22 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onDurationTypeSelectedTableRoleChangeRequest(durationTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSelectRequest: {
+                                            cueContentManager.onSelectAllFromHeaderRequest(durationTypeHeaderItem.value)
+                                        }
+
+                                        onDeselectRequest: {
+                                            cueContentManager.onDeselectAllFromHeaderRequest(durationTypeHeaderItem.value)
+                                        }
+
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(durationTypeHeaderItem.value, durationTypeHeaderItem.sortingType)
+
+                                            timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {
@@ -1222,7 +1410,9 @@ FocusScope
                                 property color activeTextColor: "#F2C94C"
                                 property color activeBackgroundColor: "#1AFFFAFA"
 
-                                property color selectedTextColor: "#27AE60"
+                                property color selectedRoleTextColor: "#27AE60"
+
+                                property color selectedTextColor: "#FFFFFF"
                                 property color selectedBackgroundColor: "#802F80ED"
 
                                 property color textColor: "#FFFFFF"
@@ -1242,6 +1432,13 @@ FocusScope
                                     property color calculatedTextColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
                                                                                                           : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedTextColor
                                                                                                                                                 : cueContentListViewDelegate.textColor
+
+                                    function calculateTextColor(currentRole) {
+                                        return cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
+                                                                                 : cueContentListViewDelegate.selected ? currentRole ? cueContentListViewDelegate.selectedRoleTextColor
+                                                                                                                                     : cueContentListViewDelegate.selectedTextColor
+                                                                                                                       : cueContentListViewDelegate.textColor
+                                    }
                                 }
 
                                 anchors.left: cueContentTableListView.contentItem.left
@@ -1319,7 +1516,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.timingTypeSelectedTableRole) {
@@ -1359,7 +1558,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.deviceTypeSelectedTableRole) {
@@ -1401,7 +1602,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.actionTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.actionTypeSelectedTableRole) {
@@ -1443,7 +1646,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.durationTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.durationTypeSelectedTableRole) {
@@ -2149,7 +2354,7 @@ FocusScope
 
                             function calculateColumnWidths(width) {
                                 return columnProportions.map(function(columnProportion) {
-                                    return width * (columnProportion / cueListView.columnProportions.reduce((a, b) => a + b, 0))
+                                    return (width - (columnsCount - 1)) * (columnProportion / cueListView.columnProportions.reduce((a, b) => a + b, 0))
                                 });
                             }
 
@@ -2204,6 +2409,17 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("№")
                                     }
 
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
+                                    }
+
                                     Text {
 
                                         Layout.fillHeight: true
@@ -2222,6 +2438,17 @@ FocusScope
                                         text: translationsManager.translationTrigger + qsTr("Cue")
                                     }
 
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
+                                    }
+
                                     Text {
 
                                         Layout.fillHeight: true
@@ -2238,6 +2465,17 @@ FocusScope
                                         color: "#FFFFFF"
 
                                         text: translationsManager.translationTrigger + qsTr("Start time")
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     Text {
@@ -2359,6 +2597,17 @@ FocusScope
                                         text: cueListViewDelegate.rowIndex
                                     }
 
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
+                                    }
+
                                     MFXUICB.TransparentTextField {
                                         id: cueListViewDelegateNameTextField
 
@@ -2435,6 +2684,17 @@ FocusScope
                                         }
                                     }
 
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
+                                    }
+
                                     Text {
 
                                         Layout.fillHeight: true
@@ -2451,6 +2711,17 @@ FocusScope
                                         color: cueListViewDelegatePrivateProperties.calculatedTextColor
 
                                         text: cueListViewDelegate.startTime
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 4
+
+                                        color: "#1FFFFFFF"
                                     }
 
                                     Text {

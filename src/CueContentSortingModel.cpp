@@ -2,16 +2,13 @@
 
 #include <QtQml/QQmlEngine>
 
-namespace  {
-static constexpr char sortingRole[] = "delay";
-}
-
 CueContentSortingModel::CueContentSortingModel(CueContentSourceModel &cueContent, QObject* parent)
     : QSortFilterProxyModel(parent)
     , m_cueContent(cueContent)
 {
     setSourceModel(&m_cueContent);
-    setSortRole(m_cueContent.roleForName(QByteArray(::sortingRole)));
+    setSortRole(m_cueContent.roleForName(CueContentSelectedTableRole::toString(CueContentSelectedTableRole::Delay).toStdString().data()));
+    setSortOrder(Qt::AscendingOrder);
 
     initConnections();
 }
@@ -23,12 +20,59 @@ void CueContentSortingModel::initConnections()
         Q_UNUSED(bottomRight)
 
         if(roles.contains(sortRole())) {
-            this->sort(0, Qt::AscendingOrder);
+            this->sort(0, sortOrder());
         }
     });
     connect(&m_cueContent, &QQmlObjectListModelBase::countChanged, [=](){
-        this->sort(0, Qt::AscendingOrder);
+        this->sort(0, sortOrder());
     });
+
+    connect(this, &CueContentSortingModel::sortByChanged, [=](const CueContentSelectedTableRole::Type & role) {
+        this->sort(0, sortOrder());
+    });
+
+    connect(this, &CueContentSortingModel::sortOrderChanged, [=](Qt::SortOrder) {
+        this->sort(0, sortOrder());
+    });
+}
+
+void CueContentSortingModel::setSortingPreference(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type &sortOrder)
+{
+    switch (sortOrder) {
+    case CueContentSortingType::Ascending:
+    case CueContentSortingType::Unknown:
+        setSortOrder(Qt::AscendingOrder);
+        break;
+    case CueContentSortingType::Descending:
+        setSortOrder(Qt::DescendingOrder);
+        break;
+    }
+
+    switch (role) {
+    case CueContentSelectedTableRole::Delay:
+    case CueContentSelectedTableRole::Between:
+    case CueContentSelectedTableRole::Time:
+    case CueContentSelectedTableRole::Prefire:
+        setSortByValueType(SortByValueType::Time);
+        break;
+    case CueContentSelectedTableRole::Unknown:
+        setSortByValueType(SortByValueType::Unknown);
+        break;
+    case CueContentSelectedTableRole::Action:
+    case CueContentSelectedTableRole::Effect:
+        setSortByValueType(SortByValueType::String);
+        break;
+    case CueContentSelectedTableRole::Angle:
+    case CueContentSelectedTableRole::Device:
+    case CueContentSelectedTableRole::DmxChannel:
+    case CueContentSelectedTableRole::RfChannel:
+        setSortByValueType(SortByValueType::Numeric);
+        break;
+    }
+
+    //NOTE super dirty hack because Idk qt metaprogramming ;)
+    setSortRole(m_cueContent.roleForName(CueContentSelectedTableRole::toString(role).toLower().toStdString().data()));
+    setSortBy(role);
 }
 
 void CueContentSortingModel::qmlRegister()
@@ -38,6 +82,7 @@ void CueContentSortingModel::qmlRegister()
 
 bool CueContentSortingModel::lessThan(const QModelIndex& left, const QModelIndex& right) const
 {
+
     if(!left.isValid()) {
         return false;
     }
@@ -49,5 +94,15 @@ bool CueContentSortingModel::lessThan(const QModelIndex& left, const QModelIndex
     auto leftCue = sourceModel()->data(left, sortRole());
     auto rightCue = sourceModel()->data(right, sortRole());
 
-    return leftCue.toULongLong() < rightCue.toULongLong();
+    if(sortByValueType() == SortByValueType::Time) {
+        return leftCue.toULongLong() < rightCue.toULongLong();
+    } else if(sortByValueType() == SortByValueType::Numeric) {
+        return leftCue.toInt() < rightCue.toInt();
+    } else if(sortByValueType() == SortByValueType::String) {
+        return leftCue.toString().compare(rightCue.toString(), Qt::CaseInsensitive) < 0;
+    } else if(sortByValueType() == SortByValueType::Unknown) {
+        return QSortFilterProxyModel::lessThan(left, right);
+    }
+
+    return QSortFilterProxyModel::lessThan(left, right);
 }
