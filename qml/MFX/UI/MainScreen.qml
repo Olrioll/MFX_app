@@ -1128,7 +1128,7 @@ FocusScope
                                                 cueContentManager.onSortFromHeaderRequest(MFXE.CueContentSelectedTableRole.Delay, MFXE.CueContentSortingType.Ascending)
                                                 cueContentManager.cleanSelectionRequest()
 
-                                                timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Ascending
+                                                timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                                 deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                                 actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                                 durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
@@ -1410,7 +1410,9 @@ FocusScope
                                 property color activeTextColor: "#F2C94C"
                                 property color activeBackgroundColor: "#1AFFFAFA"
 
-                                property color selectedTextColor: "#27AE60"
+                                property color selectedRoleTextColor: "#27AE60"
+
+                                property color selectedTextColor: "#FFFFFF"
                                 property color selectedBackgroundColor: "#802F80ED"
 
                                 property color textColor: "#FFFFFF"
@@ -1430,6 +1432,13 @@ FocusScope
                                     property color calculatedTextColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
                                                                                                           : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedTextColor
                                                                                                                                                 : cueContentListViewDelegate.textColor
+
+                                    function calculateTextColor(currentRole) {
+                                        return cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
+                                                                                 : cueContentListViewDelegate.selected ? currentRole ? cueContentListViewDelegate.selectedRoleTextColor
+                                                                                                                                     : cueContentListViewDelegate.selectedTextColor
+                                                                                                                       : cueContentListViewDelegate.textColor
+                                    }
                                 }
 
                                 anchors.left: cueContentTableListView.contentItem.left
@@ -1507,7 +1516,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.timingTypeSelectedTableRole) {
@@ -1547,7 +1558,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.deviceTypeSelectedTableRole) {
@@ -1589,7 +1602,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.actionTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.actionTypeSelectedTableRole) {
@@ -1631,7 +1646,9 @@ FocusScope
                                         font.family: MFXUIS.Fonts.robotoRegular.name
                                         font.pixelSize: 10
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                        property bool currentRole: cueContentManager.durationTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
                                             switch(cueContentManager.durationTypeSelectedTableRole) {
