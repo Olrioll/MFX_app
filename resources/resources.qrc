@@ -98,5 +98,7 @@
         <file>icons/preferences/preferences_list_selected_row_indicator_icon.svg</file>
         <file>images/fire_particle.png</file>
         <file>icons/main_screen/main_screen_calculator_clear_icon.svg</file>
+        <file>icons/main_screen/main_screen_sort_ascending_icon.svg</file>
+        <file>icons/main_screen/main_screen_sort_descending_icon.svg</file>
     </qresource>
 </RCC>

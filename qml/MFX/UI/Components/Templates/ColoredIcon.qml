@@ -31,6 +31,7 @@ Button {
             asynchronous: true
             fillMode: Image.PreserveAspectFit
             mipmap: true
+            antialiasing: true
 
             visible: _privateProperies.isTransparentColor(_colorOverlay.color)
 

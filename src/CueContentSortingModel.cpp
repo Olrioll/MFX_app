@@ -36,8 +36,18 @@ void CueContentSortingModel::initConnections()
     });
 }
 
-void CueContentSortingModel::setSortingPreference(const CueContentSelectedTableRole::Type& role)
+void CueContentSortingModel::setSortingPreference(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type &sortOrder)
 {
+    switch (sortOrder) {
+    case CueContentSortingType::Ascending:
+    case CueContentSortingType::Unknown:
+        setSortOrder(Qt::AscendingOrder);
+        break;
+    case CueContentSortingType::Descending:
+        setSortOrder(Qt::DescendingOrder);
+        break;
+    }
+
     switch (role) {
     case CueContentSelectedTableRole::Delay:
     case CueContentSelectedTableRole::Between:

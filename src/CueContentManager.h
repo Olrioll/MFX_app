@@ -15,6 +15,7 @@
 QSM_ENUM_CLASS(CueContentSelectedTableRole, Unknown = -1, Delay = 1, Between, DmxChannel, Device, RfChannel, Action, Effect, Angle, Time, Prefire)
 QSM_ENUM_CLASS(CalculatorOperator, Add = 0, Substract, Multiply, Divide, Percent)
 QSM_ENUM_CLASS(TimeUnit, Milliseconds = 0, Seconds, Minutes)
+QSM_ENUM_CLASS(CueContentSortingType, Unknown = 0, Ascending, Descending)
 
 class CueManager;
 class CueContentSortingModel;
@@ -53,7 +54,7 @@ public:
     Q_INVOKABLE void cleanSelectionRequest();
     Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDeselectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
-    Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const Qt::SortOrder sortOrder);
+    Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type& sortOrder);
 
     CueContent * cueContentById(const QUuid &id) const;
     void changeCurrentCue(Cue *cue);
@@ -79,3 +80,5 @@ private:
     DeviceManager& m_deviceManager;
     CueContentSortingModel * m_cueContentSorted = nullptr;
 };
+
+Q_DECLARE_METATYPE(CueContentSortingType::Type)

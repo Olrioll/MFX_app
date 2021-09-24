@@ -185,13 +185,12 @@ void CueContentManager::onDeselectAllFromHeaderRequest(const CueContentSelectedT
     }
 }
 
-void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const Qt::SortOrder sortOrder)
+void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type& sortOrder)
 {
     qInfo() << "Sort by" << role << "requested";
 
     //NOTE Сортировка только визуальная - она не должна изменять данные
-    m_cueContentSorted->setSortOrder(sortOrder);
-    m_cueContentSorted->setSortingPreference(role);
+    m_cueContentSorted->setSortingPreference(role, sortOrder);
 }
 
 CueContent *CueContentManager::cueContentById(const QUuid& id) const
@@ -227,9 +226,11 @@ CueContentSortingModel *CueContentManager::cueContentSorted() const
 
 void CueContentManager::qmlRegister()
 {
+    CueContentSortingType::registerToQml("MFX.Enums", 1, 0);
     CueContentSelectedTableRole::registerToQml("MFX.Enums", 1, 0);
     CalculatorOperator::registerToQml("MFX.Enums", 1, 0);
     TimeUnit::registerToQml("MFX.Enums", 1, 0);
+
 }
 
 void CueContentManager::onCurrentCueActionsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)

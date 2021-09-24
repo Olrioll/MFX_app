@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import MFX.Enums 1.0 as MFXE
 import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Styles 1.0 as MFXUIS
 
@@ -10,7 +11,8 @@ Item {
     id: control
 
     property bool allSelected: false
-    property int sortOrder: Qt.AscendingOrder
+    property bool allowSorting: true
+    property var sortingType: MFXE.CueContentSortingType.Unknown
     property alias currentIndex: valueStack.currentIndex
     property alias model: contentRepeater.model
     property var value
@@ -90,9 +92,13 @@ Item {
                     }
 
                     function onDoubleClick() {
-                        control.sortRequest(control.sortOrder)
-                        control.sortOrder = control.sortOrder === Qt.AscendingOrder ? Qt.DescendingOrder
-                                                                                    : Qt.AscendingOrder
+                        control.sortRequest(control.sortingType)
+                        if(control.sortingType === MFXE.CueContentSortingType.Unknown) {
+                            control.sortingType = MFXE.CueContentSortingType.Ascending
+                        } else {
+                            control.sortingType = control.sortingType === MFXE.CueContentSortingType.Ascending ? MFXE.CueContentSortingType.Descending
+                                                                                                               : MFXE.CueContentSortingType.Ascending
+                        }
                     }
 
                     onClicked: {
@@ -103,6 +109,43 @@ Item {
                             singleClickTimer.restart()
                         }
                     }
+                }
+            }
+        }
+    }
+
+    Item {
+        id: sortingItem
+
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        width: 30
+
+        visible: control.allowSorting && (control.sortingType !== MFXE.CueContentSortingType.Unknown)
+
+        Image {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.leftMargin: 8
+
+            width: 14
+            height: 14
+
+            source: control.sortingType === MFXE.CueContentSortingType.Ascending ? "qrc:/icons/main_screen/main_screen_sort_ascending_icon.svg"
+                                                                                 : "qrc:/icons/main_screen/main_screen_sort_descending_icon.svg"
+
+            MouseArea {
+                anchors.fill: parent
+
+                propagateComposedEvents: false
+                preventStealing: true
+
+                onClicked: {
+                    control.sortingType = control.sortingType === MFXE.CueContentSortingType.Ascending ? MFXE.CueContentSortingType.Descending
+                                                                                                       : MFXE.CueContentSortingType.Ascending
+                    control.sortRequest(control.sortingType)
                 }
             }
         }

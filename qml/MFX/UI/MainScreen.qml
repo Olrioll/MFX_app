@@ -1120,11 +1120,18 @@ FocusScope
                                         }
 
                                         switchable: false
+                                        allowSorting: false
 
                                         MouseArea {
                                             anchors.fill: parent
                                             onDoubleClicked: {
+                                                cueContentManager.onSortFromHeaderRequest(MFXE.CueContentSelectedTableRole.Delay, MFXE.CueContentSortingType.Ascending)
                                                 cueContentManager.cleanSelectionRequest()
+
+                                                timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Ascending
+                                                deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                                actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                                durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                             }
                                         }
                                     }
@@ -1169,7 +1176,11 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value, sortOrder)
+                                            cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value, timingTypeHeaderItem.sortingType)
+
+                                            deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {
@@ -1221,7 +1232,11 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(deviceTypeHeaderItem.value, sortOrder)
+                                            cueContentManager.onSortFromHeaderRequest(deviceTypeHeaderItem.value, deviceTypeHeaderItem.sortingType)
+
+                                            timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {
@@ -1274,7 +1289,11 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value, sortOrder)
+                                            cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value, actionTypeHeaderItem.sortingType)
+
+                                            timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            durationTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {
@@ -1327,7 +1346,11 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(durationTypeHeaderItem.value, sortOrder)
+                                            cueContentManager.onSortFromHeaderRequest(durationTypeHeaderItem.value, durationTypeHeaderItem.sortingType)
+
+                                            timingTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            deviceTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
+                                            actionTypeHeaderItem.sortingType = MFXE.CueContentSortingType.Unknown
                                         }
 
                                         Component.onCompleted: {

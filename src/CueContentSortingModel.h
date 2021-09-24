@@ -31,7 +31,7 @@ public:
 
     explicit CueContentSortingModel(CueContentSourceModel& cues, QObject* parent = nullptr);
 
-    void setSortingPreference(const CueContentSelectedTableRole::Type& role);
+    void setSortingPreference(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type &sortOrder);
 
     void initConnections();
 
