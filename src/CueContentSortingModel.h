@@ -3,9 +3,10 @@
 #include <QtCore/QObject>
 #include <QtCore/QSortFilterProxyModel>
 
-#include <QSuperMacros.h>
-#include <QQmlConstRefPropertyHelpers.h>
 #include "QQmlObjectListModel.h"
+#include <QQmlConstRefPropertyHelpers.h>
+#include <QQmlVarPropertyHelpers.h>
+#include <QSuperMacros.h>
 
 #include "CueContent.h"
 #include "CueContentManager.h"
@@ -24,7 +25,7 @@ public:
 private:
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(CueContentSelectedTableRole::Type, sortBy, SortBy, CueContentSelectedTableRole::Unknown) //Роль, по которой нужно сортировать (TODO - по идее лучше сделать, чтобы она получалась из QMetaObject от CueContent)
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(SortByValueType, sortByValueType, SortByValueType, SortByValueType::Unknown) //Тип значения - определяет применяемый тип сортировки
-
+    QSM_READONLY_VAR_PROPERTY(Qt::SortOrder, sortOrder, SortOrder) //Порядок сортировки
 public:
     using CueContentSourceModel = QQmlObjectListModel<CueContent>;
 
@@ -35,6 +36,7 @@ public:
     void initConnections();
 
     static void qmlRegister();
+
 protected:
     bool lessThan(const QModelIndex& left, const QModelIndex& right) const override;
 

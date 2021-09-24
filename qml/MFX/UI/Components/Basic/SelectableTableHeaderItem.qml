@@ -10,14 +10,15 @@ Item {
     id: control
 
     property bool allSelected: false
+    property int sortOrder: Qt.AscendingOrder
     property alias currentIndex: valueStack.currentIndex
     property alias model: contentRepeater.model
     property var value
     property bool switchable: true
 
     signal selectRequest()
-    signal sortRequest()
     signal deselectRequest()
+    signal sortRequest(var sortOrder)
 
     onCurrentIndexChanged: {
         value = contentRepeater.model.get(currentIndex).value
@@ -89,7 +90,9 @@ Item {
                     }
 
                     function onDoubleClick() {
-                        control.sortRequest()
+                        control.sortRequest(control.sortOrder)
+                        control.sortOrder = control.sortOrder === Qt.AscendingOrder ? Qt.DescendingOrder
+                                                                                    : Qt.AscendingOrder
                     }
 
                     onClicked: {

@@ -179,11 +179,12 @@ void CueContentManager::onDeselectAllFromHeaderRequest(const CueContentSelectedT
     }
 }
 
-void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role)
+void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const Qt::SortOrder sortOrder)
 {
-    //NOTE Сортировка только визуальная - она не должна изменять данные
     qInfo() << "Sort by" << role << "requested";
 
+    //NOTE Сортировка только визуальная - она не должна изменять данные
+    m_cueContentSorted->setSortOrder(sortOrder);
     m_cueContentSorted->setSortingPreference(role);
 }
 

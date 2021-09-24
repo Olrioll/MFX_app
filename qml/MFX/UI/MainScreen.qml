@@ -1143,7 +1143,7 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value)
+                                            cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value, sortOrder)
                                         }
 
                                         Component.onCompleted: {
@@ -1195,7 +1195,7 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(deviceTypeHeaderItem.value)
+                                            cueContentManager.onSortFromHeaderRequest(deviceTypeHeaderItem.value, sortOrder)
                                         }
 
                                         Component.onCompleted: {
@@ -1248,7 +1248,7 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value)
+                                            cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value, sortOrder)
                                         }
 
                                         Component.onCompleted: {
@@ -1301,7 +1301,7 @@ FocusScope
                                         }
 
                                         onSortRequest: {
-                                            cueContentManager.onSortFromHeaderRequest(durationTypeHeaderItem.value)
+                                            cueContentManager.onSortFromHeaderRequest(durationTypeHeaderItem.value, sortOrder)
                                         }
 
                                         Component.onCompleted: {

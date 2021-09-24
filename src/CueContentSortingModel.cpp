@@ -8,6 +8,7 @@ CueContentSortingModel::CueContentSortingModel(CueContentSourceModel &cueContent
 {
     setSourceModel(&m_cueContent);
     setSortRole(m_cueContent.roleForName(CueContentSelectedTableRole::toString(CueContentSelectedTableRole::Delay).toStdString().data()));
+    setSortOrder(Qt::AscendingOrder);
 
     initConnections();
 }
@@ -19,15 +20,19 @@ void CueContentSortingModel::initConnections()
         Q_UNUSED(bottomRight)
 
         if(roles.contains(sortRole())) {
-            this->sort(0, Qt::AscendingOrder);
+            this->sort(0, sortOrder());
         }
     });
     connect(&m_cueContent, &QQmlObjectListModelBase::countChanged, [=](){
-        this->sort(0, Qt::AscendingOrder);
+        this->sort(0, sortOrder());
     });
 
     connect(this, &CueContentSortingModel::sortByChanged, [=](const CueContentSelectedTableRole::Type & role) {
-        this->sort(0, Qt::AscendingOrder);
+        this->sort(0, sortOrder());
+    });
+
+    connect(this, &CueContentSortingModel::sortOrderChanged, [=](Qt::SortOrder) {
+        this->sort(0, sortOrder());
     });
 }
 
