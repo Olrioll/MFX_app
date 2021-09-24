@@ -6,6 +6,10 @@
 #include "CueManager.h"
 #include "CueContentSortingModel.h"
 
+namespace  {
+static constexpr char actionStartTimeChangeRole[] = "startTime";
+}
+
 CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* parent)
     : QObject(parent)
     , m_deviceManager(deviceManager)
@@ -14,6 +18,26 @@ CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* pare
     m_cueContentSorted = new CueContentSortingModel(*m_cueContentItems, this);
 
     initConnections();
+}
+
+
+void CueContentManager::initConnections()
+{
+    connect(this, &CueContentManager::currentCueChanged, this, &CueContentManager::refrestCueContentModel);
+
+}
+
+void CueContentManager::changeCurrentCue(Cue * cue)
+{
+    if(m_currentCue != nullptr) {
+        disconnect(m_currentCue->actions(), &QQmlObjectListModelBase::dataChanged, this, &CueContentManager::onCurrentCueActionsChanged);
+    }
+
+    setCurrentCue(cue);
+
+    if(m_currentCue != nullptr) {
+        connect(m_currentCue->actions(), &QQmlObjectListModelBase::dataChanged, this, &CueContentManager::onCurrentCueActionsChanged);
+    }
 }
 
 void CueContentManager::onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit)
@@ -180,9 +204,12 @@ void CueContentManager::qmlRegister()
     TimeUnit::registerToQml("MFX.Enums", 1, 0);
 }
 
-void CueContentManager::initConnections()
+void CueContentManager::onCurrentCueActionsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
 {
-    connect(this, &CueContentManager::currentCueChanged, this, &CueContentManager::refrestCueContentModel);
+    if(roles.contains(currentCue()->actions()->roleForName(actionStartTimeChangeRole))) {
+        //TODO - вот эта вот штука по идее очень неправильна - метод должен триггерить изменения только cueContent айтемов, а sortfilterproxymodel всё сама разрулит
+        refrestCueContentModel();
+    }
 }
 
 void CueContentManager::refrestCueContentModel()
@@ -195,22 +222,23 @@ void CueContentManager::refrestCueContentModel()
 
     quint64 prevStop = m_currentCue->startTime();
     auto listActions = m_currentCue->actions()->toList();
-    qSort(listActions.begin(), listActions.end(), [](Action* a1, Action *a2) {
+    std::sort(listActions.begin(), listActions.end(), [](Action* a1, Action *a2) {
         return a1->startTime() < a2->startTime();
     });
+
     for (auto* action : listActions) {
         auto* cueContent = new CueContent(this);
         cueContent->setDelay(action->startTime() - m_currentCue->startTime());
-        qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
         cueContent->setId(m_currentCue->actions()->count() + 1);
+        //qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
         cueContent->setBetween(action->startTime() - prevStop);
         auto pattern = m_deviceManager.m_patternManager->patternByName(action->patternName());
         prevStop = action->startTime() + pattern->duration();
-        qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
+        //qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
         cueContent->setTime(action->startTime() + pattern->prefireDuration());
-        qDebug() << tr("CueContentManager::refreshCueContentModel, time = %1").arg(cueContent->time());
+        //qDebug() << tr("CueContentManager::refreshCueContentModel, time = %1").arg(cueContent->time());
         cueContent->setPrefire(pattern->prefireDuration());
-        qDebug() << tr("CueContentManager::refreshCueContentModel, prefire = %1").arg(cueContent->prefire());
+        //qDebug() << tr("CueContentManager::refreshCueContentModel, prefire = %1").arg(cueContent->prefire());
 
         if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
             cueContent->setDevice(device->id());

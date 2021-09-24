@@ -55,6 +55,7 @@ public:
     Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, Qt::SortOrder sortOrder);
 
     CueContent * cueContentById(uint id) const;
+    void changeCurrentCue(Cue *cue);
 
     void setActive(const QString &cueName, int deviceId, bool active);
     CueManager *m_cueManager;
@@ -62,6 +63,10 @@ public:
     CueContentSortingModel* cueContentSorted() const;
 
     static void qmlRegister();
+
+private slots:
+    void onCurrentCueActionsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+
 private:
     void initConnections();
     void refrestCueContentModel();
