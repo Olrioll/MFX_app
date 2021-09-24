@@ -9,14 +9,13 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item {
     id: control
 
-    property int sorting: Qt.AscendingOrder
     property alias currentIndex: valueStack.currentIndex
     property alias model: contentRepeater.model
     property var value
     property bool switchable: true
 
     signal selectRequest()
-    signal sortRequest(var sortingOrder)
+    signal sortRequest()
 
     onCurrentIndexChanged: {
         value = contentRepeater.model.get(currentIndex).value
@@ -68,7 +67,7 @@ Item {
                     }
 
                     onDoubleClicked: {
-                        control.sortRequest(control.sorting === Qt.AscendingOrder ? Qt.DescendingOrder : Qt.AscendingOrder)
+                        control.sortRequest()
                     }
                 }
             }

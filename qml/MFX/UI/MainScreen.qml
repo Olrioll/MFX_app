@@ -1132,6 +1132,10 @@ FocusScope
                                             }
                                         }
 
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(timingTypeHeaderItem.value)
+                                        }
+
                                         Component.onCompleted: {
                                             timingTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Delay, "text": qsTr("Delay") })
                                             timingTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Between, "text": qsTr("Between") })
@@ -1170,6 +1174,10 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onDeviceTypeSelectedTableRoleChangeRequest(deviceTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(deviceTypeHeaderItem.value)
                                         }
 
                                         Component.onCompleted: {
@@ -1213,6 +1221,10 @@ FocusScope
                                             }
                                         }
 
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(actionTypeHeaderItem.value)
+                                        }
+
                                         Component.onCompleted: {
                                             actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Effect, "text": qsTr("Effect") })
                                             actionTypeHeaderModel.append({ "value": MFXE.CueContentSelectedTableRole.Action, "text": qsTr("Action") })
@@ -1252,6 +1264,10 @@ FocusScope
                                             if(!isLoading) {
                                                 cueContentManager.onDurationTypeSelectedTableRoleChangeRequest(durationTypeHeaderItem.value)
                                             }
+                                        }
+
+                                        onSortRequest: {
+                                            cueContentManager.onSortFromHeaderRequest(durationTypeHeaderItem.value)
                                         }
 
                                         Component.onCompleted: {

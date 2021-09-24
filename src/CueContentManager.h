@@ -43,8 +43,8 @@ public:
     Q_INVOKABLE void onActionTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDurationTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
 
-    Q_INVOKABLE void onSelectItemRequest(const uint id);
-    Q_INVOKABLE void onDeselectItemRequest(const uint id);
+    Q_INVOKABLE void onSelectItemRequest(const QUuid &id);
+    Q_INVOKABLE void onDeselectItemRequest(const QUuid &id);
     Q_INVOKABLE void onSelectAllItemsRequest();
     Q_INVOKABLE void onSelectEvenItemsRequest();
     Q_INVOKABLE void onSelectUnevenItemsRequest();
@@ -52,9 +52,9 @@ public:
     Q_INVOKABLE void onSelectRightItemsRequest();
     Q_INVOKABLE void cleanSelectionRequest();
     Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
-    Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, Qt::SortOrder sortOrder);
+    Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
 
-    CueContent * cueContentById(uint id) const;
+    CueContent * cueContentById(const QUuid &id) const;
     void changeCurrentCue(Cue *cue);
 
     void setActive(const QString &cueName, int deviceId, bool active);
@@ -73,7 +73,6 @@ private:
     void updateCueContentDelay(CalculatorOperator::Type calculatorOperator, quint64 value);
     void updateCueContentBetween(CalculatorOperator::Type calculatorOperator, quint64 value);
     void updateCueContentAction(CalculatorOperator::Type calculatorOperator, int value);
-
 
 private:
     DeviceManager& m_deviceManager;

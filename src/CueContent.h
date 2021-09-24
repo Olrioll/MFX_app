@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtCore/QObject>
+#include <QtCore/QUuid>
 
 #include <QSuperMacros.h>
 #include <QQmlVarPropertyHelpers.h>
@@ -11,7 +12,7 @@ class CueContent : public QObject
 {
     Q_OBJECT
 
-    QSM_READONLY_VAR_PROPERTY(uint, id, Id)
+    QSM_READONLY_VAR_PROPERTY(QUuid, uuid, Uuid)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, delay, Delay, -1) //Задержка от начала Cue до конкретной Operation (В терминологии домена Action). Редактируется.
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, between, Between, -1) //Задержка от начала Cue до конретной Operation за вычетом Delay предыдущей точки. Редактируется.
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(int, rfChannel, RfChannel, -1) //RfChannel для конкретного устройства. Не редактируется.

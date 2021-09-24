@@ -16,6 +16,7 @@ CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* pare
 {
     m_cueContentItems = new QQmlObjectListModel<CueContent>(this);
     m_cueContentSorted = new CueContentSortingModel(*m_cueContentItems, this);
+    m_cueContentSorted->setSortBy(CueContentSelectedTableRole::Delay);
 
     initConnections();
 }
@@ -90,7 +91,7 @@ void CueContentManager::onDurationTypeSelectedTableRoleChangeRequest(const CueCo
     setDurationTypeSelectedTableRole(role);
 }
 
-void CueContentManager::onSelectItemRequest(const uint id)
+void CueContentManager::onSelectItemRequest(const QUuid& id)
 {
     if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
         cueContent->setSelected(true);
@@ -99,7 +100,7 @@ void CueContentManager::onSelectItemRequest(const uint id)
     }
 }
 
-void CueContentManager::onDeselectItemRequest(const uint id)
+void CueContentManager::onDeselectItemRequest(const QUuid &id)
 {
     if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
         cueContent->setSelected(false);
@@ -138,7 +139,7 @@ void CueContentManager::onSelectLeftItemsRequest()
     for(auto * cueContentItem : m_cueContentItems->toList()) {
         const int index = m_cueContentItems->indexOf(cueContentItem);
 
-        cueContentItem->setSelected(index < qFloor(m_cueContentItems->count() / 2));
+        cueContentItem->setSelected(index < std::floor(m_cueContentItems->count() / 2));
     }
 }
 
@@ -147,7 +148,7 @@ void CueContentManager::onSelectRightItemsRequest()
     for(auto * cueContentItem : m_cueContentItems->toList()) {
         const int index = m_cueContentItems->indexOf(cueContentItem);
 
-        cueContentItem->setSelected(index >= qCeil(m_cueContentItems->count() / 2));
+        cueContentItem->setSelected(index >= std::ceil(m_cueContentItems->count() / 2));
     }
 }
 
@@ -161,15 +162,18 @@ void CueContentManager::onSelectAllFromHeaderRequest(const CueContentSelectedTab
     qInfo() << "Select all from header request";
 }
 
-void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, Qt::SortOrder sortOrder)
+void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role)
 {
-    qInfo() << "Sort by" << role << "requested in" << sortOrder << "order";
+    //NOTE Сортировка только визуальная - она не должна изменять данные
+    qInfo() << "Sort by" << role << "requested";
+
+    m_cueContentSorted->setSortingPreference(role);
 }
 
-CueContent *CueContentManager::cueContentById(uint id) const
+CueContent *CueContentManager::cueContentById(const QUuid& id) const
 {
     for(auto * cueContent : m_cueContentItems->toList()) {
-        if(cueContent->id() == id) {
+        if(cueContent->uuid() == id) {
             return cueContent;
         }
     }
@@ -229,7 +233,6 @@ void CueContentManager::refrestCueContentModel()
     for (auto* action : listActions) {
         auto* cueContent = new CueContent(this);
         cueContent->setDelay(action->startTime() - m_currentCue->startTime());
-        cueContent->setId(m_currentCue->actions()->count() + 1);
         //qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
         cueContent->setBetween(action->startTime() - prevStop);
         auto pattern = m_deviceManager.m_patternManager->patternByName(action->patternName());
