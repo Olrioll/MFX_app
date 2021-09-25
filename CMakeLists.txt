@@ -45,10 +45,10 @@ set(UPDATE_TRANSLATIONS OFF CACHE BOOL "Если ON, то просканируе
 
 include(build/cmake/Dependencies.cmake)
 include(build/cmake/FetchQSuperMacros.cmake)
-include(build/cmake/FetchZLib.cmake)
+#include(build/cmake/FetchZLib.cmake)
 #set (ZLIB_INCLUDE_DIR ${CMAKE_BINARY_DIR}/_deps/zlib-src ${CMAKE_BINARY_DIR}/_deps/zlib-build)
 #set (ZLIB_LIBRARY ${CMAKE_BINARY_DIR}/_deps/zlib-build/libzlibstatic.a)
-include(build/cmake/FetchQuaZip.cmake)
+#include(build/cmake/FetchQuaZip.cmake)
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Сборка                                     │
