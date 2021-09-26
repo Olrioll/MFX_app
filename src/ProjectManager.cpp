@@ -66,6 +66,7 @@ void ProjectManager::loadProject(QString fileName)
         emit patchListChanged();
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
+
         for(auto cue : getChild("Cues")->namedChildren()) {
             QString cueName = cue->properties().value("name").toString();
             emit addCue(cue->properties());
@@ -76,6 +77,8 @@ void ProjectManager::loadProject(QString fileName)
                 emit setActionProperty(cueName, pattern, deviceId, position);
             }
         }
+
+
         for(auto patch : getChild("Patches")->listedChildren()) {
             QVariantList properties;
             QVariantMap propertiesMap;
