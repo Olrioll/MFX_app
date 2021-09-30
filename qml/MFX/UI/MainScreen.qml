@@ -930,8 +930,6 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("First")
 
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
-
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -954,8 +952,6 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Uneven")
-
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
 
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
@@ -980,8 +976,6 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("All")
 
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
-
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -1005,8 +999,6 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Even")
 
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
-
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -1029,8 +1021,6 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Last")
-
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
 
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
