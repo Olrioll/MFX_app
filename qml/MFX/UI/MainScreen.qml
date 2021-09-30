@@ -2819,7 +2819,8 @@ FocusScope
                     states: [
                         State {
                             name: "visible"
-                            when: actionstButton.checked
+                            //TODO temporary always disabled
+                            when: false //actionstButton.checked
                             PropertyChanges {
                                 target: calculatorLoader
                                 Layout.preferredWidth: 176
@@ -2830,7 +2831,8 @@ FocusScope
                         },
                         State {
                             name: "hidden"
-                            when: !actionstButton.checked
+                            //TODO temporary always enabled
+                            when: true //!actionstButton.checked
                             PropertyChanges {
                                 target: calculatorLoader
                                 Layout.preferredWidth: 0
