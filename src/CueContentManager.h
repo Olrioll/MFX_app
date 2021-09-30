@@ -46,6 +46,7 @@ public:
 
     Q_INVOKABLE void onSelectItemRequest(const QUuid &id);
     Q_INVOKABLE void onDeselectItemRequest(const QUuid &id);
+    Q_INVOKABLE void onSelectCurrentRoleRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onSelectAllItemsRequest();
     Q_INVOKABLE void onSelectEvenItemsRequest();
     Q_INVOKABLE void onSelectUnevenItemsRequest();
@@ -55,6 +56,7 @@ public:
     Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDeselectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type& sortOrder);
+    Q_INVOKABLE void replaceActionForSelectedItemsRequest(const QString &patternName);
 
     CueContent * cueContentById(const QUuid &id) const;
     void changeCurrentCue(Cue *cue);

@@ -141,6 +141,7 @@ public slots:
     QVariantList getCues() const;
     void addActionToCue(QString cueName, QString actionName, int patchId, int position);
     void setCueProperty(QString cueName, QString propertyName, QVariant value);
+    void deleteCues(QStringList deletedCueNames);
 signals:
     void addCue(QVariantMap properties);
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,7 +157,6 @@ signals:
 public slots:
     QVariantList cueActions(QString cueName) const;
     void onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
-    void deleteCues(QStringList deletedCueNames);
 signals:
     void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
 ///////////////////////////////////////////////////////////////////////////////

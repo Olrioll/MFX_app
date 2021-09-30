@@ -873,10 +873,16 @@ FocusScope
                 }
 
                 Component {
-                    id: actionsComponent
+                    id: cueContentComponent
 
                     Rectangle {
                         id: mainScreenCueContentWidget
+
+                        objectName: "cue_content"
+
+                        function processPatternPanelActionSelected(actionName) {
+                            cueContentManager.replaceActionForSelectedItemsRequest(actionName);
+                        }
 
                         color: "#444444"
                         radius: 2
@@ -1378,9 +1384,10 @@ FocusScope
 
                             model: cueContentManager.cueContentSorted
 
-                            delegate: FocusScope {
+                            delegate: Item {
                                 id: cueContentListViewDelegate
 
+                                property var uuid: model.uuid
                                 property int rowIndex: model.index
                                 property int rowNumber: rowIndex + 1
                                 property string delay: model.delayTimeDecorator
@@ -1521,6 +1528,19 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+
+                                            propagateComposedEvents: true
+                                            preventStealing: false
+
+                                            onClicked: {
+                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.timingTypeSelectedTableRole)
+
+                                                mouse.accepted = false;
+                                            }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1565,6 +1585,19 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+
+                                            propagateComposedEvents: true
+                                            preventStealing: false
+
+                                            onClicked: {
+                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.deviceTypeSelectedTableRole)
+
+                                                mouse.accepted = false;
+                                            }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1609,6 +1642,19 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+
+                                            propagateComposedEvents: true
+                                            preventStealing: false
+
+                                            onClicked: {
+                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.actionTypeSelectedTableRole)
+
+                                                mouse.accepted = false;
+                                            }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1651,6 +1697,19 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+
+                                            propagateComposedEvents: true
+                                            preventStealing: false
+
+                                            onClicked: {
+                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.durationTypeSelectedTableRole)
+
+                                                mouse.accepted = false;
+                                            }
+                                        }
                                     }
                                 }
 
@@ -1662,6 +1721,13 @@ FocusScope
 
                                     onClicked: {
                                         cueContentListViewDelegate.forceActiveFocus()
+                                        if(cueContentListViewDelegate.selected) {
+                                            cueContentManager.onDeselectItemRequest(cueContentListViewDelegate.uuid)
+                                        } else {
+                                            cueContentManager.onSelectItemRequest(cueContentListViewDelegate.uuid)
+                                        }
+
+                                        mouse.accepted = false;
                                     }
                                 }
                             }
@@ -1675,6 +1741,8 @@ FocusScope
                     Rectangle
                     {
                         id: mainScreenDeviceListWidget
+
+                        objectName: "device_list"
 
                         color: "black"
                         radius: 2
@@ -2297,6 +2365,8 @@ FocusScope
                     Rectangle {
                         id: cueListWidget
 
+                        objectName: "cue_list"
+
                         color: "#444444"
                         radius: 2
 
@@ -2858,7 +2928,7 @@ FocusScope
                             PropertyChanges {
                                 target: rightPanelLoader
                                 Layout.fillWidth: true
-                                sourceComponent: actionsComponent
+                                sourceComponent: cueContentComponent
                             }
                         },
                         State {
@@ -3256,6 +3326,8 @@ FocusScope
                                 if(actionPlate.checked) {
                                     patternManager.cleanPatternSelectionRequest()
                                 } else {
+
+                                    //TODO if(patchPanelFocused) {
                                     patternManager.currentPatternChangeRequest(model.uuid)
 
                                     let checkedPatches = project.checkedPatchesList()
@@ -3264,6 +3336,11 @@ FocusScope
                                     {
                                        project.setPatchProperty(patchId, "act", actionPlate.name);
                                     })
+                                    //TODO } else if(cueContentPanelFocused) {
+                                    if(rightPanelLoader.item.objectName === "cue_content") {
+                                        rightPanelLoader.item.processPatternPanelActionSelected(actionPlate.name)
+                                    }
+                                    //TODO }
                                 }
                             }
                         }

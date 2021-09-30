@@ -8,6 +8,7 @@
 
 namespace  {
 static constexpr char actionStartTimeChangeRole[] = "startTime";
+static constexpr char actionPatternNameChangeRole[] = "patternName";
 }
 
 CueContentManager::CueContentManager(DeviceManager& deviceManager, QObject* parent)
@@ -109,6 +110,11 @@ void CueContentManager::onDeselectItemRequest(const QUuid &id)
     }
 }
 
+void CueContentManager::onSelectCurrentRoleRequest(const CueContentSelectedTableRole::Type &role)
+{
+    setSelectedTableRole(role);
+}
+
 void CueContentManager::onSelectAllItemsRequest()
 {
     for(auto * cueContentItem : m_cueContentItems->toList()) {
@@ -193,6 +199,23 @@ void CueContentManager::onSortFromHeaderRequest(const CueContentSelectedTableRol
     m_cueContentSorted->setSortingPreference(role, sortOrder);
 }
 
+void CueContentManager::replaceActionForSelectedItemsRequest(const QString &patternName)
+{
+    QList<int> devices;
+
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        if(cueContentItem->selected()) {
+            devices << cueContentItem->device();
+        }
+    }
+
+    for(auto * action : m_currentCue->actions()->toList()) {
+        if(devices.contains(action->deviceId())) {
+            action->setPatternName(patternName);
+        }
+    }
+}
+
 CueContent *CueContentManager::cueContentById(const QUuid& id) const
 {
     for(auto * cueContentItem : m_cueContentItems->toList()) {
@@ -237,6 +260,9 @@ void CueContentManager::onCurrentCueActionsChanged(const QModelIndex &topLeft, c
 {
     if(roles.contains(currentCue()->actions()->roleForName(actionStartTimeChangeRole))) {
         //TODO - вот эта вот штука по идее очень неправильна - метод должен триггерить изменения только cueContent айтемов, а sortfilterproxymodel всё сама разрулит
+        refrestCueContentModel();
+    } else if(roles.contains(currentCue()->actions()->roleForName(actionPatternNameChangeRole))){
+        //Если изменился паттерн, то делаем обновление и пересчет таблицы
         refrestCueContentModel();
     }
 }
