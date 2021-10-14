@@ -1468,24 +1468,27 @@ FocusScope
 
                                     spacing: 0
 
-                                    Text {
-
+                                    Item {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: cueContentTableListView.columnWidths[0]
                                         Layout.maximumWidth: cueContentTableListView.columnWidths[0]
                                         Layout.minimumWidth: cueContentTableListView.columnWidths[0]
 
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
+                                        Text {
+                                            anchors.fill: parent
 
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
 
-                                        text: cueContentListViewDelegate.rowNumber
+                                            color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
 
-                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                            text: cueContentListViewDelegate.rowNumber
+
+                                            Behavior on color { ColorAnimation { duration: 250 } }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1497,48 +1500,117 @@ FocusScope
                                         Layout.bottomMargin: 5
 
                                         color: "#1FFFFFFF"
+
+
                                     }
 
-                                    Text {
-                                        id: timingTypeValueItem
-
+                                    Item {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: cueContentTableListView.columnWidths[1]
                                         Layout.maximumWidth: cueContentTableListView.columnWidths[1]
                                         Layout.minimumWidth: cueContentTableListView.columnWidths[1]
 
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
+                                        Text {
+                                            id: timingTypeValueItem
 
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
-
-                                        property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
-
-                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
-
-                                        text: {
-                                            switch(cueContentManager.timingTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.Delay:
-                                                return cueContentListViewDelegate.delay
-                                            case MFXE.CueContentSelectedTableRole.Between:
-                                                return cueContentListViewDelegate.between
-                                            }
-                                            return qsTr("---")
-                                        }
-
-                                        Behavior on color { ColorAnimation { duration: 250 } }
-
-                                        MouseArea {
                                             anchors.fill: parent
 
-                                            propagateComposedEvents: true
-                                            preventStealing: false
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
 
-                                            onClicked: {
-                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.timingTypeSelectedTableRole)
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
 
-                                                mouse.accepted = false;
+                                            property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                            color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                            text: {
+                                                switch(cueContentManager.timingTypeSelectedTableRole) {
+                                                case MFXE.CueContentSelectedTableRole.Delay:
+                                                    return cueContentListViewDelegate.delay
+                                                case MFXE.CueContentSelectedTableRole.Between:
+                                                    return cueContentListViewDelegate.between
+                                                }
+                                                return qsTr("---")
+                                            }
+
+                                            Behavior on color { ColorAnimation { duration: 250 } }
+
+                                            onTextChanged: {
+                                                timingTypeValueItemHighlight.state = "visible"
+                                                timingTypeValueItemHighlightTimer.restart()
+                                            }
+
+                                            Text {
+                                                id: timingTypeValueItemHighlight
+
+                                                anchors.fill: parent
+
+                                                horizontalAlignment: Text.AlignHCenter
+                                                verticalAlignment: Text.AlignVCenter
+
+                                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                                font.pixelSize: 10
+
+                                                text: timingTypeValueItem.text
+
+                                                state: "hidden"
+
+                                                Timer {
+                                                    id: timingTypeValueItemHighlightTimer
+                                                    repeat: false
+                                                    interval: 500
+                                                    onTriggered: {
+                                                        timingTypeValueItemHighlight.state = "hidden"
+                                                    }
+                                                }
+
+                                                states: [
+                                                    State {
+                                                        name: "visible"
+                                                        PropertyChanges {
+                                                            target: timingTypeValueItemHighlight
+                                                            color: "yellow"
+                                                        }
+                                                    },
+                                                    State {
+                                                        name: "hidden"
+                                                        PropertyChanges {
+                                                            target: timingTypeValueItemHighlight
+                                                            color: "transparent"
+                                                        }
+                                                    }
+                                                ]
+
+                                                transitions: [
+                                                    Transition {
+                                                        from: "visible"
+                                                        to: "hidden"
+
+                                                        ColorAnimation {
+                                                            duration: 200
+
+                                                            alwaysRunToEnd: false
+                                                        }
+
+
+                                                    }
+
+                                                ]
+                                            }
+
+                                            MouseArea {
+                                                anchors.fill: parent
+
+                                                propagateComposedEvents: true
+                                                preventStealing: false
+
+                                                onClicked: {
+                                                    cueContentManager.onSelectCurrentRoleRequest(cueContentManager.timingTypeSelectedTableRole)
+
+                                                    mouse.accepted = false;
+                                                }
                                             }
                                         }
                                     }
@@ -1554,48 +1626,52 @@ FocusScope
                                         color: "#1FFFFFFF"
                                     }
 
-                                    Text {
-                                        id: deviceTypeValueItem
-
+                                    Item {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: cueContentTableListView.columnWidths[2]
                                         Layout.maximumWidth: cueContentTableListView.columnWidths[2]
                                         Layout.minimumWidth: cueContentTableListView.columnWidths[2]
 
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
+                                        Text {
+                                            id: deviceTypeValueItem
 
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
-
-                                        property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
-
-                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
-
-                                        text: {
-                                            switch(cueContentManager.deviceTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.RfChannel:
-                                                return cueContentListViewDelegate.rfChannel
-                                            case MFXE.CueContentSelectedTableRole.Device:
-                                                return cueContentListViewDelegate.device
-                                            case MFXE.CueContentSelectedTableRole.DmxChannel:
-                                                return cueContentListViewDelegate.dmxSlot
-                                            }
-                                            return qsTr("---")
-                                        }
-
-                                        Behavior on color { ColorAnimation { duration: 250 } }
-
-                                        MouseArea {
                                             anchors.fill: parent
 
-                                            propagateComposedEvents: true
-                                            preventStealing: false
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
 
-                                            onClicked: {
-                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.deviceTypeSelectedTableRole)
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
 
-                                                mouse.accepted = false;
+                                            property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                            color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                            text: {
+                                                switch(cueContentManager.deviceTypeSelectedTableRole) {
+                                                case MFXE.CueContentSelectedTableRole.RfChannel:
+                                                    return cueContentListViewDelegate.rfChannel
+                                                case MFXE.CueContentSelectedTableRole.Device:
+                                                    return cueContentListViewDelegate.device
+                                                case MFXE.CueContentSelectedTableRole.DmxChannel:
+                                                    return cueContentListViewDelegate.dmxSlot
+                                                }
+                                                return qsTr("---")
+                                            }
+
+                                            Behavior on color { ColorAnimation { duration: 250 } }
+
+                                            MouseArea {
+                                                anchors.fill: parent
+
+                                                propagateComposedEvents: true
+                                                preventStealing: false
+
+                                                onClicked: {
+                                                    cueContentManager.onSelectCurrentRoleRequest(cueContentManager.deviceTypeSelectedTableRole)
+
+                                                    mouse.accepted = false;
+                                                }
                                             }
                                         }
                                     }

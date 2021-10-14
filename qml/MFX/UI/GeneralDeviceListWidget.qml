@@ -21,7 +21,7 @@ Item
                 removedIndexes.push(project.patchPropertyForIndex(i, "ID"))
         }
 
-        project.removePatches(removedIndexes)
+        project.removePatchesByIDs(removedIndexes)
 
     }
 

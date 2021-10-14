@@ -240,6 +240,29 @@ QList<int> ProjectManager::checkedPatchesList() const
     return checkedIDs;
 }
 
+void ProjectManager::removePatchesByIDs(const QStringList &ids)
+{
+    qInfo() << "IDS LIST: " << ids;
+    QStringList patchNamesToRemove;
+
+    for(const auto &patch: getChild("Patches")->listedChildren()) {
+        const auto &patchID = patch->property("ID").toString();
+        qInfo() << patch->toJsonObject();
+        if(ids.contains(patchID)) {
+            patchNamesToRemove << patch->property("ID").toString();
+        }
+    }
+
+    qInfo() << "PATCH NAMES: " << patchNamesToRemove;
+
+    for(auto &patchName: patchNamesToRemove) {
+        getChild("Patches")->removeChild(patchName);
+    }
+
+
+    emit patchListChanged();
+}
+
 QVariant ProjectManager::patchProperty(int id, QString propertyName) const
 {
     auto patches = getChild("Patches")->listedChildren();
@@ -335,7 +358,6 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     {
         patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
     }
-
 
     getChild("Patches")->addChild(patch);
 

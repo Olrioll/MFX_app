@@ -93,6 +93,7 @@ public slots:
     int patchIndexForId(int id) const;
     int patchCount() const;
     QList<int> checkedPatchesList() const;
+    void removePatchesByIDs(const QStringList &ids);
 signals:
     void patchListChanged();
     void patchCheckedChanged(int id, bool checked);

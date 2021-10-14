@@ -59,5 +59,6 @@
         <file>MFX/UI/Components/Basic/SelectableTableHeaderItem.qml</file>
         <file>MFX/UI/Components/Templates/TextFieldWithBackground.qml</file>
         <file>MFX/UI/Components/Basic/TextFieldWithBackground.qml</file>
+        <file>MFX/UI/Components/Templates/RoundedTriangleShape.qml</file>
     </qresource>
 </RCC>
