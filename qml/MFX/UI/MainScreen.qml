@@ -873,10 +873,16 @@ FocusScope
                 }
 
                 Component {
-                    id: actionsComponent
+                    id: cueContentComponent
 
                     Rectangle {
                         id: mainScreenCueContentWidget
+
+                        objectName: "cue_content"
+
+                        function processPatternPanelActionSelected(actionName) {
+                            cueContentManager.replaceActionForSelectedItemsRequest(actionName);
+                        }
 
                         color: "#444444"
                         radius: 2
@@ -930,8 +936,6 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("First")
 
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
-
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -954,8 +958,6 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Uneven")
-
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
 
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
@@ -980,8 +982,6 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("All")
 
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
-
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -1005,8 +1005,6 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Even")
 
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
-
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -1029,8 +1027,6 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Last")
-
-                                        enabled: cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
 
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
@@ -1388,9 +1384,10 @@ FocusScope
 
                             model: cueContentManager.cueContentSorted
 
-                            delegate: FocusScope {
+                            delegate: Item {
                                 id: cueContentListViewDelegate
 
+                                property var uuid: model.uuid
                                 property int rowIndex: model.index
                                 property int rowNumber: rowIndex + 1
                                 property string delay: model.delayTimeDecorator
@@ -1471,24 +1468,27 @@ FocusScope
 
                                     spacing: 0
 
-                                    Text {
-
+                                    Item {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: cueContentTableListView.columnWidths[0]
                                         Layout.maximumWidth: cueContentTableListView.columnWidths[0]
                                         Layout.minimumWidth: cueContentTableListView.columnWidths[0]
 
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
+                                        Text {
+                                            anchors.fill: parent
 
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
 
-                                        text: cueContentListViewDelegate.rowNumber
+                                            color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
 
-                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                            text: cueContentListViewDelegate.rowNumber
+
+                                            Behavior on color { ColorAnimation { duration: 250 } }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1500,37 +1500,119 @@ FocusScope
                                         Layout.bottomMargin: 5
 
                                         color: "#1FFFFFFF"
+
+
                                     }
 
-                                    Text {
-                                        id: timingTypeValueItem
-
+                                    Item {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: cueContentTableListView.columnWidths[1]
                                         Layout.maximumWidth: cueContentTableListView.columnWidths[1]
                                         Layout.minimumWidth: cueContentTableListView.columnWidths[1]
 
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
+                                        Text {
+                                            id: timingTypeValueItem
 
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
+                                            anchors.fill: parent
 
-                                        property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
 
-                                        text: {
-                                            switch(cueContentManager.timingTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.Delay:
-                                                return cueContentListViewDelegate.delay
-                                            case MFXE.CueContentSelectedTableRole.Between:
-                                                return cueContentListViewDelegate.between
+                                            property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                            color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                            text: {
+                                                switch(cueContentManager.timingTypeSelectedTableRole) {
+                                                case MFXE.CueContentSelectedTableRole.Delay:
+                                                    return cueContentListViewDelegate.delay
+                                                case MFXE.CueContentSelectedTableRole.Between:
+                                                    return cueContentListViewDelegate.between
+                                                }
+                                                return qsTr("---")
                                             }
-                                            return qsTr("---")
-                                        }
 
-                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                            Behavior on color { ColorAnimation { duration: 250 } }
+
+                                            onTextChanged: {
+                                                timingTypeValueItemHighlight.state = "visible"
+                                                timingTypeValueItemHighlightTimer.restart()
+                                            }
+
+                                            Text {
+                                                id: timingTypeValueItemHighlight
+
+                                                anchors.fill: parent
+
+                                                horizontalAlignment: Text.AlignHCenter
+                                                verticalAlignment: Text.AlignVCenter
+
+                                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                                font.pixelSize: 10
+
+                                                text: timingTypeValueItem.text
+
+                                                state: "hidden"
+
+                                                Timer {
+                                                    id: timingTypeValueItemHighlightTimer
+                                                    repeat: false
+                                                    interval: 500
+                                                    onTriggered: {
+                                                        timingTypeValueItemHighlight.state = "hidden"
+                                                    }
+                                                }
+
+                                                states: [
+                                                    State {
+                                                        name: "visible"
+                                                        PropertyChanges {
+                                                            target: timingTypeValueItemHighlight
+                                                            color: "yellow"
+                                                        }
+                                                    },
+                                                    State {
+                                                        name: "hidden"
+                                                        PropertyChanges {
+                                                            target: timingTypeValueItemHighlight
+                                                            color: "transparent"
+                                                        }
+                                                    }
+                                                ]
+
+                                                transitions: [
+                                                    Transition {
+                                                        from: "visible"
+                                                        to: "hidden"
+
+                                                        ColorAnimation {
+                                                            duration: 200
+
+                                                            alwaysRunToEnd: false
+                                                        }
+
+
+                                                    }
+
+                                                ]
+                                            }
+
+                                            MouseArea {
+                                                anchors.fill: parent
+
+                                                propagateComposedEvents: true
+                                                preventStealing: false
+
+                                                onClicked: {
+                                                    cueContentManager.onSelectCurrentRoleRequest(cueContentManager.timingTypeSelectedTableRole)
+
+                                                    mouse.accepted = false;
+                                                }
+                                            }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1544,37 +1626,54 @@ FocusScope
                                         color: "#1FFFFFFF"
                                     }
 
-                                    Text {
-                                        id: deviceTypeValueItem
-
+                                    Item {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: cueContentTableListView.columnWidths[2]
                                         Layout.maximumWidth: cueContentTableListView.columnWidths[2]
                                         Layout.minimumWidth: cueContentTableListView.columnWidths[2]
 
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
+                                        Text {
+                                            id: deviceTypeValueItem
 
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
+                                            anchors.fill: parent
 
-                                        property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
 
-                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
 
-                                        text: {
-                                            switch(cueContentManager.deviceTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.RfChannel:
-                                                return cueContentListViewDelegate.rfChannel
-                                            case MFXE.CueContentSelectedTableRole.Device:
-                                                return cueContentListViewDelegate.device
-                                            case MFXE.CueContentSelectedTableRole.DmxChannel:
-                                                return cueContentListViewDelegate.dmxSlot
+                                            property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                            color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                            text: {
+                                                switch(cueContentManager.deviceTypeSelectedTableRole) {
+                                                case MFXE.CueContentSelectedTableRole.RfChannel:
+                                                    return cueContentListViewDelegate.rfChannel
+                                                case MFXE.CueContentSelectedTableRole.Device:
+                                                    return cueContentListViewDelegate.device
+                                                case MFXE.CueContentSelectedTableRole.DmxChannel:
+                                                    return cueContentListViewDelegate.dmxSlot
+                                                }
+                                                return qsTr("---")
                                             }
-                                            return qsTr("---")
-                                        }
 
-                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                            Behavior on color { ColorAnimation { duration: 250 } }
+
+                                            MouseArea {
+                                                anchors.fill: parent
+
+                                                propagateComposedEvents: true
+                                                preventStealing: false
+
+                                                onClicked: {
+                                                    cueContentManager.onSelectCurrentRoleRequest(cueContentManager.deviceTypeSelectedTableRole)
+
+                                                    mouse.accepted = false;
+                                                }
+                                            }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1619,6 +1718,19 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+
+                                            propagateComposedEvents: true
+                                            preventStealing: false
+
+                                            onClicked: {
+                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.actionTypeSelectedTableRole)
+
+                                                mouse.accepted = false;
+                                            }
+                                        }
                                     }
 
                                     Rectangle {
@@ -1661,6 +1773,19 @@ FocusScope
                                         }
 
                                         Behavior on color { ColorAnimation { duration: 250 } }
+
+                                        MouseArea {
+                                            anchors.fill: parent
+
+                                            propagateComposedEvents: true
+                                            preventStealing: false
+
+                                            onClicked: {
+                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.durationTypeSelectedTableRole)
+
+                                                mouse.accepted = false;
+                                            }
+                                        }
                                     }
                                 }
 
@@ -1672,6 +1797,13 @@ FocusScope
 
                                     onClicked: {
                                         cueContentListViewDelegate.forceActiveFocus()
+                                        if(cueContentListViewDelegate.selected) {
+                                            cueContentManager.onDeselectItemRequest(cueContentListViewDelegate.uuid)
+                                        } else {
+                                            cueContentManager.onSelectItemRequest(cueContentListViewDelegate.uuid)
+                                        }
+
+                                        mouse.accepted = false;
                                     }
                                 }
                             }
@@ -1685,6 +1817,8 @@ FocusScope
                     Rectangle
                     {
                         id: mainScreenDeviceListWidget
+
+                        objectName: "device_list"
 
                         color: "black"
                         radius: 2
@@ -2307,6 +2441,8 @@ FocusScope
                     Rectangle {
                         id: cueListWidget
 
+                        objectName: "cue_list"
+
                         color: "#444444"
                         radius: 2
 
@@ -2819,7 +2955,8 @@ FocusScope
                     states: [
                         State {
                             name: "visible"
-                            when: actionstButton.checked
+                            //TODO temporary always disabled
+                            when: false //actionstButton.checked
                             PropertyChanges {
                                 target: calculatorLoader
                                 Layout.preferredWidth: 176
@@ -2830,7 +2967,8 @@ FocusScope
                         },
                         State {
                             name: "hidden"
-                            when: !actionstButton.checked
+                            //TODO temporary always enabled
+                            when: true //!actionstButton.checked
                             PropertyChanges {
                                 target: calculatorLoader
                                 Layout.preferredWidth: 0
@@ -2866,7 +3004,7 @@ FocusScope
                             PropertyChanges {
                                 target: rightPanelLoader
                                 Layout.fillWidth: true
-                                sourceComponent: actionsComponent
+                                sourceComponent: cueContentComponent
                             }
                         },
                         State {
@@ -3264,6 +3402,8 @@ FocusScope
                                 if(actionPlate.checked) {
                                     patternManager.cleanPatternSelectionRequest()
                                 } else {
+
+                                    //TODO if(patchPanelFocused) {
                                     patternManager.currentPatternChangeRequest(model.uuid)
 
                                     let checkedPatches = project.checkedPatchesList()
@@ -3272,6 +3412,11 @@ FocusScope
                                     {
                                        project.setPatchProperty(patchId, "act", actionPlate.name);
                                     })
+                                    //TODO } else if(cueContentPanelFocused) {
+                                    if(rightPanelLoader.item.objectName === "cue_content") {
+                                        rightPanelLoader.item.processPatternPanelActionSelected(actionPlate.name)
+                                    }
+                                    //TODO }
                                 }
                             }
                         }

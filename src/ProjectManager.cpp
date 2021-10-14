@@ -66,6 +66,7 @@ void ProjectManager::loadProject(QString fileName)
         emit patchListChanged();
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
+
         for(auto cue : getChild("Cues")->namedChildren()) {
             QString cueName = cue->properties().value("name").toString();
             emit addCue(cue->properties());
@@ -76,6 +77,8 @@ void ProjectManager::loadProject(QString fileName)
                 emit setActionProperty(cueName, pattern, deviceId, position);
             }
         }
+
+
         for(auto patch : getChild("Patches")->listedChildren()) {
             QVariantList properties;
             QVariantMap propertiesMap;
@@ -237,6 +240,29 @@ QList<int> ProjectManager::checkedPatchesList() const
     return checkedIDs;
 }
 
+void ProjectManager::removePatchesByIDs(const QStringList &ids)
+{
+    qInfo() << "IDS LIST: " << ids;
+    QStringList patchNamesToRemove;
+
+    for(const auto &patch: getChild("Patches")->listedChildren()) {
+        const auto &patchID = patch->property("ID").toString();
+        qInfo() << patch->toJsonObject();
+        if(ids.contains(patchID)) {
+            patchNamesToRemove << patch->property("ID").toString();
+        }
+    }
+
+    qInfo() << "PATCH NAMES: " << patchNamesToRemove;
+
+    for(auto &patchName: patchNamesToRemove) {
+        getChild("Patches")->removeChild(patchName);
+    }
+
+
+    emit patchListChanged();
+}
+
 QVariant ProjectManager::patchProperty(int id, QString propertyName) const
 {
     auto patches = getChild("Patches")->listedChildren();
@@ -332,7 +358,6 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     {
         patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
     }
-
 
     getChild("Patches")->addChild(patch);
 

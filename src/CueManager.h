@@ -29,14 +29,14 @@ public:
     Q_INVOKABLE void expandCueOnPlayerRequest(const QString& name); //Обработчик запроса от плеера, что нужно развернуть конкретный элемент Cue
     Q_INVOKABLE void cueSelectedOnCueListRequest(const QString& name); //Обработчик запроса от панели списка Cue о том, что была выделена конкретная Cue
     Q_INVOKABLE void cueDeselectedOnCueListRequest(const QString& name); //Обработчик запроса от панели списка Cue, что у Cue, на которой ранее было выделение, оно снято
+    Q_INVOKABLE void deleteCues(QStringList deletedCueNames);
+
     Cue* cueById(const QUuid& id) const;
     Cue* cueByName(const QString& name) const;
 
     CueSortingModel* cuesSorted() const;
 
     void initConnections();
-
-    Q_INVOKABLE void deleteCues(QStringList deletedCueNames);
 
     Action* getAction(const QString &cueName, int deviceId);
 
