@@ -141,10 +141,13 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/CueContentManager.cpp"
     "src/Language.cpp"
     "src/CueContentSortingModel.cpp"
-)
+    "src/DMXDevice.cpp"
+    "src/DMXPlugin.cpp"
+ )
 
 target_link_libraries(${MFX_PROJECT_NAME}
     PRIVATE
+    "ftd2xx"
     Qt5::Widgets
     Qt5::Qml
     Qt5::Quick
@@ -156,6 +159,7 @@ target_link_libraries(${MFX_PROJECT_NAME}
     QSuperMacros
 #    QuaZip::QuaZip
 )
+
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32
     "build/packaging/windows/appIcon.rc"
