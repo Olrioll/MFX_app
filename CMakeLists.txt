@@ -39,6 +39,8 @@ set(QSUPERMACROS_BUILD_STATIC ON CACHE BOOL "")
 set(QSUPERMACROS_BUILD_DOC OFF CACHE BOOL "")
 set(UPDATE_TRANSLATIONS OFF CACHE BOOL "Если ON, то просканирует все CPP и QML файлы на наличие строк перевода и создаст/обновит *.ts файлы")
 
+add_compile_options(/wd4819)
+
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Зависимости                                │
 # └──────────────────────────────────────────────────────────────────┘
@@ -143,6 +145,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/CueContentSortingModel.cpp"
     "src/DMXDevice.cpp"
     "src/DMXPlugin.cpp"
+    "src/DMXWriter.cpp"
  )
 
 target_link_libraries(${MFX_PROJECT_NAME}

@@ -740,12 +740,12 @@ void WaveformWidget::paint(QPainter* painter)
 
 #endif
 
-qint64 WaveformWidget::max() const
+qint64 WaveformWidget::maxo() const
 {
     return m_max / _ratio;
 }
 
-qint64 WaveformWidget::min() const
+qint64 WaveformWidget::mino() const
 {
     return m_min / _ratio;
 }

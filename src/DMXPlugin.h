@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "DMXDevice.h"
-//#include "DMXWriter.h"
+#include "DMXWriter.h"
 
 class QDmxUsbPlugin : public QObject
 {
@@ -41,7 +41,7 @@ private:
     QMap<quint32, DMXDevice*> m_deviceList;
     QMultiHash<quint32,quint32> m_openedOutput;
     QString m_lastError;
-    //QDMXWriter *m_writer = NULL;
+    QDMXWriter *m_writer = NULL;
 };
 
 #endif // DMXPLUGIN_H

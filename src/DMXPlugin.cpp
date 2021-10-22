@@ -3,7 +3,7 @@
 
 QDmxUsbPlugin::QDmxUsbPlugin(QObject *parent): QObject(parent)
 {
-    //m_writer = new QDMXWriter();
+    m_writer = new QDMXWriter();
 }
 
 QDmxUsbPlugin::~QDmxUsbPlugin()
@@ -78,13 +78,13 @@ void QDmxUsbPlugin::writeDmx(quint32 device, quint32 port, QByteArray data)
     if (device >= quint32(m_deviceList.size())) {
         return;
     }
-    /*m_writer->init(m_deviceList[device], data);
-    m_writer->start();*/
+    m_writer->init(m_deviceList[device], data);
+    m_writer->start();
 }
 
 void QDmxUsbPlugin::onStopWrite()
 {
-   //m_writer->stop();
+   m_writer->stop();
 }
 
 void QDmxUsbPlugin::onChangeWriteData()
@@ -92,6 +92,6 @@ void QDmxUsbPlugin::onChangeWriteData()
     QByteArray data;
     data.resize(512);
     data.fill('a', 512);
-    //m_writer->changeData(data);
+    m_writer->changeData(data);
 }
 

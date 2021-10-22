@@ -51,8 +51,8 @@ public slots:
     QString maxString() const;
     QString minString() const;
     QString positionString(qint64 pos, QString format) const;
-    qint64 max() const;
-    qint64 min() const;
+    qint64 maxo() const;
+    qint64 mino() const;
     qint64 maxSample() const;
     qint64 minSample() const;
     float ratio() const;
