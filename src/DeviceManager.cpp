@@ -91,5 +91,6 @@ void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName
         return;
     }
     Pattern *p = m_patternManager->patternByName(patternName);
+    qDebug()<<"RUNACTION: "<<time;
     device->runPattern(p, time);
 }

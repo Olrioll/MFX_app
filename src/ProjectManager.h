@@ -26,6 +26,7 @@ public:
 
     ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
     virtual ~ProjectManager();
+    void setPrefire(QMap<QString, int> &&pref);
 
 public slots:
 
@@ -82,6 +83,8 @@ public slots:
     QVariantList cueActions(QString cueName) const;
     void onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
     void deleteCues(QStringList deletedCueNames);
+    void copyCues(QStringList copyCueNames);
+    void saveJsonOut();
 
 signals:
 
@@ -98,6 +101,7 @@ signals:
     void addCue(QVariantMap properties);
     void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
     void editPatch(QVariantList properties);
+    void pasteCues(QStringList pastedCues);
 
 private:
 
@@ -106,6 +110,8 @@ private:
     SettingsManager& _settings;
     bool _hasUnsavedChanges = false;
     QString _currentGroup;
+    QStringList _pastedCues;
+    QMap<QString,int> m_prefire;
 };
 
 #endif // PROJECTMANAGER_H

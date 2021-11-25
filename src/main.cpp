@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     ProjectManager project(settings);
     PatternManager patternManager(settings);
     patternManager.initPatterns();
+    project.setPrefire(patternManager.getPrefire());
     DeviceManager deviceManager;
     deviceManager.m_patternManager = &patternManager;
     CursorManager cursorManager;

@@ -20,6 +20,7 @@ public:
 
     void initConnections();
     static void qmlRegister();
+    QMap<QString,int> getPrefire();
 
     Q_INVOKABLE void currentPatternChangeRequest(const QUuid& patternUuid);
     Q_INVOKABLE void cleanPatternSelectionRequest();
@@ -32,4 +33,5 @@ public:
 private:
     PatternFilteringModel* m_patternsFiltered = nullptr;
     SettingsManager& m_settingsManager;
+    QMap<QString,int> m_prefire;
 };

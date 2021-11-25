@@ -32,6 +32,7 @@ public:
 
     QJsonObject toJsonObject() const;
     void fromJsonObject(const QJsonObject& jsonObject);
+    QString addFromJsonObject(QJsonObject &&jsonObject);
 
     void clear();
     bool isEmpty() const;

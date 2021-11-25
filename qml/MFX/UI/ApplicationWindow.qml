@@ -28,6 +28,9 @@ ApplicationWindow
 
     property bool isPatchEditorOpened: false
     property bool isMouseCursorVisible: true
+    onIsMouseCursorVisibleChanged: if(isMouseCursorVisible){
+                                       cursorManager.showCursor()
+                                   }else cursorManager.hideCursor()
 
     property alias projectSettingsWidget: projectSettingsWidget
     property alias screensLayout: screensLayout

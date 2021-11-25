@@ -5,6 +5,9 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QProcess>
+#include <QJsonValue>
+#include <QJsonArray>
+
 
 #include <QDebug>
 
@@ -18,6 +21,11 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 ProjectManager::~ProjectManager()
 {
     cleanWorkDirectory();
+}
+
+void ProjectManager::setPrefire(QMap<QString, int> &&pref)
+{
+    m_prefire = std::move(pref);
 }
 
 void ProjectManager::cleanWorkDirectory()
@@ -616,6 +624,12 @@ QVariantList ProjectManager::cueActions(QString cueName) const
         actionList.push_back(action->properties());
     }
 
+    auto variantSort = [](const QVariant &v1, const QVariant &v2)
+    {
+        return v1.toMap().value("position").toDouble() < v2.toMap().value("position").toDouble() ;
+    };
+
+    std::sort(actionList.begin(), actionList.end(), variantSort);
     return actionList;
 }
 
@@ -634,5 +648,107 @@ void ProjectManager::deleteCues(QStringList deletedCueNames)
 {
     for(auto &name: deletedCueNames) {
         getChild("Cues")->removeChild(name);
+    }
+}
+
+void ProjectManager::copyCues(QStringList copyCueNames)
+{
+    _pastedCues.clear();
+    for(auto &name: copyCueNames) {
+        auto newName = getChild("Cues")->addFromJsonObject(getChild("Cues")->getChild(name)->toJsonObject());
+        if(!newName.isEmpty()){
+            _pastedCues<<newName;
+            auto cue = getChild("Cues")->getChild(newName);
+            emit addCue(cue->properties());
+            foreach(auto action, cue->listedChildren()) {
+                QString pattern = action->properties().value("actionName").toString();
+                quint64 deviceId = action->properties().value("patchId").toUInt();
+                quint64 position = action->properties().value("position").toUInt();
+                emit setActionProperty(newName, pattern, deviceId, position);
+            }
+        }
+    }
+
+    if(!_pastedCues.isEmpty()){
+        emit pasteCues(_pastedCues);
+    }
+}
+
+void ProjectManager::saveJsonOut()
+{
+    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
+    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
+    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save json output file"), lastOpenedDir);
+
+    QFile jsonFile(fileName);
+    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+
+        auto ar = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
+
+        auto pch = getChild("Patches")->toJsonObject().value("children").toArray();
+        QMap <int,QJsonObject>patch;
+        for(auto z: pch){
+            auto p = z.toObject().value("properties").toObject();
+            patch.insert(p.value("ID").toInt(),p);
+        }
+
+        QJsonObject out;
+        auto getRoundPos = [](const double p){
+            return qint64(p/10.0)*10;
+        };
+        QVector<QJsonObject> list;
+        auto data = QJsonObject({
+
+                                    qMakePair(QString("action"), 1),
+                                    qMakePair(QString("between"), QJsonValue(static_cast<qint64>(0))),
+                                    qMakePair(QString("ch"), 1),
+                                    qMakePair(QString("delay"), QJsonValue(static_cast<qint64>(0))),
+                                    qMakePair(QString("freeze"), bool(false)),
+                                    qMakePair(QString("id"), 0),
+                                    qMakePair(QString("position"), 0),
+                                    qMakePair(QString("time"), QJsonValue(static_cast<qint64>(100))),
+                                    qMakePair(QString("type"),1)
+                                });
+        for( auto y:ar )
+        {
+
+            for(const auto x: y.toObject().value("children").toArray())
+            {
+                QJsonObject d;
+                auto actionName = x.toObject().value("properties").toObject().value("actionName").toString();
+                auto patchid = x.toObject().value("properties").toObject().value("patchId").toInt();
+                auto position = getRoundPos(x.toObject().value("properties").toObject().value("position").toDouble()) - m_prefire.value(actionName);
+                if(position<0)continue;
+
+                data["action"] = actionName.remove("A").toInt();
+                data["ch"] = patch.find(patchid).value().value("DMX").toInt();
+                data["delay"] = position;
+                list.append(data);
+            }
+
+        }
+
+        std::sort(list.begin(),list.end(),[](const QJsonObject &a,const QJsonObject &b){
+            return a.value("delay").toInt() < b.value("delay").toInt();});
+
+        int id = 1;
+        auto lastMs = list.first().value("delay").toInt();
+        for(auto &x: list){
+            x["id"] = id++;
+            auto pl = x.value("delay").toInt();
+            x["between"] = pl - lastMs;
+            lastMs = pl;
+        }
+
+        QJsonArray arr;
+        for(auto &x: list)
+        {
+            arr.push_back(x);
+        }
+
+        jsonFile.write(QJsonDocument(arr).toJson());
+
+        jsonFile.waitForBytesWritten(30000);
+        jsonFile.close();
     }
 }

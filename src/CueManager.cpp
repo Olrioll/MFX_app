@@ -218,12 +218,13 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
                 continue;
             }
             quint64 duration = pattern->duration();
-            if (a->startTime() == t * 10) {
+            const auto pref = pattern->prefireDuration();
+            if (a->startTime() - pref == t * 10) {
                 emit runPattern(a->deviceId(), playerPosition(), a->patternName());
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
             }
-            if(c->active() && a->startTime() + duration == t * 10) {
+            if(c->active() && a->startTime() - pref + duration == t * 10) {
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }
