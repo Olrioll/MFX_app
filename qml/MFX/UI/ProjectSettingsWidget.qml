@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
@@ -535,6 +535,9 @@ Item
                 {
                     project.setBackgroundImage(projectSettingsWidget.choosenImageFile)
                     sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
+                }else{
+                    project.setBackgroundImage("qrc:/images/defaultBG.svg")
+                    sceneWidget.backgroundImage.source = "qrc:/images/defaultBG.svg"
                 }
 
                 sceneWidget.centerBackgroundImage()
@@ -552,8 +555,8 @@ Item
                     project.setAudioTrack(choosenAudioFile)
                 }
 
-                sceneWidget.sceneFrameItem.restorePreviousGeometry()
                 sceneWidget.sceneFrameItem.visible = true
+                sceneWidget.sceneFrameItem.restorePreviousGeometry()
                 applicationWindow.isPatchEditorOpened = false
                 projectSettingsWidget.visible = false
                 if(isNewProject)

@@ -147,6 +147,18 @@ Pattern *PatternManager::patternById(const QUuid &id) const
     return nullptr;
 }
 
+qulonglong PatternManager::maxPatternDuration(const QStringList &list) const
+{
+    qulonglong out = 0;
+    for(auto * pattern : m_patterns->toList()) {
+        for(auto &name: list)
+            if(name.compare(pattern->name(), Qt::CaseInsensitive) == 0) {
+                out = qMax<qulonglong>(pattern->duration() + pattern->prefireDuration(),out);
+            }
+    }
+    return out;
+}
+
 Pattern *PatternManager::patternByName(const QString &name) const
 {
     for(auto * pattern : m_patterns->toList()) {

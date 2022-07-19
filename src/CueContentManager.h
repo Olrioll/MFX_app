@@ -44,9 +44,13 @@ public:
     Q_INVOKABLE void onActionTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDurationTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
 
+    Q_INVOKABLE QList<int> onGetSelectedDeviseList();
+    Q_INVOKABLE void onMirror();
+    Q_INVOKABLE void onSelectedChangeAction(const QString& name);
     Q_INVOKABLE void onSelectItemRequest(const QUuid &id);
     Q_INVOKABLE void onDeselectItemRequest(const QUuid &id);
     Q_INVOKABLE void onSelectAllItemsRequest();
+    Q_INVOKABLE void onDeselecAllItemsRequest();
     Q_INVOKABLE void onSelectEvenItemsRequest();
     Q_INVOKABLE void onSelectUnevenItemsRequest();
     Q_INVOKABLE void onSelectLeftItemsRequest();
@@ -55,11 +59,12 @@ public:
     Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDeselectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type& sortOrder);
-
+    Q_INVOKABLE void setAllUnActive();
     CueContent * cueContentById(const QUuid &id) const;
     void changeCurrentCue(Cue *cue);
 
     void setActive(const QString &cueName, int deviceId, bool active);
+
     CueManager *m_cueManager;
 
     CueContentSortingModel* cueContentSorted() const;

@@ -10,6 +10,7 @@
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
+#include "FireBaseClouds.h"
 
 class ProjectManager : public QObject, public JsonSerializable
 {
@@ -31,6 +32,7 @@ public:
 public slots:
 
     void loadProject(QString fileName);
+    void reloadCurrentProject();
     void newProject();
     void saveProject();
 
@@ -50,6 +52,8 @@ public slots:
     void removeGroup(QString name);
     bool renameGroup(QString newName);
     void addPatchesToGroup(QString groupName, QList<int> patchIDs);
+    void removePatches(const QList<int> patchIds);
+    void removeSelectedPatches();
     void removePatchesFromGroup(QString groupName, QList<int> patchIDs);
     bool isGroupContainsPatch(QString groupName, int patchId) const;
     bool isPatchHasGroup(int patchId) const;
@@ -69,6 +73,7 @@ public slots:
     QStringList patchPropertiesNames(int index) const;
     QList<QVariant> patchPropertiesValues(int index) const;
     void setPatchProperty(int id, QString propertyName, QVariant value);
+    void uncheckPatch();
     QVariantList patchesIdList(QString groupName) const;
     int patchIndexForId(int id) const;
 
@@ -84,7 +89,15 @@ public slots:
     void onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
     void deleteCues(QStringList deletedCueNames);
     void copyCues(QStringList copyCueNames);
+    void changeAction(QString cueName, int deviceId, QString pattern);
     void saveJsonOut();
+    void onMirror(const QString &cueName, QList<int> deviceId);
+    void onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside);
+    void onRandom(const QString &cueName, QList<int> deviceId);
+    QStringList maxActWidth(const QList<int> &ids);
+    void setMsecPerPx(double ms){  msperpx = ms;}
+    double getMsecPerPx(){return msperpx;}
+    void updateCurrent();
 
 signals:
 
@@ -99,12 +112,16 @@ signals:
 
     void sceneFrameWidthChanged(double sceneFrameWidth);
     void addCue(QVariantMap properties);
+    void deleteAllCue();
+    void reloadCues();
     void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
     void editPatch(QVariantList properties);
     void pasteCues(QStringList pastedCues);
+    void updateCues(QString cueName);
+    void reloadPattern();
 
 private:
-
+    void updateCoeffByName(QString cueName);
     void cleanWorkDirectory();
 
     SettingsManager& _settings;
@@ -112,6 +129,8 @@ private:
     QString _currentGroup;
     QStringList _pastedCues;
     QMap<QString,int> m_prefire;
+//    FireBaseClouds clouds;
+   double msperpx = 1;
 };
 
 #endif // PROJECTMANAGER_H

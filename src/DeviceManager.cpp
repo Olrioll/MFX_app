@@ -53,8 +53,19 @@ void DeviceManager::onEditPatch(QVariantList properties)
     int minAng = -120;
     int maxAng = -120;
     int height = -1;
+
+//    bool isId = false;
+    bool isMinAnd = true;
+    bool isMaxAnd = true;
+    bool isHeight = true;
+    qDebug()<< "EditPatch"<<properties;
     foreach(auto prop, properties)
     {
+        if(prop.toMap().isEmpty()){
+          isMinAnd = isMaxAnd = isHeight = false;
+          continue;
+        }
+
         QString stringFirst = prop.toMap().first().toString();
         QVariant last = prop.toMap().last();
 
@@ -63,12 +74,19 @@ void DeviceManager::onEditPatch(QVariantList properties)
         }
         if(stringFirst == "min ang") {
             minAng = last.toInt();
+            if(last.isNull())
+                isMinAnd = false;
+
         }
         if(stringFirst == "max ang") {
             maxAng = last.toInt();
+            if(last.isNull())
+                isMaxAnd = false;
         }
         if(stringFirst == "height") {
             height = last.toInt();
+            if(last.isNull())
+                isHeight = false;
         }
     }
     Device *device = deviceById(id);
@@ -79,9 +97,21 @@ void DeviceManager::onEditPatch(QVariantList properties)
         return;
     }
     SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);
+    if(isMinAnd)
     sequenceDevice->setMinAngle(minAng);
+
+    if(isMaxAnd)
     sequenceDevice->setMaxAngle(maxAng);
+
+    if(isHeight)
     sequenceDevice->setheight(height);
+    emit editChanged();
+}
+
+void DeviceManager::reloadPattern()
+{
+ m_patternManager->initPatterns();
+qDebug()<<"reloadPattern";
 }
 
 void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName)

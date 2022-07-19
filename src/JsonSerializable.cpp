@@ -32,6 +32,11 @@ QVariant JsonSerializable::property(const QString &name) const
     return _properties.value(name);
 }
 
+bool JsonSerializable::containsProperty(const QString &name) const
+{
+    return _properties.contains(name);
+}
+
 QVariantMap &JsonSerializable::properties()
 {
     return _properties;
@@ -68,6 +73,37 @@ void JsonSerializable::renameChild(const QString &name, const QString &newName)
 {
     auto oldValue = _namedChildren.take(name);
     _namedChildren.insert(newName, oldValue);
+}
+
+void JsonSerializable::removeChildrenAtIndex(const QList<int> listidx)
+{
+    QList<JsonSerializable*> copy;
+    for(auto &idx: listidx){
+        copy.append(_childrenList[idx]);
+    }
+
+    for(auto i = 0; i<_childrenList.size();++i)
+        if(!copy.contains(_childrenList[i])){
+            delete _childrenList[i];
+        }
+
+    _childrenList.clear();
+    _childrenList = std::move(copy);
+}
+
+void JsonSerializable::removefromChildrenWithProperty(const QString& property, QVariant equal)
+{
+    QList<JsonSerializable*> copy;
+    for(auto i = 0; i<_childrenList.size();++i){
+        if(_childrenList[i]->containsProperty(property)){
+            if(equal.compare(_childrenList[i]->property(property)) != 0){
+                copy.append(_childrenList[i]);
+            }else delete _childrenList[i];
+        }else {qDebug()<<property<<" PROPERTY NOT CONTAINS:";   return; }
+    }
+
+    _childrenList.clear();
+    _childrenList = std::move(copy);
 }
 
 JsonSerializable *JsonSerializable::getChild(const QString &name) const

@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
@@ -26,6 +26,11 @@ Item
         anchors.bottomMargin: 10
         anchors.bottom: patchScreenMode ? addGroupButton.top : parent.bottom
         spacing: 10
+        MouseArea{
+            anchors.fill: parent;
+            z:-1
+            onClicked: project.uncheckPatch();
+        }
 
         property bool dropAreaAvaliable: deviceGroupWidget.dropAreaAvaliable
 

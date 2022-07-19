@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 
@@ -1077,6 +1077,7 @@ Item
                     let newYposition = Math.round(newY / 12) * 12
                     let newPosition = playerWidget.min + pixelsToMsec(newX)
 
+//                    console.log("drag.x ",drag.x, newX, newPosition)
                     let newCueName = "Cue"
 
                     for(let i = 1; i < 1000; i++)
@@ -1139,8 +1140,16 @@ Item
                                                                                  })
 
                                 newCuePlate.loadActions()
+                                if(newCuePlate.position < 0)
+                                    newCuePlate.position = 0
+
+                                if(newCuePlate.position > waveformWidget.duration() - newCuePlate.duration - 10)
+                                    newCuePlate.position = waveformWidget.duration() - newCuePlate.duration - 10
+
                                 cueView.cuePlates.push(newCuePlate)
+
                                 project.setCueProperty(newCuePlate.name, "duration", newCuePlate.duration)
+
                                 console.log(newCuePlate.name, newCuePlate.duration)
                                 break
                             }
@@ -1233,6 +1242,7 @@ Item
                     if(currCuePlate.name === name)
                     {
                         cueManager.expandCueOnPlayerRequest(currCuePlate.name)
+                        mainScreen.cueName = currCuePlate.name
                         currCuePlate.isExpanded = true
                         expandedY = currCuePlate.y
                     }
@@ -1607,6 +1617,12 @@ Item
                     actionList.forEach(function(currAction)
                     {
                         currAction.position += dt
+                        let p = Math.round(Math.round(currAction.position*10)/10);
+                        let l = p % 10;
+                        if(l > 5)
+                            p += 10 - l;
+                        else p -= l;
+                        currAction.position = p
                     })
                 }
 
@@ -1696,6 +1712,14 @@ Item
 
                             onReleased:
                             {
+                                let p = Math.round(Math.round(actionMarker.position*10)/10);
+                                let l = p % 10;
+                                if(l > 5)
+                                    p += 10 - l;
+                                else p -= l;
+
+                                actionMarker.position = p;
+                                cuePlate.updatePosition()
                                 if(isMoved){
                                     let pXY = mapToGlobal(this.x +actionStartMarker.width, actionStartMarker.childrenRect.y +actionStartMarker.childrenRect.height);
                                     cursorManager.setCursorPosXY(pXY.x,pXY.y);
@@ -1703,10 +1727,7 @@ Item
                                 }
                                 cueViewFlickable.interactive = true
                                 cuePlate.caption.visible = true
-
-
                                 cuePlate.loadActions();
-
                                 cuePlate.actionList.forEach(function(currAction, i){
                                     currAction.updateCoeff();
 
@@ -1915,7 +1936,7 @@ Item
                     {
                         // Перемещение по горизонтали
                         let delta = /*pixelsToMsecRounded(xAcc)//*/pixelsToMsec(xAcc)
-
+pixelsToMsecRounded(xAcc)
 
                         if(Math.abs(delta) > 0)
                         {
@@ -1935,7 +1956,7 @@ Item
                                 return;
 
                             }else if((position + delta + cuePlate.duration) >= playerWidget.projectDuration()){
-                                position = playerWidget.projectDuration()-cuePlate.duration;
+                                position = Math.round(Math.round((playerWidget.projectDuration()-cuePlate.duration)*10) / 10);
                                 //                                if(!isMovedStop){
                                 ////                                    cursorManager.saveLastPos();
                                 //                                    lastMousePos = cursorManager.cursorPos().x
@@ -2040,6 +2061,12 @@ Item
 
                     onReleased:
                     {
+                        let p = Math.round(Math.round(position*10)/10);
+                        let l = p % 10;
+                        if(l > 5)
+                            p += 10 - l;
+                        else p -= l;
+                        position = p;
                         if(isMovedStop){
                             let pXY = mapToGlobal(cuePlateMouseArea.x+curPos.x,cuePlateMouseArea.y+curPos.y);
                             //                            console.log(pXY);
@@ -2120,6 +2147,7 @@ Item
                     anchors.left: cuePlateMouseArea.right
                     allwaysHide: false
                     property bool colapsed: false
+                    property bool isChanged: false
 
                     cursor: Qt.SizeHorCursor
 
@@ -2140,60 +2168,46 @@ Item
                                 {
                                     return // this is first action in cue
                                 }
-
-                                //                                console.log(i,currAction.positionCoeff)
                                 let newPosition = currAction.position + delta * currAction.positionCoeff
 
-                                //                                if(newPosition === cuePlate.firstAction.position) {
-                                //                                    console.log("return",i,currAction.positionCoeff)
-                                //                                    return
-                                //                                }
                                 if(newPosition <= cuePlate.firstAction.position) {
                                     newPosition = cuePlate.firstAction.position
 
-                                    var positionCoeff = cuePlate.actionList.length<1?0:(1/(cuePlate.actionList.length)) * i/*((cuePlate.actionList[i].patchId -1 ))*/;
-                                    // console.log(cuePlate.actionList.length, i)
-
-
-                                    //                                    console.log(cuePlate.firstAction.position, endPosition)
-
-                                    //                                    var endPosition = cuePlate.actionList[cuePlate.actionList.length-1].position + patternManager.patternByName(cuePlate.actionList[cuePlate.actionList.length-1].actionName).duration
-                                    //                                    var positionCoeff = (prevDuration - cuePlate.firstAction.position) / cuePlate.duration
-
-                                    //                                    var positionCoeff = (((cuePlate.duration/cuePlate.actionList.length) * i)+(currAction.prefire*i)) / cuePlate.duration
+                                    var positionCoeff = cuePlate.actionList.length<1?0:(1/(cuePlate.actionList.length)) * i;
                                     project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "positionCoeff", positionCoeff)
-                                    //                                    console.log("coeff ",i,currAction.positionCoeff)
-
-//                                    project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
-//                                    cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
-//                                    cuePlate.loadActions();
-//                                    colapsed = true;
-//                                    return;
-
                                 }
-//                                if(colapsed){
-//                                    colapsed = false;
-//                                }
 
-                                //                                console.log(newPosition)
                                 project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
                                 cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                                 cuePlate.loadActions();
-//                                cuePlate.actionList.forEach(function(currAction, i){
-//                                    currAction.updateCoeff();
-//                                });
 
                             })
-
-//                             cuePlate.loadActions();
-//                            cuePlate.actionList.forEach(function(currAction,i){
-//                                console.log(i,currAction.positionCoeff,currAction.position,currAction.patchId) ;
-//                            });
                         }
                     }
 
                     onReleased:
                     {
+                        cuePlate.actionList.forEach(function(currAction, i)
+                        {
+                            if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
+                            {
+                                return // this is first action in cue
+                            }
+
+                            let newPosition = currAction.position;
+
+                            let p = Math.round(Math.round(newPosition*10)/10);
+                            let l = p % 10;
+                            if(l > 5)
+                                p += 10 - l;
+                            else p -= l;
+                            newPosition = p;
+
+                            project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
+                            cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
+                            cuePlate.loadActions();
+                        });
+
                         cueViewFlickable.interactive = true
                         project.setCueProperty(cuePlate.name, "duration", cuePlate.duration)
                     }
@@ -2780,6 +2794,7 @@ Item
             playerTimer.stop()
             playerWidget.position = startPositionMarker.position
             playButton.checked = false
+            cueContentManager.setAllUnActive();
         }
     }
 
@@ -2814,6 +2829,7 @@ Item
             {
                 waveformWidget.pause()
                 playerTimer.stop()
+                cueContentManager.setAllUnActive();
             }
         }
     }
@@ -3889,6 +3905,20 @@ Item
                     }
                 })
             })
+        }
+    }
+
+    Connections{
+        target: project
+        function onUpdateCues(updateCueName){
+            cueView.loadCues();
+            cueView.collapseAll();
+            cueView.expandCuePlate(updateCueName);
+
+        }
+        function onReloadCues(){
+            console.log("reloadCues")
+            cueView.loadCues();
         }
     }
 

@@ -561,12 +561,13 @@ Item {
                         }
 
                         MFXUICT.TextInputField {
+                            id:emailL
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
                             Layout.minimumHeight: implicitHeight
 
-                            text: ""
+                            text: settingsManager.value("cloudLogin")
                             placeholderText: translationsManager.translationTrigger + qsTr("Email or Login")
 
                             errorState: cloudLoginPage.errorState
@@ -577,12 +578,13 @@ Item {
                         }
 
                         MFXUICT.TextInputField {
+                            id: passwL
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
                             Layout.minimumHeight: implicitHeight
 
-                            text: ""
+                            text: settingsManager.value("cloudPassword")
                             placeholderText: translationsManager.translationTrigger + qsTr("Password")
 
                             errorState: cloudLoginPage.errorState
@@ -683,6 +685,9 @@ Item {
                             Layout.minimumHeight: 20
 
                             checkable: false
+                            onClicked:     {                settingsManager.setValue("cloudLogin", emailL.text)
+                            settingsManager.setValue("cloudPassword", passwL.text)
+                            }
 
                             fontFamilyName: MFXUIS.Fonts.robotoMedium.name
                             textSize: 8
@@ -986,6 +991,8 @@ Item {
                 onClicked: {
                     deviceManager.comPort = selectComPortComboBox.currentText
                     settingsManager.setValue("comPort", selectComPortComboBox.currentText)
+                    settingsManager.setValue("cloudLogin", emailL.text)
+                    settingsManager.setValue("cloudPassword", passwL.text)
 
                     preferences.canBeDestroyed()
                 }

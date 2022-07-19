@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
@@ -236,7 +236,8 @@ Item
                 if (mouse.button === Qt.LeftButton)
                 {
                     project.setCurrentGroup(deviceGroup.name)
-                    project.attemptToCheckPatches(deviceGroup.name)
+                    deviceList.selectAll()
+//                    project.attemptToCheckPatches(deviceGroup.name)
                 }
             }
 
