@@ -33,9 +33,19 @@ void CueManager::initConnections()
             emit cueExpandedChanged(changedCue->name(), changedCue->expanded());
 
             if(changedCue->expanded()) {
-                m_cueContentManager.setCurrentCue(changedCue);
+                m_cueContentManager.changeCurrentCue(changedCue);
             } else {
-                m_cueContentManager.setCurrentCue(nullptr);
+                m_cueContentManager.changeCurrentCue(nullptr);
+            }
+        }
+    });
+
+    connect(m_cues, &QQmlObjectListModelBase::rowsAboutToBeRemoved, [=](const QModelIndex &parent, int first, int last){
+        for(int index = first; index <= last; index++) {
+            auto * cue = m_cues->at(index);
+            if((cue != nullptr) && cue->expanded()) {
+                cue->setExpanded(false);
+                m_cueContentManager.changeCurrentCue(nullptr);
             }
         }
     });
@@ -43,9 +53,10 @@ void CueManager::initConnections()
 
 void CueManager::deleteCues(QStringList deletedCueNames)
 {
-    for(auto &name: deletedCueNames) {
-        Cue *cue = cueByName(name);
-        if(cue == NULL) {
+    for(const auto &name: deletedCueNames) {
+        auto * cue = cueByName(name);
+        if(cue == nullptr) {
+            qWarning() << "Cue with name" << name << "was not found";
             continue;
         }
         m_cues->remove(cue);
@@ -54,7 +65,7 @@ void CueManager::deleteCues(QStringList deletedCueNames)
 
 Cue* CueManager::cueByName(const QString &name) const
 {
-    for (auto* cue : m_cues->toList()) {
+    for (auto * cue : m_cues->toList()) {
         if (cue->name().compare(name) == 0) {
             return cue;
         }
@@ -79,7 +90,7 @@ Action *CueManager::getAction(const QString& cueName, int deviceId)
     return act;
 }
 
-void CueManager::addCue(QVariantMap properties)
+void CueManager::onAddCue(QVariantMap properties)
 {
     QString name = properties.value("name").toString();
     //double newYposition = properties.value("newYposition").toDouble();
@@ -130,7 +141,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
     }
 }
 
-void CueManager::setActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
+void CueManager::onSetActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
     auto* action = getAction(cueName, deviceId);
     if(action == nullptr) {

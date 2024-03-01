@@ -2,14 +2,14 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.0
 
-Control {
+Button {
     id: _coloredIcon
 
     property string source: ""
     property color color: "transparent"
 
-    implicitWidth: _icon.paintedWidth
-    implicitHeight: _icon.paintedHeight
+    implicitWidth: _icon.width
+    implicitHeight: _icon.width
 
     QtObject {
         id: _privateProperies
@@ -19,9 +19,9 @@ Control {
         }
     }
 
-    background: Item { }
+    background: Item {
+        anchors.fill: parent
 
-    contentItem: Item {
         Image {
             id: _icon
 
@@ -31,6 +31,7 @@ Control {
             asynchronous: true
             fillMode: Image.PreserveAspectFit
             mipmap: true
+            antialiasing: true
 
             visible: _privateProperies.isTransparentColor(_colorOverlay.color)
 
@@ -53,24 +54,7 @@ Control {
             color: enabled ? _coloredIcon.color : "transparent"
             opacity: color.a
         }
-
-        MouseArea {
-            anchors.fill: parent
-
-            propagateComposedEvents: true
-            preventStealing: false
-
-            onClicked: (mouse) => {
-                           mouse.accepted = false
-                       }
-
-            onPressAndHold: (mouse) => {
-                                mouse.accepted = false
-                            }
-
-            onDoubleClicked: (mouse) => {
-                                 mouse.accepted = false
-                             }
-        }
     }
+
+    contentItem: Item { }
 }

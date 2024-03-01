@@ -77,7 +77,7 @@ T.ComboBox {
         source: "qrc:/qt-project.org/imports/QtQuick/Controls.2/Material/images/drop-indicator.png"
     }
 
-    contentItem: T.TextField {
+    contentItem: T.TextInputField {
         padding: 6
         leftPadding: control.editable ? 2 : control.mirrored ? 0 : 12
         rightPadding: control.editable ? 2 : control.mirrored ? 12 : 0

@@ -45,6 +45,10 @@ set(UPDATE_TRANSLATIONS OFF CACHE BOOL "Если ON, то просканируе
 
 include(build/cmake/Dependencies.cmake)
 include(build/cmake/FetchQSuperMacros.cmake)
+#include(build/cmake/FetchZLib.cmake)
+#set (ZLIB_INCLUDE_DIR ${CMAKE_BINARY_DIR}/_deps/zlib-src ${CMAKE_BINARY_DIR}/_deps/zlib-build)
+#set (ZLIB_LIBRARY ${CMAKE_BINARY_DIR}/_deps/zlib-build/libzlibstatic.a)
+#include(build/cmake/FetchQuaZip.cmake)
 
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Сборка                                     │
@@ -69,6 +73,8 @@ find_package(Qt5 ${QT_VERSION} COMPONENTS
     LinguistTools
     EXACT REQUIRED
 )
+
+#add_subdirectory(quazip-1.1)
 
 file(GLOB_RECURSE CPP_SOURCES
     ${CMAKE_SOURCE_DIR}/src/*.h}
@@ -148,6 +154,7 @@ target_link_libraries(${MFX_PROJECT_NAME}
     Qt5::Network
     Qt5::NetworkAuth
     QSuperMacros
+#    QuaZip::QuaZip
 )
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32

@@ -11,6 +11,7 @@ Button
 
     property string color: "#4f4f4f"
     property string pressedColor: "#888888"
+    property color textColor: "#ffffff"
     property int textSize: 12
     property alias fontFamilyName: contentItem.font.family
     property bool enableShadow: false
@@ -59,13 +60,13 @@ Button
             if(button.checkable)
             {
                 if(parent.enabled)
-                    parent.checked ? "#ffffff" : button.disabledTextColor
+                    parent.checked ? button.textColor : button.disabledTextColor
                 else
-                    "#222222"
+                    button.disabledTextColor
             }
 
             else
-                parent.enabled ? "#ffffff" : button.disabledTextColor
+                parent.enabled ? button.textColor : button.disabledTextColor
         }
 
         text: parent.text

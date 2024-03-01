@@ -6,4 +6,6 @@ LayoutSpacer 1.0 LayoutSpacer.qml
 RoundedRectangleShape 1.0 RoundedRectangleShape.qml
 ComboBox 1.0 ComboBox.qml
 ColoredIcon 1.0 ColoredIcon.qml
-TextField 1.0 TextField.qml
+TextInputField 1.0 TextInputField.qml
+TextFieldWithBackground 1.0 TextFieldWithBackground.qml
+RoundedTriangleShape 1.0 RoundedTriangleShape.qml

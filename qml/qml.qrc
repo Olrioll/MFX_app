@@ -54,8 +54,11 @@
         <file>MFX/UI/PreferencesPopup.qml</file>
         <file>MFX/UI/Components/Templates/ComboBox.qml</file>
         <file>MFX/UI/Components/Templates/ColoredIcon.qml</file>
-        <file>MFX/UI/Components/Templates/TextField.qml</file>
+        <file>MFX/UI/Components/Templates/TextInputField.qml</file>
         <file>MFX/UI/Components/Basic/TransparentTextField.qml</file>
         <file>MFX/UI/Components/Basic/SelectableTableHeaderItem.qml</file>
+        <file>MFX/UI/Components/Templates/TextFieldWithBackground.qml</file>
+        <file>MFX/UI/Components/Basic/TextFieldWithBackground.qml</file>
+        <file>MFX/UI/Components/Templates/RoundedTriangleShape.qml</file>
     </qresource>
 </RCC>

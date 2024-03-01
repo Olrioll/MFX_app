@@ -200,7 +200,7 @@ Item
 
         for(let i = 0; i < changedIdList.length; i++)
         {
-            project.editPatch(
+            project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
                               {propName: "DMX", propValue: currentDmxValue},

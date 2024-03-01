@@ -66,6 +66,45 @@ void ProjectManager::loadProject(QString fileName)
         emit patchListChanged();
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
+
+        for(auto cue : getChild("Cues")->namedChildren()) {
+            QString cueName = cue->properties().value("name").toString();
+            emit addCue(cue->properties());
+            foreach(auto action, cue->listedChildren()) {
+                QString pattern = action->properties().value("actionName").toString();
+                quint64 deviceId = action->properties().value("patchId").toUInt();
+                quint64 position = action->properties().value("position").toUInt();
+                emit setActionProperty(cueName, pattern, deviceId, position);
+            }
+        }
+
+
+        for(auto patch : getChild("Patches")->listedChildren()) {
+            QVariantList properties;
+            QVariantMap propertiesMap;
+            propertiesMap["propName"] = "ID";
+            propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "DMX";
+            propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "min ang";
+            propertiesMap["propValue"] = patch->properties().value("min ang").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "max ang";
+            propertiesMap["propValue"] = patch->properties().value("max ang").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "RF pos";
+            propertiesMap["propValue"] = patch->properties().value("RF pos").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "RF ch";
+            propertiesMap["propValue"] = patch->properties().value("RF ch").toInt();
+            properties.append(propertiesMap);
+            propertiesMap["propName"] = "height";
+            propertiesMap["propValue"] = patch->properties().value("height").toInt();
+            properties.append(propertiesMap);
+            emit editPatch(properties);
+        }
     }
 }
 
@@ -201,6 +240,29 @@ QList<int> ProjectManager::checkedPatchesList() const
     return checkedIDs;
 }
 
+void ProjectManager::removePatchesByIDs(const QStringList &ids)
+{
+    qInfo() << "IDS LIST: " << ids;
+    QStringList patchNamesToRemove;
+
+    for(const auto &patch: getChild("Patches")->listedChildren()) {
+        const auto &patchID = patch->property("ID").toString();
+        qInfo() << patch->toJsonObject();
+        if(ids.contains(patchID)) {
+            patchNamesToRemove << patch->property("ID").toString();
+        }
+    }
+
+    qInfo() << "PATCH NAMES: " << patchNamesToRemove;
+
+    for(auto &patchName: patchNamesToRemove) {
+        getChild("Patches")->removeChild(patchName);
+    }
+
+
+    emit patchListChanged();
+}
+
 QVariant ProjectManager::patchProperty(int id, QString propertyName) const
 {
     auto patches = getChild("Patches")->listedChildren();
@@ -297,7 +359,6 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
         patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
     }
 
-
     getChild("Patches")->addChild(patch);
 
     for(int i = 0; i < 20; i++)
@@ -326,7 +387,7 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     emit patchListChanged();
 }
 
-void ProjectManager::editPatch(QVariantList properties)
+void ProjectManager::onEditPatch(QVariantList properties)
 {
     JsonSerializable* patch = new JsonSerializable;
 //    patch->setProperty("type", type);
@@ -542,7 +603,7 @@ bool ProjectManager::isPatchHasGroup(int patchId) const
     return false;
 }
 
-void ProjectManager::addCue(QVariantMap properties)
+void ProjectManager::onAddCue(QVariantMap properties)
 {
     auto newCueName = properties.value("name").toString();
     getChild("Cues")->addChild(newCueName);
@@ -583,7 +644,7 @@ QVariantList ProjectManager::cueActions(QString cueName) const
     return actionList;
 }
 
-void ProjectManager::setActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
+void ProjectManager::onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
 {
     for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
     {

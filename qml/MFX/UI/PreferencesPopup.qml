@@ -259,7 +259,7 @@ Item {
                             fixedHeight: 4
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -293,7 +293,7 @@ Item {
                             fixedHeight: 4
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -327,7 +327,7 @@ Item {
                             fixedHeight: 4
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -359,7 +359,7 @@ Item {
                             fixedHeight: 4
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -560,7 +560,7 @@ Item {
                             fixedHeight: 8
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -576,7 +576,7 @@ Item {
                             fixedHeight: 4
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -777,7 +777,7 @@ Item {
                             fixedHeight: 8
                         }
 
-                        MFXUICT.TextField {
+                        MFXUICT.TextInputField {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight

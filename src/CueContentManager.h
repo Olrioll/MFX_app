@@ -15,6 +15,7 @@
 QSM_ENUM_CLASS(CueContentSelectedTableRole, Unknown = -1, Delay = 1, Between, DmxChannel, Device, RfChannel, Action, Effect, Angle, Time, Prefire)
 QSM_ENUM_CLASS(CalculatorOperator, Add = 0, Substract, Multiply, Divide, Percent)
 QSM_ENUM_CLASS(TimeUnit, Milliseconds = 0, Seconds, Minutes)
+QSM_ENUM_CLASS(CueContentSortingType, Unknown = 0, Ascending, Descending)
 
 class CueManager;
 class CueContentSortingModel;
@@ -35,6 +36,7 @@ class CueContentManager : public QObject {
 public:
     explicit CueContentManager(DeviceManager& deviceManager, QObject* parent = nullptr);
 
+    //Вызовы из интерфейса
     Q_INVOKABLE void onUpdateCueContentValueRequest(CueContentSelectedTableRole::Type selectedRole, CalculatorOperator::Type calculatorOperator, int value, TimeUnit::Type timeUnit);
 
     Q_INVOKABLE void onTimingTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
@@ -42,11 +44,22 @@ public:
     Q_INVOKABLE void onActionTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onDurationTypeSelectedTableRoleChangeRequest(const CueContentSelectedTableRole::Type& role);
 
+    Q_INVOKABLE void onSelectItemRequest(const QUuid &id);
+    Q_INVOKABLE void onDeselectItemRequest(const QUuid &id);
+    Q_INVOKABLE void onSelectCurrentRoleRequest(const CueContentSelectedTableRole::Type& role);
     Q_INVOKABLE void onSelectAllItemsRequest();
     Q_INVOKABLE void onSelectEvenItemsRequest();
     Q_INVOKABLE void onSelectUnevenItemsRequest();
     Q_INVOKABLE void onSelectLeftItemsRequest();
     Q_INVOKABLE void onSelectRightItemsRequest();
+    Q_INVOKABLE void cleanSelectionRequest();
+    Q_INVOKABLE void onSelectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
+    Q_INVOKABLE void onDeselectAllFromHeaderRequest(const CueContentSelectedTableRole::Type& role);
+    Q_INVOKABLE void onSortFromHeaderRequest(const CueContentSelectedTableRole::Type& role, const CueContentSortingType::Type& sortOrder);
+    Q_INVOKABLE void replaceActionForSelectedItemsRequest(const QString &patternName);
+
+    CueContent * cueContentById(const QUuid &id) const;
+    void changeCurrentCue(Cue *cue);
 
     void setActive(const QString &cueName, int deviceId, bool active);
     CueManager *m_cueManager;
@@ -54,6 +67,10 @@ public:
     CueContentSortingModel* cueContentSorted() const;
 
     static void qmlRegister();
+
+private slots:
+    void onCurrentCueActionsChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
+
 private:
     void initConnections();
     void refrestCueContentModel();
@@ -65,3 +82,5 @@ private:
     DeviceManager& m_deviceManager;
     CueContentSortingModel * m_cueContentSorted = nullptr;
 };
+
+Q_DECLARE_METATYPE(CueContentSortingType::Type)

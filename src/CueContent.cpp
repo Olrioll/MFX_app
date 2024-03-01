@@ -3,7 +3,9 @@
 #include <QtCore/QTime>
 
 CueContent::CueContent(QObject *parent) : QObject(parent)
-{  
+{
+    setUuid(QUuid::createUuid());
+
     initConnections();
 }
 

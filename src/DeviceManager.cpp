@@ -47,7 +47,7 @@ void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal 
     device->setPosYRatio(posYRatio);
 }
 
-void DeviceManager::editPatch(QVariantList properties)
+void DeviceManager::onEditPatch(QVariantList properties)
 {
     int id = -1;
     int minAng = -120;
