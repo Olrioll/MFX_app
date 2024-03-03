@@ -42,15 +42,19 @@ ApplicationWindow
         return {x:0, width:width, y:mainMenu.height, height:height}
     }
 
+    Timer
+    {
+        id: startTimer
+        interval: 200
+        running: false
+        onTriggered: patchMenuButton.checked = true
+    }
+
     function createDefaultProject()
     {
         mainScreen.playerWidget.hidePlayerElements()
         mainScreen.playerWidget.waitingText.text = qsTr("Not available")
         project.defaultProject()
-
-        patchScreen.deviceLibWidget.setActive(false)
-        patchScreen.deviceListWidget.setActive(false)
-        patchScreen.groupListWidget.setActive(false)
 
         if(project.property("backgroundImageFile") !=="" )
         {
@@ -58,7 +62,8 @@ ApplicationWindow
             sceneWidget.centerBackgroundImage()
         }
 
-        patchMenuButton.checked = true
+        screensLayout.currentIndex = 1
+        startTimer.running = true
     }
 
     function createNewProject()
@@ -203,13 +208,14 @@ ApplicationWindow
             left: leftResizeArea.right
         }
 
-        /*StartScreen
+        StartScreen
         {
             id: startScreen
             Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-        }*/
+            visible: false
+        }
 
         PatchScreen
         {
