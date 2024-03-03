@@ -23,11 +23,31 @@
 #include <QSurfaceFormat>
 #include <QQuickWindow>
 
+#include "Trace/AppStackWalker.h"
+#include "Trace/AppMessageHandler.h"
+#include "Trace/Logger.h"
+
+LONG WINAPI AppCrashHandler( EXCEPTION_POINTERS* exceptionInfo )
+{
+  qCritical() << "App crash!";
+
+  AppStackWalker sw;
+  sw.ShowCallstack( GetCurrentThread(), exceptionInfo->ContextRecord );
+
+  return EXCEPTION_EXECUTE_HANDLER;
+}
+
 int main(int argc, char** argv)
 {
+    qInstallMessageHandler( AppMessageHandler );
+    SetUnhandledExceptionFilter( AppCrashHandler );
+
     QApplication app(argc, argv);
     app.setOrganizationName("MFX");
     app.setOrganizationDomain("mfx.com");
+
+    std::shared_ptr<Logger> logger = std::make_shared<Logger>( app.applicationDirPath() );
+    AssignMessageHandlerToLog( logger );
 
     const QDir robotoFontDir(":/fonts/Roboto/");
     const auto robotoFontFiles = robotoFontDir.entryList(QStringList{"*.ttf"}, QDir::NoDotAndDotDot | QDir::Files);

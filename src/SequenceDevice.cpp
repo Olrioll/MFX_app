@@ -8,6 +8,8 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
 
 void SequenceDevice::runPattern(Pattern *p, quint64 time)
 {
+    qDebug() << (p ? p->type() : PatternType::Unknown);
+
     if(p == NULL) {
         return;
     }

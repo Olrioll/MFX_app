@@ -17,11 +17,15 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 
 ProjectManager::~ProjectManager()
 {
+    qDebug();
+
     cleanWorkDirectory();
 }
 
 void ProjectManager::cleanWorkDirectory()
 {
+    qDebug();
+
     QDir workDir(_settings.workDirectory());
     auto fileNamesList = workDir.entryList(QDir::Files);
 
@@ -41,6 +45,8 @@ void ProjectManager::cleanWorkDirectory()
 
 void ProjectManager::loadProject(QString fileName)
 {
+    qDebug() << fileName;
+
     QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
     QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
 
@@ -57,6 +63,8 @@ void ProjectManager::loadProject(QString fileName)
     QFile file(_settings.workDirectory() + "/project.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        qDebug() << file;
+
         _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
         _settings.setValue("lastProject", fileName);
         setCurrentProjectFile(fileName);
@@ -67,8 +75,10 @@ void ProjectManager::loadProject(QString fileName)
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
 
-        for(auto cue : getChild("Cues")->namedChildren()) {
+        for(auto cue : getChild("Cues")->namedChildren())
+        {
             QString cueName = cue->properties().value("name").toString();
+            qDebug() << cueName;
             emit addCue(cue->properties());
             foreach(auto action, cue->listedChildren()) {
                 QString pattern = action->properties().value("actionName").toString();
@@ -79,11 +89,13 @@ void ProjectManager::loadProject(QString fileName)
         }
 
 
-        for(auto patch : getChild("Patches")->listedChildren()) {
+        for(auto patch : getChild("Patches")->listedChildren())
+        {
             QVariantList properties;
             QVariantMap propertiesMap;
             propertiesMap["propName"] = "ID";
             propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
+            qDebug() << patch->properties().value( "ID" ).toUInt();
             properties.append(propertiesMap);
             propertiesMap["propName"] = "DMX";
             propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
@@ -110,6 +122,8 @@ void ProjectManager::loadProject(QString fileName)
 
 void ProjectManager::newProject()
 {
+    qDebug();
+
     if(!isEmpty())
         saveProject();
 
@@ -136,17 +150,24 @@ void ProjectManager::newProject()
 
 void ProjectManager::saveProject()
 {
+    qDebug();
+
     if(m_currentProjectFile == "")
     {
+        qDebug();
         setCurrentProjectFile(saveProjectDialog());
     }
 
     if(m_currentProjectFile == "")
         return;
 
+    qDebug() << m_currentProjectFile;
+
     QFile jsonFile(_settings.workDirectory() + "/project.json");
     if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
+        qDebug() << jsonFile;
+
         QJsonDocument doc;
         doc.setObject(toJsonObject());
         jsonFile.write(doc.toJson());

@@ -18,6 +18,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED)
 
 set(QT_VERSION 5.15.2)
+set(Qt5Core_DIR "c:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/")
+set(Qt5Qml_DIR "c:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Qml/")
+set(Qt5_DIR "c:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/")
 
 set(MFX_PROJECT_NAME "MFX" CACHE STRING "Название проекта")
 set(MFX_LAUNCHER_PROJECT_NAME "MFXLauncher" CACHE STRING "Название лаунчера для проекта MFX")
@@ -129,7 +132,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/DeviceManager.cpp"
     "src/CueManager.cpp"
     "src/QQmlObjectListModel.h"
-    "src/ComPortModel"
+    "src/ComPortModel.cpp"
     "src/CueSortingModel.cpp"
     "src/DmxWorker.cpp"
     "src/Pattern.cpp"
@@ -141,6 +144,10 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/CueContentManager.cpp"
     "src/Language.cpp"
     "src/CueContentSortingModel.cpp"
+    "src/Trace/StackWalker.cpp"
+    "src/Trace/AppStackWalker.cpp"
+    "src/Trace/AppMessageHandler.cpp"
+    "src/Trace/Logger.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}
