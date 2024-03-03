@@ -35,7 +35,7 @@ protected:
 
 public slots:
 
-    void setAudioTrackFile(QString fileName);
+    void setAudioTrackFile(const QString& fileName);
 
     qint64 duration() const;
     static qint64 sampleCount();

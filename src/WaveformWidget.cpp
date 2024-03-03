@@ -790,7 +790,7 @@ float WaveformWidget::scaleFactor() const
 }
 
 
-void WaveformWidget::setAudioTrackFile(QString fileName)
+void WaveformWidget::setAudioTrackFile(const QString& fileName)
 {
     _audioTrackFile = fileName;
     _player.setMedia(QUrl::fromLocalFile(fileName));

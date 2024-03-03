@@ -30,7 +30,8 @@ private:
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrackPath, CurrentProjectAudioTrackPath, "") //Абсолютный путь к текущему выбранному музыкальному файлу
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(qlonglong, currentProjectAudioTrackDuration, CurrentProjectAudioTrackDuration, 0) //Длительность текущего выбранного музыкального файла в миллисекундах
 public slots:
-    void loadProject(QString fileName);
+    void loadProject(const QString& fileName);
+    void defaultProject();
     void newProject();
     void saveProject();
 
@@ -39,8 +40,8 @@ public slots:
     QString openProjectDialog();
     QString saveProjectDialog();
 
-    void setBackgroundImage(QString fileName);
-    void setAudioTrack(QString fileName);
+    void setBackgroundImage(const QString& fileName);
+    void setAudioTrack(const QString& fileName);
 
     bool hasUnsavedChanges() const; //Отвечает за индикацию, был ли проект изменен (значит, нужно попросить сохранить данные при закрытии программы)
 private:
@@ -64,8 +65,8 @@ signals:
 ///                      Работа с сохранением данных                         //
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
-    void setProperty(QString name, QVariant value);
-    QVariant property(QString name) const;
+    void setProperty(const QString& name, QVariant value);
+    QVariant property(const QString& name) const;
 ///////////////////////////////////////////////////////////////////////////////
 ///                      Работа с сохранением данных END                     //
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,8 +89,8 @@ public slots:
     QVariantMap patchProperties(int index) const;
     QStringList patchPropertiesNames(int index) const;
     QList<QVariant> patchPropertiesValues(int index) const;
-    void setPatchProperty(int id, QString propertyName, QVariant value);
-    QVariantList patchesIdList(QString groupName) const;
+    void setPatchProperty(int id, const QString& propertyName, QVariant value);
+    QVariantList patchesIdList(const QString& groupName) const;
     int patchIndexForId(int id) const;
     int patchCount() const;
     QList<int> checkedPatchesList() const;

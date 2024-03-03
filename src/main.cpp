@@ -46,8 +46,12 @@ int main(int argc, char** argv)
     app.setOrganizationName("MFX");
     app.setOrganizationDomain("mfx.com");
 
-    std::shared_ptr<Logger> logger = std::make_shared<Logger>( app.applicationDirPath() );
+    SettingsManager settings( app.applicationDirPath() );
+
+    std::shared_ptr<Logger> logger = std::make_shared<Logger>(QDir(settings.workDirectory()).filePath("Logs"));
     AssignMessageHandlerToLog( logger );
+
+    qDebug() << settings.workDirectory();
 
     const QDir robotoFontDir(":/fonts/Roboto/");
     const auto robotoFontFiles = robotoFontDir.entryList(QStringList{"*.ttf"}, QDir::NoDotAndDotDot | QDir::Files);
@@ -55,7 +59,6 @@ int main(int argc, char** argv)
         QFontDatabase::addApplicationFont(robotoFontDir.path() + QDir::separator() + robotoFontFile);
     }
 
-    SettingsManager settings;
     TranslationManager translationManager(settings);
     ProjectManager project(settings);
     PatternManager patternManager(settings);

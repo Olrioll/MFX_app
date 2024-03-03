@@ -140,7 +140,7 @@ Item
         width: sourceSize.width * sceneWidget.scaleFactor
         height: sourceSize.height * sceneWidget.scaleFactor
         source: project.property("backgroundImageFile") === "" || project.property("backgroundImageFile") === undefined ?
-                    "file:///" + settingsManager.workDirectory() + "/default.png" :
+                    "" :
                     "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
     }
 
@@ -1429,9 +1429,10 @@ Item
         target: project
         function onBackgroundImageChanged()
         {
-            backgroundImage.source = project.property("backgroundImageFile") === "" ?
-                        "file:///" + settingsManager.workDirectory() + "/default.png" :
-                        "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
+            if( project.property("backgroundImageFile") !== "" )
+                backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
+            else
+                backgroundImage.source = ""
         }
     }
 

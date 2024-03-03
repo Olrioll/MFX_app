@@ -8,6 +8,9 @@
 
 #include <QDebug>
 
+constexpr int defaultSceneFrameWidth = 10;
+constexpr int defaultSceneFrameHeight = 20;
+
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
     addChild("Patches");
@@ -24,12 +27,10 @@ ProjectManager::~ProjectManager()
 
 void ProjectManager::cleanWorkDirectory()
 {
-    qDebug();
-
     QDir workDir(_settings.workDirectory());
     auto fileNamesList = workDir.entryList(QDir::Files);
 
-    QStringList exceptionList = {"settings.ini", "default.png"};
+    QStringList exceptionList = {"settings.ini"};
 
     for(auto & entry : fileNamesList)
     {
@@ -38,12 +39,13 @@ void ProjectManager::cleanWorkDirectory()
 
         if(!exceptionList.contains(entry))
         {
+            qDebug() << entry;
             QFile::remove(_settings.workDirectory() + "/" + entry);
         }
     }
 }
 
-void ProjectManager::loadProject(QString fileName)
+void ProjectManager::loadProject(const QString& fileName)
 {
     qDebug() << fileName;
 
@@ -117,6 +119,31 @@ void ProjectManager::loadProject(QString fileName)
             properties.append(propertiesMap);
             emit editPatch(properties);
         }
+    }
+}
+
+void ProjectManager::defaultProject()
+{
+    qDebug();
+
+    newProject();
+
+    setProperty( "sceneFrameWidth", defaultSceneFrameWidth );
+    setProperty( "sceneFrameHeight", defaultSceneFrameHeight );
+    setAudioTrack( QDir( _settings.appDirectory() ).filePath( "default.mp3" ) );
+    setBackgroundImage( QDir( _settings.appDirectory() ).filePath( "default.png" ) );
+
+    if( property( "sceneFrameWidth" ).toInt() >= property( "sceneFrameHeight" ).toInt() )
+        setProperty( "sceneImageWidth", property( "sceneFrameWidth" ).toInt() * 2 );
+    else
+        setProperty( "sceneImageWidth", property( "sceneFrameWidth" ).toInt() * 20 );
+
+    if( property( "backgroundImageFile" ).toString() != "" && property( "sceneImageWidth" ).toInt() > 0 )
+    {
+        QImage img( property( "backgroundImageFile" ).toString() );
+        float xPos = ((img.width() - property( "sceneFrameWidth" ).toInt() / (float)property( "sceneImageWidth" ).toInt() * img.width()) / 2) / img.width();
+        setProperty( "sceneFrameX", xPos );
+        setProperty( "sceneFrameY", 0.3 );
     }
 }
 
@@ -208,6 +235,7 @@ QString ProjectManager::saveProjectDialog()
     lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
 
     QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), lastOpenedDir, tr("MFX projects (*.mfx)"));
+    qDebug() << fileName;
 
     if(fileName.size())
     {
@@ -224,6 +252,7 @@ QString ProjectManager::openProjectDialog()
     lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
 
     QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), lastOpenedDir, tr("MFX projects (*.mfx)"));
+    qDebug() << fileName;
 
     if(fileName.size())
     {
@@ -324,7 +353,7 @@ QList<QVariant> ProjectManager::patchPropertiesValues(int index) const
     return getChild("Patches")->listedChildren().at(index)->properties().values();
 }
 
-void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant value)
+void ProjectManager::setPatchProperty(int id, const QString& propertyName, QVariant value)
 {
     auto patches = getChild("Patches")->listedChildren();
     for(auto patch : patches)
@@ -345,14 +374,14 @@ void ProjectManager::setPatchProperty(int id, QString propertyName, QVariant val
     }
 }
 
-void ProjectManager::setProperty(QString name, QVariant value)
+void ProjectManager::setProperty(const QString& name, QVariant value)
 {
     JsonSerializable::setProperty(name, value);
 }
 
-QVariant ProjectManager::property(QString name) const
+QVariant ProjectManager::property(const QString& name) const
 {
-    return JsonSerializable::property(name);
+    return JsonSerializable::property( name );
 }
 
 int ProjectManager::lastPatchId() const
@@ -454,7 +483,7 @@ int ProjectManager::patchIndexForId(int id) const
 }
 
 
-QVariantList ProjectManager::patchesIdList(QString groupName) const
+QVariantList ProjectManager::patchesIdList(const QString& groupName) const
 {
     auto groups = getChild("Groups")->namedChildren();
     return groups.value(groupName)->property("patches").toList();
@@ -492,8 +521,10 @@ QString ProjectManager::selectBackgroundImageDialog()
     return fileName;
 }
 
-void ProjectManager::setBackgroundImage(QString fileName)
+void ProjectManager::setBackgroundImage(const QString& fileName)
 {
+    qDebug() << fileName;
+
     QFileInfo info(fileName);
     if((info.completeBaseName() + "." + info.completeSuffix()) != property("backgroundImageFile").toString())
     {
@@ -504,8 +535,10 @@ void ProjectManager::setBackgroundImage(QString fileName)
     }
 }
 
-void ProjectManager::setAudioTrack(QString fileName)
+void ProjectManager::setAudioTrack(const QString& fileName)
 {
+    qDebug() << fileName;
+
     QFileInfo info(fileName);
     if((info.completeBaseName() + "." + info.completeSuffix()) != property("audioTrackFile").toString())
     {

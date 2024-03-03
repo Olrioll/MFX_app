@@ -2,12 +2,14 @@
 
 #include "SettingsManager.h"
 
-SettingsManager::SettingsManager(QObject *parent) :
+SettingsManager::SettingsManager(const QString& appDir, QObject *parent) :
     QObject(parent),
-    _settings(_workDirectory + "/settings.ini", QSettings::IniFormat)
+    _settings(_workDirectory + "/settings.ini", QSettings::IniFormat),
+    _appDirectory( appDir )
 {
-    qDebug() << _workDirectory;
-    _settings.setValue("workDirectory", _workDirectory);
+    qDebug() << _workDirectory << " " << _appDirectory;
+    _settings.setValue( "workDirectory", _workDirectory );
+    _settings.setValue( "appDirectory", _appDirectory );
 }
 
 SettingsManager::~SettingsManager()
@@ -25,12 +27,15 @@ void SettingsManager::setValue(QString name, QVariant value)
 
 QVariant SettingsManager::value(QString name)
 {
-    qDebug() << name << " " << _settings.value( name );
     return _settings.value(name);
 }
 
 QString SettingsManager::workDirectory()
 {
-    qDebug() << _workDirectory;
     return _workDirectory;
+}
+
+QString SettingsManager::appDirectory()
+{
+    return _appDirectory;
 }
