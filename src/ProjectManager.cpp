@@ -313,7 +313,7 @@ void ProjectManager::removePatchesByIDs(const QStringList &ids)
     emit patchListChanged();
 }
 
-QVariant ProjectManager::patchProperty(int id, QString propertyName) const
+QVariant ProjectManager::patchProperty(int id, const QString& propertyName) const
 {
     auto patches = getChild("Patches")->listedChildren();
     for(auto patch : patches)
@@ -327,7 +327,7 @@ QVariant ProjectManager::patchProperty(int id, QString propertyName) const
     return 0;
 }
 
-QVariant ProjectManager::patchPropertyForIndex(int index, QString propertyName) const
+QVariant ProjectManager::patchPropertyForIndex(int index, const QString& propertyName) const
 {
     return getChild("Patches")->listedChildren().at(index)->property(propertyName);
 }
@@ -397,14 +397,14 @@ int ProjectManager::lastPatchId() const
     return id;
 }
 
-void ProjectManager::addPatch(QString type, QVariantList properties)
+void ProjectManager::addPatch(const QString& type, const QVariantList& properties)
 {
     JsonSerializable* patch = new JsonSerializable;
     patch->setProperty("type", type);
     patch->setProperty("act", "");
     patch->setProperty("checked", false);
 
-    foreach(auto prop, properties)
+    foreach(const auto& prop, properties)
     {
         patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
     }
@@ -437,14 +437,14 @@ void ProjectManager::addPatch(QString type, QVariantList properties)
     emit patchListChanged();
 }
 
-void ProjectManager::onEditPatch(QVariantList properties)
+void ProjectManager::onEditPatch(const QVariantList& properties)
 {
     JsonSerializable* patch = new JsonSerializable;
 //    patch->setProperty("type", type);
 //    patch->setProperty("act", "");
 //    patch->setProperty("checked", false);
 
-    foreach(auto prop, properties)
+    foreach(const auto& prop, properties)
     {
         patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
     }

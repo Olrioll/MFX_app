@@ -8,8 +8,8 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item
 {
     id: patchIcon
-    width: realSizeWidth * backgroundImage.width / project.property("sceneImageWidth")
-    height: realSizeHeight * backgroundImage.width / project.property("sceneImageWidth")
+    width: Math.max(rectId.width, realSizeWidth * backgroundImage.width / project.property("sceneImageWidth"))
+    height: Math.max(rectId.height, realSizeHeight * backgroundImage.width / project.property("sceneImageWidth"))
     x: posXRatio * backgroundImage.width
     y: posYRatio * backgroundImage.height
 
@@ -107,7 +107,7 @@ Item
 // Плашка с ID
     Rectangle
     {
-        id: rect1
+        id: rectId
         width: 20
         height: 20
         anchors.left: parent.left
@@ -119,8 +119,8 @@ Item
         {
             width: 4
             height: 4
-            anchors.left: rect1.left
-            anchors.top: rect1.top
+            anchors.left: rectId.left
+            anchors.top: rectId.top
             color: patchIcon.checked ? "#27AE60" : "#828282"
         }
 
@@ -139,8 +139,8 @@ Item
     {
         width: 4
         height: 4
-        anchors.right: rect1.right
-        anchors.bottom: rect1.bottom
+        anchors.right: rectId.right
+        anchors.bottom: rectId.bottom
         color: patchIcon.checked ? "#27AE60" : "#828282"
     }
 
@@ -148,8 +148,8 @@ Item
     {
         width: 4
         height: 4
-        anchors.left: rect1.left
-        anchors.bottom: rect1.bottom
+        anchors.left: rectId.left
+        anchors.bottom: rectId.bottom
         color: patchIcon.checked ? "#27AE60" : "#828282"
         radius: 2
     }

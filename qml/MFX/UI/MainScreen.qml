@@ -3413,7 +3413,7 @@ FocusScope
                                        project.setPatchProperty(patchId, "act", actionPlate.name);
                                     })
                                     //TODO } else if(cueContentPanelFocused) {
-                                    if(rightPanelLoader.item.objectName === "cue_content") {
+                                    if(rightPanelLoader.item && rightPanelLoader.item.objectName === "cue_content") {
                                         rightPanelLoader.item.processPatternPanelActionSelected(actionPlate.name)
                                     }
                                     //TODO }

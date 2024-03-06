@@ -81,10 +81,10 @@ public slots:
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
     int lastPatchId() const;
-    void addPatch(QString type, QVariantList properties);
-    void onEditPatch(QVariantList properties);
-    QVariant patchProperty(int id, QString propertyName) const;
-    QVariant patchPropertyForIndex(int index, QString propertyName) const;
+    void addPatch(const QString& type, const QVariantList& properties);
+    void onEditPatch(const QVariantList& properties);
+    QVariant patchProperty(int id, const QString& propertyName) const;
+    QVariant patchPropertyForIndex(int index, const QString& propertyName) const;
     QString patchType(int index) const;
     QVariantMap patchProperties(int index) const;
     QStringList patchPropertiesNames(int index) const;

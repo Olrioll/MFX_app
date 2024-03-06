@@ -196,6 +196,9 @@ Item
                 let currCoord = patchIcons[i].mapToItem(sceneWidget, 0, 0);
                 let currWidth = patchIcons[i].width
                 let currHeight = patchIcons[i].height
+                //console.log( "mouseX=" + mouseX + " mouseY=" + mouseY )
+                //console.log( "currCoord.x=" + currCoord.x + " currCoord.y=" + currCoord.y )
+                //console.log( "currWidth=" + currWidth + " currHeight=" + currHeight )
                 if(mouseX > currCoord.x && mouseX < currCoord.x + currWidth)
                 {
                     if(mouseY > currCoord.y && mouseY < currCoord.y + currHeight)
