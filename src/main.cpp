@@ -74,7 +74,8 @@ int main(int argc, char** argv)
     QObject::connect(&project, &ProjectManager::addCue, &cueManager, &CueManager::onAddCue);
     QObject::connect(&project, &ProjectManager::setActionProperty, &cueManager, &CueManager::onSetActionProperty);
     QObject::connect(&project, &ProjectManager::editPatch, &deviceManager, &DeviceManager::onEditPatch);
-    QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
+    //QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
+    QObject::connect( &cueManager, &CueManager::runPatternSingly, &deviceManager, &DeviceManager::onRunPatternSingly );
     QString comPort = settings.value("comPort").toString();
     if(!comPort.isEmpty()) {
         deviceManager.setComPort(comPort);

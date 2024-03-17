@@ -20,17 +20,22 @@ public:
     void runPatternOnDevice(int deviceId, int patternNum);
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
+    Q_INVOKABLE void runPreviewPattern( const QString& patternName );
 
     PatternManager *m_patternManager;
+    Device* m_previewDevice;
 
     Device* deviceById(int id);
 
 signals:
     void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, bool active);
     void endOfPattern(qulonglong deviceId);
+    void drawPreviewInGui( int duration, int angle, int velocity, bool active );
+    void endOfPreview();
 
 public slots:
-    void onRunPattern(int deviceId, quint64 time, QString patternName);
+    //void onRunPattern(int deviceId, quint64 time, const QString& patternName);
+    void onRunPatternSingly( int deviceId, quint64 time, const QString& patternName );
     void onEditPatch(QVariantList properties);
 
 private:

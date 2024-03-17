@@ -329,34 +329,61 @@ QVariant ProjectManager::patchProperty(int id, const QString& propertyName) cons
 
 QVariant ProjectManager::patchPropertyForIndex(int index, const QString& propertyName) const
 {
-    return getChild("Patches")->listedChildren().at(index)->property(propertyName);
+    auto& children = getChild( "Patches" )->listedChildren();
+
+    if( index < 0 || index >= children.size() )
+        return {};
+
+    return children.at(index)->property(propertyName);
 }
 
 QString ProjectManager::patchType(int index) const
 {
-    return getChild("Patches")->listedChildren().at(index)->property("type").toString();
+    auto& children = getChild( "Patches" )->listedChildren();
+
+    if( index < 0 || index >= children.size() )
+        return {};
+
+    return children.at(index)->property("type").toString();
 }
 
 QVariantMap ProjectManager::patchProperties(int index) const
 {
-    QVariantMap props = getChild("Patches")->listedChildren().at(index)->properties();
+    auto& children = getChild( "Patches" )->listedChildren();
+
+    if( index < 0 || index >= children.size() )
+        return {};
+
+    QVariantMap props = children.at(index)->properties();
     return props;
 }
 
 QStringList ProjectManager::patchPropertiesNames(int index) const
 {
-    return getChild("Patches")->listedChildren().at(index)->properties().keys();
+    auto& children = getChild( "Patches" )->listedChildren();
+
+    if( index < 0 || index >= children.size() )
+        return {};
+
+    return children.at(index)->properties().keys();
 }
 
 QList<QVariant> ProjectManager::patchPropertiesValues(int index) const
 {
-    return getChild("Patches")->listedChildren().at(index)->properties().values();
+    auto& children = getChild( "Patches" )->listedChildren();
+
+    if( index < 0 || index >= children.size() )
+        return {};
+
+    return children.at(index)->properties().values();
 }
 
 void ProjectManager::setPatchProperty(int id, const QString& propertyName, QVariant value)
 {
+    //qDebug() << id << " " << propertyName << " " << value;
+
     auto patches = getChild("Patches")->listedChildren();
-    for(auto patch : patches)
+    for(auto& patch : patches)
     {
         if(patch->property("ID").toInt() == id)
         {
@@ -376,6 +403,7 @@ void ProjectManager::setPatchProperty(int id, const QString& propertyName, QVari
 
 void ProjectManager::setProperty(const QString& name, QVariant value)
 {
+    //qDebug() << name << " " << value;
     JsonSerializable::setProperty(name, value);
 }
 

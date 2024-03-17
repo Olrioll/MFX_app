@@ -210,24 +210,34 @@ CueSortingModel* CueManager::cuesSorted() const
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
     quint64 t = time / 10;
-    for (const auto& c : m_cues->toList()) {
-        for (const Action* a : c->actions()->toList()) {
+    for (const auto& c : m_cues->toList())
+    {
+        for (const Action* a : c->actions()->toList())
+        {
             auto patternManager = m_deviceManager->m_patternManager;
             auto pattern = patternManager->patternByName(a->patternName());
-            if(pattern == NULL) {
+            if(pattern == nullptr)
                 continue;
-            }
-            quint64 duration = pattern->duration();
-            if (a->startTime() == t * 10) {
-                emit runPattern(a->deviceId(), playerPosition(), a->patternName());
+
+            if (a->startTime() == t * 10)
+            {
+                qDebug() << time;
+                //emit runPattern(a->deviceId(), playerPosition(), a->patternName());
+                emit runPatternSingly( a->deviceId(), playerPosition(), a->patternName() );
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
             }
-            if(c->active() && a->startTime() + duration == t * 10) {
+
+            quint64 duration = pattern->duration();
+
+            if(c->active() && a->startTime() + duration == t * 10)
+            {
+                qDebug() << time;
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }
         }
     }
+
     emit DMXWorker::instance()->playbackTimeChanged(t * 10);
 }

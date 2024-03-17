@@ -31,7 +31,7 @@ class CueContent : public QObject
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, prefireTimeDecorator, PrefireTimeDecorator, "") //Декоратор для времени prefire
 
     //Интерфейс
-    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Определяет, быбрана ли данная строка в интерфейсе таблицы Cue Content (Либо массовым выделением Even-Uneven, либо вручную)
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Определяет, выбрана ли данная строка в интерфейсе таблицы Cue Content (Либо массовым выделением Even-Uneven, либо вручную)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, active, Active, false) //Определяет статус, активен ли сейчас данный паттерн на данном устройстве
 public:
     explicit CueContent(QObject *parent = nullptr);

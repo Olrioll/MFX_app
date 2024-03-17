@@ -7,24 +7,16 @@ import MFX.UI.Styles 1.0 as MFXUIS
 
 Item
 {
-    id: patchIcon
-    width: Math.max(rectId.width, realSizeWidth * backgroundImage.width / project.property("sceneImageWidth"))
-    height: Math.max(rectId.height, realSizeHeight * backgroundImage.width / project.property("sceneImageWidth"))
-    x: posXRatio * backgroundImage.width
-    y: posYRatio * backgroundImage.height
+    id: previewIcon
+    width: 50
+    height: 50
 
-    property int patchId
-    property bool checked: false
-    property double realSizeWidth: 0.35
-    property double realSizeHeight: 0.35
-    property string imageFile
-    property real posXRatio: project.patchProperty(patchId, "posXRatio")
-    property real posYRatio: project.patchProperty(patchId, "posYRatio")
+    property string imageFile: "qrc:/device_sequences"
     signal drawOperation(var duration, var angle, var velocity, var active)
     signal endOfPattern()
 
     onDrawOperation: {
-        //console.log(patchId, duration, angle, velocity, active)
+        //console.log(duration, angle, velocity, active)
 
         particleEmiter.duration = duration
         particleEmiter.angle = angle
@@ -94,67 +86,17 @@ Item
         color: "#333333"
 
         border.width: 4
-        border.color: patchIcon.checked ? "#27AE60" : "#333333"
+        border.color: "#333333"
     }
 
     Image
     {
         anchors.margins: 4
         anchors.fill: parent
-        source: patchIcon.imageFile
+        source: imageFile
     }
 
-// Плашка с ID
-    Rectangle
-    {
-        id: rectId
-        width: 20
-        height: 20
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        color: patchIcon.checked ? "#27AE60" : "#828282"
-        radius: 4
-
-        Rectangle
-        {
-            width: 4
-            height: 4
-            anchors.left: rectId.left
-            anchors.top: rectId.top
-            color: patchIcon.checked ? "#27AE60" : "#828282"
-        }
-
-        Text
-        {
-            id: patchIdText
-            anchors.centerIn: parent
-            color: "#ffffff"
-            text:  patchIcon.patchId
-            font.family: MFXUIS.Fonts.robotoRegular.name
-            font.pixelSize: 12
-        }
-    }
-
-    Rectangle
-    {
-        width: 4
-        height: 4
-        anchors.right: rectId.right
-        anchors.bottom: rectId.bottom
-        color: patchIcon.checked ? "#27AE60" : "#828282"
-    }
-
-    Rectangle
-    {
-        width: 4
-        height: 4
-        anchors.left: rectId.left
-        anchors.bottom: rectId.bottom
-        color: patchIcon.checked ? "#27AE60" : "#828282"
-        radius: 2
-    }
-
-    Connections
+    /*Connections
     {
         target: project
         function onPatchCheckedChanged(checkedId, checked)
@@ -162,17 +104,17 @@ Item
             if(checkedId === patchIcon.patchId)
                 patchIcon.checked = checked
         }
-    }
+    }*/
     Connections
     {
         target: deviceManager
-        function onDrawOperationInGui(deviceId, duration, angle, velocity, active) {
-            if(deviceId === patchId) {
-                patchIcon.drawOperation(duration, angle, velocity, active)
-            }
+        function onDrawPreviewInGui(duration, angle, velocity, active)
+        {
+            //console.log("onDrawPreviewInGui")
+            previewIcon.drawOperation(duration, angle, velocity, active)
         }
     }
-    Connections
+    /*Connections
     {
         target: deviceManager
         function onEndOfPattern(deviceId) {
@@ -180,8 +122,8 @@ Item
                 patchIcon.endOfPattern()
             }
         }
-    }
+    }*/
     onEndOfPattern: {
-        //console.log("end of pattern:", patchId)
+        //console.log("end of pattern")
     }
 }

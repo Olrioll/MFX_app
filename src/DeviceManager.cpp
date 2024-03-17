@@ -1,10 +1,13 @@
 #include "DeviceManager.h"
+#include "PreviewDevice.h"
 
 DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
 {
     m_devices = new QQmlObjectListModel<Device>(this);
     // connect(this, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged); // disable comport until we come with working DMX512 library
 
+    m_previewDevice = new PreviewDevice( this );
+    m_previewDevice->m_manager = this;
 }
 
 Device *DeviceManager::deviceById(int id)
@@ -84,12 +87,41 @@ void DeviceManager::onEditPatch(QVariantList properties)
     sequenceDevice->setheight(height);
 }
 
-void DeviceManager::onRunPattern(int deviceId, quint64 time, QString patternName)
+/*
+void DeviceManager::onRunPattern(int deviceId, quint64 time, const QString& patternName)
 {
+    qDebug() << deviceId << " " << patternName;
+
     Device *device = deviceById(deviceId);
-    if(device == NULL) {
+    if(device == nullptr)
         return;
-    }
+
     Pattern *p = m_patternManager->patternByName(patternName);
     device->runPattern(p, time);
+}*/
+
+void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QString& patternName )
+{
+    qDebug() << deviceId << " " << patternName;
+
+    Device* device = deviceById( deviceId );
+    if( !device )
+        return;
+
+    Pattern* p = m_patternManager->patternByName( patternName );
+    if( !p )
+        return;
+
+    device->runPatternSingly( p, time );
+}
+
+void DeviceManager::runPreviewPattern( const QString& patternName )
+{
+    qDebug() << patternName;
+
+    Pattern* p = m_patternManager->patternByName( patternName );
+    if( !p )
+        return;
+
+    m_previewDevice->runPatternSingly( p, 0 );
 }

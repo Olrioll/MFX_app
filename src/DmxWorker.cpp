@@ -35,7 +35,7 @@ DMXWorker *DMXWorker::instance()
     return &inst;
 }
 
-void DMXWorker::setOperation(int deviceId, Operation *op)
+void DMXWorker::setOperation(int deviceId, const Operation *op)
 {
     if(op != NULL) {
         m_dmxArray[(deviceId - 1) * 6] = op->angle(); // first channel

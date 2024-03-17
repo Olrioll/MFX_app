@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick.Controls 2.13
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
@@ -3202,7 +3202,7 @@ FocusScope
                 radius: 2
             }
 
-            //TODO пока что тип данных для паттерны скрыт, а соответственно, скрыты кнопки фильтрации по типу паттерна
+            //TODO пока что тип данных для паттерна скрыт, а соответственно, скрыты кнопки фильтрации по типу паттерна
             //     а также убран отступ для панели с паттернами. После того, как фича будет реализована - достаточно убрать
             //     эту переменную в местах, где она используется, вернув правильные значения
             property bool patternTypesFeatureHidden: true
@@ -3280,191 +3280,205 @@ FocusScope
             Rectangle
             {
                 id: actionViewBackground2
-                anchors.fill: parent
                 color: "#4f4f4f"
                 radius: 2
 
+                anchors.fill: parent
                 anchors.topMargin: !actionViewWidget.patternTypesFeatureHidden ? 24 : 0
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
 
                 Rectangle
                 {
                     id: actionViewBackground3
                     color: "black"
 
+                    anchors.fill: parent
                     anchors.margins: 2
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
                 }
 
-                GridView
+                SplitView
                 {
-                    id: actionView
-
+                    anchors.fill: parent
                     anchors.margins: 2
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
+                    orientation: Qt.Vertical
 
-                    clip: true
+                    GridView
+                    {
+                        id: actionView
+                        SplitView.preferredHeight: actionView.width
 
-                    cellWidth: 60
-                    cellHeight: 52
+                        clip: true
 
-                    ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
+                        cellWidth: 60
+                        cellHeight: 52
 
-                    model: patternManager.patternsFiltered
+                        ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
 
-                    delegate: Item {
-                        id: actionPlate
+                        model: patternManager.patternsFiltered
 
-                        property string name: model.name
-                        property bool checked: model.uuid === patternManager.selectedPatternUuid
+                        delegate: Item {
+                            id: actionPlate
 
-                        width: actionView.cellWidth
-                        height: actionView.cellHeight
+                            property string name: model.name
+                            property bool checked: model.uuid === patternManager.selectedPatternUuid
 
-                        Item
-                        {
+                            width: actionView.cellWidth
+                            height: actionView.cellHeight
 
-                            anchors.fill: parent
-
-                            Rectangle
+                            Item
                             {
-                                width: actionView.cellWidth - 4
-                                height: actionView.cellHeight - 4
-                                id: actionPlateBAckground
-                                anchors.centerIn: parent
-                                color: "#666666"
-                                radius: 2
+
+                                anchors.fill: parent
 
                                 Rectangle
                                 {
-                                    color: "black"
+                                    width: actionView.cellWidth - 4
+                                    height: actionView.cellHeight - 4
+                                    id: actionPlateBAckground
+                                    anchors.centerIn: parent
+                                    color: "#666666"
                                     radius: 2
 
-                                    anchors.topMargin: 2
-                                    anchors.bottomMargin: 13
-                                    anchors.leftMargin: 2
-                                    anchors.rightMargin: 2
-                                    anchors.fill: parent
-
-                                    Image
+                                    Rectangle
                                     {
-                                        source: "qrc:/imagePlaceholder"
-                                        anchors.centerIn: parent
+                                        color: "black"
+                                        radius: 2
+
+                                        anchors.topMargin: 2
+                                        anchors.bottomMargin: 13
+                                        anchors.leftMargin: 2
+                                        anchors.rightMargin: 2
+                                        anchors.fill: parent
+
+                                        Image
+                                        {
+                                            source: "qrc:/imagePlaceholder"
+                                            anchors.centerIn: parent
+                                        }
+                                    }
+
+                                    Text
+                                    {
+                                        id: actionPlateName
+                                        text: actionPlate.name
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+                                        elide: Text.ElideMiddle
+                                        color: "#ffffff"
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        anchors.bottom: parent.bottom
+                                        anchors.horizontalCenter: parent.horizontalCenter
                                     }
                                 }
 
-                                Text
+                                Rectangle
                                 {
-                                    id: actionPlateName
-                                    text: actionPlate.name
+                                    width: actionView.cellWidth - 4
+                                    height: actionView.cellHeight - 4
+                                    id: actionPlateBorder
+                                    anchors.centerIn: parent
+                                    color: "transparent"
+                                    radius: 2
 
-                                    horizontalAlignment: Text.AlignHCenter
-                                    verticalAlignment: Text.AlignVCenter
-                                    elide: Text.ElideMiddle
-                                    color: "#ffffff"
-                                    font.family: MFXUIS.Fonts.robotoRegular.name
-                                    font.pixelSize: 10
+                                    border.width: 2
+                                    border.color: "#27AE60"
 
-                                    anchors.bottom: parent.bottom
-                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    visible: actionPlate.checked
                                 }
                             }
 
-                            Rectangle
-                            {
-                                width: actionView.cellWidth - 4
-                                height: actionView.cellHeight - 4
-                                id: actionPlateBorder
-                                anchors.centerIn: parent
-                                color: "transparent"
-                                radius: 2
+                            MouseArea {
+                                anchors.fill: parent
 
-                                border.width: 2
-                                border.color: "#27AE60"
-
-                                visible: actionPlate.checked
-                            }
-                        }
-
-                        MouseArea {
-                            anchors.fill: parent
-
-                            onClicked:  {
-                                if(actionPlate.checked) {
-                                    patternManager.cleanPatternSelectionRequest()
-                                } else {
-
-                                    //TODO if(patchPanelFocused) {
-                                    patternManager.currentPatternChangeRequest(model.uuid)
-
-                                    let checkedPatches = project.checkedPatchesList()
-
-                                    checkedPatches.forEach(function(patchId)
+                                onClicked:
+                                {
+                                    if(actionPlate.checked)
                                     {
-                                       project.setPatchProperty(patchId, "act", actionPlate.name);
-                                    })
-                                    //TODO } else if(cueContentPanelFocused) {
-                                    if(rightPanelLoader.item && rightPanelLoader.item.objectName === "cue_content") {
-                                        rightPanelLoader.item.processPatternPanelActionSelected(actionPlate.name)
+                                        patternManager.cleanPatternSelectionRequest()
                                     }
-                                    //TODO }
+                                    else
+                                    {
+                                        deviceManager.runPreviewPattern( actionPlate.name )
+
+                                        //TODO if(patchPanelFocused) {
+                                        patternManager.currentPatternChangeRequest(model.uuid)
+
+                                        let checkedPatches = project.checkedPatchesList()
+
+                                        checkedPatches.forEach(function(patchId)
+                                        {
+                                           project.setPatchProperty(patchId, "act", actionPlate.name);
+                                        })
+                                        //TODO } else if(cueContentPanelFocused) {
+                                        if(rightPanelLoader.item && rightPanelLoader.item.objectName === "cue_content") {
+                                            rightPanelLoader.item.processPatternPanelActionSelected(actionPlate.name)
+                                        }
+                                        //TODO }
+                                    }
+                                }
+                            }
+                        }
+
+
+
+                        Item
+                        {
+                            id: topShadow
+                            height: 20
+                            width: parent.width
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+
+                            visible: actionView.contentY > 0
+
+                            LinearGradient
+                            {
+                                anchors.fill: parent
+                                start: Qt.point(0, 0)
+                                end: Qt.point(0, parent.height)
+                                gradient: Gradient
+                                {
+                                    GradientStop { position: 1.0; color: "#00000000" }
+                                    GradientStop { position: 0.0; color: "#FF000000" }
+                                }
+                            }
+                        }
+
+                        Item
+                        {
+                            id: bottomShadow
+                            height: 20
+                            width: parent.width
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+
+                            LinearGradient
+                            {
+                                anchors.fill: parent
+                                start: Qt.point(0, parent.height)
+                                end: Qt.point(0, 0)
+                                gradient: Gradient
+                                {
+                                    GradientStop { position: 1.0; color: "#00000000" }
+                                    GradientStop { position: 0.0; color: "#FF000000" }
                                 }
                             }
                         }
                     }
 
-
-
-                    Item
+                    Rectangle
                     {
-                        id: topShadow
-                        height: 20
-                        width: parent.width
-                        anchors.left: parent.left
-                        anchors.top: parent.top
+                        id: previewWidget
+                        SplitView.preferredHeight: actionView.width
+                        color: "black"
+                        clip: true
 
-                        visible: actionView.contentY > 0
-
-                        LinearGradient
+                        PreviewIcon
                         {
-                            anchors.fill: parent
-                            start: Qt.point(0, 0)
-                            end: Qt.point(0, parent.height)
-                            gradient: Gradient
-                            {
-                                GradientStop { position: 1.0; color: "#00000000" }
-                                GradientStop { position: 0.0; color: "#FF000000" }
-                            }
-                        }
-                    }
-
-                    Item
-                    {
-                        id: bottomShadow
-                        height: 20
-                        width: parent.width
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-
-                        LinearGradient
-                        {
-                            anchors.fill: parent
-                            start: Qt.point(0, parent.height)
-                            end: Qt.point(0, 0)
-                            gradient: Gradient
-                            {
-                                GradientStop { position: 1.0; color: "#00000000" }
-                                GradientStop { position: 0.0; color: "#FF000000" }
-                            }
+                            id: previewIcon
+                            anchors.centerIn: parent
                         }
                     }
                 }

@@ -48,7 +48,8 @@ public slots:
     void onPlaybackTimeChanged(quint64 time);
 
 signals:
-    void runPattern(int deviceId, quint64 time, QString patternName);
+    void runPattern(int deviceId, quint64 time, const QString& patternName);
+    void runPatternSingly( int deviceId, quint64 time, const QString& patternName );
 
     void cueExpandedChanged(const QString& name, bool selected); //Сигнал о том, что у Cue с именем name требуется изменить статус схлопывания на плеере
 

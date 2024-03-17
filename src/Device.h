@@ -29,6 +29,7 @@ class Device  : public QObject {
     QSM_WRITABLE_VAR_PROPERTY(bool, draggingBlocked, DraggingBlocked) //Флаг, определяющий возможность двигать устройства на сцене
 public:
     explicit Device(QObject* parent = nullptr);
-    virtual void runPattern(Pattern* p, quint64 time) = 0;
+    //virtual void runPattern(const Pattern* p, quint64 time) = 0;
+    virtual void runPatternSingly( const Pattern* p, quint64 time ) = 0;
     DeviceManager *m_manager;
 };

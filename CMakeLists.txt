@@ -128,6 +128,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/Action.cpp"
     "src/Device.cpp"
     "src/SequenceDevice.cpp"
+    "src/PreviewDevice.cpp"
     "src/Group.cpp"
     "src/DeviceManager.cpp"
     "src/CueManager.cpp"

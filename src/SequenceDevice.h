@@ -23,15 +23,22 @@ class SequenceDevice : public Device {
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, height, height, 0) //DMX
 public:
     explicit SequenceDevice(QObject* parent = nullptr);
-    void runPattern(Pattern* p, quint64 time) override;
+    //void runPattern(const Pattern* p, quint64 time) override;
+    void runPatternSingly( const Pattern* p, quint64 time ) override;
 
 public slots:
     void onPlaybackTimeChanged(quint64 time);
+    void onPatternTimerChanged();
+
+private:
+    void doPlaybackTimeChanged( quint64 time, bool sendToWorker );
+    virtual void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker );
 
 private:
     QList<Operation*> m_operations;
     Operation* m_op = NULL;
     quint64 m_opStartTime;
     quint64 m_patternStopTime;
-    void setDMXOperation(int deviceId, Operation* op);
+    quint64 m_patternTime = 0;
+    QTimer m_patternTimer;
 };

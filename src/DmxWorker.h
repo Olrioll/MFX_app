@@ -13,7 +13,7 @@ class DMXWorker : public QSerialPort
     Q_OBJECT
 public:
     static DMXWorker *instance();
-    void setOperation(int deviceId, Operation* op);
+    void setOperation(int deviceId, const Operation* op);
 
 public slots:
     void onComPortChanged(QString port);
