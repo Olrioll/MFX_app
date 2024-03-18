@@ -3304,7 +3304,7 @@ FocusScope
                     GridView
                     {
                         id: actionView
-                        SplitView.preferredHeight: actionView.width
+                        SplitView.fillHeight: true
 
                         clip: true
 
@@ -3471,14 +3471,20 @@ FocusScope
                     Rectangle
                     {
                         id: previewWidget
-                        SplitView.preferredHeight: actionView.width
+                        SplitView.preferredHeight: 120
+                        SplitView.maximumHeight: 150
+                        SplitView.minimumHeight: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
                         color: "black"
                         clip: true
 
                         PreviewIcon
                         {
                             id: previewIcon
-                            anchors.centerIn: parent
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 20
                         }
                     }
                 }
