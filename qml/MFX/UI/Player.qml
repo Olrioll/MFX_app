@@ -46,6 +46,11 @@ Item
 
     onWidthChanged: updatePlayerElements()
 
+    function tooglePlay()
+    {
+        playButton.checked = !playButton.checked
+    }
+
     function hidePlayerElements()
     {
         timeScale.visible = false

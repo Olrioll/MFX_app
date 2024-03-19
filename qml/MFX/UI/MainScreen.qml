@@ -20,6 +20,13 @@ FocusScope
 
     focus: true
 
+    Shortcut
+    {
+        sequence: "Space" //Qt.Key_Space
+        //context: Qt.ApplicationShortcut
+        onActivated: playerWidget.tooglePlay()
+    }
+
     function setupSceneWidget(widget)
     {
         sceneWidget = widget
