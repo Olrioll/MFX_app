@@ -8,8 +8,8 @@
 
 #include <QDebug>
 
-constexpr int defaultSceneFrameWidth = 10;
-constexpr int defaultSceneFrameHeight = 20;
+constexpr int defaultSceneFrameWidth = 20;
+constexpr int defaultSceneFrameHeight = 10;
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
@@ -131,7 +131,7 @@ void ProjectManager::defaultProject()
     setProperty( "sceneFrameWidth", defaultSceneFrameWidth );
     setProperty( "sceneFrameHeight", defaultSceneFrameHeight );
     setAudioTrack( QDir( _settings.appDirectory() ).filePath( "default.mp3" ) );
-    setBackgroundImage( QDir( _settings.appDirectory() ).filePath( "default.png" ) );
+    setBackgroundImage( QDir( _settings.appDirectory() ).filePath( "default.svg" ) );
 
     if( property( "sceneFrameWidth" ).toInt() >= property( "sceneFrameHeight" ).toInt() )
         setProperty( "sceneImageWidth", property( "sceneFrameWidth" ).toInt() * 2 );
@@ -141,9 +141,12 @@ void ProjectManager::defaultProject()
     if( property( "backgroundImageFile" ).toString() != "" && property( "sceneImageWidth" ).toInt() > 0 )
     {
         QImage img( property( "backgroundImageFile" ).toString() );
+
         float xPos = ((img.width() - property( "sceneFrameWidth" ).toInt() / (float)property( "sceneImageWidth" ).toInt() * img.width()) / 2) / img.width();
+        float yPos = ((img.height() - property( "sceneFrameHeight" ).toInt() / (float)property( "sceneImageHeight" ).toInt() * img.height()) / 2) / img.height();
+
         setProperty( "sceneFrameX", xPos );
-        setProperty( "sceneFrameY", 0.3 );
+        setProperty( "sceneFrameY", yPos );
     }
 }
 
