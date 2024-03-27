@@ -5,6 +5,8 @@
 #include <QTranslator>
 #include <QQuickStyle>
 #include <QtGui/QFontDatabase>
+#include <QSurfaceFormat>
+#include <QQuickWindow>
 
 #include "ProjectManager.h"
 #include "SettingsManager.h"
@@ -20,8 +22,7 @@
 #include "TranslationManager.h"
 #include "CueContentManager.h"
 #include "CueContentSortingModel.h"
-#include <QSurfaceFormat>
-#include <QQuickWindow>
+#include "Backuper.h"
 
 #include "Trace/AppStackWalker.h"
 #include "Trace/AppMessageHandler.h"
@@ -37,10 +38,31 @@ LONG WINAPI AppCrashHandler( EXCEPTION_POINTERS* exceptionInfo )
   return EXCEPTION_EXECUTE_HANDLER;
 }
 
+HANDLE gAppMutex = nullptr;
+
+bool CheckOneAppInstance()
+{
+    gAppMutex = ::CreateMutex( nullptr, FALSE, "MFX_one_app_instance" );
+
+    if( gAppMutex && GetLastError() == ERROR_ALREADY_EXISTS )
+    {
+        CloseHandle( gAppMutex );
+        return false;
+    }
+
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     qInstallMessageHandler( AppMessageHandler );
     SetUnhandledExceptionFilter( AppCrashHandler );
+
+    if( !CheckOneAppInstance() )
+    {
+        qDebug() << "App already running";
+        return 1;
+    }
 
     QApplication app(argc, argv);
     app.setOrganizationName("MFX");
@@ -70,6 +92,7 @@ int main(int argc, char** argv)
     CueManager cueManager(cueContentManager);
     cueManager.m_deviceManager = &deviceManager;
     cueContentManager.m_cueManager = &cueManager;
+    Backuper backuper( project, settings );
 
     QObject::connect(&project, &ProjectManager::addCue, &cueManager, &CueManager::onAddCue);
     QObject::connect(&project, &ProjectManager::setActionProperty, &cueManager, &CueManager::onSetActionProperty);
@@ -111,8 +134,13 @@ QSurfaceFormat::setDefaultFormat(format);
     engine.rootContext()->setContextProperty("comPortModel", &deviceManager.m_comPortModel);
     engine.rootContext()->setContextProperty("dmxWorker", DMXWorker::instance());
     engine.rootContext()->setContextProperty("cueContentManager", &cueContentManager);
+    engine.rootContext()->setContextProperty( "backuper", &backuper );
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 
-    return app.exec();
+    int res = app.exec();
+
+    backuper.exitProject();
+
+    return res;
 }

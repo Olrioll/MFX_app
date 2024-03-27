@@ -62,5 +62,5 @@ void Cue::calculateStartTime()
 
 void Cue::onActiveChanged(bool active)
 {
-    qDebug() << "Cue::onActiveChanged:" << m_name << m_active;
+    //qDebug() << "Cue::onActiveChanged:" << m_name << m_active;
 }

@@ -6,6 +6,11 @@
 #include <QStandardPaths>
 #include <QDir>
 
+constexpr char AUTO_BACKUP_INTERVAL_SEC[] = "autoBackupIntervalSec";
+constexpr char PROJECT_FILE[] = "project.json";
+
+constexpr int AUTO_BACKUP_DEF_INTERVAL_SEC = 15;
+
 class SettingsManager : public QObject
 {
     Q_OBJECT
@@ -21,6 +26,9 @@ public:
     Q_INVOKABLE QString appDirectory();
 
 signals:
+
+private:
+    void SetDefaultValues();
 
 private:
 

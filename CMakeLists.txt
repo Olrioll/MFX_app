@@ -149,6 +149,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/Trace/AppStackWalker.cpp"
     "src/Trace/AppMessageHandler.cpp"
     "src/Trace/Logger.cpp"
+    "src/Backuper.cpp"
 )
 
 target_link_libraries(${MFX_PROJECT_NAME}

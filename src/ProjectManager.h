@@ -30,10 +30,12 @@ private:
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrackPath, CurrentProjectAudioTrackPath, "") //Абсолютный путь к текущему выбранному музыкальному файлу
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(qlonglong, currentProjectAudioTrackDuration, CurrentProjectAudioTrackDuration, 0) //Длительность текущего выбранного музыкального файла в миллисекундах
 public slots:
-    void loadProject(const QString& fileName);
+    bool loadProject(const QString& fileName);
     void defaultProject();
     void newProject();
     void saveProject();
+
+    void saveProjectToFile( const QString& projectFile, const QString& saveFile, const QDir& saveDir );
 
     QString selectBackgroundImageDialog();
     QString selectAudioTrackDialog();

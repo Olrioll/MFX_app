@@ -34,7 +34,7 @@ ApplicationWindow
 
     Component.onCompleted:
     {
-        createDefaultProject()
+        runProject()
     }
 
     function childWidgetsArea()
@@ -50,11 +50,12 @@ ApplicationWindow
         onTriggered: patchMenuButton.checked = true
     }
 
-    function createDefaultProject()
+    function runProject()
     {
         mainScreen.playerWidget.hidePlayerElements()
         mainScreen.playerWidget.waitingText.text = qsTr("Not available")
-        project.defaultProject()
+
+        backuper.runProject()
 
         if(project.property("backgroundImageFile") !=="" )
         {

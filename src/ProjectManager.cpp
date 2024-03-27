@@ -30,7 +30,7 @@ void ProjectManager::cleanWorkDirectory()
     QDir workDir(_settings.workDirectory());
     auto fileNamesList = workDir.entryList(QDir::Files);
 
-    QStringList exceptionList = {"settings.ini"};
+    QStringList exceptionList = {"settings.ini", "project.backup"};
 
     for(auto & entry : fileNamesList)
     {
@@ -45,12 +45,19 @@ void ProjectManager::cleanWorkDirectory()
     }
 }
 
-void ProjectManager::loadProject(const QString& fileName)
+bool ProjectManager::loadProject(const QString& fileName)
 {
     qDebug() << fileName;
 
-    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
-    QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+    if( !QFile::exists( fileName ) )
+    {
+        qDebug() << "file " << fileName << " not found";
+        return false;
+    }
+
+    QDir dir( _settings.workDirectory() );
+    QFile::remove( dir.filePath( property( "backgroundImageFile" ).toString() ) );
+    QFile::remove( dir.filePath( property( "audioTrackFile" ).toString() ) );
 
     QProcess proc;
     proc.setProgram("7z.exe");
@@ -62,11 +69,9 @@ void ProjectManager::loadProject(const QString& fileName)
     proc.start("7z.exe", args);
     proc.waitForFinished();
 
-    QFile file(_settings.workDirectory() + "/project.json");
+    QFile file( dir.filePath( PROJECT_FILE ) );
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug() << file;
-
         _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
         _settings.setValue("lastProject", fileName);
         setCurrentProjectFile(fileName);
@@ -80,9 +85,9 @@ void ProjectManager::loadProject(const QString& fileName)
         for(auto cue : getChild("Cues")->namedChildren())
         {
             QString cueName = cue->properties().value("name").toString();
-            qDebug() << cueName;
             emit addCue(cue->properties());
-            foreach(auto action, cue->listedChildren()) {
+            foreach(auto action, cue->listedChildren())
+            {
                 QString pattern = action->properties().value("actionName").toString();
                 quint64 deviceId = action->properties().value("patchId").toUInt();
                 quint64 position = action->properties().value("position").toUInt();
@@ -97,7 +102,6 @@ void ProjectManager::loadProject(const QString& fileName)
             QVariantMap propertiesMap;
             propertiesMap["propName"] = "ID";
             propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
-            qDebug() << patch->properties().value( "ID" ).toUInt();
             properties.append(propertiesMap);
             propertiesMap["propName"] = "DMX";
             propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
@@ -119,7 +123,11 @@ void ProjectManager::loadProject(const QString& fileName)
             properties.append(propertiesMap);
             emit editPatch(properties);
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void ProjectManager::defaultProject()
@@ -180,56 +188,62 @@ void ProjectManager::newProject()
 
 void ProjectManager::saveProject()
 {
-    qDebug();
-
     if(m_currentProjectFile == "")
-    {
-        qDebug();
         setCurrentProjectFile(saveProjectDialog());
-    }
 
     if(m_currentProjectFile == "")
         return;
 
     qDebug() << m_currentProjectFile;
 
-    QFile jsonFile(_settings.workDirectory() + "/project.json");
-    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    saveProjectToFile( PROJECT_FILE, m_currentProjectFile, _settings.workDirectory() );
+
+    //QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    //QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+
+    _settings.setValue("lastProject", m_currentProjectFile);
+}
+
+void ProjectManager::saveProjectToFile( const QString& projectFile, const QString& saveFile, const QDir& saveDir )
+{
+    QFile jsonFile( saveDir.filePath( projectFile ) );
+    if( jsonFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
     {
         qDebug() << jsonFile;
 
         QJsonDocument doc;
-        doc.setObject(toJsonObject());
-        jsonFile.write(doc.toJson());
+        doc.setObject( toJsonObject() );
+        jsonFile.write( doc.toJson() );
+    }
+    else
+    {
+        qDebug() << "file " << projectFile << " not found";
+        return;
     }
 
-    jsonFile.waitForBytesWritten(30000);
+    jsonFile.waitForBytesWritten( 30000 );
     jsonFile.close();
 
-    QFile::remove(m_currentProjectFile);
+    QFile::remove( saveDir.filePath( saveFile ) );
 
     QProcess proc;
-    proc.setProgram("7z.exe");
+    proc.setProgram( "7z.exe" );
     QStringList args = {};
-    args.append("a");
-    args.append(m_currentProjectFile);
-    args.append("-y");
-    args.append(_settings.workDirectory() + "/project.json");
+    args.append( "a" );
+    args.append( saveDir.filePath( saveFile ) );
+    args.append( "-y" );
+    args.append( saveDir.filePath( projectFile ) );
 
-    if(property("backgroundImageFile").toString() != "")
-        args.append(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
+    if( property( "backgroundImageFile" ).toString() != "" )
+        args.append( saveDir.filePath( property( "backgroundImageFile" ).toString() ) );
 
-    if(property("audioTrackFile").toString() != "")
-        args.append(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
+    if( property( "audioTrackFile" ).toString() != "" )
+        args.append( saveDir.filePath( property( "audioTrackFile" ).toString() ) );
 
-    proc.start("7z.exe", args);
+    proc.start( "7z.exe", args );
     proc.waitForFinished();
 
     jsonFile.remove();
-    QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
-    QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
-
-    _settings.setValue("lastProject", m_currentProjectFile);
 }
 
 QString ProjectManager::saveProjectDialog()
