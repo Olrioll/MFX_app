@@ -23,7 +23,7 @@ DisableProgramGroupPage=yes
 LicenseFile=lic.txt
 InfoAfterFile=info_after.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
-;PrivilegesRequired=lowest
+PrivilegesRequired=lowest
 OutputDir=.
 OutputBaseFilename=MFXSetup
 SetupIconFile=appIcon.ico
@@ -40,7 +40,7 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "files\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "settings_files\*"; DestDir: "{localappdata}\{#MyAppPublisher}\{#MyAppName}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
