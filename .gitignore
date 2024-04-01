@@ -1,7 +1,10 @@
 /.vs
 /out
-/installer/MFXLauncher.exe
+/installer/files/MFXLauncher.exe
 /installer/files/MFX.exe
+/installer/MFXSetup.exe
+/installer/MFXSetup.zip
 
 CMakeLists.txt.*
 CMakeSettings.json
+/installer/MFX.zip
