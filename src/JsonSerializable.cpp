@@ -32,6 +32,11 @@ QVariant JsonSerializable::property(const QString &name) const
     return _properties.value(name);
 }
 
+bool JsonSerializable::containsProperty(const QString &name) const
+{
+    return _properties.contains(name);
+}
+
 QVariantMap &JsonSerializable::properties()
 {
     return _properties;
@@ -68,6 +73,37 @@ void JsonSerializable::renameChild(const QString &name, const QString &newName)
 {
     auto oldValue = _namedChildren.take(name);
     _namedChildren.insert(newName, oldValue);
+}
+
+void JsonSerializable::removeChildrenAtIndex(const QList<int> listidx)
+{
+    QList<JsonSerializable*> copy;
+    for(auto &idx: listidx){
+        copy.append(_childrenList[idx]);
+    }
+
+    for(auto i = 0; i<_childrenList.size();++i)
+        if(!copy.contains(_childrenList[i])){
+            delete _childrenList[i];
+        }
+
+    _childrenList.clear();
+    _childrenList = std::move(copy);
+}
+
+void JsonSerializable::removefromChildrenWithProperty(const QString& property, QVariant equal)
+{
+    QList<JsonSerializable*> copy;
+    for(auto i = 0; i<_childrenList.size();++i){
+        if(_childrenList[i]->containsProperty(property)){
+            if(equal.compare(_childrenList[i]->property(property)) != 0){
+                copy.append(_childrenList[i]);
+            }else delete _childrenList[i];
+        }else {qDebug()<<property<<" PROPERTY NOT CONTAINS:";   return; }
+    }
+
+    _childrenList.clear();
+    _childrenList = std::move(copy);
 }
 
 JsonSerializable *JsonSerializable::getChild(const QString &name) const
@@ -134,6 +170,75 @@ void JsonSerializable::fromJsonObject(const QJsonObject &jsonObject)
     {
         _childrenList.push_back(new JsonSerializable(child.toObject()));
     }
+}
+
+QString JsonSerializable::addFromJsonObject(QJsonObject &&jsonObject)
+{
+    auto pr = jsonObject.take("properties").toObject().toVariantMap();
+    auto tm = pr.take("name");
+    auto yp = pr.take("yPosition");
+
+    QString newName;
+    int i = 1;
+    for(;i<1000;i++)
+    {
+        newName = "Cue" + QString::number(i);
+        if(_namedChildren.contains(newName))
+            continue;
+        else{
+            pr.insert("name",newName);
+
+            auto pos = pr.value("position").toDouble();
+            double dur = pr.value("duration").toUInt();
+            QVector<int> allPos;
+            for(auto &x:_namedChildren){
+
+                  const auto oX =x->_properties.value("position").toDouble();
+                  const double oD = x->_properties.value("duration").toUInt();
+//                  auto a1 = (pos == oX);
+//                  auto a2 = ((pos<= oX) && ((pos + dur)>=oX));
+//                  auto a3 = ((oX<= pos) && ((oX + oD)>=pos));
+                if( !(((pos+dur) < oX) || (pos > (oX+oD))))
+                {
+                    allPos.push_back(x->_properties.value("yPosition").toInt());
+                }else if(pos == oX){
+                   allPos.push_back(x->_properties.value("yPosition").toInt());
+                }
+            }
+
+            std::sort(allPos.begin(),allPos.end());
+            bool isOk=true;
+            int y2 = 0;
+            auto y1 =yp.toInt() + 12;
+
+            for(auto &x:allPos){
+                if(yp.toInt() < x){
+                    auto y3 = y1>y2?y1:y2;
+                    if(y3 < (x-12)){
+                        yp = y3;
+                        isOk=false;
+                        break;
+                    }else{
+                        y2 = x+12;
+                    }
+                }else{
+                    y2 = x+12;
+                }
+            }
+
+            if(isOk){
+              yp = allPos.back()+12;
+            }
+
+            pr.insert("yPosition",yp);
+            jsonObject.insert("properties",QJsonValue::fromVariant(pr));
+            _namedChildren.insert(newName,new JsonSerializable(jsonObject));
+            break;
+        }
+    }
+    if(i==1000)return QString();
+
+    return newName;
 }
 
 void JsonSerializable::clear()

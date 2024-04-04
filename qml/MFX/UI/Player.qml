@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 
@@ -113,6 +113,10 @@ Item
     {
 //        return Math.round(Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width) * 10) / 10
         return pixels * (playerWidget.max - playerWidget.min) / playerWidget.width
+    }
+    function pixelsToMsecRounded(pixels)
+    {
+        return Math.round(Math.round(pixels * (playerWidget.max - playerWidget.min) / playerWidget.width) * 10) / 10
     }
 
     function zoom(delta)
@@ -473,7 +477,7 @@ Item
                     stepMsec = r * 2000;
                     else stepMsec = r>2?(r-1)*2000 : 2000
                 }
- // малое деление будет равно 1 сек
+// малое деление будет равно 1 сек
                 else if(msecPerPx >= 50)
                 {
                     stepMsec = 1000
@@ -497,13 +501,13 @@ Item
                     stepMsec = 10
                 }
 
-                // стартовая позиция в мсек
+// стартовая позиция в мсек
                 var startMsec = Math.ceil(min / stepMsec) * stepMsec
 
-                // стартовая позиция в пикселях
+// стартовая позиция в пикселях
                 var start = (startMsec - min) / msecPerPx
 
-                // шаг делений в пикселях
+// шаг делений в пикселях
                 var step = stepMsec / msecPerPx
 
                 ctx.miterLimit = 0.1
@@ -883,10 +887,25 @@ Item
                     playerWidget.min -= step
                     playerWidget.max -= step
 
-                    cueView.movedPlates.forEach(function(currCuePLate)
-                    {
-                        currCuePLate.position -= step
+                    var moveCue = true
+                    cueView.movedPlates.forEach(function(currCuePLate){
+                        if((currCuePLate.position - step) <=1){
+                            moveCue = false;
+                            return;
+                        }else if(currCuePLate.position - step +currCuePLate.duration >= playerWidget.projectDuration())
+                        {
+                            moveCue = false;
+                            return;
+                        }
                     })
+
+                    if(moveCue){
+
+                        cueView.movedPlates.forEach(function(currCuePLate)
+                        {
+                            currCuePLate.position -= step
+                        })
+                    }
 
                     cueView.checkPlatesIntersection()
                 }
@@ -907,10 +926,25 @@ Item
                     playerWidget.min += step
                     playerWidget.max += step
 
-                    cueView.movedPlates.forEach(function(currCuePLate)
-                    {
-                        currCuePLate.position += step
+                    var moveCue = true
+                    cueView.movedPlates.forEach(function(currCuePLate){
+
+                        if(currCuePLate.position + step +currCuePLate.duration >= playerWidget.projectDuration()){
+                            moveCue = false;
+                            return;
+                        }else if((currCuePLate.position + step) <=1)
+                        {
+                            moveCue = false;
+                            return;
+                        }
                     })
+
+                    if(moveCue){
+                        cueView.movedPlates.forEach(function(currCuePLate)
+                        {
+                            currCuePLate.position += step
+                        })
+                    }
 
                     cueView.checkPlatesIntersection()
                 }
@@ -935,6 +969,15 @@ Item
 
             onClicked:
             {
+
+                if(cueCopy.isCopy){
+                    console.log("copydelete")
+                    cueView.deleteIntersected();
+                    cueCopy.isCopy=false;
+                    return;
+                }
+
+                cueCopy.isCopy=false;
                 cueView.cuePlates.forEach(function(currCuePlate)
                 {
                     currCuePlate.checked = false
@@ -943,9 +986,9 @@ Item
                 cueView.cuePlates.forEach(function(currCuePlate)
                 {
                    if(selectRect.contains(currCuePlate.mapToItem(selectRect, 0, 0)) && selectRect.contains(currCuePlate.mapToItem(selectRect, currCuePlate.width, currCuePlate.height)))
-                   {
-                       currCuePlate.checked = true
-                   }
+                    {
+                        currCuePlate.checked = true
+                    }
                 })
 
                 cueView.collapseAll()
@@ -968,11 +1011,59 @@ Item
 
                 cueView.cuePlates.forEach(function(currCuePlate)
                 {
-                   if(selectRect.contains(currCuePlate.mapToItem(selectRect, 0, 0)) && selectRect.contains(currCuePlate.mapToItem(selectRect, currCuePlate.width, currCuePlate.height)))
-                   {
-                       currCuePlate.checked = true
-                   }
+                    if(selectRect.contains(currCuePlate.mapToItem(selectRect, 0, 0)) && selectRect.contains(currCuePlate.mapToItem(selectRect, currCuePlate.width, currCuePlate.height)))
+                    {
+                        currCuePlate.checked = true
+                    }
                 })
+            }
+        }
+
+        MfxMenu{
+            id:cueCopy
+            property bool isCopy:false
+            property var copyCuesNames: []
+
+            Action
+            {
+                text: translationsManager.translationTrigger + qsTr("Copy")
+                onTriggered:
+                {
+                    let lastCopy = cueView.checkedPlates()
+                    cueCopy.copyCuesNames = [];
+                    lastCopy.forEach(function(currCuePlate)
+                    {
+                        cueCopy.copyCuesNames.push(currCuePlate.name)
+                    })
+
+                    cueCopy.isCopy = true
+                    project.copyCues(cueCopy.copyCuesNames)
+                }
+            }
+            Action
+            {
+                text: translationsManager.translationTrigger + qsTr("Delete")
+                onTriggered:
+                {
+                    console.log("triggered")
+                    let checkedPlates = cueView.checkedPlates()
+
+                    if(checkedPlates.length)
+                    {
+                        var confirmDelDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                        confirmDelDialog.x = applicationWindow.width / 2 - confirmDelDialog.width / 2
+                        confirmDelDialog.y = applicationWindow.height / 2 - confirmDelDialog.height / 2
+                        confirmDelDialog.caption = qsTr("Delete Cues")
+                        confirmDelDialog.dialogText = qsTr("Delete selected cues from the project?")
+                        confirmDelDialog.acceptButtonText = qsTr("Delete")
+                        confirmDelDialog.cancelButtonText = qsTr("Cancel")
+                        confirmDelDialog.acceptButtonColor = "#EB5757"
+                        confirmDelDialog.cancelButtonColor = "#27AE60"
+
+                        confirmDelDialog.accepted.connect(cueView.deleteCues)
+
+                    }
+                }
             }
         }
 
@@ -991,6 +1082,7 @@ Item
                     let newYposition = Math.round(newY / 12) * 12
                     let newPosition = playerWidget.min + pixelsToMsec(newX)
 
+//                    console.log("drag.x ",drag.x, newX, newPosition)
                     let newCueName = "Cue"
 
                     for(let i = 1; i < 1000; i++)
@@ -1051,8 +1143,19 @@ Item
                                                                                      position: newPosition,
                                                                                      duration: 15000
                                                                                  })
+
                                 newCuePlate.loadActions()
+                                if(newCuePlate.position < 0)
+                                    newCuePlate.position = 0
+
+                                if(newCuePlate.position > waveformWidget.duration() - newCuePlate.duration - 10)
+                                    newCuePlate.position = waveformWidget.duration() - newCuePlate.duration - 10
+
                                 cueView.cuePlates.push(newCuePlate)
+
+                                project.setCueProperty(newCuePlate.name, "duration", newCuePlate.duration)
+
+                                console.log(newCuePlate.name, newCuePlate.duration)
                                 break
                             }
 
@@ -1144,6 +1247,7 @@ Item
                     if(currCuePlate.name === name)
                     {
                         cueManager.expandCueOnPlayerRequest(currCuePlate.name)
+                        mainScreen.cueName = currCuePlate.name
                         currCuePlate.isExpanded = true
                         expandedY = currCuePlate.y
                     }
@@ -1184,6 +1288,47 @@ Item
                 })
 
                 return checkedPlatesList
+            }
+            function intersectedPlates(){
+                let intersectedPlatesList = []
+                cuePlates.forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.state === "intersected")
+                        intersectedPlatesList.push(currCuePlate)
+                })
+                return intersectedPlatesList;
+            }
+
+            function deleteIntersected(){
+                let deletedCuesNames = []
+                if(!intersectedPlates().length){
+                    return;
+                }
+
+                intersectedPlates().forEach(function(currCuePlate)
+                {
+                    deletedCuesNames.push(currCuePlate.name)
+                })
+
+                project.deleteCues(deletedCuesNames)
+                cueManager.deleteCues(deletedCuesNames)
+                loadCues();
+            }
+
+            function deleteSelected(){
+                let deletedCuesNames = []
+                if(!checkedPlates().length){
+                    return;
+                }
+
+                checkedPlates().forEach(function(currCuePlate)
+                {
+                    deletedCuesNames.push(currCuePlate.name)
+                })
+
+                project.deleteCues(deletedCuesNames)
+                cueManager.deleteCues(deletedCuesNames)
+                loadCues();
             }
 
             function deleteCues()
@@ -1289,8 +1434,8 @@ Item
 
                 cueView.movedPlates.forEach(function(currCuePlate)
                 {
-                   if(currCuePlate.yPosition < lowestY)
-                       lowestY = currCuePlate.yPosition
+                    if(currCuePlate.yPosition < lowestY)
+                        lowestY = currCuePlate.yPosition
 
                 })
 
@@ -1374,12 +1519,12 @@ Item
 
             contentItem:
                 Rectangle
-                {
-                    implicitWidth: 10
-                    radius: 2
-                    color: "#c4c4c4"
-                    opacity: parent.pressed ? 0.25 : 0.5
-                }
+            {
+                implicitWidth: 10
+                radius: 2
+                color: "#c4c4c4"
+                opacity: parent.pressed ? 0.25 : 0.5
+            }
         }
 
         Component
@@ -1398,12 +1543,13 @@ Item
                 property string name: ""
                 property bool isExpanded: false
                 property bool checked: false //Влияет только на цвет рамки выделения
+                onCheckedChanged: if(cueCopy.isCopy)checked =true
                 property bool isAfterExpanded: false
                 property int yPosition
-                property int position // в мсек
-                property int duration  // в мсек
+                property double position // в мсек
+                property double duration  // в мсек
                 property int startMovingY
-                property int startMovingPosition
+                property double startMovingPosition
 
                 property var actionList: []
                 property var firstAction: null
@@ -1459,11 +1605,11 @@ Item
                     actions.forEach(function(currAction)
                     {
                         let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
-                                                                                            displayedName: currAction.actionName + " - P" + currAction.patchId,
-                                                                                            patchId: currAction.patchId,
-                                                                                            position: currAction.position,
-                                                                                            prefire: patternManager.patternByName(currAction.actionName).prefireDuration,
-                                                                                            positionCoeff: currAction.positionCoeff
+                                                                                     displayedName: currAction.actionName + " - P" + currAction.patchId,
+                                                                                     patchId: currAction.patchId,
+                                                                                     position: currAction.position,
+                                                                                     prefire: patternManager.patternByName(currAction.actionName).prefireDuration,
+                                                                                     positionCoeff: currAction.positionCoeff
                                                                                  })
                         actionList.push(newActionMarker)
                     })
@@ -1476,6 +1622,12 @@ Item
                     actionList.forEach(function(currAction)
                     {
                         currAction.position += dt
+                        let p = Math.round(Math.round(currAction.position*10)/10);
+                        let l = p % 10;
+                        if(l > 5)
+                            p += 10 - l;
+                        else p -= l;
+                        currAction.position = p
                     })
                 }
 
@@ -1494,10 +1646,14 @@ Item
                         property string name: ""
                         property string displayedName: ""
                         property int patchId
-                        property int position: 0 // в мсек
-                        property int prefire: 0 // в мсек
-                        property int duration: 0  // в мсек
+                        property double position: 0 // в мсек
+                        property double prefire: 0 // в мсек
+                        property double duration: 0  // в мсек
                         property double positionCoeff: 0
+                        function updateCoeff(){
+                            positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
+                            project.onSetActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
+                        }
 
                         onPositionChanged:
                         {
@@ -1533,7 +1689,7 @@ Item
                             id: actionMarkerMouseArea
                             anchors.margins: -4
                             anchors.fill: actionStartMarker
-
+                            property bool isMoved: false
                             onPressed:
                             {
                                 cueViewFlickable.interactive = false
@@ -1542,9 +1698,10 @@ Item
 
                             onMouseXChanged:
                             {
-                                let delta = pixelsToMsec(xAcc)
+                                let delta = pixelsToMsecRounded(xAcc)
                                 if(Math.abs(delta) > 0)
                                 {
+                                    isMoved = true;
                                     xAcc = 0
                                     if((actionMarker.position + delta) >= cuePlate.position && (actionMarker.position + delta) <= (cuePlate.position + cuePlate.duration))
                                     {
@@ -1552,15 +1709,34 @@ Item
                                         cuePlate.updatePosition()
                                         return
                                     }
+
+
                                 }
-                                positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
-                                project.onSetActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
+
                             }
 
                             onReleased:
                             {
+                                let p = Math.round(Math.round(actionMarker.position*10)/10);
+                                let l = p % 10;
+                                if(l > 5)
+                                    p += 10 - l;
+                                else p -= l;
+
+                                actionMarker.position = p;
+                                cuePlate.updatePosition()
+                                if(isMoved){
+                                    let pXY = mapToGlobal(this.x +actionStartMarker.width, actionStartMarker.childrenRect.y +actionStartMarker.childrenRect.height);
+                                    cursorManager.setCursorPosXY(pXY.x,pXY.y);
+                                    isMoved = false;
+                                }
                                 cueViewFlickable.interactive = true
                                 cuePlate.caption.visible = true
+                                cuePlate.loadActions();
+                                cuePlate.actionList.forEach(function(currAction, i){
+                                    currAction.updateCoeff();
+
+                                });
                             }
                         }
 
@@ -1684,12 +1860,19 @@ Item
                     anchors.bottom: cuePlate.bottom
                     anchors.left: cuePlate.left
                     width: cuePlate.width - 4
+                    property bool isRightClick: false
+                    property bool isMovedStop: false
+                    property  var lastMousePos;
+                    property var curPos;
+                    property real curposY;
 
                     drag.threshold: 0
                     drag.smoothed: false
 
+
                     onPressed:
                     {
+                        curPos = mapToItem(cuePlateMouseArea, mouseX, mouseY)
                         cueViewFlickable.interactive = false
 
                         cueView.movedPlates = cueView.checkedPlates()
@@ -1708,49 +1891,112 @@ Item
                             currCuePlate.startMovingY = currCuePlate.yPosition
 
                             if(currCuePlate.x < cueView.leftMovedPlate.x)
-                               cueView.leftMovedPlate =  currCuePlate
+                                cueView.leftMovedPlate =  currCuePlate
 
                             if(currCuePlate.x + currCuePlate.width > cueView.rightMovedPlate.x + cueView.rightMovedPlate.width)
-                               cueView.rightMovedPlate =  currCuePlate
+                                cueView.rightMovedPlate =  currCuePlate
 
                             if(currCuePlate.y < cueView.topMovedPlate.y)
-                               cueView.topMovedPlate =  currCuePlate
+                                cueView.topMovedPlate =  currCuePlate
 
                             if(currCuePlate.y + currCuePlate.height > cueView.rightMovedPlate.y + cueView.rightMovedPlate.heght)
-                               cueView.bottomMovedPlate =  currCuePlate
+                                cueView.bottomMovedPlate =  currCuePlate
                         })
                     }
 
                     onClicked:
                     {
 
+                        if(cueCopy.isCopy){
+                            cueView.deleteSelected();
+                            cueCopy.isCopy = false;
+                        }
+
+                        isMovedStop = false
+
+                        if(mouse.button === Qt.RightButton)
+                        {
+                            cueCopy.popup();
+                            cueCopy.x = cuePlate.x
+                            parent.checked = true;
+                            isRightClick = true
+                        }
+
+                        curPos = mapToItem(cuePlateMouseArea, mouseX, mouseY)
                     }
 
                     onDoubleClicked:
                     {
+                        isMovedStop = false
                         if(cuePlate.isExpanded)
                             cueView.collapseAll()
                         else
                             cueView.expandCuePlate(cuePlate.name)
 
                         cuePlate.checked = true
+                        curPos = mapToItem(this, mouseX, mouseY)
                     }
 
                     onPositionChanged:
                     {
                         // Перемещение по горизонтали
-                        let delta = pixelsToMsec(xAcc)
+                        let delta = /*pixelsToMsecRounded(xAcc)//*/pixelsToMsec(xAcc)
+pixelsToMsecRounded(xAcc)
 
                         if(Math.abs(delta) > 0)
                         {
                             xAcc = 0
+                            cueCopy.isCopy=false;
+                            isMovedStop = true
                             let isFitsLimits = true
+                            if((position + delta) <=1){
+                                position = 1;
+                                //                                if(!isMovedStop){
+                                ////                                    cursorManager.saveLastPos();
+                                //                                    lastMousePos = cursorManager.cursorPos()
+                                //                                    console.log(lastMousePos)
+                                //                                    isMovedStop =true;
+                                ////                                    cursorManager.saveLastPos()
+                                //                                }
+                                return;
+
+                            }else if((position + delta + cuePlate.duration) >= playerWidget.projectDuration()){
+                                position = Math.round(Math.round((playerWidget.projectDuration()-cuePlate.duration)*10) / 10);
+                                //                                if(!isMovedStop){
+                                ////                                    cursorManager.saveLastPos();
+                                //                                    lastMousePos = cursorManager.cursorPos().x
+                                //                                    console.log(lastMousePos)
+                                //                                    isMovedStop =true;
+                                ////                                    cursorManager.saveLastPos()
+                                //                                }
+                                return;
+
+                            };
+
+                            //                            if(isMovedStop)
+                            //                            {
+                            //                                isMovedStop = false;
+                            //                                     cursorManager.setCursorPosX(lastMousePos);
+                            //                                cursorManager.saveLastPos();
+                            //                                return;
+                            ////                                cursorManager.moveToLastPos();
+                            //                            }
+
+
+
                             cueView.movedPlates.forEach(function(currCuePlate)
                             {
                                 if( ! ((currCuePlate.startMovingPosition + delta >= 0) && (currCuePlate.startMovingPosition + delta < playerWidget.projectDuration())))
                                 {
                                     isFitsLimits = false
+
                                     return
+                                }
+
+                                if(((currCuePlate.position + delta) <= 1) || ((currCuePlate.position + delta + currCuePlate.duration) >= playerWidget.projectDuration())){
+                                    isFitsLimits = false
+                                    //                                    console.log(currCuePlate.name)
+                                    return;
                                 }
                             })
 
@@ -1759,6 +2005,7 @@ Item
                                 cueView.movedPlates.forEach(function(currCuePlate)
                                 {
                                     currCuePlate.position += delta
+
                                     cueView.checkPlatesIntersection()
                                 })
                             }
@@ -1819,6 +2066,33 @@ Item
 
                     onReleased:
                     {
+                        let p = Math.round(Math.round(position*10)/10);
+                        let l = p % 10;
+                        if(l > 5)
+                            p += 10 - l;
+                        else p -= l;
+                        position = p;
+                        if(isMovedStop){
+                            let pXY = mapToGlobal(cuePlateMouseArea.x+curPos.x,cuePlateMouseArea.y+curPos.y);
+                            //                            console.log(pXY);
+                            cursorManager.setCursorPosXY(pXY.x,pXY.y)
+                            isMovedStop = false;
+                        }
+
+                        //                        cursorManager.setCursorPosX(lastMousePos)
+                        //                        if(isMovedStop)
+                        //                        {
+                        //                            isMovedStop = false;
+                        //                            console.log(lastMousePos)
+                        //                                 cursorManager.setCursorPosX(lastMousePos)
+                        ////                                cursorManager.moveToLastPos();
+                        //                        }
+
+                        if(isRightClick){
+                            isRightClick = false;
+                            return;
+                        }
+
                         cueViewFlickable.interactive = true
                         scrollDownTimer.stop()
                         scrollUpTimer.stop()
@@ -1830,7 +2104,7 @@ Item
                             cuePlate.checked = !cuePlate.checked
                         }
 
-//                        if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
+                        //                        if(cueView.movedPlates.length > 1) // Перетаскиваем несколько плашек
                         {
                             if(cueView.movedPlates[0].state === "intersected")
                             {
@@ -1876,37 +2150,69 @@ Item
                     anchors.top: cuePlate.top
                     anchors.bottom: cuePlate.bottom
                     anchors.left: cuePlateMouseArea.right
+                    allwaysHide: false
+                    property bool colapsed: false
+                    property bool isChanged: false
 
                     cursor: Qt.SizeHorCursor
 
-                    onPressed: cueViewFlickable.interactive = false
+                    onPressed: {
+                        cueViewFlickable.interactive = false
+
+                    }
 
                     onMouseXChanged:
                     {
                         let delta = pixelsToMsec(dx)
                         if(cuePlate.duration + delta > 0)
                         {
+//                            let prevDuration = cuePlate.firstAction.position;
                             cuePlate.actionList.forEach(function(currAction, i)
                             {
                                 if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
                                 {
                                     return // this is first action in cue
                                 }
-
                                 let newPosition = currAction.position + delta * currAction.positionCoeff
-                                if(newPosition < cuePlate.firstAction.position) {
-                                    return
+
+                                if(newPosition <= cuePlate.firstAction.position) {
+                                    newPosition = cuePlate.firstAction.position
+
+                                    var positionCoeff = cuePlate.actionList.length<1?0:(1/(cuePlate.actionList.length)) * i;
+                                    project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "positionCoeff", positionCoeff)
                                 }
 
                                 project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
                                 cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                                 cuePlate.loadActions();
+
                             })
                         }
                     }
 
                     onReleased:
                     {
+                        cuePlate.actionList.forEach(function(currAction, i)
+                        {
+                            if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
+                            {
+                                return // this is first action in cue
+                            }
+
+                            let newPosition = currAction.position;
+
+                            let p = Math.round(Math.round(newPosition*10)/10);
+                            let l = p % 10;
+                            if(l > 5)
+                                p += 10 - l;
+                            else p -= l;
+                            newPosition = p;
+
+                            project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
+                            cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
+                            cuePlate.loadActions();
+                        });
+
                         cueViewFlickable.interactive = true
                         project.setCueProperty(cuePlate.name, "duration", cuePlate.duration)
                     }
@@ -2493,6 +2799,7 @@ Item
             playerTimer.stop()
             playerWidget.position = startPositionMarker.position
             playButton.checked = false
+            cueContentManager.setAllUnActive();
         }
     }
 
@@ -2527,6 +2834,7 @@ Item
             {
                 waveformWidget.pause()
                 playerTimer.stop()
+                cueContentManager.setAllUnActive();
             }
         }
     }
@@ -3101,9 +3409,9 @@ Item
                 leftPadding: 0
 
                 background: Rectangle {
-                        color: "#444444"
-                        opacity: 0
-                    }
+                    color: "#444444"
+                    opacity: 0
+                }
 
                 Image
                 {
@@ -3582,6 +3890,40 @@ Item
             scrollBackgroundWaveform.anchors.leftMargin = project.property("prePlayInterval") / playerWidget.projectDuration() * positioningRect.width
             scrollBackgroundWaveform.anchors.rightMargin = project.property("postPlayInterval") / playerWidget.projectDuration() * positioningRect.width
             scrollBackgroundWaveform.showAll()
+        }
+    }
+
+    Connections{
+        target: project
+        function onPasteCues(pastedCues){
+            cueView.loadCues()
+            let curCue;
+
+            pastedCues.forEach(function(_name){
+
+                cueView.cuePlates.forEach(function(currCuePlate)
+                {
+                    if(currCuePlate.name === _name ){
+
+                        currCuePlate.checked = true;
+                        currCuePlate.state = "intersected"
+                    }
+                })
+            })
+        }
+    }
+
+    Connections{
+        target: project
+        function onUpdateCues(updateCueName){
+            cueView.loadCues();
+            cueView.collapseAll();
+            cueView.expandCuePlate(updateCueName);
+
+        }
+        function onReloadCues(){
+            console.log("reloadCues")
+            cueView.loadCues();
         }
     }
 

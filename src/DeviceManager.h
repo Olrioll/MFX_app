@@ -9,6 +9,7 @@
 #include "ComPortModel.h"
 #include "PatternManager.h"
 
+
 class DeviceManager : public QObject
 {
     Q_OBJECT
@@ -32,11 +33,13 @@ signals:
     void endOfPattern(qulonglong deviceId);
     void drawPreviewInGui( int duration, int angle, int velocity, bool active );
     void endOfPreview();
+    void editChanged();
 
 public slots:
     //void onRunPattern(int deviceId, quint64 time, const QString& patternName);
     void onRunPatternSingly( int deviceId, quint64 time, const QString& patternName );
     void onEditPatch(QVariantList properties);
+    void reloadPattern();
 
 private:
     void addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);

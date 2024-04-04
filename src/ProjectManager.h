@@ -10,6 +10,7 @@
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
+#include "FireBaseClouds.h"
 
 class ProjectManager : public QObject, public JsonSerializable
 {
@@ -29,9 +30,11 @@ private:
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrack, CurrentProjectAudioTrack, "") //Имя текущего выбранного музыкального файла
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrackPath, CurrentProjectAudioTrackPath, "") //Абсолютный путь к текущему выбранному музыкальному файлу
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(qlonglong, currentProjectAudioTrackDuration, CurrentProjectAudioTrackDuration, 0) //Длительность текущего выбранного музыкального файла в миллисекундах
+
 public slots:
     bool loadProject(const QString& fileName);
     void defaultProject();
+    void reloadCurrentProject();
     void newProject();
     void saveProject();
 
@@ -44,13 +47,13 @@ public slots:
 
     void setBackgroundImage(const QString& fileName);
     void setAudioTrack(const QString& fileName);
+    void setPrefire( const QMap<QString, int>& pref );
 
     bool hasUnsavedChanges() const; //Отвечает за индикацию, был ли проект изменен (значит, нужно попросить сохранить данные при закрытии программы)
-private:
-    void cleanWorkDirectory();
-private:
-    bool _hasUnsavedChanges = false;
-    SettingsManager& _settings;
+    void removePatches(const QList<int> patchIds);
+    void removeSelectedPatches();
+    bool isPatchHasGroup(int patchId) const;
+
 signals:
     void audioTrackFileChanged();
     void backgroundImageChanged();
@@ -93,6 +96,7 @@ public slots:
     QList<QVariant> patchPropertiesValues(int index) const;
     void setPatchProperty(int id, const QString& propertyName, QVariant value);
     QVariantList patchesIdList(const QString& groupName) const;
+    void uncheckPatch();
     int patchIndexForId(int id) const;
     int patchCount() const;
     QList<int> checkedPatchesList() const;
@@ -112,7 +116,6 @@ signals:
 ///                      Работа с группами                                   //
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
-    bool isPatchHasGroup(int patchId) const;
     QString currentGroup() const;
     void setCurrentGroup(QString name);
     bool isGroupVisible(QString groupName) const;
@@ -124,8 +127,7 @@ public slots:
     void removePatchesFromGroup(QString groupName, QList<int> patchIDs);
     bool isGroupContainsPatch(QString groupName, int patchId) const;
     QStringList groupNames() const;
-private:
-    QString _currentGroup;
+
 signals:
     void currentGroupChanged(QString name);
     void groupChanged(QString name);
@@ -146,6 +148,17 @@ public slots:
     void addActionToCue(QString cueName, QString actionName, int patchId, int position);
     void setCueProperty(QString cueName, QString propertyName, QVariant value);
     void deleteCues(QStringList deletedCueNames);
+    void copyCues(QStringList copyCueNames);
+    void changeAction(QString cueName, int deviceId, QString pattern);
+    void saveJsonOut();
+    void onMirror(const QString &cueName, QList<int> deviceId);
+    void onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside);
+    void onRandom(const QString &cueName, QList<int> deviceId);
+    QStringList maxActWidth(const QList<int> &ids);
+    void setMsecPerPx(double ms){  msperpx = ms;}
+    double getMsecPerPx(){return msperpx;}
+    void updateCurrent();
+
 signals:
     void addCue(QVariantMap properties);
 ///////////////////////////////////////////////////////////////////////////////
@@ -162,10 +175,26 @@ public slots:
     QVariantList cueActions(QString cueName) const;
     void onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
 signals:
+    void deleteAllCue();
+    void reloadCues();
     void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
+    void pasteCues(QStringList pastedCues);
+    void updateCues(QString cueName);
+    void reloadPattern();
 ///////////////////////////////////////////////////////////////////////////////
 ///                      Работа с экшенами   END                             //
 ///////////////////////////////////////////////////////////////////////////////
+private:
+    void updateCoeffByName(QString cueName);
+    void cleanWorkDirectory();
+
+    SettingsManager& _settings;
+    bool _hasUnsavedChanges = false;
+    QString _currentGroup;
+    QStringList _pastedCues;
+    QMap<QString,int> m_prefire;
+    FireBaseClouds clouds;
+   double msperpx = 1;
 };
 
 #endif // PROJECTMANAGER_H

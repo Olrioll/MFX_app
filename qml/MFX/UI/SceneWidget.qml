@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
@@ -549,6 +549,58 @@ Item
             height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
             frameHeightText.text = project.property("sceneFrameHeight") + " m"
             frameWidthText.text = project.property("sceneFrameWidth") + " m"
+            console.log( sceneWidget.scaleFactor , sceneWidget.width,sceneWidget.height,backgroundImage.x,backgroundImage.height)
+            if(sceneWidget.width > 0){
+                sceneWidget.scaleFactor = project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
+                if(sceneWidget.width <= backgroundImage.width ){
+                    sceneWidget.scaleFactor = sceneWidget.width / backgroundImage.sourceSize.width;
+                }
+
+                if(sceneWidget.height <= backgroundImage.height )
+                {
+                    sceneWidget.scaleFactor = sceneWidget.height / backgroundImage.sourceSize.height;
+                }
+
+                var currentSceneFrameX = (x - backgroundImage.x) / backgroundImage.width
+                var currentSceneFrameY = (y - backgroundImage.y) / backgroundImage.height
+
+                var prevWidth = backgroundImage.width;
+                var prevHeight = backgroundImage.height;
+                var newWidth = backgroundImage.sourceSize.width * sceneWidget.scaleFactor;
+                var newHeight = backgroundImage.sourceSize.height * sceneWidget.scaleFactor;
+                var currWidthChange = newWidth - prevWidth;
+                var currHeightChange = newHeight - prevHeight;
+
+                let newScaleFactror = sceneWidget.scaleFactor
+                let scaleRatio = newScaleFactror / 1.0
+
+                if(backgroundImage.width <= sceneWidget.width)
+                {
+                    backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
+                }
+
+                else
+                {
+                    let dx = ((sceneWidget.width/2) - backgroundImage.x) / prevWidth * currWidthChange
+                    backgroundImage.x -= dx
+                }
+
+                if(backgroundImage.height <= sceneWidget.height)
+                {
+                    backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
+                }
+
+                else
+                {
+                    let dy = ((sceneWidget.height/2) - backgroundImage.y) / prevHeight * currHeightChange
+                    backgroundImage.y -= dy
+                }
+
+                x = currentSceneFrameX * newWidth + backgroundImage.x
+                y = currentSceneFrameY * newHeight + backgroundImage.y
+                width = width * scaleRatio
+                height = height * scaleRatio
+        }
         }
 
         Rectangle

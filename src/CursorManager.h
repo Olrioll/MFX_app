@@ -16,6 +16,8 @@ public slots:
     void moveCursor(int dx, int dy);
     void hideCursor();
     void showCursor();
+    void setCursorPosX(QPoint pos);
+    void setCursorPosXY(int x, int y);
 
     QPoint cursorPos() const;
     void saveLastPos();

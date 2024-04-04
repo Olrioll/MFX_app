@@ -23,10 +23,41 @@ void SequenceDevice::runPattern(const Pattern *p, quint64 time)
     m_opStartTime = time;
     m_patternStopTime = time + p->duration() - 10; // time in DMXWorker is 10 ms before time in SequenceDevices
     m_operations = p->operations()->toList();
-    if(m_operations.count() == 0)
+
+    auto nOp = m_operations;
+    auto first = true;
+    auto firstDuration = -1;
+    auto counter = 0;
+    m_operations.erase(std::remove_if(m_operations.begin(),m_operations.end(),
+                                      [&](const Operation* op){  auto r = ((op->angleDegrees() < minAngle()) || (op->angleDegrees() > maxAngle()));
+        if(r && first  && counter == 0){
+            first = false;
+            firstDuration = op->duration();
+        }
+
+        ++counter;
+        return  r ;}),m_operations.end());
+
+    if(firstDuration != -1 && !m_operations.isEmpty() ){
+        m_operations[0]->setDuration(firstDuration);
+    }
+
+    if(m_operations.count() == 0) {
         return;
 
     qDebug() << p->type() << " " << m_operations.count() << " " << m_opStartTime << " " << m_patternStopTime;
+
+
+    if(nOp.size() != m_operations.size())
+    {
+        qDebug()<<"SequenceDevice.cpp operation size changed" << nOp.size() << m_operations.size()<< "\nAngle: "<<minAngle()<<maxAngle();
+        for(auto& x: m_operations){
+            qDebug()<<"  "<<x->angle() << x->duration();
+        }
+        for(auto& x: nOp){
+            qDebug()<<" --- "<<x->angle() << x->duration();
+        }
+    }
 
     m_op = m_operations[0]; // first operation of pattern
     setDMXOperation(id(), m_op, true);

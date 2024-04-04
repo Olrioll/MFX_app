@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import "qrc:/"
@@ -126,6 +126,15 @@ ListView
         }
     }
 
+    function selectAll()
+    {
+        for(let i = 0; i < deviceListView.count; i++)
+        {
+            project.setPatchProperty(deviceListModel.get(i).currentId, "checked", true)
+        }
+        cueContentManager.cleanSelectionRequest()
+    }
+
     delegate: PatchPlate
     {
         anchors.left: deviceListView.contentItem.left
@@ -134,6 +143,21 @@ ListView
         no: counter
         patchId: currentId
         parentList: deviceListView
+        DropArea{
+            anchors.fill: parent;
+            property bool isEnter: false
+            onDropped: {
+                console.log("Dropped")
+                if(drop.source.name.startsWith("A")){
+                    project.setPatchProperty(currentId, "act", drop.source.name);
+                    project.setPatchProperty(patchId, "checked", false)
+                    isEnter = false;
+                    refreshCells()
+                }
+            }
+            onEntered: if(drag.source.name.startsWith("A")){ project.setPatchProperty(patchId, "checked", true); isEnter=true; }
+            onExited: if(isEnter) project.setPatchProperty(patchId, "checked", false)
+        }
     }
 
     model: ListModel

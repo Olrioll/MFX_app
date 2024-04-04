@@ -20,6 +20,7 @@ public:
 
     void initConnections();
     static void qmlRegister();
+    const QMap<QString, int>& getPrefire();
 
     Q_INVOKABLE void currentPatternChangeRequest(const QUuid& patternUuid);
     Q_INVOKABLE void cleanPatternSelectionRequest();
@@ -27,9 +28,11 @@ public:
     void initPatterns();
     PatternFilteringModel * patternsFiltered() const;
     Pattern *patternById(const QUuid& id) const;
+    Q_INVOKABLE qulonglong maxPatternDuration(const QStringList &list) const;
     //TODO запрашивается из QML - избавиться впоследствии
     Q_INVOKABLE Pattern *patternByName(const QString& name) const;
 private:
     PatternFilteringModel* m_patternsFiltered = nullptr;
     SettingsManager& m_settingsManager;
+    QMap<QString,int> m_prefire;
 };

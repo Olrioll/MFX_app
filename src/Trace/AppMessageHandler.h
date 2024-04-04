@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qlogging.h>
+#include <memory>
 
 class Logger;
 

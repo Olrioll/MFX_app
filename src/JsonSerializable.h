@@ -16,6 +16,7 @@ public:
     void setProperty(const QString& name, QVariant value = QVariant());
     void setProperties(const QVariantMap& props);
     QVariant property(const QString& name) const;
+    bool containsProperty(const QString& name) const;
     QVariantMap& properties();
     void addChild(const QString& name);
     void addChild(JsonSerializable* child);
@@ -23,6 +24,8 @@ public:
     void addChild();
     void removeChild(const QString& name);
     void renameChild(const QString& name, const QString& newName);
+    void removeChildrenAtIndex(const QList<int> listidx);
+    void removefromChildrenWithProperty(const QString& property, QVariant equal);
 
     JsonSerializable* getChild(const QString& name) const;
     QStringList childrenNames() const;
@@ -32,6 +35,7 @@ public:
 
     QJsonObject toJsonObject() const;
     void fromJsonObject(const QJsonObject& jsonObject);
+    QString addFromJsonObject(QJsonObject &&jsonObject);
 
     void clear();
     bool isEmpty() const;

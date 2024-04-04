@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.13
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
@@ -8,6 +8,7 @@ import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.Enums 1.0 as MFXE
 import MFX.Models 1.0 as MDFM
 import MFX.UI.Styles 1.0 as MFXUIS
+import QtQml.Models 2.12
 
 import "qrc:/"
 
@@ -17,6 +18,7 @@ FocusScope
 
     property var sceneWidget: null
     property alias playerWidget: playerWidget
+    property string cueName
 
     focus: true
 
@@ -843,12 +845,23 @@ FocusScope
 
                                     Repeater {
                                         model: ListModel {
-                                            ListElement { text: qsTr("Forward"); callback: function() {}; }
-                                            ListElement { text: qsTr("Backward"); callback: function() {};  }
-                                            ListElement { text: qsTr("Inside"); callback: function() {};  }
-                                            ListElement { text: qsTr("Outside"); callback: function() {};  }
-                                            ListElement { text: qsTr("Mirror"); callback: function() {};  }
-                                            ListElement { text: qsTr("Random"); callback: function() {};  }
+                                            ListElement { text: qsTr("Inside"); callback: function() {
+                                                let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                                project.onInsideOutside(cueName, selectedCue,true);
+                                            };  }
+                                            ListElement { text: qsTr("Outside"); callback: function() {
+                                                let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                                project.onInsideOutside(cueName, selectedCue, false);
+
+                                            };  }
+                                            ListElement { text: qsTr("Mirror"); callback: function() {
+                                                let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                                project.onMirror(cueName, selectedCue);
+                                            };  }
+                                            ListElement { text: qsTr("Random"); callback: function() {
+                                                let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                                project.onRandom(cueName, selectedCue);
+                                            };  }
                                         }
 
                                         delegate: MfxButton {
@@ -943,9 +956,9 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("First")
 
+                                        enabled: true //cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
-
                                         onClicked: {
                                             cueContentManager.onSelectLeftItemsRequest();
                                         }
@@ -965,6 +978,8 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Uneven")
+
+                                        enabled:  true //cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
 
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
@@ -989,6 +1004,8 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("All")
 
+                                        enabled:  true //cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -1011,6 +1028,8 @@ FocusScope
                                         checkable: false
 
                                         text: translationsManager.translationTrigger + qsTr("Even")
+
+                                        enabled:  true //cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
 
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
@@ -1035,6 +1054,8 @@ FocusScope
 
                                         text: translationsManager.translationTrigger + qsTr("Last")
 
+                                        enabled:  true //cueContentManager.selectedTableRole !== MFXE.CueContentSelectedTableRole.Unknown
+
                                         disabledColor: "#804f4f4f"
                                         disabledTextColor: "#30ffffff"
 
@@ -1048,6 +1069,339 @@ FocusScope
 
                         Keys.onEscapePressed: {
                             cueContentManager.cleanSelectionRequest()
+                        }
+
+                        DelegateModel{
+                            id:visualModel
+                            model:cueContentManager.cueContentSorted
+                            delegate: FocusScope {
+
+                                id: cueContentListViewDelegate
+
+                                property int rowIndex: model.index
+                                property int rowNumber: rowIndex + 1
+                                property string delay: model.delayTimeDecorator
+                                property string between: model.betweenTimeDecorator
+                                property var rfChannel: model.rfChannel
+                                property var device: model.device
+                                property var dmxSlot: model.dmxSlot
+                                property var action: model.action
+                                property var effect: model.effect
+                                property var angle: model.angle
+                                property string time: model.timeTimeDecorator
+                                property string prefire: model.prefireTimeDecorator
+
+                                property bool active: model.active
+                                property bool selected: model.selected
+
+                                property color activeTextColor: "#F2C94C"
+                                property color activeBackgroundColor: "#1AFFFAFA"
+
+                                property color selectedRoleTextColor: "#27AE60"
+
+                                property color selectedTextColor: "#FFFFFF"
+                                property color selectedBackgroundColor: "#802F80ED"
+
+                                property color textColor: "#FFFFFF"
+                                property color backgroundColor: "transparent"
+
+                                Keys.onEscapePressed: {
+                                    cueContentManager.cleanSelectionRequest()
+                                }
+
+                                QtObject {
+                                    id: cueContentListViewDelegatePrivateProperties
+
+                                    property color calculatedBackgroundColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeBackgroundColor
+                                                                                                                : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedBackgroundColor
+                                                                                                                                                      : cueContentListViewDelegate.backgroundColor
+                                    property color calculatedTextColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
+                                                                                                          : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedTextColor
+                                                                                                                                                : cueContentListViewDelegate.textColor
+                                    function calculateTextColor(currentRole) {
+                                        return cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
+                                                                                 : cueContentListViewDelegate.selected ? currentRole ? cueContentListViewDelegate.selectedRoleTextColor
+                                                                                                                                     : cueContentListViewDelegate.selectedTextColor
+                                        : cueContentListViewDelegate.textColor
+                                    }
+                                }
+
+                                anchors.left: cueContentTableListView.contentItem.left
+                                anchors.right: cueContentTableListView.contentItem.right
+
+                                height: 30
+
+                                Rectangle {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.bottom: parent.bottom
+                                    anchors.leftMargin: 2
+                                    anchors.rightMargin: 2
+
+                                    height: 1
+
+                                    color: "#66000000"
+                                }
+
+                                Rectangle {
+                                    anchors.fill: parent
+
+                                    color: cueContentListViewDelegatePrivateProperties.calculatedBackgroundColor
+
+                                    Behavior on color { ColorAnimation { duration: 1 } }
+                                }
+
+                                RowLayout {
+                                    anchors.fill: parent
+
+                                    spacing: 0
+
+                                    Text {
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[0]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[0]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[0]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
+
+                                        text: cueContentListViewDelegate.rowNumber
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+
+                                        color: "#1FFFFFFF"
+                                    }
+
+                                    Text {
+                                        id: timingTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[1]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[1]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[1]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                        text: {
+                                            switch(cueContentManager.timingTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.Delay:
+                                                return cueContentListViewDelegate.delay
+                                            case MFXE.CueContentSelectedTableRole.Between:
+                                                return cueContentListViewDelegate.between
+                                            }
+                                            return qsTr("---")
+                                        }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+
+                                        color: "#1FFFFFFF"
+                                    }
+
+                                    Text {
+                                        id: deviceTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[2]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[2]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[2]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                        text: {
+                                            switch(cueContentManager.deviceTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.RfChannel:
+                                                return cueContentListViewDelegate.rfChannel
+                                            case MFXE.CueContentSelectedTableRole.Device:
+                                                return cueContentListViewDelegate.device
+                                            case MFXE.CueContentSelectedTableRole.DmxChannel:
+                                                return cueContentListViewDelegate.dmxSlot
+                                            }
+                                            return qsTr("---")
+                                        }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+                                        color: "#1FFFFFFF"
+                                    }
+
+                                    Text {
+                                        id: actionTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[3]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[3]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[3]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        property bool currentRole: cueContentManager.actionTypeSelectedTableRole === cueContentManager.selectedTableRole
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                        text: {
+                                            switch(cueContentManager.actionTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.Action:
+                                                return cueContentListViewDelegate.action
+                                            case MFXE.CueContentSelectedTableRole.Angle:
+                                                return cueContentListViewDelegate.angle
+                                            case MFXE.CueContentSelectedTableRole.Effect:
+                                                return cueContentListViewDelegate.effect
+                                            }
+                                            return qsTr("---")
+                                        }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: 1
+                                        Layout.maximumWidth: 1
+                                        Layout.minimumWidth: 1
+                                        Layout.topMargin: 4
+                                        Layout.bottomMargin: 5
+                                        color: "#1FFFFFFF"
+                                    }
+
+                                    Text {
+                                        id: durationTypeValueItem
+
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: cueContentTableListView.columnWidths[4]
+                                        Layout.maximumWidth: cueContentTableListView.columnWidths[4]
+                                        Layout.minimumWidth: cueContentTableListView.columnWidths[4]
+
+                                        horizontalAlignment: Text.AlignHCenter
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 10
+
+                                        property bool currentRole: cueContentManager.durationTypeSelectedTableRole === cueContentManager.selectedTableRole
+
+                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
+
+                                        text: {
+                                            switch(cueContentManager.durationTypeSelectedTableRole) {
+                                            case MFXE.CueContentSelectedTableRole.Time:
+                                                return cueContentListViewDelegate.time
+                                            case MFXE.CueContentSelectedTableRole.Prefire:
+                                                return cueContentListViewDelegate.prefire
+                                            }
+                                            return qsTr("---")
+                                        }
+
+                                        Behavior on color { ColorAnimation { duration: 250 } }
+                                    }
+                                }
+
+                                Drag.active: dragArea.held
+                                Drag.source: cueContentListViewDelegate
+                                Drag.hotSpot.x: width / 2
+                                Drag.hotSpot.y: height / 2
+                                MouseArea {
+                                    anchors.fill: parent
+                                    id:dragArea
+
+                                    propagateComposedEvents: true
+                                    preventStealing: false
+
+                                    onClicked: {
+                                        console.log(model.selected)
+                                        model.selected = !model.selected;
+                                        if(model.selected){
+                                            project.uncheckPatch();
+                                        }
+
+                                        cueContentListViewDelegate.forceActiveFocus()
+                                    }
+
+                                    property bool held: false
+
+                                    anchors { left: parent.left; right: parent.right }
+                                    drag.target: held ? cueContentListViewDelegate : undefined
+                                    drag.axis: Drag.YAxis
+                                    onReleased: held = false
+
+                                    DropArea {
+                                        anchors { fill: parent; margins: 10 }
+                                        onDropped: {
+                                            console.log("onDrop",drag.source.name)
+                                            model.action = drag.source.name
+                                            project.changeAction(cueName,model.device,drag.source.name)
+                                            model.selected = false;
+                                            return;
+                                        }
+                                        onEntered: {
+                                            console.log("onEnter",drag.source.name,containsDrag)
+                                            if(drag.source.name){
+                                                model.selected = true;
+                                                if(model.selected){
+                                                    project.uncheckPatch();
+                                                }
+                                                return;
+                                            }
+                                        }
+                                        onExited: {
+                                            if(drag.source.name){
+                                                model.selected = false;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         ListView {
@@ -1081,6 +1435,13 @@ FocusScope
                             headerPositioning: ListView.OverlayHeader
                             spacing: 1
                             orientation: Qt.Vertical
+                            MouseArea{
+                                anchors.fill: parent;
+                                z:-1
+                                onClicked: {
+                                    cueContentManager.onDeselecAllItemsRequest();
+                                }
+                            }
 
                             header: FocusScope {
                                 id: headerItem
@@ -1389,434 +1750,10 @@ FocusScope
                                 }
                             }
 
-                            model: cueContentManager.cueContentSorted
-
-                            delegate: Item {
-                                id: cueContentListViewDelegate
-
-                                property var uuid: model.uuid
-                                property int rowIndex: model.index
-                                property int rowNumber: rowIndex + 1
-                                property string delay: model.delayTimeDecorator
-                                property string between: model.betweenTimeDecorator
-                                property var rfChannel: model.rfChannel
-                                property var device: model.device
-                                property var dmxSlot: model.dmxSlot
-                                property var action: model.action
-                                property var effect: model.effect
-                                property var angle: model.angle
-                                property string time: model.timeTimeDecorator
-                                property string prefire: model.prefireTimeDecorator
-
-                                property bool active: model.active
-                                property bool selected: model.selected
-
-                                property color activeTextColor: "#F2C94C"
-                                property color activeBackgroundColor: "#1AFFFAFA"
-
-                                property color selectedRoleTextColor: "#27AE60"
-
-                                property color selectedTextColor: "#FFFFFF"
-                                property color selectedBackgroundColor: "#802F80ED"
-
-                                property color textColor: "#FFFFFF"
-                                property color backgroundColor: "transparent"
-
-                                Keys.onEscapePressed: {
-                                    cueContentManager.cleanSelectionRequest()
+                            model: visualModel
                                 }
-
-                                QtObject {
-                                    id: cueContentListViewDelegatePrivateProperties
-
-                                    property color calculatedBackgroundColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeBackgroundColor
-                                                                                                                : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedBackgroundColor
-                                                                                                                                                      : cueContentListViewDelegate.backgroundColor
-
-                                    property color calculatedTextColor: cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
-                                                                                                          : cueContentListViewDelegate.selected ? cueContentListViewDelegate.selectedTextColor
-                                                                                                                                                : cueContentListViewDelegate.textColor
-
-                                    function calculateTextColor(currentRole) {
-                                        return cueContentListViewDelegate.active ? cueContentListViewDelegate.activeTextColor
-                                                                                 : cueContentListViewDelegate.selected ? currentRole ? cueContentListViewDelegate.selectedRoleTextColor
-                                                                                                                                     : cueContentListViewDelegate.selectedTextColor
-                                                                                                                       : cueContentListViewDelegate.textColor
                                     }
                                 }
-
-                                anchors.left: cueContentTableListView.contentItem.left
-                                anchors.right: cueContentTableListView.contentItem.right
-
-                                height: 30
-
-                                Rectangle {
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.bottom: parent.bottom
-                                    anchors.leftMargin: 2
-                                    anchors.rightMargin: 2
-
-                                    height: 1
-
-                                    color: "#66000000"
-                                }
-
-                                Rectangle {
-                                    anchors.fill: parent
-
-                                    color: cueContentListViewDelegatePrivateProperties.calculatedBackgroundColor
-
-                                    Behavior on color { ColorAnimation { duration: 250 } }
-                                }
-
-                                RowLayout {
-                                    anchors.fill: parent
-
-                                    spacing: 0
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: cueContentTableListView.columnWidths[0]
-                                        Layout.maximumWidth: cueContentTableListView.columnWidths[0]
-                                        Layout.minimumWidth: cueContentTableListView.columnWidths[0]
-
-                                        Text {
-                                            anchors.fill: parent
-
-                                            horizontalAlignment: Text.AlignHCenter
-                                            verticalAlignment: Text.AlignVCenter
-
-                                            font.family: MFXUIS.Fonts.robotoRegular.name
-                                            font.pixelSize: 10
-
-                                            color: cueContentListViewDelegatePrivateProperties.calculatedTextColor
-
-                                            text: cueContentListViewDelegate.rowNumber
-
-                                            Behavior on color { ColorAnimation { duration: 250 } }
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: 1
-                                        Layout.maximumWidth: 1
-                                        Layout.minimumWidth: 1
-                                        Layout.topMargin: 4
-                                        Layout.bottomMargin: 5
-
-                                        color: "#1FFFFFFF"
-
-
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: cueContentTableListView.columnWidths[1]
-                                        Layout.maximumWidth: cueContentTableListView.columnWidths[1]
-                                        Layout.minimumWidth: cueContentTableListView.columnWidths[1]
-
-                                        Text {
-                                            id: timingTypeValueItem
-
-                                            anchors.fill: parent
-
-                                            horizontalAlignment: Text.AlignHCenter
-                                            verticalAlignment: Text.AlignVCenter
-
-                                            font.family: MFXUIS.Fonts.robotoRegular.name
-                                            font.pixelSize: 10
-
-                                            property bool currentRole: cueContentManager.timingTypeSelectedTableRole === cueContentManager.selectedTableRole
-
-                                            color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
-
-                                            text: {
-                                                switch(cueContentManager.timingTypeSelectedTableRole) {
-                                                case MFXE.CueContentSelectedTableRole.Delay:
-                                                    return cueContentListViewDelegate.delay
-                                                case MFXE.CueContentSelectedTableRole.Between:
-                                                    return cueContentListViewDelegate.between
-                                                }
-                                                return qsTr("---")
-                                            }
-
-                                            Behavior on color { ColorAnimation { duration: 250 } }
-
-                                            onTextChanged: {
-                                                timingTypeValueItemHighlight.state = "visible"
-                                                timingTypeValueItemHighlightTimer.restart()
-                                            }
-
-                                            Text {
-                                                id: timingTypeValueItemHighlight
-
-                                                anchors.fill: parent
-
-                                                horizontalAlignment: Text.AlignHCenter
-                                                verticalAlignment: Text.AlignVCenter
-
-                                                font.family: MFXUIS.Fonts.robotoRegular.name
-                                                font.pixelSize: 10
-
-                                                text: timingTypeValueItem.text
-
-                                                state: "hidden"
-
-                                                Timer {
-                                                    id: timingTypeValueItemHighlightTimer
-                                                    repeat: false
-                                                    interval: 500
-                                                    onTriggered: {
-                                                        timingTypeValueItemHighlight.state = "hidden"
-                                                    }
-                                                }
-
-                                                states: [
-                                                    State {
-                                                        name: "visible"
-                                                        PropertyChanges {
-                                                            target: timingTypeValueItemHighlight
-                                                            color: "yellow"
-                                                        }
-                                                    },
-                                                    State {
-                                                        name: "hidden"
-                                                        PropertyChanges {
-                                                            target: timingTypeValueItemHighlight
-                                                            color: "transparent"
-                                                        }
-                                                    }
-                                                ]
-
-                                                transitions: [
-                                                    Transition {
-                                                        from: "visible"
-                                                        to: "hidden"
-
-                                                        ColorAnimation {
-                                                            duration: 200
-
-                                                            alwaysRunToEnd: false
-                                                        }
-
-
-                                                    }
-
-                                                ]
-                                            }
-
-                                            MouseArea {
-                                                anchors.fill: parent
-
-                                                propagateComposedEvents: true
-                                                preventStealing: false
-
-                                                onClicked: {
-                                                    cueContentManager.onSelectCurrentRoleRequest(cueContentManager.timingTypeSelectedTableRole)
-
-                                                    mouse.accepted = false;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: 1
-                                        Layout.maximumWidth: 1
-                                        Layout.minimumWidth: 1
-                                        Layout.topMargin: 4
-                                        Layout.bottomMargin: 5
-
-                                        color: "#1FFFFFFF"
-                                    }
-
-                                    Item {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: cueContentTableListView.columnWidths[2]
-                                        Layout.maximumWidth: cueContentTableListView.columnWidths[2]
-                                        Layout.minimumWidth: cueContentTableListView.columnWidths[2]
-
-                                        Text {
-                                            id: deviceTypeValueItem
-
-                                            anchors.fill: parent
-
-                                            horizontalAlignment: Text.AlignHCenter
-                                            verticalAlignment: Text.AlignVCenter
-
-                                            font.family: MFXUIS.Fonts.robotoRegular.name
-                                            font.pixelSize: 10
-
-                                            property bool currentRole: cueContentManager.deviceTypeSelectedTableRole === cueContentManager.selectedTableRole
-
-                                            color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
-
-                                            text: {
-                                                switch(cueContentManager.deviceTypeSelectedTableRole) {
-                                                case MFXE.CueContentSelectedTableRole.RfChannel:
-                                                    return cueContentListViewDelegate.rfChannel
-                                                case MFXE.CueContentSelectedTableRole.Device:
-                                                    return cueContentListViewDelegate.device
-                                                case MFXE.CueContentSelectedTableRole.DmxChannel:
-                                                    return cueContentListViewDelegate.dmxSlot
-                                                }
-                                                return qsTr("---")
-                                            }
-
-                                            Behavior on color { ColorAnimation { duration: 250 } }
-
-                                            MouseArea {
-                                                anchors.fill: parent
-
-                                                propagateComposedEvents: true
-                                                preventStealing: false
-
-                                                onClicked: {
-                                                    cueContentManager.onSelectCurrentRoleRequest(cueContentManager.deviceTypeSelectedTableRole)
-
-                                                    mouse.accepted = false;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: 1
-                                        Layout.maximumWidth: 1
-                                        Layout.minimumWidth: 1
-                                        Layout.topMargin: 4
-                                        Layout.bottomMargin: 5
-
-                                        color: "#1FFFFFFF"
-                                    }
-
-                                    Text {
-                                        id: actionTypeValueItem
-
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: cueContentTableListView.columnWidths[3]
-                                        Layout.maximumWidth: cueContentTableListView.columnWidths[3]
-                                        Layout.minimumWidth: cueContentTableListView.columnWidths[3]
-
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
-
-                                        property bool currentRole: cueContentManager.actionTypeSelectedTableRole === cueContentManager.selectedTableRole
-
-                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
-
-                                        text: {
-                                            switch(cueContentManager.actionTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.Action:
-                                                return cueContentListViewDelegate.action
-                                            case MFXE.CueContentSelectedTableRole.Angle:
-                                                return cueContentListViewDelegate.angle
-                                            case MFXE.CueContentSelectedTableRole.Effect:
-                                                return cueContentListViewDelegate.effect
-                                            }
-                                            return qsTr("---")
-                                        }
-
-                                        Behavior on color { ColorAnimation { duration: 250 } }
-
-                                        MouseArea {
-                                            anchors.fill: parent
-
-                                            propagateComposedEvents: true
-                                            preventStealing: false
-
-                                            onClicked: {
-                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.actionTypeSelectedTableRole)
-
-                                                mouse.accepted = false;
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: 1
-                                        Layout.maximumWidth: 1
-                                        Layout.minimumWidth: 1
-                                        Layout.topMargin: 4
-                                        Layout.bottomMargin: 5
-
-                                        color: "#1FFFFFFF"
-                                    }
-
-                                    Text {
-                                        id: durationTypeValueItem
-
-                                        Layout.fillHeight: true
-                                        Layout.preferredWidth: cueContentTableListView.columnWidths[4]
-                                        Layout.maximumWidth: cueContentTableListView.columnWidths[4]
-                                        Layout.minimumWidth: cueContentTableListView.columnWidths[4]
-
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
-
-                                        property bool currentRole: cueContentManager.durationTypeSelectedTableRole === cueContentManager.selectedTableRole
-
-                                        color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
-
-                                        text: {
-                                            switch(cueContentManager.durationTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.Time:
-                                                return cueContentListViewDelegate.time
-                                            case MFXE.CueContentSelectedTableRole.Prefire:
-                                                return cueContentListViewDelegate.prefire
-                                            }
-                                            return qsTr("---")
-                                        }
-
-                                        Behavior on color { ColorAnimation { duration: 250 } }
-
-                                        MouseArea {
-                                            anchors.fill: parent
-
-                                            propagateComposedEvents: true
-                                            preventStealing: false
-
-                                            onClicked: {
-                                                cueContentManager.onSelectCurrentRoleRequest(cueContentManager.durationTypeSelectedTableRole)
-
-                                                mouse.accepted = false;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                MouseArea {
-                                    anchors.fill: parent
-
-                                    propagateComposedEvents: true
-                                    preventStealing: false
-
-                                    onClicked: {
-                                        cueContentListViewDelegate.forceActiveFocus()
-                                        if(cueContentListViewDelegate.selected) {
-                                            cueContentManager.onDeselectItemRequest(cueContentListViewDelegate.uuid)
-                                        } else {
-                                            cueContentManager.onSelectItemRequest(cueContentListViewDelegate.uuid)
-                                        }
-
-                                        mouse.accepted = false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
 
                 Component {
                     id: devicesListComponent
@@ -1897,11 +1834,17 @@ FocusScope
                             anchors.bottomMargin: 6
                             clip: true
 
+
                             ListView
                             {
                                 id: sortedDeviceListView
 
                                 spacing: 10
+                                MouseArea{
+                                    anchors.fill: parent;
+                                    z:-1
+                                    onClicked: project.uncheckPatch();
+                                }
 
                                 ScrollBar.vertical: ScrollBar {
                                     anchors.right: sortedDeviceListView.contentItem.right
@@ -2008,8 +1951,12 @@ FocusScope
                                                 elide: Text.ElideRight
                                                 font.family: MFXUIS.Fonts.robotoRegular.name
                                                 font.pixelSize: 12
+                                            MouseArea{
+                                                anchors.fill: parent
+                                                onDoubleClicked: deviceListView.selectAll();
                                             }
                                         }
+                                    }
 
                                         Item
                                         {
@@ -2065,13 +2012,42 @@ FocusScope
                                                     }
                                                 }
 
+                                            function selectAll()
+                                            {
+                                                for(let i = 0; i < deviceListModel.count; i++)
+                                                {
+                                                    project.setPatchProperty(deviceListModel.get(i).currentId, "checked", true)
+
+                                                }
+                                                cueContentManager.cleanSelectionRequest()
+                                            }
+
                                                 delegate: PatchPlate
                                                 {
                                                     anchors.left: deviceListView.contentItem.left
                                                     anchors.right: deviceListView.contentItem.right
                                                     no: counter
                                                     patchId: currentId
+                                                property string ssss
+                                                DropArea{
+                                                    anchors.fill: parent;
+                                                    property bool isEnter: false
+                                                    onDropped: {
+                                                        console.log("Dropped")
+                                                        if(drop.source.name.startsWith("A")){
+
+
+                                                            project.setPatchProperty(currentId, "act", drop.source.name);
+                                                            project.setPatchProperty(patchId, "checked", false)
+                                                            isEnter = false;
+                                                            refreshCells()
                                                 }
+
+                                                    }
+                                                    onEntered: if(drag.source.name.startsWith("A")){ project.setPatchProperty(patchId, "checked", true); isEnter=true; }
+                                                    onExited: if(isEnter) project.setPatchProperty(patchId, "checked", false)
+                                                }
+                                            }
 
                                                 model: ListModel
                                                 {
@@ -2095,8 +2071,6 @@ FocusScope
 
                                                     Drag.active: deviceListView.held
                                                     Drag.source: this
-                                                    Drag.hotSpot.x: this.width / 2
-                                                    Drag.hotSpot.y: this.height / 2
 
                                                     states: State
                                                     {
@@ -2130,8 +2104,8 @@ FocusScope
                                                     id: draggedCuePlate
                                                     visible: false
 
-                                                    x: draggedPlate.x + draggedPlate.Drag.hotSpot.x
-                                                    y: draggedPlate.y + draggedPlate.Drag.hotSpot.y
+                                                x: draggedPlate.x /*+ draggedPlate.Drag.hotSpot.x*/
+                                                y: draggedPlate.y /*+ draggedPlate.Drag.hotSpot.y*/
 
                                                     height: 10
                                                     width: 100
@@ -2179,9 +2153,9 @@ FocusScope
                                                     drag.axis: Drag.XAndYAxis
 
                                                     drag.minimumX: 0
-                                                    drag.maximumX: mainScreen.width - draggedPlate.width
+                                                drag.maximumX: mainScreen.width - draggedCuePlate.width
                                                     drag.minimumY: 0
-                                                    drag.maximumY: mainScreen.height - draggedPlate.height
+                                                drag.maximumY: mainScreen.height - draggedCuePlate.height
 
                                                     drag.threshold: 0
                                                     drag.smoothed: false
@@ -2191,6 +2165,7 @@ FocusScope
                                                         pressedItem = deviceListView.itemAt(mouseX, mouseY)
                                                         if(pressedItem)
                                                         {
+                                                        cueContentManager.cleanSelectionRequest()
                                                             if(!wasDragging)
                                                                 project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
 
@@ -2204,29 +2179,33 @@ FocusScope
                                                         pressedItem = deviceListView.itemAt(mouseX, mouseY)
                                                         if(pressedItem)
                                                         {
-                                                            draggedPlate.Drag.hotSpot.x = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).x
-                                                            draggedPlate.Drag.hotSpot.y = pressedItem.mapFromItem(mouseArea, mouseX, mouseY).y
+                                                        draggedPlate.checkedIDs = []
 
-                                                            draggedPlate.checkedIDs = []
                                                             for(let i = 0; i < deviceListView.count; i++)
                                                             {
-                                                                if(deviceListView.itemAtIndex(i).checked)
+                                                            if(deviceListView.itemAtIndex(i).checked){
                                                                     draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
                                                             }
+                                                        }
 
                                                             if(!draggedPlate.checkedIDs.includes(pressedItem.patchId))
                                                                 draggedPlate.checkedIDs.push(pressedItem.patchId)
 
                                                             deviceListView.held = true
-                                                            draggedPlate.x = pressedItem.mapToItem(mainScreen, 0, 0).x
-                                                            draggedPlate.y = pressedItem.mapToItem(mainScreen, 0, 0).y
+                                                        draggedPlate.x =  pressedItem.mapToItem(mainScreen, mouseX, mouseY).x
+                                                        draggedPlate.y =  pressedItem.mapToItem(mainScreen, 0, 0).y + draggedPlate.height/2
+
                                                             draggedPlate.no = pressedItem.no
-                                                            draggedPlate.width = pressedItem.width
-                                                            draggedPlate.height = pressedItem.height
+
+                                                        var checkedActs = project.maxActWidth(draggedPlate.checkedIDs);
+
+                                                        let ww = patternManager.maxPatternDuration(checkedActs);
+
+                                                        draggedPlate.width = playerWidget.msecToPixels(ww);
+                                                        draggedCuePlate.width = draggedPlate.width;
+                                                        draggedPlate.height = draggedCuePlate.height
                                                             draggedPlate.name = pressedItem.name
                                                             draggedPlate.imageFile = pressedItem.imageFile
-
-                                                            draggedPlate.infoText = qsTr("Adding patches with IDs: " + draggedPlate.checkedIDs)
 
                                                             draggedPlate.refreshCells()
                                                         }
@@ -2261,6 +2240,9 @@ FocusScope
                                                     {
                                                         if(drag.target)
                                                         {
+                                                        if(drag.target.x < 1)
+                                                            drag.target.x = 3;
+
                                                             drag.target.Drag.drop()
                                                             deviceListView.held = false
                                                             wasDragging = false
@@ -2649,6 +2631,7 @@ FocusScope
 
                                 property bool active: model.active
                                 property bool selected: model.selected
+                                onSelectedChanged: cueName = name
                                 property var id: model.uuid
                                 property int rowIndex: model.index
                                 property string name: model.name
@@ -3027,32 +3010,7 @@ FocusScope
                 }
             }
         }
-    }
-
-//    MfxMouseArea
-//    {
-//        id: panelsResizeArea
-//        width: 4
-//        anchors.top: parent.top
-//        anchors.bottom: playerWidget.top
-//        anchors.left: leftPanel.right
-
-//        property int previousX
-
-//        cursor: Qt.SizeHorCursor
-
-//        onPressed:
-//        {
-//            previousX = mouseX
-//        }
-
-//        onMouseXChanged:
-//        {
-//            var dx = mouseX - previousX
-
-//            leftPanel.width += dx
-//        }
-//    }
+    } // left panel
 
     Item
     {
@@ -3313,6 +3271,17 @@ FocusScope
                         id: actionView
                         SplitView.fillHeight: true
 
+                        anchors.margins: 2
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        interactive: true;//!held
+                        onFlickStarted: { applicationWindow.isMouseCursorVisible = true}
+                        onMovementStarted: { applicationWindow.isMouseCursorVisible = true}
+                        onMovementEnded: {console.log("movement");applicationWindow.isMouseCursorVisible = true}
+                        onFlickEnded: {console.log("flickEnded");applicationWindow.isMouseCursorVisible = true}
+                        property bool held: false
                         clip: true
 
                         cellWidth: 60
@@ -3321,8 +3290,10 @@ FocusScope
                         ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
 
                         model: patternManager.patternsFiltered
-
-                        delegate: Item {
+                        property var pressedItem: null
+                        
+                        delegate: Item
+                        {
                             id: actionPlate
 
                             property string name: model.name
@@ -3330,6 +3301,22 @@ FocusScope
 
                             width: actionView.cellWidth
                             height: actionView.cellHeight
+                            Drag.active: actionView.held
+                            Drag.source: actionView.pressedItem
+                            Drag.hotSpot.x: this.width / 2
+                            Drag.hotSpot.y: this.height / 2
+                            states:
+                            [
+                                State
+                                {
+                                    name: "inDrag"
+                                    when: actionPlate.checked && actionView.held
+                                    PropertyChanges { target: actionView.pressedItem; parent: mainScreen }
+                                    PropertyChanges { target: actionView.pressedItem; anchors.centerIn: undefined }
+                                    PropertyChanges { target: actionView.pressedItem; x: coords.currentMouseX }
+                                    PropertyChanges { target: actionView.pressedItem; y: coords.currentMouseY }
+                                }
+                            ]
 
                             Item
                             {
@@ -3396,11 +3383,43 @@ FocusScope
                                 }
                             }
 
-                            MouseArea {
+                            MfxMouseArea
+                            {
+                                id:coords
                                 anchors.fill: parent
+                                property bool wasDragged: false
+                                property int currentMouseX
+                                property int currentMouseY
+                                allwaysHide: true
+
+                                onPositionChanged:
+                                {
+
+                                    if(Math.abs(dx) > 5)
+                                    {
+                                        if(!actionView.held)
+                                        {
+                                            if(actionPlate.checked)
+                                                patternManager.cleanPatternSelectionRequest()
+
+                                            console.log(actionPlate.name)
+                                            patternManager.currentPatternChangeRequest(model.uuid)
+                                            cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                            actionView.pressedItem = actionPlate
+                                            if(actionView.pressedItem)
+                                            {
+                                                actionView.draggedItemIndex = index;
+                                                currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
+                                                currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
+                                                actionView.held = true
+                                            }
+                                        }
+                                    }
+                                }
 
                                 onClicked:
                                 {
+                                    console.log("clicked")
                                     if(actionPlate.checked)
                                     {
                                         patternManager.cleanPatternSelectionRequest()
@@ -3410,26 +3429,65 @@ FocusScope
                                         deviceManager.runPreviewPattern( actionPlate.name )
 
                                         //TODO if(patchPanelFocused) {
+                                        currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
+                                        currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
                                         patternManager.currentPatternChangeRequest(model.uuid)
-
                                         let checkedPatches = project.checkedPatchesList()
 
                                         checkedPatches.forEach(function(patchId)
                                         {
-                                           project.setPatchProperty(patchId, "act", actionPlate.name);
+                                            project.setPatchProperty(patchId, "act", actionPlate.name);
                                         })
-                                        //TODO } else if(cueContentPanelFocused) {
-                                        if(rightPanelLoader.item && rightPanelLoader.item.objectName === "cue_content") {
-                                            rightPanelLoader.item.processPatternPanelActionSelected(actionPlate.name)
-                                        }
+
+
+                                        let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                        selectedCue.forEach(function(idDevice)
+                                        {
+                                            project.changeAction(cueName, idDevice,actionPlate.name)
+                                        })
+                                        cueContentManager.onSelectedChangeAction(actionPlate.name)
                                         //TODO }
+                                    }
+                                }
+
+                                drag.target: actionView.held ? actionView.pressedItem : undefined
+                                drag.axis: Drag.XAndYAxis
+                                drag.minimumX: 0
+                                drag.maximumX: mainScreen.width - actionView.cellWidth
+                                drag.minimumY: 0
+                                drag.maximumY: mainScreen.height - actionView.cellHeight
+
+                                onReleased:
+                                {
+                                    if(drag.target)
+                                    {
+                                        drag.target.Drag.drop()
+                                        if (actionView.draggedItemIndex !== -1)
+                                        {
+                                            var draggedIndex = actionView.draggedItemIndex
+                                            actionView.draggedItemIndex = -1
+                                        }
+                                    }
+                                    actionView.held = false;
+                                }
+                            
+                                onPressed:
+                                {
+                                    if(actionPlate.checked)
+                                    {
+                                        actionView.pressedItem = actionPlate
+                                        if(actionView.pressedItem)
+                                        {
+                                            actionView.draggedItemIndex = index;
+                                            currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
+                                            currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
+                                            actionView.held = true
+                                        }
                                     }
                                 }
                             }
                         }
-
-
-
+                        
                         Item
                         {
                             id: topShadow
@@ -3473,31 +3531,39 @@ FocusScope
                                 }
                             }
                         }
-                    }
 
-                    Rectangle
-                    {
-                        id: previewWidget
-                        SplitView.preferredHeight: 120
-                        SplitView.maximumHeight: 150
-                        SplitView.minimumHeight: 100
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        color: "black"
-                        clip: true
+                        property int draggedItemIndex: -1
 
-                        PreviewIcon
+                        Item
                         {
-                            id: previewIcon
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 20
+                            id: dndContainer
+                            anchors.fill: parent
+                        }
+
+                        Rectangle
+                        {
+                            id: previewWidget
+                            SplitView.preferredHeight: 120
+                            SplitView.maximumHeight: 150
+                            SplitView.minimumHeight: 100
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            color: "black"
+                            clip: true
+
+                            PreviewIcon
+                            {
+                                id: previewIcon
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 20
+                            }
                         }
                     }
                 }
             }
         }
-    }
+    } // right panel
 
     Player
     {

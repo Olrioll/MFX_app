@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.19.0 FATAL_ERROR)
 
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 3)
 
 set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
@@ -18,9 +18,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED)
 
 set(QT_VERSION 5.15.2)
-set(Qt5Core_DIR "c:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Core/")
-set(Qt5Qml_DIR "c:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5Qml/")
-set(Qt5_DIR "c:/Qt/5.15.2/msvc2019_64/lib/cmake/Qt5/")
 
 set(MFX_PROJECT_NAME "MFX" CACHE STRING "Название проекта")
 set(MFX_LAUNCHER_PROJECT_NAME "MFXLauncher" CACHE STRING "Название лаунчера для проекта MFX")
@@ -42,15 +39,36 @@ set(QSUPERMACROS_BUILD_STATIC ON CACHE BOOL "")
 set(QSUPERMACROS_BUILD_DOC OFF CACHE BOOL "")
 set(UPDATE_TRANSLATIONS OFF CACHE BOOL "Если ON, то просканирует все CPP и QML файлы на наличие строк перевода и создаст/обновит *.ts файлы")
 
+add_compile_options(/wd4819)
+
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Зависимости                                │
 # └──────────────────────────────────────────────────────────────────┘
 
 include(build/cmake/Dependencies.cmake)
 include(build/cmake/FetchQSuperMacros.cmake)
+include(local.cmake)
+
+link_directories("libs")
+
+#include_directories("../../Firebase/")
+#link_directories("../../Firebase/x64/Debug/")
+#add_library(firebase_admob STATIC "../../Firebase/x64/Debug/firebase_admob.lib")
+#add_library(firebase_analytics STATIC "../../Firebase/x64/Debug/firebase_analytics.lib")
+#add_library(firebase_app STATIC "d:/Firebase/x64/Debug/firebase_app.lib")
+#add_library(firebase_auth STATIC "../../Firebase/x64/Debug/firebase_auth.lib")
+#add_library(firebase_database STATIC "../../Firebase/x64/Debug/firebase_database.lib")
+#add_library(firebase_dynamic_links STATIC "../../Firebase/x64/Debug/firebase_dynamic_links.lib")
+#add_library(firebase_firestore STATIC "../../Firebase/x64/Debug/firebase_firestore.lib")
+#add_library(firebase_functions STATIC "../../Firebase/x64/Debug/firebase_functions.lib")
+#add_library(firebase_installations STATIC "../../Firebase/x64/Debug/firebase_installations.lib")
+#add_library(firebase_messaging STATIC "../../Firebase/x64/Debug/firebase_messaging.lib")
+#add_library(firebase_remote_config STATIC "../../Firebase/x64/Debug/firebase_remote_config.lib")
+#add_library(firebase_storage STATIC "../../Firebase/x64/Debug/firebase_storage.lib")
 #include(build/cmake/FetchZLib.cmake)
 #set (ZLIB_INCLUDE_DIR ${CMAKE_BINARY_DIR}/_deps/zlib-src ${CMAKE_BINARY_DIR}/_deps/zlib-build)
 #set (ZLIB_LIBRARY ${CMAKE_BINARY_DIR}/_deps/zlib-build/libzlibstatic.a)
+#set (ZLIB_LIBRARY ${CMAKE_BINARY_DIR}/_deps/zlib-build/zlibstatic.lib)
 #include(build/cmake/FetchQuaZip.cmake)
 
 # ┌──────────────────────────────────────────────────────────────────┐
@@ -150,10 +168,42 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/Trace/AppMessageHandler.cpp"
     "src/Trace/Logger.cpp"
     "src/Backuper.cpp"
-)
+    "src/DMXDevice.cpp"
+    "src/DMXPlugin.cpp"
+    "src/DMXWriter.cpp"
+    "src/FireBaseClouds.cpp"
+ )
+
+if (NOT "$ENV{FIREBASE_CPP_SDK_DIR}" STREQUAL "")
+  set(DEFAULT_FIREBASE_CPP_SDK_DIR "$ENV{FIREBASE_CPP_SDK_DIR}")
+else()
+  set(DEFAULT_FIREBASE_CPP_SDK_DIR FIREBASE_CPP_SDK_DIR_DEF)
+endif()
+
+if ("${FIREBASE_CPP_SDK_DIR}" STREQUAL "")
+  set(FIREBASE_CPP_SDK_DIR ${DEFAULT_FIREBASE_CPP_SDK_DIR})
+endif()
+
+if(NOT EXISTS ${FIREBASE_CPP_SDK_DIR})
+  message(FATAL_ERROR "The Firebase C++ SDK directory does not exist: ${FIREBASE_CPP_SDK_DIR}. See the readme.md for more information")
+endif()
+
+set(MSVC_RUNTIME_MODE MD)
+
+if(MSVC)
+  set(ADDITIONAL_LIBS advapi32 ws2_32 crypt32)
+else()
+  set(ADDITIONAL_LIBS pthread)
+endif()
+
+add_subdirectory(${FIREBASE_CPP_SDK_DIR} bin/ EXCLUDE_FROM_ALL)
+## Note that firebase_app needs to be last in the list.
+set(firebase_libs firebase_storage firebase_auth firebase_app)
+
 
 target_link_libraries(${MFX_PROJECT_NAME}
     PRIVATE
+    "ftd2xx"
     Qt5::Widgets
     Qt5::Qml
     Qt5::Quick
@@ -163,8 +213,11 @@ target_link_libraries(${MFX_PROJECT_NAME}
     Qt5::Network
     Qt5::NetworkAuth
     QSuperMacros
+    ${firebase_libs}
+    ${ADDITIONAL_LIBS}
 #    QuaZip::QuaZip
 )
+
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32
     "build/packaging/windows/appIcon.rc"
@@ -207,3 +260,5 @@ if(UPDATE_TRANSLATIONS)
     file(APPEND ${CMAKE_SOURCE_DIR}/resources/translations.qrc "</RCC>\n")
 endif()
 
+#firebase
+#target_link_libraries("${target_name}" "${firebase_libs}" ${ADDITIONAL_LIBS})

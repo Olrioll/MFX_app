@@ -38,6 +38,11 @@ void PatternManager::qmlRegister()
     qRegisterMetaType<Pattern*>("Pattern*");
 }
 
+const QMap<QString, int>& PatternManager::getPrefire()
+{
+    return m_prefire;
+}
+
 void PatternManager::currentPatternChangeRequest(const QUuid &patternUuid)
 {
     setSelectedPatternUuid(patternUuid);
@@ -53,7 +58,7 @@ void PatternManager::initPatterns()
 {
     QDir workDir(m_settingsManager.workDirectory());
     auto fileNamesList = workDir.entryList({ ::patternsFileNameTemplate }, QDir::Files);
-
+    m_prefire.clear();
     for (auto& fileName : fileNamesList) {
         QFile file(m_settingsManager.workDirectory() + "/" + fileName);
 
@@ -120,6 +125,7 @@ void PatternManager::initPatterns()
             pattern->setType(PatternType::Sequential);
             pattern->setDuration(duration);
             pattern->setPrefireDurarion(prefire);
+            m_prefire.insert(name,prefire);
             m_patterns->append(pattern);
         }
     }
@@ -139,6 +145,18 @@ Pattern *PatternManager::patternById(const QUuid &id) const
     }
 
     return nullptr;
+}
+
+qulonglong PatternManager::maxPatternDuration(const QStringList &list) const
+{
+    qulonglong out = 0;
+    for(auto * pattern : m_patterns->toList()) {
+        for(auto &name: list)
+            if(name.compare(pattern->name(), Qt::CaseInsensitive) == 0) {
+                out = qMax<qulonglong>(pattern->duration() + pattern->prefireDuration(),out);
+            }
+    }
+    return out;
 }
 
 Pattern *PatternManager::patternByName(const QString &name) const

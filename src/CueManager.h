@@ -44,6 +44,9 @@ public:
 
 public slots:
     void onAddCue(QVariantMap properties);
+    void onDeleteAllCue();
+    void onRecalculateCue();
+    void onDeleteCue(const QString& cueName);
     void onSetActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition);
     void onPlaybackTimeChanged(quint64 time);
 

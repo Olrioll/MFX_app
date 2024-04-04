@@ -22,6 +22,16 @@ void CursorManager::showCursor()
     qApp->restoreOverrideCursor();
 }
 
+void CursorManager::setCursorPosX(QPoint pos)
+{
+    QCursor::setPos(pos.x(),QCursor::pos().y());
+}
+
+void CursorManager::setCursorPosXY(int x, int y)
+{
+    QCursor::setPos(x,y);
+}
+
 QPoint CursorManager::cursorPos() const
 {
     return QCursor::pos();

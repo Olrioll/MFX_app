@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
@@ -28,6 +28,9 @@ ApplicationWindow
 
     property bool isPatchEditorOpened: false
     property bool isMouseCursorVisible: true
+    onIsMouseCursorVisibleChanged: if(isMouseCursorVisible){
+                                       cursorManager.showCursor()
+                                   }else cursorManager.hideCursor()
 
     property alias projectSettingsWidget: projectSettingsWidget
     property alias screensLayout: screensLayout
@@ -92,6 +95,7 @@ ApplicationWindow
                 mainScreen.playerWidget.waitingText.text = qsTr("Not available")
 
             patchMenuButton.checked = true
+            sceneWidget.sceneFrameItem.restorePreviousGeometry()
         }
     }
 

@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
@@ -14,14 +14,8 @@ Item
 
     function deleteSelected()
     {
-        var removedIndexes = []
-        for(let i = 0; i < project.patchCount(); i++)
-        {
-            if(project.patchPropertyForIndex(i, "checked"))
-                removedIndexes.push(project.patchPropertyForIndex(i, "ID"))
-        }
-
-        project.removePatchesByIDs(removedIndexes)
+        project.removeSelectedPatches();
+        deviceListView.loadGeneralDeviceList();
 
     }
 

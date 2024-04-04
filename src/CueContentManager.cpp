@@ -92,6 +92,53 @@ void CueContentManager::onDurationTypeSelectedTableRoleChangeRequest(const CueCo
     setDurationTypeSelectedTableRole(role);
 }
 
+QList<int> CueContentManager::onGetSelectedDeviseList()
+{
+    QList<int> selectedList;
+    for(auto * cueContentItem : m_cueContentItems->toList()){
+        if( cueContentItem->selected())
+        {
+            selectedList << cueContentItem->device();
+        }
+    }
+
+    return selectedList;
+}
+
+void CueContentManager::onMirror()
+{
+    QList<CueContent*> l;
+    for(auto * cueContentItem : m_cueContentItems->toList()){
+        if( cueContentItem->selected())
+        {
+
+            l << cueContentItem;
+        }
+    }
+
+    for(auto i = 0,y = l.size() -1; i < l.size(); i++,--y){
+        if(i<y){
+         auto dev = l[i]->device();
+         auto act = l[i]->action();
+         l[i]->setDevice(l[y]->device());
+         l[i]->setAction(l[y]->action());
+         l[y]->setDevice(dev);
+         l[y]->setAction(act);
+        }else return;
+    }
+}
+
+void CueContentManager::onSelectedChangeAction(const QString &name)
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()){
+        if( cueContentItem->selected())
+        {
+
+            cueContentItem->setAction(name);
+        }
+    }
+}
+
 void CueContentManager::onSelectItemRequest(const QUuid& id)
 {
     if(auto * cueContent = cueContentById(id); cueContent != nullptr) {
@@ -117,8 +164,26 @@ void CueContentManager::onSelectCurrentRoleRequest(const CueContentSelectedTable
 
 void CueContentManager::onSelectAllItemsRequest()
 {
+    bool selection = false;
+    for(auto * cueContentItem : m_cueContentItems->toList()){
+        if( cueContentItem->selected())
+            continue;
+        else {
+            selection = true;
+            break;
+        }
+    }
+
     for(auto * cueContentItem : m_cueContentItems->toList()) {
-        cueContentItem->setSelected(true);
+        cueContentItem->setSelected(selection);
+
+    }
+}
+
+void CueContentManager::onDeselecAllItemsRequest()
+{
+    for(auto * cueContentItem : m_cueContentItems->toList()) {
+        cueContentItem->setSelected(false);
     }
 }
 
@@ -239,6 +304,13 @@ void CueContentManager::setActive(const QString& cueName, int deviceId, bool act
         if(deviceId == cueContentItem->device()) {
             cueContentItem->setActive(active);
         }
+    }
+}
+
+void CueContentManager::setAllUnActive()
+{
+    for (auto cueContentItem : m_cueContentItems->toList()) {
+            cueContentItem->setActive(false);
     }
 }
 
