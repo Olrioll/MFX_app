@@ -17,13 +17,13 @@ class DeviceManager : public QObject
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, comPort, ComPort, "") //Выбранный компорт
 public:
     ComPortModel m_comPortModel;
-    explicit DeviceManager(QObject *parent = nullptr);
+    explicit DeviceManager(PatternManager* patternManager, QObject *parent = nullptr);
     void runPatternOnDevice(int deviceId, int patternNum);
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
 
-    PatternManager *m_patternManager;
+    PatternManager* GetPatternManager() { return m_patternManager; }
     Device* m_previewDevice;
 
     Device* deviceById(int id);
@@ -43,4 +43,7 @@ public slots:
 
 private:
     void addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
+
+private:
+    PatternManager* m_patternManager;
 };

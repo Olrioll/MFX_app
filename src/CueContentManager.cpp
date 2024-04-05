@@ -358,7 +358,7 @@ void CueContentManager::refrestCueContentModel()
         cueContent->setDelay(action->startTime() - m_currentCue->startTime());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
         cueContent->setBetween(action->startTime() - prevStop);
-        auto pattern = m_deviceManager.m_patternManager->patternByName(action->patternName());
+        auto pattern = m_deviceManager.GetPatternManager()->patternByName(action->patternName());
         prevStop = action->startTime() + pattern->duration();
         //qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
         cueContent->setTime(action->startTime() + pattern->prefireDuration());

@@ -142,7 +142,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
     if(cue == nullptr) {
         return;
     }
-    auto patternManager = m_deviceManager->m_patternManager;
+    auto patternManager = m_deviceManager->GetPatternManager();
     quint64 cueStart = -1; // very big positive number since type is unsigned
     quint64 cueStop = 0;
     for (auto action : cue->actions()->toList()) {
@@ -269,7 +269,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
     {
         for (const Action* a : c->actions()->toList())
         {
-            auto patternManager = m_deviceManager->m_patternManager;
+            auto patternManager = m_deviceManager->GetPatternManager();
             auto pattern = patternManager->patternByName(a->patternName());
             if(pattern == nullptr)
                 continue;

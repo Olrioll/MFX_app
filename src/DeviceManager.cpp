@@ -1,7 +1,9 @@
 #include "DeviceManager.h"
 #include "PreviewDevice.h"
 
-DeviceManager::DeviceManager(QObject *parent) : QObject(parent)
+DeviceManager::DeviceManager(PatternManager* patternManager, QObject *parent)
+    : m_patternManager(patternManager)
+    , QObject(parent)
 {
     m_devices = new QQmlObjectListModel<Device>(this);
     // connect(this, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged); // disable comport until we come with working DMX512 library
