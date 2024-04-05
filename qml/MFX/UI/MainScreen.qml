@@ -3266,16 +3266,19 @@ FocusScope
                     anchors.margins: 2
                     orientation: Qt.Vertical
 
+                    handle: Rectangle
+                    {
+                        implicitHeight: 3
+
+                        color: SplitHandle.pressed ? Qt.lighter("#6F6F6F", 1.5)
+                            : (SplitHandle.hovered ? Qt.lighter("#6F6F6F", 1.1) : "#6F6F6F")
+                    }
+
                     GridView
                     {
                         id: actionView
                         SplitView.fillHeight: true
 
-                        anchors.margins: 2
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
                         interactive: true;//!held
                         onFlickStarted: { applicationWindow.isMouseCursorVisible = true}
                         onMovementStarted: { applicationWindow.isMouseCursorVisible = true}
@@ -3419,7 +3422,6 @@ FocusScope
 
                                 onClicked:
                                 {
-                                    console.log("clicked")
                                     if(actionPlate.checked)
                                     {
                                         patternManager.cleanPatternSelectionRequest()
@@ -3531,7 +3533,6 @@ FocusScope
                                 }
                             }
                         }
-
                         property int draggedItemIndex: -1
 
                         Item
@@ -3539,25 +3540,25 @@ FocusScope
                             id: dndContainer
                             anchors.fill: parent
                         }
+                    }
 
-                        Rectangle
+                    Rectangle
+                    {
+                        id: previewWidget
+                        SplitView.preferredHeight: 120
+                        SplitView.maximumHeight: 200
+                        SplitView.minimumHeight: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        color: "black"
+                        clip: true
+
+                        PreviewIcon
                         {
-                            id: previewWidget
-                            SplitView.preferredHeight: 120
-                            SplitView.maximumHeight: 150
-                            SplitView.minimumHeight: 100
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            color: "black"
-                            clip: true
-
-                            PreviewIcon
-                            {
-                                id: previewIcon
-                                anchors.horizontalCenter: parent.horizontalCenter
-                                anchors.bottom: parent.bottom
-                                anchors.bottomMargin: 20
-                            }
+                            id: previewIcon
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 20
                         }
                     }
                 }

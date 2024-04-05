@@ -8,8 +8,8 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item
 {
     id: previewIcon
-    width: 50
-    height: 50
+    width: 30
+    height: 30
 
     property string imageFile: "qrc:/device_sequences"
     signal drawOperation(var duration, var angle, var velocity, var active)
