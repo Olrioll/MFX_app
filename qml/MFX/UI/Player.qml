@@ -1017,6 +1017,20 @@ Item
                     }
                 })
             }
+
+            onWheel:
+            {
+                if(wheel.modifiers & Qt.ControlModifier)
+                {
+                    playerWidget.zoom(wheel.angleDelta.y > 0 ? 2 : -2)
+                }
+                else if(wheel.modifiers & Qt.ShiftModifier)
+                {
+                    playerWidget.move(wheel.angleDelta.y, 0)
+                }
+                else
+                    wheel.accepted = false
+            }
         }
 
         MfxMenu{
@@ -3922,7 +3936,7 @@ pixelsToMsecRounded(xAcc)
 
         }
         function onReloadCues(){
-            console.log("reloadCues")
+            //console.log("reloadCues")
             cueView.loadCues();
         }
     }

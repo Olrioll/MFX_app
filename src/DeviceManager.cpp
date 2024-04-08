@@ -63,7 +63,7 @@ void DeviceManager::onEditPatch(QVariantList properties)
     bool isMinAnd = true;
     bool isMaxAnd = true;
     bool isHeight = true;
-    qDebug()<< "EditPatch"<<properties;
+    //qDebug()<< "EditPatch"<<properties;
     foreach(auto prop, properties)
     {
         if(prop.toMap().isEmpty()){

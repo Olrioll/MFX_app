@@ -175,7 +175,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
 
         });
 
-        qDebug()<<"\n minAngle, maxAngle,id, minusDuration "<<minAngle<<maxAngle<<action->deviceId()<<minusDuration;
+        //qDebug()<<"\n minAngle, maxAngle,id, minusDuration "<<minAngle<<maxAngle<<action->deviceId()<<minusDuration;
 
         if((maxAngle == 0) &&  (minAngle == 0))
             minusDuration = 0;
@@ -184,10 +184,10 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
             cueStop = action->startTime() + pattern->duration() - minusDuration;
         }
 
-        qDebug()<<pattern->duration()<<minusDuration;
+        //qDebug()<<pattern->duration()<<minusDuration;
         if(pattern->duration() > minusDuration ){
             pattern->setDuration(pattern->duration() - minusDuration);
-            qDebug()<<"NEWPATTERNDURATION: "<<pattern->duration()<<minusDuration;
+            //qDebug()<<"NEWPATTERNDURATION: "<<pattern->duration()<<minusDuration;
 
         }
 
