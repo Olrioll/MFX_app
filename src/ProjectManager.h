@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include <QRecursiveMutex>
 
 #include <QSuperMacros.h>
 #include <QQmlConstRefPropertyHelpers.h>
@@ -194,7 +195,8 @@ private:
     QStringList _pastedCues;
     QMap<QString,int> m_prefire;
     FireBaseClouds clouds;
-   double msperpx = 1;
+    double msperpx = 1;
+    mutable QRecursiveMutex m_ProjectLocker;
 };
 
 #endif // PROJECTMANAGER_H

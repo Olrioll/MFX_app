@@ -18,6 +18,8 @@ constexpr int defaultSceneFrameHeight = 10;
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     addChild("Patches");
     addChild("Cues");
     addChild("Groups");
@@ -25,8 +27,6 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 
 ProjectManager::~ProjectManager()
 {
-    qDebug();
-
     cleanWorkDirectory();
 }
 
@@ -58,6 +58,7 @@ void ProjectManager::cleanWorkDirectory()
 bool ProjectManager::loadProject(const QString& fileName)
 {
     qDebug() << fileName;
+    QMutexLocker locker( &m_ProjectLocker );
 
     if( !QFile::exists( fileName ) )
     {
@@ -146,6 +147,7 @@ bool ProjectManager::loadProject(const QString& fileName)
 void ProjectManager::defaultProject()
 {
     qDebug();
+    QMutexLocker locker( &m_ProjectLocker );
 
     newProject();
 
@@ -173,6 +175,9 @@ void ProjectManager::defaultProject()
 
 void ProjectManager::reloadCurrentProject()
 {
+    qDebug();
+    QMutexLocker locker( &m_ProjectLocker );
+
     for(auto cue : getChild("Cues")->namedChildren()) {
         QString cueName = cue->properties().value("name").toString();
         emit addCue(cue->properties());
@@ -218,6 +223,7 @@ void ProjectManager::reloadCurrentProject()
 void ProjectManager::newProject()
 {
     qDebug();
+    QMutexLocker locker( &m_ProjectLocker );
 
     if(!isEmpty())
         saveProject();
@@ -245,6 +251,8 @@ void ProjectManager::newProject()
 
 void ProjectManager::saveProject()
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     if(m_currentProjectFile == "")
         setCurrentProjectFile(saveProjectDialog());
 
@@ -269,7 +277,10 @@ void ProjectManager::saveProjectToFile( const QString& projectFile, const QStrin
         qDebug() << jsonFile;
 
         QJsonDocument doc;
-        doc.setObject( toJsonObject() );
+        {
+            QMutexLocker locker( &m_ProjectLocker );
+            doc.setObject( toJsonObject() );
+        }
         jsonFile.write( doc.toJson() );
     }
     else
@@ -378,6 +389,7 @@ void ProjectManager::removePatchesByIDs(const QStringList &ids)
     }
 
     qInfo() << "PATCH NAMES: " << patchNamesToRemove;
+    QMutexLocker locker( &m_ProjectLocker );
 
     for(auto &patchName: patchNamesToRemove) {
         getChild("Patches")->removeChild(patchName);
@@ -455,6 +467,7 @@ QList<QVariant> ProjectManager::patchPropertiesValues(int index) const
 void ProjectManager::setPatchProperty(int id, const QString& propertyName, QVariant value)
 {
     //qDebug() << id << " " << propertyName << " " << value;
+    QMutexLocker locker( &m_ProjectLocker );
 
     auto patches = getChild("Patches")->listedChildren();
     for(auto& patch : patches)
@@ -477,6 +490,8 @@ void ProjectManager::setPatchProperty(int id, const QString& propertyName, QVari
 
 void ProjectManager::uncheckPatch()
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     auto patches = getChild("Patches")->listedChildren();
     for(auto patch : patches)
     {
@@ -488,6 +503,8 @@ void ProjectManager::uncheckPatch()
 void ProjectManager::setProperty(const QString& name, QVariant value)
 {
     //qDebug() << name << " " << value;
+    QMutexLocker locker( &m_ProjectLocker );
+
     JsonSerializable::setProperty(name, value);
 }
 
@@ -511,6 +528,8 @@ int ProjectManager::lastPatchId() const
 
 void ProjectManager::addPatch(const QString& type, const QVariantList& properties)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     JsonSerializable* patch = new JsonSerializable;
     patch->setProperty("type", type);
     patch->setProperty("act", "");
@@ -551,6 +570,8 @@ void ProjectManager::addPatch(const QString& type, const QVariantList& propertie
 
 void ProjectManager::onEditPatch(const QVariantList& properties)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     JsonSerializable* patch = new JsonSerializable;
 //    patch->setProperty("type", type);
 //    patch->setProperty("act", "");
@@ -656,6 +677,7 @@ QString ProjectManager::selectBackgroundImageDialog()
 void ProjectManager::setBackgroundImage(const QString& fileName)
 {
     qDebug() << fileName;
+    QMutexLocker locker( &m_ProjectLocker );
 
     QFileInfo info(fileName);
     if((info.completeBaseName() + "." + info.completeSuffix()) != property("backgroundImageFile").toString())
@@ -670,6 +692,7 @@ void ProjectManager::setBackgroundImage(const QString& fileName)
 void ProjectManager::setAudioTrack(const QString& fileName)
 {
     qDebug() << fileName;
+    QMutexLocker locker( &m_ProjectLocker );
 
     QFileInfo info(fileName);
     if((info.completeBaseName() + "." + info.completeSuffix()) != property("audioTrackFile").toString())
@@ -690,6 +713,8 @@ QString ProjectManager::currentGroup() const
 
 void ProjectManager::setCurrentGroup(QString name)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     if(getChild("Groups")->childrenNames().contains(name))
     {
         _currentGroup = name;
@@ -706,12 +731,16 @@ bool ProjectManager::isGroupVisible(QString groupName) const
 
 void ProjectManager::setGroupVisible(QString groupName, bool state)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     auto groups = getChild("Groups")->namedChildren();
     groups.value(groupName)->setProperty("visible", state);
 }
 
 bool ProjectManager::addGroup(QString name)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     if(getChild("Groups")->childrenNames().contains(name))
         return false;
 
@@ -726,12 +755,16 @@ bool ProjectManager::addGroup(QString name)
 
 void ProjectManager::removeGroup(QString name)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     getChild("Groups")->removeChild(name);
     emit groupCountChanged();
 }
 
 bool ProjectManager::renameGroup(QString newName)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     if(getChild("Groups")->childrenNames().contains(newName))
         return false;
 
@@ -743,6 +776,8 @@ bool ProjectManager::renameGroup(QString newName)
 
 void ProjectManager::addPatchesToGroup(QString groupName, QList<int> patchIDs)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     QVariantList patchesList = getChild("Groups")->getChild(groupName)->property("patches").toList();
     for(auto i : patchIDs)
     {
@@ -759,11 +794,16 @@ void ProjectManager::addPatchesToGroup(QString groupName, QList<int> patchIDs)
 
 void ProjectManager::removePatches(const QList<int> patchIds)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
      getChild("Patches")->removeChildrenAtIndex(patchIds);
      emit patchListChanged();
 }
 
-void ProjectManager::removeSelectedPatches(){
+void ProjectManager::removeSelectedPatches()
+{
+
+    QMutexLocker locker( &m_ProjectLocker );
 
     QList<int> ids;
     for(auto i =0; i< patchCount();++i){
@@ -800,6 +840,8 @@ void ProjectManager::removeSelectedPatches(){
 
 void ProjectManager::removePatchesFromGroup(QString groupName, QList<int> patchIDs)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     QVariantList patchesList = getChild("Groups")->getChild(groupName)->property("patches").toList();
     for(auto i : patchIDs)
     {
@@ -832,6 +874,8 @@ bool ProjectManager::isPatchHasGroup(int patchId) const
 
 void ProjectManager::onAddCue(QVariantMap properties)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     auto newCueName = properties.value("name").toString();
     getChild("Cues")->addChild(newCueName);
     getChild("Cues")->getChild(newCueName)->setProperties(properties);
@@ -850,11 +894,14 @@ QVariantList ProjectManager::getCues() const
 
 void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVariant value)
 {
+    QMutexLocker locker( &m_ProjectLocker );
     getChild("Cues")->getChild(cueName)->setProperty(propertyName, value);
 }
 
 void ProjectManager::addActionToCue(QString cueName, QString actionName, int patchId, int position)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     JsonSerializable* newAction = new JsonSerializable;
     newAction->setProperties({{"actionName", actionName}, {"patchId", patchId}, {"position", position}});
     getChild("Cues")->getChild(cueName)->addChild(newAction);
@@ -879,6 +926,8 @@ QVariantList ProjectManager::cueActions(QString cueName) const
 
 void ProjectManager::onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
     {
         if(action->property("actionName").toString() == actionName && action->property("patchId").toInt() == patchId)
@@ -890,6 +939,8 @@ void ProjectManager::onSetActionProperty(QString cueName, QString actionName, in
 
 void ProjectManager::deleteCues(QStringList deletedCueNames)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     for(auto &name: deletedCueNames) {
         getChild("Cues")->removeChild(name);
     }
@@ -897,6 +948,8 @@ void ProjectManager::deleteCues(QStringList deletedCueNames)
 
 void ProjectManager::copyCues(QStringList copyCueNames)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     _pastedCues.clear();
     for(auto &name: copyCueNames) {
         auto newName = getChild("Cues")->addFromJsonObject(getChild("Cues")->getChild(name)->toJsonObject());
@@ -920,6 +973,8 @@ void ProjectManager::copyCues(QStringList copyCueNames)
 
 void ProjectManager::changeAction(QString cueName, int deviceId, QString pattern)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
         auto cue = getChild("Cues")->getChild(cueName);
         foreach(auto action, cue->listedChildren()) {
             if(deviceId == action->properties().value("patchId").toUInt())
@@ -940,7 +995,9 @@ void ProjectManager::saveJsonOut()
     QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save json output file"), lastOpenedDir);
 
     QFile jsonFile(fileName);
-    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate)){
+    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        QMutexLocker locker( &m_ProjectLocker );
 
         auto ar = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
 
@@ -1030,6 +1087,8 @@ void ProjectManager::saveJsonOut()
 
 void ProjectManager::onMirror(const QString &cueName, QList<int> deviceId)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     auto cue = getChild("Cues")->getChild(cueName);
 
     QList<JsonSerializable*> l;
@@ -1064,6 +1123,8 @@ void ProjectManager::onMirror(const QString &cueName, QList<int> deviceId)
 
 void ProjectManager::onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     auto cue = getChild("Cues")->getChild(cueName);
     QList<JsonSerializable*> p;
     foreach(auto action, cue->listedChildren()) {
@@ -1116,6 +1177,8 @@ if(inside){
 
 void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     auto cue = getChild("Cues")->getChild(cueName);
 
     QList<JsonSerializable*> l;
@@ -1162,8 +1225,7 @@ void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
 
 QStringList ProjectManager::maxActWidth(const QList<int> &ids)
 {
-
-QStringList out;
+    QStringList out;
     auto patches = getChild("Patches")->listedChildren();
     for(auto patch : patches)
     {
@@ -1180,6 +1242,8 @@ QStringList out;
 
 void ProjectManager::updateCurrent()
 {
+    QMutexLocker locker( &m_ProjectLocker );
+
     emit deleteAllCue();
     _hasUnsavedChanges = true;
     reloadCurrentProject();

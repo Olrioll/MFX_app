@@ -23,4 +23,5 @@ private:
     ProjectManager& mProjectManager;
     SettingsManager& mSettings;
     QTimer mAutoBackupTimer;
+    bool mAutoBackupRun = false;
 };

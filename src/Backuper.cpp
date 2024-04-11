@@ -1,3 +1,5 @@
+#include <QtConcurrent/QtConcurrent>
+
 #include "Backuper.h"
 
 constexpr char APP_STATUS[] = "appStatus";
@@ -67,5 +69,22 @@ void Backuper::exitProject()
 
 void Backuper::onAutoBackupTimerChanged()
 {
-    makeBackup();
+    if( mAutoBackupRun )
+    {
+        qDebug() << "makeBackup already running";
+        return;
+    }
+
+    mAutoBackupRun = true;
+
+    QFutureWatcher<void>* watcher = new QFutureWatcher<void>();
+
+    connect( watcher, &QFutureWatcher<void>::finished, this, [=]
+    {
+        mAutoBackupRun = false;
+        watcher->deleteLater();
+    });
+
+    QFuture<void> future = QtConcurrent::run( this, &Backuper::makeBackup );
+    watcher->setFuture( future );
 }
