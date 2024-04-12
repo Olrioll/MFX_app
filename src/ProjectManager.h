@@ -11,7 +11,6 @@
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
-#include "FireBaseClouds.h"
 
 class ProjectManager : public QObject, public JsonSerializable
 {
@@ -194,7 +193,7 @@ private:
     QString _currentGroup;
     QStringList _pastedCues;
     QMap<QString,int> m_prefire;
-    FireBaseClouds clouds;
+    //FireBaseClouds clouds;
     double msperpx = 1;
     mutable QRecursiveMutex m_ProjectLocker;
 };
