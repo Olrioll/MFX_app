@@ -13,6 +13,10 @@
 
 #include <QDebug>
 
+#include "CloudSync/BasicCredentials.hpp"
+#include "CloudSync/CloudFactory.hpp"
+#include "CloudSync/exceptions/cloud/CloudException.hpp"
+
 constexpr int defaultSceneFrameWidth = 20;
 constexpr int defaultSceneFrameHeight = 10;
 
@@ -995,94 +999,110 @@ void ProjectManager::saveJsonOut()
     QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save json output file"), lastOpenedDir);
 
     QFile jsonFile(fileName);
-    if (jsonFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        QMutexLocker locker( &m_ProjectLocker );
+    if( !jsonFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
+        return;
 
-        auto ar = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
+    QMutexLocker locker( &m_ProjectLocker );
 
-        auto pch = getChild("Patches")->toJsonObject().value("children").toArray();
-        QMap <int,QJsonObject>patch;
-        for(auto z: pch){
-            auto p = z.toObject().value("properties").toObject();
-            patch.insert(p.value("ID").toInt(),p);
-        }
+    auto ar = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
 
-        QJsonObject out;
-        auto getRoundPos = [](const double p){
-            return qint64(p/10.0)*10;
-        };
-        QVector<QJsonObject> list;
-        auto data = QJsonObject({
-
-                                    qMakePair(QString("action"), 1),
-                                    qMakePair(QString("between"), QJsonValue(static_cast<qint64>(0))),
-                                    qMakePair(QString("ch"), 1),
-                                    qMakePair(QString("delay"), QJsonValue(static_cast<qint64>(0))),
-                                    qMakePair(QString("freeze"), bool(false)),
-                                    qMakePair(QString("id"), 0),
-                                    qMakePair(QString("position"), 0),
-                                    qMakePair(QString("time"), QJsonValue(static_cast<qint64>(100))),
-                                    qMakePair(QString("type"),1)
-                                });
-        for( auto y:ar )
-        {
-
-            for(const auto x: y.toObject().value("children").toArray())
-            {
-                QJsonObject d;
-                auto actionName = x.toObject().value("properties").toObject().value("actionName").toString();
-                auto patchid = x.toObject().value("properties").toObject().value("patchId").toInt();
-                auto position = getRoundPos(x.toObject().value("properties").toObject().value("position").toDouble()) - m_prefire.value(actionName);
-                if(position<0)continue;
-
-                data["action"] = actionName.remove("A").toInt();
-                data["ch"] = patch.find(patchid).value().value("DMX").toInt();
-                data["delay"] = position;
-                list.append(data);
-            }
-
-        }
-
-        std::sort(list.begin(),list.end(),[](const QJsonObject &a,const QJsonObject &b){
-            return a.value("delay").toInt() < b.value("delay").toInt();});
-
-        int id = 1;
-        auto lastMs = 0;
-        for(auto &x: list){
-            x["id"] = id++;
-            auto pl = x.value("delay").toInt();
-            x["between"] = pl - lastMs;
-            lastMs = pl;
-        }
-
-        QJsonArray arr;
-        for(auto &x: list)
-        {
-            arr.push_back(x);
-        }
-
-        const auto jsonout = QJsonDocument(arr).toJson();
-        jsonFile.write(jsonout);
-        const auto l = _settings.value("cloudLogin").toString();
-        const auto p = _settings.value("cloudPassword").toString();
-        if(!l.isEmpty() && !p.isEmpty())
-        {
-            QFileInfo info(fileName);
-            auto fname =info.fileName();
-            if(fname>0)
-            {
-                if(fname.size() + 1>12){
-                    const auto s = fname.size() - 12;
-                    fname = fname.remove(12,s-1);
-                }
-//                clouds.sendToClouds(jsonout,l,p,fname);
-            }
-        }
-
-        jsonFile.waitForBytesWritten(30000);
-        jsonFile.close();
+    auto pch = getChild("Patches")->toJsonObject().value("children").toArray();
+    QMap <int,QJsonObject>patch;
+    for(auto z: pch){
+        auto p = z.toObject().value("properties").toObject();
+        patch.insert(p.value("ID").toInt(),p);
     }
+
+    QJsonObject out;
+    auto getRoundPos = [](const double p){
+        return qint64(p/10.0)*10;
+    };
+    QVector<QJsonObject> list;
+    auto data = QJsonObject({
+
+                                qMakePair(QString("action"), 1),
+                                qMakePair(QString("between"), QJsonValue(static_cast<qint64>(0))),
+                                qMakePair(QString("ch"), 1),
+                                qMakePair(QString("delay"), QJsonValue(static_cast<qint64>(0))),
+                                qMakePair(QString("freeze"), bool(false)),
+                                qMakePair(QString("id"), 0),
+                                qMakePair(QString("position"), 0),
+                                qMakePair(QString("time"), QJsonValue(static_cast<qint64>(100))),
+                                qMakePair(QString("type"),1)
+                            });
+    for( auto y:ar )
+    {
+
+        for(const auto x: y.toObject().value("children").toArray())
+        {
+            QJsonObject d;
+            auto actionName = x.toObject().value("properties").toObject().value("actionName").toString();
+            auto patchid = x.toObject().value("properties").toObject().value("patchId").toInt();
+            auto position = getRoundPos(x.toObject().value("properties").toObject().value("position").toDouble()) - m_prefire.value(actionName);
+            if(position<0)continue;
+
+            data["action"] = actionName.remove("A").toInt();
+            data["ch"] = patch.find(patchid).value().value("DMX").toInt();
+            data["delay"] = position;
+            list.append(data);
+        }
+
+    }
+
+    std::sort(list.begin(),list.end(),[](const QJsonObject &a,const QJsonObject &b){
+        return a.value("delay").toInt() < b.value("delay").toInt();});
+
+    int id = 1;
+    auto lastMs = 0;
+    for(auto &x: list){
+        x["id"] = id++;
+        auto pl = x.value("delay").toInt();
+        x["between"] = pl - lastMs;
+        lastMs = pl;
+    }
+
+    QJsonArray arr;
+    for(auto &x: list)
+    {
+        arr.push_back(x);
+    }
+
+    const auto jsonout = QJsonDocument(arr).toJson();
+    jsonFile.write(jsonout);
+    const auto l = _settings.value("cloudLogin").toString().toStdString();
+    const auto p = _settings.value("cloudPassword").toString().toStdString();
+    
+    if(!l.empty() && !p.empty())
+    {
+        QFileInfo info(fileName);
+        auto fname =info.fileName();
+        if(fname>0)
+        {
+            if(fname.size() + 1>12)
+            {
+                const auto s = fname.size() - 12;
+                fname = fname.remove(12,s-1);
+            }
+
+            std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
+
+            try
+            {
+                auto credentials = CloudSync::BasicCredentials::from_username_password( l, p );
+                auto cloud = CloudSync::CloudFactory().create_nextcloud( "https://cloud.mainfx.ru/", credentials );
+
+                auto file = cloud->root()->create_file( fname.toStdString() );
+                file->write_binary( content );
+            }
+            catch( const CloudSync::exceptions::cloud::CloudException& e )
+            {
+                qCritical() << "Sth went wrong: " << e.what();
+            }
+        }
+    }
+
+    jsonFile.waitForBytesWritten(30000);
+    jsonFile.close();
 }
 
 void ProjectManager::onMirror(const QString &cueName, QList<int> deviceId)

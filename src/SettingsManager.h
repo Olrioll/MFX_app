@@ -20,8 +20,8 @@ public:
     explicit SettingsManager(const QString& appDir, QObject *parent = nullptr);
     ~SettingsManager();
 
-    Q_INVOKABLE void setValue(QString name, QVariant value);
-    Q_INVOKABLE QVariant value(QString name);
+    Q_INVOKABLE void setValue(const QString& name, const QVariant& value);
+    Q_INVOKABLE QVariant value(const QString& name);
     Q_INVOKABLE QString workDirectory();
     Q_INVOKABLE QString appDirectory();
 

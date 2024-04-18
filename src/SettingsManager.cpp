@@ -19,7 +19,7 @@ SettingsManager::~SettingsManager()
     _settings.sync();
 }
 
-void SettingsManager::setValue(QString name, QVariant value)
+void SettingsManager::setValue(const QString& name, const QVariant& value)
 {
     qDebug() << name << value;
 
@@ -27,7 +27,7 @@ void SettingsManager::setValue(QString name, QVariant value)
     _settings.sync();
 }
 
-QVariant SettingsManager::value(QString name)
+QVariant SettingsManager::value(const QString& name)
 {
     return _settings.value(name);
 }

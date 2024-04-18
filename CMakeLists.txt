@@ -49,8 +49,6 @@ include(build/cmake/Dependencies.cmake)
 include(build/cmake/FetchQSuperMacros.cmake)
 include(local.cmake)
 
-link_directories("libs")
-
 # ┌──────────────────────────────────────────────────────────────────┐
 # │                       Сборка                                     │
 # └──────────────────────────────────────────────────────────────────┘
@@ -153,6 +151,10 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/DMXWriter.cpp"
  )
 
+#target_link_directories(${MFX_PROJECT_NAME} PUBLIC "libs")
+
+target_include_directories(${MFX_PROJECT_NAME} PUBLIC "libs")
+
 set(MSVC_RUNTIME_MODE MD)
 
 if(MSVC)
@@ -165,7 +167,9 @@ endif()
 
 target_link_libraries(${MFX_PROJECT_NAME}
     PRIVATE
-    "ftd2xx"
+    ${CMAKE_SOURCE_DIR}/libs/ftd2xx.lib
+    ${CMAKE_SOURCE_DIR}/libs/CloudSync.lib
+    ${CMAKE_SOURCE_DIR}/libs/libcurl.lib
     Qt5::Widgets
     Qt5::Qml
     Qt5::Quick
