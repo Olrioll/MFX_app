@@ -168,7 +168,6 @@ endif()
 target_link_libraries(${MFX_PROJECT_NAME}
     PRIVATE
     ${CMAKE_SOURCE_DIR}/libs/ftd2xx.lib
-    ${CMAKE_SOURCE_DIR}/libs/CloudSync.lib
     ${CMAKE_SOURCE_DIR}/libs/libcurl.lib
     Qt5::Widgets
     Qt5::Qml
@@ -183,6 +182,11 @@ target_link_libraries(${MFX_PROJECT_NAME}
 #    QuaZip::QuaZip
 )
 
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    target_link_libraries(${MFX_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/libs/CloudSyncD.lib)
+else()
+    target_link_libraries(${MFX_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/libs/CloudSync.lib)
+endif()
 
 add_executable(${MFX_LAUNCHER_PROJECT_NAME} WIN32
     "build/packaging/windows/appIcon.rc"

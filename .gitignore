@@ -16,11 +16,3 @@ installer/files/ftlang.dll
 installer/files/ftser2k.sys
 installer/files/ftserui2.dll
 installer/MFXSetup.exe
-src/ftd2xx.h_1
-src/ftd2xx.lib
-src/ftd2xx.lib_1
-src/ftd2xx.lib
-src/ftd2xx.lib
-src/ftd2xx.lib
-*.lib
-src/ftd2xx.lib
