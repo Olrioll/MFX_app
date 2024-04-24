@@ -643,7 +643,12 @@ int ProjectManager::patchIndexForId(int id) const
 QVariantList ProjectManager::patchesIdList(const QString& groupName) const
 {
     auto groups = getChild("Groups")->namedChildren();
-    return groups.value(groupName)->property("patches").toList();
+    auto value = groups.value( groupName );
+
+    if( value )
+        return value->property("patches").toList();
+
+    return {};
 }
 
 QString ProjectManager::selectAudioTrackDialog()
