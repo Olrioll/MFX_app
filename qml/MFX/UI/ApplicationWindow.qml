@@ -72,14 +72,11 @@ ApplicationWindow
 
     function createNewProject()
     {
-        mainScreen.playerWidget.hidePlayerElements()
-        mainScreen.playerWidget.waitingText.text = qsTr("Not available")
-        project.newProject()
-        projectSettingsWidget.visible = true
-
         patchScreen.deviceLibWidget.setActive(false)
         patchScreen.deviceListWidget.setActive(false)
         patchScreen.groupListWidget.setActive(false)
+
+        projectSettingsWidget.visible = true
     }
 
     function openProject()
@@ -791,13 +788,8 @@ ApplicationWindow
         }
     }
 
-    Connections
+    function showPatchScreen()
     {
-        target: projectSettingsWidget
-        function onCreateButtonClicked()
-        {
-            patchMenuButton.checked = true
-        }
+        patchMenuButton.checked = true
     }
-
 }

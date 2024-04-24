@@ -17,8 +17,6 @@ Item
     property string choosenImageFile
     property string choosenAudioFile
 
-    signal createButtonClicked
-
     Rectangle
     {
         id: rectangle
@@ -83,10 +81,12 @@ Item
             onClicked:
             {
                 applicationWindow.isPatchEditorOpened = false
+
+                projectSettingsWidget.visible = false
+
                 patchScreen.deviceLibWidget.setActive(true)
                 patchScreen.deviceListWidget.setActive(true)
                 patchScreen.groupListWidget.setActive(true)
-                projectSettingsWidget.visible = false
             }
         }
 
@@ -522,6 +522,12 @@ Item
 
             onClicked:
             {
+                if(isNewProject)
+                    project.newProject()
+
+                mainScreen.playerWidget.hidePlayerElements()
+                mainScreen.playerWidget.waitingText.text = qsTr("Not available")
+
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
 
@@ -557,14 +563,20 @@ Item
 
                 sceneWidget.sceneFrameItem.visible = true
                 sceneWidget.sceneFrameItem.restorePreviousGeometry()
+
                 applicationWindow.isPatchEditorOpened = false
+
                 projectSettingsWidget.visible = false
+
                 if(isNewProject)
                 {
-                    projectSettingsWidget.createButtonClicked()
+                    applicationWindow.showPatchScreen()
+
+                    patchScreen.deviceLibWidget.setActive(false)
+                    patchScreen.deviceListWidget.setActive(false)
+                    patchScreen.groupListWidget.setActive(false)
                 }
             }
         }
-
     }
 }
