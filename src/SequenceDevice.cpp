@@ -69,13 +69,46 @@ void SequenceDevice::runPatternSingly( const Pattern* p, quint64 time )
         return;
 
     m_opStartTime = time;
-    m_patternStopTime = time + p->duration() - 10; // time in DMXWorker is 10 ms before time in SequenceDevices
+    //m_patternStopTime = time + p->duration() - 10; // time in DMXWorker is 10 ms before time in SequenceDevices
     m_operations = p->operations()->toList();
+
+    /*auto nOp = m_operations;
+    auto first = true;
+    auto firstDuration = -1;
+    auto counter = 0;
+
+    m_operations.erase( std::remove_if( m_operations.begin(), m_operations.end(),
+        [&]( const Operation* op )
+    {
+        auto r = ((op->angleDegrees() < minAngle()) || (op->angleDegrees() > maxAngle()));
+        if( r && first && counter == 0 )
+        {
+            first = false;
+            firstDuration = op->duration();
+        }
+
+        ++counter;
+        return  r;
+    } ), m_operations.end() );
+
+    if( firstDuration != -1 && !m_operations.isEmpty() )
+        m_operations[0]->setDuration( firstDuration );*/
 
     if( m_operations.count() == 0 )
         return;
 
     //qDebug() << p->type() << " " << m_operations.count() << " " << m_opStartTime << " " << m_patternStopTime;
+
+    /*if( nOp.size() != m_operations.size() )
+    {
+        qDebug() << "Operation size changed" << nOp.size() << m_operations.size() << "\nAngle: " << minAngle() << maxAngle();
+
+        for( auto& x : m_operations )
+            qDebug() << "  " << x->angle() << x->duration();
+
+        for( auto& x : nOp )
+            qDebug() << " --- " << x->angle() << x->duration();
+    }*/
 
     m_op = m_operations[0]; // first operation of pattern
 
@@ -92,32 +125,35 @@ void SequenceDevice::onPlaybackTimeChanged( quint64 time )
 
 void SequenceDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
 {
-    if(time == m_patternStopTime)
+    if( !m_op /*|| m_op->skipOutOfAngles() && time >= m_patternStopTime*/ )
     {
         m_patternTimer.stop();
 
-        setDMXOperation(id(), nullptr, sendToWorker);
+        setDMXOperation( id(), nullptr, sendToWorker );
 
-        m_patternStopTime = 0;
+        //m_patternStopTime = 0;
         return;
     }
 
-    if(m_op == nullptr)
-        return;
-
-    if(time == m_opStartTime + m_op->duration() - 10)
+    if(time >= m_opStartTime + m_op->duration() - 10)
     {
-        m_opStartTime = time + 10;
-        m_operations.removeFirst();
-        m_op = m_operations.count() ? m_operations[0] : nullptr;
+        // для операций у которых не задано velocity время окончания определяется по duration
+        // для операций у которых задано velocity, помимо duration ещё проверяем достигли ли мы заданного угла
 
-        setDMXOperation(id(), m_op, sendToWorker);
-
-        if(m_operations.count() <= 1)
+        if( !m_op->velocity() || m_angleChangeFinished )
         {
-            m_operations.clear();
-            m_op = nullptr;
-            m_opStartTime = 0;
+            m_opStartTime = time + 10;
+            m_operations.removeFirst();
+            m_op = m_operations.count() ? m_operations[0] : nullptr;
+
+            setDMXOperation( id(), m_op, sendToWorker );
+
+            if( m_operations.count() <= 1 )
+            {
+                m_operations.clear();
+                m_op = nullptr;
+                m_opStartTime = 0;
+            }
         }
     }
 }
@@ -132,23 +168,51 @@ void SequenceDevice::onPatternTimerChanged()
 
 void SequenceDevice::setDMXOperation(int deviceId, const Operation *op, bool sendToWorker)
 {
+    int duration = 0;
     int angle = 0;
-    if(op != nullptr)
+    int velocity = 0;
+    bool active = false;
+    bool skipOutOfAngles = true;
+
+    if( op != nullptr )
+    {
+        duration = op->duration();
         angle = op->angleDegrees();
+        velocity = op->velocity();
+        active = op->active();
+        skipOutOfAngles = op->skipOutOfAngles();
+    }
 
-    if((angle < minAngle()) || (angle > maxAngle())) // filter operations by angle
-        return;
+    if( angle < minAngle() || angle > maxAngle() )
+    {
+        if( skipOutOfAngles )
+            return;
+
+        if( angle < minAngle() )
+            angle = minAngle();
+        else if( angle > maxAngle() )
+            angle = maxAngle();
+    }
 
     if(op != nullptr)
     {
-        //qDebug() << "drawOperationInGui " << deviceId << " " << op->duration() << " " << op->angleDegrees() << " " << op->velocity() << " " << op->active();
-        emit m_manager->drawOperationInGui( deviceId, op->duration(), op->angleDegrees(), op->velocity(), op->active() );
-    }
-    else
-    {
-        emit m_manager->endOfPattern(deviceId);
+        m_angleChangeFinished = false;
+        m_angleDestination = angle;
+
+        setDMXOperation( deviceId, duration, angle, velocity, active );
     }
 
-    if( sendToWorker )
+    if( sendToWorker && deviceId > 0 )
         DMXWorker::instance()->setOperation(deviceId, op);
+}
+
+void SequenceDevice::setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active )
+{
+    emit m_manager->drawOperationInGui( deviceId, duration, angle, velocity, active );
+}
+
+void SequenceDevice::finishChangeAngle( int angle )
+{
+    //qDebug() << angle;
+    m_angleChangeFinished = angle == m_angleDestination;
 }

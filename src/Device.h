@@ -8,6 +8,8 @@
 #include <QQmlVarPropertyHelpers.h>
 #include "Pattern.h"
 
+constexpr int PREVIEW_DEVICE_ID = -1;
+
 enum DeviceType {
     DEVICE_TYPE_SEQUENCES,
     DEVICE_TYPE_DIMMER,
@@ -31,5 +33,7 @@ public:
     explicit Device(QObject* parent = nullptr);
     //virtual void runPattern(const Pattern* p, quint64 time) = 0;
     virtual void runPatternSingly( const Pattern* p, quint64 time ) = 0;
+    virtual void finishChangeAngle( int angle ) = 0;
+
     DeviceManager *m_manager;
 };

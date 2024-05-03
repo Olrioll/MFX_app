@@ -3282,8 +3282,8 @@ FocusScope
                         interactive: true;//!held
                         onFlickStarted: { applicationWindow.isMouseCursorVisible = true}
                         onMovementStarted: { applicationWindow.isMouseCursorVisible = true}
-                        onMovementEnded: {console.log("movement");applicationWindow.isMouseCursorVisible = true}
-                        onFlickEnded: {console.log("flickEnded");applicationWindow.isMouseCursorVisible = true}
+                        onMovementEnded: {/*console.log("movement");*/applicationWindow.isMouseCursorVisible = true}
+                        onFlickEnded: {/*console.log("flickEnded");*/applicationWindow.isMouseCursorVisible = true}
                         property bool held: false
                         clip: true
 

@@ -61,5 +61,6 @@
         <file>MFX/UI/Components/Basic/TextFieldWithBackground.qml</file>
         <file>MFX/UI/Components/Templates/RoundedTriangleShape.qml</file>
         <file>MFX/UI/PreviewIcon.qml</file>
+        <file>MFX/UI/ParticleEmiter.qml</file>
     </qresource>
 </RCC>

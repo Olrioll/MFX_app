@@ -37,7 +37,7 @@ void Logger::Log( QtMsgType type, const QString& msg, const QString& file, const
 
         if( m_File.isOpen() )
         {
-            const QString time = QDateTime::currentDateTime().toString( "dd.MM.yyyy hh:mm:ss " );
+            const QString time = QDateTime::currentDateTime().toString( "dd.MM.yyyy hh:mm:ss.zzz " );
             QString str = QString( "%1 [%2]: " ).arg( time, msgLevelHash[type] );
 
             if( !func.isEmpty() )

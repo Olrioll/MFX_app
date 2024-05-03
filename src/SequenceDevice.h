@@ -24,7 +24,6 @@ class SequenceDevice : public Device {
 public:
     explicit SequenceDevice(QObject* parent = nullptr);
     //void runPattern(const Pattern* p, quint64 time) override;
-    void runPatternSingly( const Pattern* p, quint64 time ) override;
 
 public slots:
     void onPlaybackTimeChanged(quint64 time);
@@ -32,13 +31,20 @@ public slots:
 
 private:
     void doPlaybackTimeChanged( quint64 time, bool sendToWorker );
+
+    void runPatternSingly( const Pattern* p, quint64 time ) override;
+    void finishChangeAngle( int angle ) override;
+
     virtual void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker );
+    virtual void setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active );
 
 private:
     QList<Operation*> m_operations;
-    Operation* m_op = NULL;
-    quint64 m_opStartTime;
-    quint64 m_patternStopTime;
+    Operation* m_op = nullptr;
+    quint64 m_opStartTime = 0;
+    //quint64 m_patternStopTime = 0;
     quint64 m_patternTime = 0;
     QTimer m_patternTimer;
+    bool m_angleChangeFinished = false;
+    int m_angleDestination = 0;
 };

@@ -549,7 +549,7 @@ Item
             height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
             frameHeightText.text = project.property("sceneFrameHeight") + " m"
             frameWidthText.text = project.property("sceneFrameWidth") + " m"
-            console.log( sceneWidget.scaleFactor , sceneWidget.width,sceneWidget.height,backgroundImage.x,backgroundImage.height)
+            //console.log( sceneWidget.scaleFactor , sceneWidget.width,sceneWidget.height,backgroundImage.x,backgroundImage.height)
             if(sceneWidget.width > 0){
                 sceneWidget.scaleFactor = project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
                 if(sceneWidget.width <= backgroundImage.width ){

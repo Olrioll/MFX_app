@@ -22,6 +22,7 @@ public:
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
+    Q_INVOKABLE void finishChangeAngle( int deviceId, int angle );
 
     PatternManager* GetPatternManager() { return m_patternManager; }
     Device* m_previewDevice;

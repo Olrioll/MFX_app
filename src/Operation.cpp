@@ -15,5 +15,5 @@ Operation::Operation(const Operation& operation)
 
 int Operation::angleDegrees() const
 {
-    return static_cast<int>(210. / 255 * m_angle - 105);
+    return static_cast<int>((MAX_ANGLE - MIN_ANGLE) / 255.0 * m_angle + MIN_ANGLE);
 }

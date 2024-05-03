@@ -185,11 +185,11 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
         }
 
         //qDebug()<<pattern->duration()<<minusDuration;
-        if(pattern->duration() > minusDuration ){
-            pattern->setDuration(pattern->duration() - minusDuration);
-            //qDebug()<<"NEWPATTERNDURATION: "<<pattern->duration()<<minusDuration;
-
-        }
+        //if(pattern->duration() > minusDuration ){
+        //    pattern->setDuration(pattern->duration() - minusDuration);
+        //    //qDebug()<<"NEWPATTERNDURATION: "<<pattern->duration()<<minusDuration;
+        //
+        //}
 
         cue->setStartTime(cueStart);
         cue->setDurationTime(cueStop-cueStart);
@@ -276,7 +276,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
 
             if (a->startTime() == t * 10)
             {
-                qDebug() << time;
+                //qDebug() << time;
                 //emit runPattern(a->deviceId(), playerPosition(), a->patternName());
                 emit runPatternSingly( a->deviceId(), playerPosition(), a->patternName() );
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
@@ -287,7 +287,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
 
             if(c->active() && a->startTime() + duration == t * 10)
             {
-                qDebug() << time;
+                //qDebug() << time;
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }

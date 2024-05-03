@@ -14,14 +14,14 @@ DeviceManager::DeviceManager(PatternManager* patternManager, QObject *parent)
 
 Device *DeviceManager::deviceById(int id)
 {
-    Device* device = NULL;
-    for(const auto & d : m_devices->toList()) {
-        if(d->id() == id) {
-            device = d;
-            break;
-        }
-    }
-    return device;
+    if( id == PREVIEW_DEVICE_ID )
+        return m_previewDevice;
+
+    for(const auto device : m_devices->toList())
+        if( device->id() == id )
+            return device;
+
+    return nullptr;
 }
 
 void DeviceManager::addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio)
@@ -157,4 +157,13 @@ void DeviceManager::runPreviewPattern( const QString& patternName )
         return;
 
     m_previewDevice->runPatternSingly( p, 0 );
+}
+
+void DeviceManager::finishChangeAngle( int deviceId, int angle )
+{
+    Device* device = deviceById( deviceId );
+    if( !device )
+        return;
+
+    device->finishChangeAngle( angle );
 }

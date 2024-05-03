@@ -96,40 +96,56 @@ void PatternManager::initPatterns()
         if (currRawAction.size())
             rawActions.push_back(currRawAction);
 
+        auto setOperationData = []( const QStringList& actions, Operation* operation )
+        {
+            const QString& durationStr = actions.at( 0 );
+            int duration = durationStr.right( 2 ).toInt() * 10;
+            bool skipIfOutOfAngles = durationStr.length() < 3 || durationStr[0] != "1";
+
+            operation->setDuration( duration );
+            operation->setSkipOutOfAngles( skipIfOutOfAngles );
+            operation->setAngle( actions.at( 1 ).toInt() );
+            operation->setVelocity( actions.at( 2 ).toInt() );
+
+            int activeCode = actions.at( 3 ).toInt();
+            operation->setActive( activeCode == 255 ? true : false );
+        };
+
         m_patterns->clear();
         for (const auto& rawAction : rawActions)
         {
+            QString name = rawAction.at( 0 );
+            name.remove( ',' ).chop( 1 );
+
             auto pattern = new Pattern(this);
-            QString name = rawAction.at(0);
-            name.remove(',').chop(1);
-            auto actions1 = rawAction.at( 1 ).split( ',' );
-            int prefire = actions1.at(0).right(2).toInt() * 10;
-            auto * operation = new Operation(this);
-            operation->setDuration(prefire);
-            operation->setAngle(actions1.at(1).toInt());
-            operation->setVelocity(actions1.at(2).toInt());
-            int activeCode = actions1.at(3).toInt();
-            operation->setActive(activeCode == 255 ? true: false);
+            pattern->setName( name );
+
+            auto actions = rawAction.at( 1 ).split( ',' );
+
+            auto operation = new Operation( this );
+            setOperationData( actions, operation );
+
             pattern->operations()->append(operation);
+
+            int prefire = operation->duration();
             int duration = prefire;
+
             for (int i = 2; i < rawAction.size(); i++)
             {
-                auto nextOperation = new Operation(this);
-                auto actionsI = rawAction.at( i ).split( ',' );
-                nextOperation->setDuration(actionsI.at(0).toInt() * 10);
-                nextOperation->setAngle(actionsI.at(1).toInt());
-                nextOperation->setVelocity(actionsI.at(2).toInt());
-                activeCode = actionsI.at(3).toInt();
-                nextOperation->setActive(activeCode == 255 ? true: false);
-                pattern->operations()->append(nextOperation);
-                duration += actionsI.at(0).toInt() * 10;
+                actions = rawAction.at( i ).split( ',' );
+
+                operation = new Operation( this );
+                setOperationData( actions, operation );
+
+                pattern->operations()->append(operation);
+                duration += operation->duration();
             }
-            pattern->setName(name);
+
             //TODO типы паттернов пока не реализованы, поэтому для всех делаем общий стандарт - Sequential
             pattern->setType(PatternType::Sequential);
             pattern->setDuration(duration);
             pattern->setPrefireDurarion(prefire);
-            m_prefire.insert(name,prefire);
+            m_prefire.insert(name, prefire);
             m_patterns->append(pattern);
         }
     }

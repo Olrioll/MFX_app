@@ -8,5 +8,5 @@ public:
     explicit PreviewDevice( QObject* parent = nullptr );
 
 private:
-    void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker ) override;
+    void setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active ) override;
 };
