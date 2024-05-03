@@ -10,6 +10,7 @@ Item
     width: 30
     height: 30
 
+    property int patchId: -1 // PREVIEW_DEVICE_ID
     property string imageFile: "qrc:/device_sequences"
     signal drawOperation(var duration, var angle, var velocity, var active)
 
