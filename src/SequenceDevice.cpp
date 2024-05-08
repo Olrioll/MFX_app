@@ -135,7 +135,7 @@ void SequenceDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
         return;
     }
 
-    if(time >= m_opStartTime + m_op->duration() - 10)
+    if(time >= m_opStartTime + m_op->duration())
     {
         // для операций у которых не задано velocity время окончания определяется по duration
         // для операций у которых задано velocity, помимо duration ещё проверяем достигли ли мы заданного угла
@@ -213,6 +213,6 @@ void SequenceDevice::setDMXOperation( int deviceId, int duration, int angle, int
 
 void SequenceDevice::finishChangeAngle( int angle )
 {
-    //qDebug() << angle;
+    qDebug() << "finishChangeAngle" << angle;
     m_angleChangeFinished = angle == m_angleDestination;
 }

@@ -16,23 +16,19 @@ Item
 
     onDrawOperation:
     {
-        //console.log(duration, angle, velocity, active)
-
-        if( velocity != 0 )
-        {
-            particleEmiter.duration = -1
-            particleEmiter.velocity = velocity
-        }
-        else
-        {
-            particleEmiter.duration = duration
-            particleEmiter.velocity = -1
-        }
+        particleEmiter.stopAngleBehavior()
 
         var angleChangeFinished = velocity != 0 && angle == particleEmiter.angle
+        var calcDuration = velocity == 0 ? 0 : Math.abs(angle - particleEmiter.angle) / (velocity / 19 * 56.8) * 1000
 
+        //console.log(duration, calcDuration, angle, particleEmiter.angle, velocity, active)
+
+        particleEmiter.duration = velocity == 0 ? duration : calcDuration
         particleEmiter.angle = angle
         particleEmiter.active = active
+        particleEmiter.notifyFinishChangeAngle = velocity != 0
+
+        particleEmiter.startAngleBehavior()
 
         if( angleChangeFinished )
             deviceManager.finishChangeAngle( -1, angle )

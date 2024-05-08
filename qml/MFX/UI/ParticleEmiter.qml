@@ -3,22 +3,37 @@ import QtQuick.Particles 2.15
 
 Item
 {
-    property int duration: -1
+    property int duration: 0
     property int angle: -90
-    property int velocity: -1
     property bool active: false
+    property bool notifyFinishChangeAngle: false
 
-    Behavior on angle
+    function startAngleBehavior()
     {
-        SmoothedAnimation
-        {
-            duration: particleEmiter.duration
-            velocity: particleEmiter.velocity == -1 ? -1 : particleEmiter.velocity / 19 * 62.2
+        angleBehavior.start()
+    }
 
-            onRunningChanged:
+    function stopAngleBehavior()
+    {
+        angleBehavior.stop()
+    }
+
+    NumberAnimation
+    {
+        id: angleBehavior
+        to: -90 + angle
+        target: angleDir
+        properties: "angle"
+        duration: particleEmiter.duration
+
+        onRunningChanged:
+        {
+            //console.log('onRunningChanged', running)
+
+            if( !running )
             {
-                if( !running && particleEmiter.velocity != -1 )
-                    deviceManager.finishChangeAngle( patchId, angle )
+                if( particleEmiter.notifyFinishChangeAngle )
+                    deviceManager.finishChangeAngle( patchId, particleEmiter.angle )
             }
         }
     }
@@ -61,7 +76,8 @@ Item
 
         velocity: AngleDirection
         {
-            angle: -90 + particleEmiter.angle
+            id: angleDir
+            angle: -90 + particleEmiter.toAngle
             angleVariation: 2
             magnitude: 300
             magnitudeVariation: 100

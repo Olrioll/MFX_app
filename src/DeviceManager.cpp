@@ -115,8 +115,8 @@ void DeviceManager::onEditPatch(QVariantList properties)
 
 void DeviceManager::reloadPattern()
 {
- m_patternManager->initPatterns();
-qDebug()<<"reloadPattern";
+    qDebug();
+    m_patternManager->initPatterns();
 }
 
 /*
@@ -135,7 +135,7 @@ void DeviceManager::onRunPattern(int deviceId, quint64 time, const QString& patt
 
 void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QString& patternName )
 {
-    qDebug() << deviceId << " " << patternName;
+    //qDebug() << deviceId << " " << patternName;
 
     Device* device = deviceById( deviceId );
     if( !device )
@@ -150,7 +150,7 @@ void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QStrin
 
 void DeviceManager::runPreviewPattern( const QString& patternName )
 {
-    qDebug() << patternName;
+    //qDebug() << patternName;
 
     Pattern* p = m_patternManager->patternByName( patternName );
     if( !p )

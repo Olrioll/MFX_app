@@ -241,13 +241,15 @@ FocusScope
                 }
             }
 
-            RowLayout {
+            RowLayout
+            {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
                 spacing: 3
 
-                Component {
+                Component
+                {
                     id: calculatorComponent
 
                     Rectangle {
@@ -267,7 +269,8 @@ FocusScope
                                      }
                         }
 
-                        Flickable {
+                        Flickable
+                        {
                             anchors.fill: parent
                             anchors.topMargin: 8
                             anchors.leftMargin: 10
@@ -278,7 +281,8 @@ FocusScope
 
                             clip: true
 
-                            ColumnLayout {
+                            ColumnLayout
+                            {
                                 id: calculatorContentLayout
 
                                 anchors.left: parent.left
@@ -288,7 +292,8 @@ FocusScope
 
                                 spacing: 0
 
-                                Item {
+                                Item 
+                                {
                                     id: calculatorTextInputItem
 
                                     Layout.fillWidth: true
@@ -545,7 +550,8 @@ FocusScope
                                     fixedHeight: 6
                                 }
 
-                                Grid {
+                                Grid 
+                                {
                                     id: calculatorButtons
 
                                     Layout.fillWidth: true
@@ -780,7 +786,8 @@ FocusScope
                                     fixedHeight: 20
                                 }
 
-                                Grid {
+                                Grid 
+                                {
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: childrenRect.height
                                     Layout.maximumHeight: childrenRect.height
@@ -2937,17 +2944,22 @@ FocusScope
                     ]
                 }
 
-                Loader {
+                Loader
+                {
                     id: calculatorLoader
 
                     Layout.fillHeight: true
 
-                    states: [
-                        State {
+                    states:
+                    [
+                        State
+                        {
                             name: "visible"
                             //TODO temporary always disabled
-                            when: false //actionstButton.checked
-                            PropertyChanges {
+                            //when: false //actionstButton.checked
+                            when: actionstButton.checked
+                            PropertyChanges
+                            {
                                 target: calculatorLoader
                                 Layout.preferredWidth: 176
                                 Layout.maximumWidth: 176
@@ -2955,11 +2967,14 @@ FocusScope
                                 sourceComponent: calculatorComponent
                             }
                         },
-                        State {
+                        State
+                        {
                             name: "hidden"
                             //TODO temporary always enabled
-                            when: true //!actionstButton.checked
-                            PropertyChanges {
+                            //when: true //!actionstButton.checked
+                            when: !actionstButton.checked
+                            PropertyChanges
+                            {
                                 target: calculatorLoader
                                 Layout.preferredWidth: 0
                                 Layout.maximumWidth: 0

@@ -904,7 +904,9 @@ QVariantList ProjectManager::getCues() const
 void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVariant value)
 {
     QMutexLocker locker( &m_ProjectLocker );
-    getChild("Cues")->getChild(cueName)->setProperty(propertyName, value);
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( cue )
+        cue->setProperty( propertyName, value );
 }
 
 void ProjectManager::addActionToCue(QString cueName, QString actionName, int patchId, int position)
@@ -913,16 +915,20 @@ void ProjectManager::addActionToCue(QString cueName, QString actionName, int pat
 
     JsonSerializable* newAction = new JsonSerializable;
     newAction->setProperties({{"actionName", actionName}, {"patchId", patchId}, {"position", position}});
-    getChild("Cues")->getChild(cueName)->addChild(newAction);
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( cue )
+        cue->addChild( newAction );
 }
 
 QVariantList ProjectManager::cueActions(QString cueName) const
 {
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( !cue )
+        return {};
+
     QVariantList actionList;
-    for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
-    {
+    for(auto & action : cue->listedChildren())
         actionList.push_back(action->properties());
-    }
 
     auto variantSort = [](const QVariant &v1, const QVariant &v2)
     {
@@ -937,13 +943,13 @@ void ProjectManager::onSetActionProperty(QString cueName, QString actionName, in
 {
     QMutexLocker locker( &m_ProjectLocker );
 
-    for(auto & action : getChild("Cues")->getChild(cueName)->listedChildren())
-    {
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( !cue )
+        return;
+
+    for(auto & action : cue->listedChildren())
         if(action->property("actionName").toString() == actionName && action->property("patchId").toInt() == patchId)
-        {
             action->setProperty(propertyName, value);
-        }
-    }
 }
 
 void ProjectManager::deleteCues(QStringList deletedCueNames)
@@ -960,13 +966,20 @@ void ProjectManager::copyCues(QStringList copyCueNames)
     QMutexLocker locker( &m_ProjectLocker );
 
     _pastedCues.clear();
-    for(auto &name: copyCueNames) {
+    for(auto &name: copyCueNames)
+    {
         auto newName = getChild("Cues")->addFromJsonObject(getChild("Cues")->getChild(name)->toJsonObject());
-        if(!newName.isEmpty()){
+        if(!newName.isEmpty())
+        {
             _pastedCues<<newName;
             auto cue = getChild("Cues")->getChild(newName);
+            if( !cue )
+                continue;
+
             emit addCue(cue->properties());
-            foreach(auto action, cue->listedChildren()) {
+
+            for(const auto& action : cue->listedChildren())
+            {
                 QString pattern = action->properties().value("actionName").toString();
                 quint64 deviceId = action->properties().value("patchId").toUInt();
                 quint64 position = action->properties().value("position").toUInt();
@@ -984,16 +997,20 @@ void ProjectManager::changeAction(QString cueName, int deviceId, QString pattern
 {
     QMutexLocker locker( &m_ProjectLocker );
 
-        auto cue = getChild("Cues")->getChild(cueName);
-        foreach(auto action, cue->listedChildren()) {
-            if(deviceId == action->properties().value("patchId").toUInt())
-            {
-                action->setProperty("actionName",pattern);
-                quint64 position = action->properties().value("position").toUInt();
-                emit setActionProperty(cueName, pattern, deviceId, position);
-                emit updateCues(cueName);
-                return;
-            }
+    auto cue = getChild("Cues")->getChild(cueName);
+    if( !cue )
+        return;
+
+    for(auto& action : cue->listedChildren())
+    {
+        if(deviceId == action->properties().value("patchId").toUInt())
+        {
+            action->setProperty("actionName",pattern);
+            quint64 position = action->properties().value("position").toUInt();
+            emit setActionProperty(cueName, pattern, deviceId, position);
+            emit updateCues(cueName);
+            return;
+        }
     }
 }
 
@@ -1114,18 +1131,19 @@ void ProjectManager::onMirror(const QString &cueName, QList<int> deviceId)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
-    auto cue = getChild("Cues")->getChild(cueName);
+    const auto cue = getChild("Cues")->getChild(cueName);
+    if( !cue )
+        return;
 
     QList<JsonSerializable*> l;
-    foreach(auto action, cue->listedChildren()) {
+    for(const auto action : cue->listedChildren())
         if(deviceId.contains(action->properties().value("patchId").toUInt()))
-        {
            l << action;
-        }
-      }
 
-    for(auto i = 0,y = l.size() -1; i < l.size(); i++,--y){
-        if(i<y){
+    for(auto i = 0,y = l.size() -1; i < l.size(); i++,--y)
+    {
+        if(i<y)
+        {
          auto devL = l[i]->properties().value("patchId").toUInt();
          auto actL = l[i]->properties().value("actionName").toString();
          auto devF = l[y]->properties().value("patchId").toUInt();
@@ -1139,46 +1157,56 @@ void ProjectManager::onMirror(const QString &cueName, QList<int> deviceId)
 
          emit setActionProperty(cueName, actL, devL, position2);
          emit setActionProperty(cueName, actF, devF, position);
-        }else break;;
+        }
+        else
+            break;;
     }
 
-     updateCoeffByName(cueName);
-    if(!l.isEmpty()) emit updateCues(cueName);
+    updateCoeffByName(cueName);
+
+    if(!l.isEmpty())
+        emit updateCues(cueName);
 }
 
 void ProjectManager::onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
-    auto cue = getChild("Cues")->getChild(cueName);
-    QList<JsonSerializable*> p;
-    foreach(auto action, cue->listedChildren()) {
-        if(deviceId.contains(action->properties().value("patchId").toUInt()))
-        {
-           p << action;
-        }
-      }
+    const auto cue = getChild("Cues")->getChild(cueName);
+    if( !cue )
+        return;
 
+    QList<JsonSerializable*> p;
+
+    for( const auto& action : cue->listedChildren())
+        if(deviceId.contains(action->properties().value("patchId").toUInt()))
+           p << action;
 
     QList<JsonSerializable*> l;
     QList<quint64> pos;
-    for(auto i = 0,y = p.size()-1; i < p.size(); i++,--y){
-        if(i<y){
+
+    for(auto i = 0,y = p.size()-1; i < p.size(); i++,--y)
+    {
+        if(i<y)
+        {
            l << p[i] << p[y];
            auto _pos = p[i*2]->properties().value("position").toUInt();
            pos << _pos << _pos;
-        }else if(i == y){
+        }
+        else if(i == y)
+        {
             l<< p[i];
             pos << p[p.size()-1]->properties().value("position").toUInt();
         }
     }
 
-if(inside){
-   std::reverse(l.begin(),l.end());
-}
+    if(inside)
+       std::reverse(l.begin(),l.end());
 
-    for(auto i = 0,y=0; i < l.size(); i+=2,y+=2){
-        if(i<l.size()-1){
+    for(auto i = 0,y=0; i < l.size(); i+=2,y+=2)
+    {
+        if(i<l.size()-1)
+        {
          auto devL = l[i]->properties().value("patchId").toUInt();
          auto actL = l[i]->properties().value("actionName").toString();
          auto devF = l[i+1]->properties().value("patchId").toUInt();
@@ -1188,16 +1216,22 @@ if(inside){
          l[i]->setProperty("position",position);
          emit setActionProperty(cueName, actL, devL, position);
          emit setActionProperty(cueName, actF, devF, position);
-        }else if(i<l.size()){
+        }
+        else if(i<l.size())
+        {
             quint64 position =  pos[i];
             l[i]->setProperty("position",position);
             emit setActionProperty(cueName, l[i]->properties().value("actionName").toString(),
                                    l[i]->properties().value("patchId").toUInt(), position);
-        }else break;
+        }
+        else
+            break;
     }
 
      updateCoeffByName(cueName);
-     if(!l.isEmpty()) emit updateCues(cueName);
+     
+     if(!l.isEmpty())
+         emit updateCues(cueName);
 }
 
 void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
@@ -1205,19 +1239,20 @@ void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
     QMutexLocker locker( &m_ProjectLocker );
 
     auto cue = getChild("Cues")->getChild(cueName);
+    if( !cue )
+        return;
 
     QList<JsonSerializable*> l;
-    foreach(auto action, cue->listedChildren()) {
+    for(const auto action : cue->listedChildren())
         if(deviceId.contains(action->properties().value("patchId").toUInt()))
-        {
            l << action;
-        }
-      }
 
-    for(auto i = 0; i< l.size(); i+=2){
-        if((i+1) < l.size()){
+    for(auto i = 0; i< l.size(); i+=2)
+    {
+        if((i+1) < l.size())
             l.swapItemsAt(i,i+1);
-        }else break;
+        else
+            break;
     }
 
     std::random_device rd;
@@ -1225,8 +1260,10 @@ void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
 
     std::shuffle(l.begin(),l.end(),g);
 
-    for(auto i = 0,y = l.size() -1; i < l.size(); i++,--y){
-        if(i<y){
+    for(auto i = 0,y = l.size() -1; i < l.size(); i++,--y)
+    {
+        if(i<y)
+        {
          auto devL = l[i]->properties().value("patchId").toUInt();
          auto actL = l[i]->properties().value("actionName").toString();
          auto devF = l[y]->properties().value("patchId").toUInt();
@@ -1240,12 +1277,15 @@ void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
 
          emit setActionProperty(cueName, actL, devL, position2);
          emit setActionProperty(cueName, actF, devF, position);
-        }else break;;
+        }
+        else 
+            break;
     }
 
     updateCoeffByName(cueName);
 
-    if(!l.isEmpty()) emit updateCues(cueName);
+    if(!l.isEmpty())
+        emit updateCues(cueName);
 }
 
 QStringList ProjectManager::maxActWidth(const QList<int> &ids)

@@ -5,8 +5,8 @@
 #include <QSuperMacros.h>
 #include <QQmlVarPropertyHelpers.h>
 
-constexpr int MIN_ANGLE = -115;
-constexpr int MAX_ANGLE = 115;
+constexpr int MIN_ANGLE = -105;
+constexpr int MAX_ANGLE = 105;
 
 class Operation: public QObject {
     Q_OBJECT
