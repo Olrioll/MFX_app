@@ -135,7 +135,7 @@ void SequenceDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
         return;
     }
 
-    if(time >= m_opStartTime + m_op->duration())
+    if(time >= m_opStartTime + m_op->duration() - 10)
     {
         // для операций у которых не задано velocity время окончания определяется по duration
         // для операций у которых задано velocity, помимо duration ещё проверяем достигли ли мы заданного угла
