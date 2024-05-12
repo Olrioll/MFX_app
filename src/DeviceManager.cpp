@@ -1,8 +1,11 @@
 #include "DeviceManager.h"
 #include "PreviewDevice.h"
+#include "PatternManager.h"
+#include "ProjectManager.h"
 
-DeviceManager::DeviceManager(PatternManager* patternManager, QObject *parent)
+DeviceManager::DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent)
     : m_patternManager(patternManager)
+    , m_ProjectManager(projectManager)
     , QObject(parent)
 {
     m_devices = new QQmlObjectListModel<Device>(this);
@@ -12,7 +15,7 @@ DeviceManager::DeviceManager(PatternManager* patternManager, QObject *parent)
     m_previewDevice->m_manager = this;
 }
 
-Device *DeviceManager::deviceById(int id)
+Device *DeviceManager::deviceById(int id) const
 {
     if( id == PREVIEW_DEVICE_ID )
         return m_previewDevice;
@@ -52,64 +55,72 @@ void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal 
     device->setPosYRatio(posYRatio);
 }
 
-void DeviceManager::onEditPatch(QVariantList properties)
+void DeviceManager::onEditPatch(const QVariantList& properties)
 {
     int id = -1;
-    int minAng = -120;
-    int maxAng = -120;
+    int minAng = MIN_ANGLE;
+    int maxAng = MAX_ANGLE;
     int height = -1;
 
 //    bool isId = false;
-    bool isMinAnd = true;
-    bool isMaxAnd = true;
-    bool isHeight = true;
+    bool isMinAng = false;
+    bool isMaxAng = false;
+    bool isHeight = false;
     //qDebug()<< "EditPatch"<<properties;
-    foreach(auto prop, properties)
+    for(const auto prop : properties)
     {
-        if(prop.toMap().isEmpty()){
-          isMinAnd = isMaxAnd = isHeight = false;
-          continue;
-        }
+        const auto propMap = prop.toMap();
+        if( propMap.isEmpty() )
+            continue;
 
-        QString stringFirst = prop.toMap().first().toString();
-        QVariant last = prop.toMap().last();
+        QString stringFirst = propMap.first().toString();
+        QVariant last = propMap.last();
 
-        if(stringFirst == "ID") {
+        if(stringFirst == "ID")
+        {
             id = last.toInt();
         }
-        if(stringFirst == "min ang") {
-            minAng = last.toInt();
-            if(last.isNull())
-                isMinAnd = false;
+        else if(stringFirst == "min ang")
+        {
+            if( !last.isNull() )
+            {
+                minAng = last.toInt();
+                isMinAng = true;
+            }
+        }
+        else if(stringFirst == "max ang")
+        {
+            if( !last.isNull() )
+            {
+                maxAng = last.toInt();
+                isMaxAng = true;
+            }
+        }
+        else if( stringFirst == "height" )
+        {
+            if( !last.isNull() )
+            {
+                height = last.toInt();
+                isHeight = true;
+            }
+        }
+    }
 
-        }
-        if(stringFirst == "max ang") {
-            maxAng = last.toInt();
-            if(last.isNull())
-                isMaxAnd = false;
-        }
-        if(stringFirst == "height") {
-            height = last.toInt();
-            if(last.isNull())
-                isHeight = false;
-        }
-    }
-    Device *device = deviceById(id);
-    if(device == NULL) {
+    Device* device = deviceById(id);
+    if( !device || device->deviceType() != DEVICE_TYPE_SEQUENCES )
         return;
-    }
-    if(device->deviceType() != DEVICE_TYPE_SEQUENCES) {
-        return;
-    }
+
     SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);
-    if(isMinAnd)
-    sequenceDevice->setMinAngle(minAng);
+    
+    if(isMinAng)
+        sequenceDevice->setMinAngle(minAng);
 
-    if(isMaxAnd)
-    sequenceDevice->setMaxAngle(maxAng);
+    if(isMaxAng)
+        sequenceDevice->setMaxAngle(maxAng);
 
     if(isHeight)
-    sequenceDevice->setheight(height);
+        sequenceDevice->setheight(height);
+
     emit editChanged();
 }
 
@@ -166,4 +177,28 @@ void DeviceManager::finishChangeAngle( int deviceId, int angle )
         return;
 
     device->finishChangeAngle( angle );
+}
+
+qulonglong DeviceManager::maxActionsDuration( const QList<int>& ids ) const
+{
+    qulonglong duration = 0;
+
+    for( auto id : ids )
+    {
+        QString act = m_ProjectManager->patchProperty( id, "act" ).toString();
+        duration = std::max( duration, actionDuration( act, id ) );
+    }
+
+    return duration;
+}
+
+qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId ) const
+{
+    Pattern* pattern = m_patternManager->patternByName( actName );
+    Device* device = deviceById( deviceId );
+
+    if( pattern && device )
+        return device->getDurationByPattern( *pattern );
+
+    return 0;
 }

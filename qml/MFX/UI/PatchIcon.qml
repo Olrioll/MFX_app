@@ -27,6 +27,7 @@ Item
 
         var angleChangeFinished = velocity != 0 && angle == particleEmiter.angle
         var calcDuration = velocity == 0 ? 0 : Math.abs(angle - particleEmiter.angle) / (velocity / 19 * 56.8) * 1000
+        calcDuration = Math.round(calcDuration / 10) * 10
 
         //console.log(duration, calcDuration, angle, particleEmiter.angle, velocity, active)
 

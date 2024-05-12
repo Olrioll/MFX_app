@@ -86,7 +86,8 @@ int main(int argc, char** argv)
     PatternManager patternManager(settings);
     patternManager.initPatterns();
     project.setPrefire(patternManager.getPrefire());
-    DeviceManager deviceManager(&patternManager);
+    DeviceManager deviceManager(&patternManager, &project);
+    project.SetDeviceManager( &deviceManager );
     CursorManager cursorManager;
     CueContentManager cueContentManager(deviceManager);
     CueManager cueManager(cueContentManager);

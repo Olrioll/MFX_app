@@ -3,6 +3,7 @@
 #include <QtCore/QRandomGenerator>
 
 #include "CueSortingModel.h"
+#include "PatternManager.h"
 
 namespace  {
 static constexpr char playerExpandedRoleName[] = "expanded";
@@ -138,62 +139,32 @@ void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern
 
 void CueManager::recalculateCueStartAndDuration(const QString &cueName)
 {
-    Cue* cue = cueByName(cueName);
-    if(cue == nullptr) {
+    Cue* cue = cueByName( cueName );
+    if( !cue )
         return;
-    }
+
     auto patternManager = m_deviceManager->GetPatternManager();
     quint64 cueStart = -1; // very big positive number since type is unsigned
     quint64 cueStop = 0;
-    for (auto action : cue->actions()->toList()) {
-        Pattern *pattern = patternManager->patternByName(action->patternName());
-        if(pattern == NULL) {
+
+    for( auto action : cue->actions()->toList() )
+    {
+        Pattern* pattern = patternManager->patternByName(action->patternName());
+        if( !pattern )
             continue;
-        }
-        if(cueStart > action->startTime()) {
+
+        if( cueStart > action->startTime() )
             cueStart = action->startTime();
-        }
 
-        auto device = m_deviceManager->deviceById(action->deviceId());
-        SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);
-        auto maxAngle =  sequenceDevice->maxAngle();
-        auto minAngle =  sequenceDevice->minAngle();
-        auto pOp = pattern->operations();
-        int minusDuration = 0;
-        auto first = true;
-        auto counter = 0;
-        std::for_each(pOp->begin(), pOp->end(),[&](const Operation* op){
-            auto r = ((op->angleDegrees() < minAngle) || (op->angleDegrees() > maxAngle));
-            if(r && first  && counter == 0){
-                first = false;
-                return;
-            }
-            ++counter;
-            if(r){
-                minusDuration += op->duration();
-            }
+        Device* device = m_deviceManager->deviceById( action->deviceId() );
+        qulonglong duration = device ? device->getDurationByPattern( *pattern ) : 0;
 
-        });
-
-        //qDebug()<<"\n minAngle, maxAngle,id, minusDuration "<<minAngle<<maxAngle<<action->deviceId()<<minusDuration;
-
-        if((maxAngle == 0) &&  (minAngle == 0))
-            minusDuration = 0;
-
-        if(cueStop < action->startTime() + pattern->duration()) {
-            cueStop = action->startTime() + pattern->duration() - minusDuration;
-        }
-
-        //qDebug()<<pattern->duration()<<minusDuration;
-        //if(pattern->duration() > minusDuration ){
-        //    pattern->setDuration(pattern->duration() - minusDuration);
-        //    //qDebug()<<"NEWPATTERNDURATION: "<<pattern->duration()<<minusDuration;
-        //
-        //}
-
-        cue->setStartTime(cueStart);
-        cue->setDurationTime(cueStop-cueStart);
+        if( cueStop < action->startTime() + duration )
+            cueStop = action->startTime() + duration;
     }
+
+    cue->setStartTime( cueStart );
+    cue->setDurationTime( cueStop - cueStart );
 }
 
 void CueManager::onSetActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
@@ -264,13 +235,14 @@ CueSortingModel* CueManager::cuesSorted() const
 
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
+    auto patternManager = m_deviceManager->GetPatternManager();
     quint64 t = time / 10;
+
     for (const auto& c : m_cues->toList())
     {
         for (const Action* a : c->actions()->toList())
         {
-            auto patternManager = m_deviceManager->GetPatternManager();
-            auto pattern = patternManager->patternByName(a->patternName());
+            const auto pattern = patternManager->patternByName(a->patternName());
             if(pattern == nullptr)
                 continue;
 
@@ -283,7 +255,11 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
                 c->setActive(true);
             }
 
-            quint64 duration = pattern->duration();
+            Device* device = m_deviceManager->deviceById( a->deviceId() );
+            if( !device )
+                continue;;
+
+            quint64 duration = device->getDurationByPattern( *pattern );
 
             if(c->active() && a->startTime() + duration == t * 10)
             {

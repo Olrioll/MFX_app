@@ -23,7 +23,7 @@ class Cue : public QObject
 
     //Декораторы
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, startTimeDecorator, StartTimeDecorator, "") //Декоратор для времени начала Cue
-    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, durationTimeDecorator, DurationTimeDecorator, "") //Декоратор для времени начала Cue
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, durationTimeDecorator, DurationTimeDecorator, "") //Декоратор для длительности Cue
 
     //Интерфейс
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, selected, Selected, false) //Выделен ли Cue на панели списка Cue пользователем

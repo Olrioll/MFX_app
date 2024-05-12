@@ -18,7 +18,7 @@ class Pattern : public QObject {
     QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid)
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, name, Name, "")
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, type, Type, PatternType::Unknown)
-    QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, duration, Duration, 0)
+    //QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, duration, Duration, 0)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, prefireDuration, PrefireDurarion, 0)
     QML_OBJMODEL_PROPERTY(Operation, operations)
 public:

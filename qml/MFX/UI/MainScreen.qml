@@ -2160,9 +2160,9 @@ FocusScope
                                                     drag.axis: Drag.XAndYAxis
 
                                                     drag.minimumX: 0
-                                                drag.maximumX: mainScreen.width - draggedCuePlate.width
+                                                    drag.maximumX: mainScreen.width - draggedCuePlate.width
                                                     drag.minimumY: 0
-                                                drag.maximumY: mainScreen.height - draggedCuePlate.height
+                                                    drag.maximumY: mainScreen.height - draggedCuePlate.height
 
                                                     drag.threshold: 0
                                                     drag.smoothed: false
@@ -2172,7 +2172,8 @@ FocusScope
                                                         pressedItem = deviceListView.itemAt(mouseX, mouseY)
                                                         if(pressedItem)
                                                         {
-                                                        cueContentManager.cleanSelectionRequest()
+                                                            cueContentManager.cleanSelectionRequest()
+
                                                             if(!wasDragging)
                                                                 project.setPatchProperty(pressedItem.patchId, "checked", !project.patchProperty(pressedItem.patchId, "checked"))
 
@@ -2186,31 +2187,26 @@ FocusScope
                                                         pressedItem = deviceListView.itemAt(mouseX, mouseY)
                                                         if(pressedItem)
                                                         {
-                                                        draggedPlate.checkedIDs = []
+                                                            draggedPlate.checkedIDs = []
 
                                                             for(let i = 0; i < deviceListView.count; i++)
-                                                            {
-                                                            if(deviceListView.itemAtIndex(i).checked){
+                                                                if(deviceListView.itemAtIndex(i).checked)
                                                                     draggedPlate.checkedIDs.push(deviceListView.itemAtIndex(i).patchId)
-                                                            }
-                                                        }
 
                                                             if(!draggedPlate.checkedIDs.includes(pressedItem.patchId))
                                                                 draggedPlate.checkedIDs.push(pressedItem.patchId)
 
                                                             deviceListView.held = true
-                                                        draggedPlate.x =  pressedItem.mapToItem(mainScreen, mouseX, mouseY).x
-                                                        draggedPlate.y =  pressedItem.mapToItem(mainScreen, 0, 0).y + draggedPlate.height/2
+                                                            draggedPlate.x = pressedItem.mapToItem(mainScreen, mouseX, mouseY).x
+                                                            draggedPlate.y = pressedItem.mapToItem(mainScreen, 0, 0).y + draggedPlate.height/2
 
                                                             draggedPlate.no = pressedItem.no
 
-                                                        var checkedActs = project.maxActWidth(draggedPlate.checkedIDs);
+                                                            let maxDuration = deviceManager.maxActionsDuration(draggedPlate.checkedIDs);
 
-                                                        let ww = patternManager.maxPatternDuration(checkedActs);
-
-                                                        draggedPlate.width = playerWidget.msecToPixels(ww);
-                                                        draggedCuePlate.width = draggedPlate.width;
-                                                        draggedPlate.height = draggedCuePlate.height
+                                                            draggedPlate.width = playerWidget.msecToPixels(maxDuration);
+                                                            draggedCuePlate.width = draggedPlate.width;
+                                                            draggedPlate.height = draggedCuePlate.height
                                                             draggedPlate.name = pressedItem.name
                                                             draggedPlate.imageFile = pressedItem.imageFile
 

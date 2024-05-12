@@ -12,14 +12,18 @@
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
 
+class DeviceManager;
+
 class ProjectManager : public QObject, public JsonSerializable
 {
 
     Q_OBJECT
 public:
 
-    ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
+    explicit ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
     virtual ~ProjectManager();
+
+    void SetDeviceManager( DeviceManager* deviceManager );
 
 ///////////////////////////////////////////////////////////////////////////////
 ///                          Работа с проектом                               //
@@ -154,7 +158,6 @@ public slots:
     void onMirror(const QString &cueName, QList<int> deviceId);
     void onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside);
     void onRandom(const QString &cueName, QList<int> deviceId);
-    QStringList maxActWidth(const QList<int> &ids);
     void setMsecPerPx(double ms){  msperpx = ms;}
     double getMsecPerPx(){return msperpx;}
     void updateCurrent();
@@ -172,7 +175,8 @@ signals:
 ///                      Работа с экшенами                                   //
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
-    QVariantList cueActions(QString cueName) const;
+    QVariantList cueActions(const QString& cueName) const;
+    qulonglong cueActionDuration( const QString& cueName, const QString& actName ) const;
     void onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value);
 signals:
     void deleteAllCue();
@@ -189,6 +193,7 @@ private:
     void cleanWorkDirectory();
 
     SettingsManager& _settings;
+    DeviceManager* m_DeviceManager;
     bool _hasUnsavedChanges = false;
     QString _currentGroup;
     QStringList _pastedCues;

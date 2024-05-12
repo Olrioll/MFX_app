@@ -77,7 +77,7 @@ Item
         velocity: AngleDirection
         {
             id: angleDir
-            angle: -90 + particleEmiter.toAngle
+            angle: -90
             angleVariation: 2
             magnitude: 300
             magnitudeVariation: 100

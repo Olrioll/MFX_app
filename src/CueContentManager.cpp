@@ -5,6 +5,7 @@
 #include "SequenceDevice.h"
 #include "CueManager.h"
 #include "CueContentSortingModel.h"
+#include "PatternManager.h"
 
 namespace  {
 static constexpr char actionStartTimeChangeRole[] = "startTime";
@@ -353,20 +354,23 @@ void CueContentManager::refrestCueContentModel()
         return a1->startTime() < a2->startTime();
     });
 
-    for (auto* action : listActions) {
+    for (auto* action : listActions)
+    {
+        auto* device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById( action->deviceId() ));
         auto* cueContent = new CueContent(this);
         cueContent->setDelay(action->startTime() - m_currentCue->startTime());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
         cueContent->setBetween(action->startTime() - prevStop);
         auto pattern = m_deviceManager.GetPatternManager()->patternByName(action->patternName());
-        prevStop = action->startTime() + pattern->duration();
+        prevStop = action->startTime() + device ? device->getDurationByPattern( *pattern ) : 0;
         //qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
         cueContent->setTime(action->startTime() + pattern->prefireDuration());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, time = %1").arg(cueContent->time());
         cueContent->setPrefire(pattern->prefireDuration());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, prefire = %1").arg(cueContent->prefire());
 
-        if(auto * device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById(action->deviceId())); device != nullptr) {
+        if( device )
+        {
             cueContent->setDevice(device->id());
             cueContent->setDmxSlot(device->dmx());
             cueContent->setRfChannel(device->rfChannel());

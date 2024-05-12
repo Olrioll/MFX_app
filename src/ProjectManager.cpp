@@ -1,4 +1,5 @@
 #include "ProjectManager.h"
+#include "DeviceManager.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -32,6 +33,11 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 ProjectManager::~ProjectManager()
 {
     cleanWorkDirectory();
+}
+
+void ProjectManager::SetDeviceManager( DeviceManager* deviceManager )
+{
+    m_DeviceManager = deviceManager;
 }
 
 void ProjectManager::setPrefire( const QMap<QString, int>& pref)
@@ -98,48 +104,47 @@ bool ProjectManager::loadProject(const QString& fileName)
         emit patchListChanged();
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
+        emit reloadPattern();
+
+        for( auto patch : getChild( "Patches" )->listedChildren() )
+        {
+            QVariantList properties;
+            QVariantMap propertiesMap;
+            propertiesMap["propName"] = "ID";
+            propertiesMap["propValue"] = patch->properties().value( "ID" ).toUInt();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "DMX";
+            propertiesMap["propValue"] = patch->properties().value( "DMX" ).toInt();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "min ang";
+            propertiesMap["propValue"] = patch->properties().value( "min ang" ).toInt();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "max ang";
+            propertiesMap["propValue"] = patch->properties().value( "max ang" ).toInt();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "RF pos";
+            propertiesMap["propValue"] = patch->properties().value( "RF pos" ).toInt();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "RF ch";
+            propertiesMap["propValue"] = patch->properties().value( "RF ch" ).toInt();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "height";
+            propertiesMap["propValue"] = patch->properties().value( "height" ).toInt();
+            properties.append( propertiesMap );
+            emit editPatch( properties );
+        }
 
         for(auto cue : getChild("Cues")->namedChildren())
         {
             QString cueName = cue->properties().value("name").toString();
             emit addCue(cue->properties());
-            foreach(auto action, cue->listedChildren())
+            for(const auto action : cue->listedChildren())
             {
                 QString pattern = action->properties().value("actionName").toString();
                 quint64 deviceId = action->properties().value("patchId").toUInt();
                 quint64 position = action->properties().value("position").toUInt();
                 emit setActionProperty(cueName, pattern, deviceId, position);
             }
-        }
-
-        emit reloadPattern();
-
-        for(auto patch : getChild("Patches")->listedChildren())
-        {
-            QVariantList properties;
-            QVariantMap propertiesMap;
-            propertiesMap["propName"] = "ID";
-            propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
-            properties.append(propertiesMap);
-            propertiesMap["propName"] = "DMX";
-            propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
-            properties.append(propertiesMap);
-            propertiesMap["propName"] = "min ang";
-            propertiesMap["propValue"] = patch->properties().value("min ang").toInt();
-            properties.append(propertiesMap);
-            propertiesMap["propName"] = "max ang";
-            propertiesMap["propValue"] = patch->properties().value("max ang").toInt();
-            properties.append(propertiesMap);
-            propertiesMap["propName"] = "RF pos";
-            propertiesMap["propValue"] = patch->properties().value("RF pos").toInt();
-            properties.append(propertiesMap);
-            propertiesMap["propName"] = "RF ch";
-            propertiesMap["propValue"] = patch->properties().value("RF ch").toInt();
-            properties.append(propertiesMap);
-            propertiesMap["propName"] = "height";
-            propertiesMap["propValue"] = patch->properties().value("height").toInt();
-            properties.append(propertiesMap);
-            emit editPatch(properties);
         }
 
         return true;
@@ -920,14 +925,14 @@ void ProjectManager::addActionToCue(QString cueName, QString actionName, int pat
         cue->addChild( newAction );
 }
 
-QVariantList ProjectManager::cueActions(QString cueName) const
+QVariantList ProjectManager::cueActions(const QString& cueName) const
 {
     auto cue = getChild( "Cues" )->getChild( cueName );
     if( !cue )
         return {};
 
     QVariantList actionList;
-    for(auto & action : cue->listedChildren())
+    for(const auto action : cue->listedChildren())
         actionList.push_back(action->properties());
 
     auto variantSort = [](const QVariant &v1, const QVariant &v2)
@@ -937,6 +942,24 @@ QVariantList ProjectManager::cueActions(QString cueName) const
 
     std::sort(actionList.begin(), actionList.end(), variantSort);
     return actionList;
+}
+
+qulonglong ProjectManager::cueActionDuration( const QString& cueName, const QString& actName ) const
+{
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( !cue )
+        return 0;
+
+    for( const auto action : cue->listedChildren() )
+    {
+        if( action->property( "actionName" ).toString() == actName )
+        {
+            int deviceId = action->property( "patchId" ).toInt();
+            return m_DeviceManager->actionDuration( actName, deviceId );
+        }
+    }
+
+    return 0;
 }
 
 void ProjectManager::onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
@@ -1286,23 +1309,6 @@ void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
 
     if(!l.isEmpty())
         emit updateCues(cueName);
-}
-
-QStringList ProjectManager::maxActWidth(const QList<int> &ids)
-{
-    QStringList out;
-    auto patches = getChild("Patches")->listedChildren();
-    for(auto patch : patches)
-    {
-        for(auto &id:ids){
-            if(patch->property("ID").toInt() == id)
-            {
-                out<<patch->property("act").toString();
-            }
-        }
-    }
-
-    return out;
 }
 
 void ProjectManager::updateCurrent()

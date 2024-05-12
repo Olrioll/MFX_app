@@ -128,7 +128,7 @@ void PatternManager::initPatterns()
             pattern->operations()->append(operation);
 
             int prefire = operation->duration();
-            int duration = prefire;
+            //int duration = prefire;
 
             for (int i = 2; i < rawAction.size(); i++)
             {
@@ -138,12 +138,12 @@ void PatternManager::initPatterns()
                 setOperationData( actions, operation );
 
                 pattern->operations()->append(operation);
-                duration += operation->duration();
+                //duration += operation->duration();
             }
 
             //TODO типы паттернов пока не реализованы, поэтому для всех делаем общий стандарт - Sequential
             pattern->setType(PatternType::Sequential);
-            pattern->setDuration(duration);
+            //pattern->setDuration(duration);
             pattern->setPrefireDurarion(prefire);
             m_prefire.insert(name, prefire);
             m_patterns->append(pattern);
@@ -167,6 +167,7 @@ Pattern *PatternManager::patternById(const QUuid &id) const
     return nullptr;
 }
 
+/*
 qulonglong PatternManager::maxPatternDuration(const QStringList &list) const
 {
     qulonglong out = 0;
@@ -177,15 +178,13 @@ qulonglong PatternManager::maxPatternDuration(const QStringList &list) const
             }
     }
     return out;
-}
+}*/
 
 Pattern *PatternManager::patternByName(const QString &name) const
 {
-    for(auto * pattern : m_patterns->toList()) {
-        if(name.compare(pattern->name(), Qt::CaseInsensitive) == 0) {
+    for(auto * pattern : m_patterns->toList())
+        if(name.compare(pattern->name(), Qt::CaseInsensitive) == 0)
             return pattern;
-        }
-    }
 
     return nullptr;
 }

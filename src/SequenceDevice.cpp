@@ -1,6 +1,7 @@
 #include "SequenceDevice.h"
 
 constexpr int PATTERN_INTERVAL_MS = 10;
+constexpr int DEFAULT_START_ANGLE = 0;
 
 SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
 {
@@ -213,6 +214,48 @@ void SequenceDevice::setDMXOperation( int deviceId, int duration, int angle, int
 
 void SequenceDevice::finishChangeAngle( int angle )
 {
-    qDebug() << "finishChangeAngle" << angle;
+    //qDebug() << "finishChangeAngle" << angle;
     m_angleChangeFinished = angle == m_angleDestination;
+}
+
+qulonglong SequenceDevice::calcDurationByPattern( const Pattern& pattern ) const
+{
+    int posAngle = DEFAULT_START_ANGLE;
+    qulonglong duration = 0;
+
+    for( const Operation* op : pattern.operations()->toList() )
+    {
+        if( !op )
+            continue;
+
+        int angle = op->angleDegrees();
+        bool skipAngle = false;
+
+        if( angle < minAngle() || angle > maxAngle() )
+        {
+            if( op->skipOutOfAngles() )
+                skipAngle = true;
+            else
+            {
+                if( angle < minAngle() )
+                    angle = minAngle();
+                else if( angle > maxAngle() )
+                    angle = maxAngle();
+            }
+        }
+
+        if( !skipAngle && op->velocity() )
+        {
+            duration += abs( angle - posAngle ) / (op->velocity() / 19 * 56.8) * 1000;
+            duration /= 10;
+            duration *= 10;
+        }
+        else
+            duration += op->duration();
+
+        if( !skipAngle )
+            posAngle = angle;
+    }
+
+    return duration;
 }

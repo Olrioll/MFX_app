@@ -2,6 +2,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QUuid>
+//#include <QHash>
 
 #include <QSuperMacros.h>
 #include <QQmlConstRefPropertyHelpers.h>
@@ -19,7 +20,8 @@ enum DeviceType {
 
 class DeviceManager;
 
-class Device  : public QObject {
+class Device  : public QObject
+{
     Q_OBJECT
     QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор устройства
     QSM_READONLY_CSTREF_PROPERTY(DeviceType, deviceType, DeviceType) // Тип устройства
@@ -35,5 +37,13 @@ public:
     virtual void runPatternSingly( const Pattern* p, quint64 time ) = 0;
     virtual void finishChangeAngle( int angle ) = 0;
 
-    DeviceManager *m_manager;
+    qulonglong getDurationByPattern( const Pattern& pattern );
+
+private:
+    virtual qulonglong calcDurationByPattern( const Pattern& pattern ) const = 0;
+
+    QHash<QString, qulonglong> m_DurationsByPattern;
+
+public:
+    DeviceManager* m_manager;
 };

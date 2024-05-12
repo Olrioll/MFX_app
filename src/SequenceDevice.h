@@ -35,6 +35,8 @@ private:
     void runPatternSingly( const Pattern* p, quint64 time ) override;
     void finishChangeAngle( int angle ) override;
 
+    qulonglong calcDurationByPattern( const Pattern& pattern ) const override;
+
     virtual void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker );
     virtual void setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active );
 

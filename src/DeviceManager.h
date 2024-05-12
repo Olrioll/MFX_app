@@ -7,8 +7,9 @@
 #include "SequenceDevice.h"
 #include "QQmlObjectListModel.h"
 #include "ComPortModel.h"
-#include "PatternManager.h"
 
+class PatternManager;
+class ProjectManager;
 
 class DeviceManager : public QObject
 {
@@ -17,17 +18,19 @@ class DeviceManager : public QObject
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, comPort, ComPort, "") //Выбранный компорт
 public:
     ComPortModel m_comPortModel;
-    explicit DeviceManager(PatternManager* patternManager, QObject *parent = nullptr);
-    void runPatternOnDevice(int deviceId, int patternNum);
+    explicit DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent = nullptr);
+    //void runPatternOnDevice(int deviceId, int patternNum);
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
     Q_INVOKABLE void finishChangeAngle( int deviceId, int angle );
+    Q_INVOKABLE qulonglong maxActionsDuration( const QList<int>& ids ) const;
+    Q_INVOKABLE qulonglong actionDuration( const QString& actName, int deviceId ) const;
 
     PatternManager* GetPatternManager() { return m_patternManager; }
     Device* m_previewDevice;
 
-    Device* deviceById(int id);
+    Device* deviceById(int id) const;
 
 signals:
     void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, bool active);
@@ -39,7 +42,7 @@ signals:
 public slots:
     //void onRunPattern(int deviceId, quint64 time, const QString& patternName);
     void onRunPatternSingly( int deviceId, quint64 time, const QString& patternName );
-    void onEditPatch(QVariantList properties);
+    void onEditPatch(const QVariantList& properties);
     void reloadPattern();
 
 private:
@@ -47,4 +50,5 @@ private:
 
 private:
     PatternManager* m_patternManager;
+    ProjectManager* m_ProjectManager;
 };

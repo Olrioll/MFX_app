@@ -1169,7 +1169,7 @@ Item
 
                                 project.setCueProperty(newCuePlate.name, "duration", newCuePlate.duration)
 
-                                console.log(newCuePlate.name, newCuePlate.duration)
+                                //console.log(newCuePlate.name, newCuePlate.duration)
                                 break
                             }
 
@@ -1578,7 +1578,7 @@ Item
                         firstAction = actionList[0]
                         position = actionList[0].position
 
-                        endPosition = actionList[0].position + patternManager.patternByName(actions[0].actionName).duration
+                        endPosition = actionList[0].position + project.cueActionDuration(cuePlate.name, actions[0].actionName)
                     }
                     else
                         return
@@ -1592,8 +1592,8 @@ Item
                         }
 
                         let currPosition = currActionMarker.position
+                        let currDuration = project.cueActionDuration(cuePlate.name, currActionMarker.name)
 
-                        let currDuration = patternManager.patternByName(currActionMarker.name).duration
                         if(currPosition + currDuration > endPosition)
                         {
                             endPosition = currPosition + currDuration
@@ -1607,9 +1607,7 @@ Item
                 function loadActions()
                 {
                     for(var i = 0; i < actionList.length; i++)
-                    {
                         actionList[i].destroy()
-                    }
 
                     actionList = []
 
@@ -1955,7 +1953,7 @@ Item
                     {
                         // Перемещение по горизонтали
                         let delta = /*pixelsToMsecRounded(xAcc)//*/pixelsToMsec(xAcc)
-pixelsToMsecRounded(xAcc)
+                        pixelsToMsecRounded(xAcc)
 
                         if(Math.abs(delta) > 0)
                         {

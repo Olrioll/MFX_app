@@ -28,7 +28,7 @@ public:
     void initPatterns();
     PatternFilteringModel * patternsFiltered() const;
     Pattern *patternById(const QUuid& id) const;
-    Q_INVOKABLE qulonglong maxPatternDuration(const QStringList &list) const;
+    //Q_INVOKABLE qulonglong maxPatternDuration(const QStringList &list) const;
     //TODO запрашивается из QML - избавиться впоследствии
     Q_INVOKABLE Pattern *patternByName(const QString& name) const;
 private:

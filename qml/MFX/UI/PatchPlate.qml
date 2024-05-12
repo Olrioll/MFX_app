@@ -91,7 +91,8 @@ Item
         if("act" in patchProperties && showAction)
             cellListModel.append({propName: "act", propValue: patchProperties["act"]})
 
-        patchPlate.type = patchProperties.type
+        if("type" in patchProperties)
+            patchPlate.type = patchProperties["type"]
 
         switch (patchPlate.type)
         {
