@@ -676,7 +676,7 @@ Item
         {
             id: setButton
             x: 172
-            y: 221
+            y: 226
             width: 124
             color: "#2F80ED"
             text: translationsManager.translationTrigger + qsTr("Set")
@@ -684,7 +684,7 @@ Item
             {
                 (addSequWindow.isEditMode && !isOneDevice)?
                  true:
-                dmxField.checkValue() &&
+                        dmxField.checkValue() &&
                         rfPosField.checkValue() &&
                         rfChField.checkValue() &&
                         heightField.checkValue() &&
@@ -764,21 +764,26 @@ Item
             {
                 if(containsPress)
                 {
+                    let currVal = Math.round(Number(-105 + mouseX * 1.44) / 5) * 5
+                    
+                    if( currVal < -105 )
+                        currVal = -105;
+                    else if( currVal > 105 )
+                        currVal = 105;
+
                     if(currentHandler === "min")
                     {
-                        let currMin = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        if(maxAngField.text == "~"){
-                            minAngField.text = currMin
-                        }else if(currMin <= Number(maxAngField.text))
-                            minAngField.text = currMin
+                        if(maxAngField.text == "~")
+                            minAngField.text = currVal
+                        else if(currVal <= Number(maxAngField.text))
+                            minAngField.text = currVal
                     }
                     else if(currentHandler === "max")
                     {
-                        let currMax = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        if(minAngField.text == "~"){
-                            maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        }else if(currMax >= Number(minAngField.text))
-                            maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                        if(minAngField.text == "~")
+                            maxAngField.text = currVal
+                        else if(currVal >= Number(minAngField.text))
+                            maxAngField.text = currVal
                     }
                 }
             }
@@ -786,10 +791,10 @@ Item
 
         Rectangle
         {
-            x: 16
-            y: 210
-            width: 140
-            height: 80
+            x: 20
+            y: 216
+            width: 132
+            height: 70
             color: "#444444"
         }
 
@@ -810,7 +815,7 @@ Item
                 strokeWidth: 0
                 capStyle: ShapePath.FlatCap
 
-                startX: 20; startY: 110
+                startX: 10; startY: 118
 
                 PathLine
                 {
@@ -820,8 +825,8 @@ Item
 
                 PathLine
                 {
-                    x: 160
-                    y: 110
+                    x: 162
+                    y: 118
                 }
 
             }
@@ -884,7 +889,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: isOneDevice? "-115":"~"//"-115"
+            text: isOneDevice? "-105":"~"//"-105"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -898,7 +903,7 @@ Item
                 if(text === "" || text === "~")
                     return false
 
-                return ((Number(text) >= -115 && Number(text) < 116) && Number(text) <= Number(maxAngField.text))
+                return ((Number(text) >= -105 && Number(text) <= 105) && Number(text) <= Number(maxAngField.text))
             }
 
             maximumLength: 4
@@ -930,7 +935,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: isOneDevice? "115":"~"//"115"
+            text: isOneDevice? "105":"~"//"105"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -944,7 +949,7 @@ Item
                 if(text === "" || text === "~")
                     return false
 
-                return ((Number(text) >= -115 && Number(text) < 116) && Number(text) >= Number(minAngField.text))
+                return ((Number(text) >= -105 && Number(text) <= 105) && Number(text) >= Number(minAngField.text))
             }
 
             maximumLength: 4
@@ -1003,10 +1008,10 @@ Item
         }
 
         Text {
-            y: 207
+            y: 217
             height: 17
             color: "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("-115")
+            text: translationsManager.translationTrigger + qsTr("-105")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1020,10 +1025,10 @@ Item
         }
 
         Text {
-            y: 207
+            y: 217
             height: 17
             color: "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("+115")
+            text: translationsManager.translationTrigger + qsTr("+105")
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1037,7 +1042,7 @@ Item
         }
 
         Text {
-            y: 201
+            y: 211
             height: 17
             color: "#ffffff"
             text: translationsManager.translationTrigger + qsTr("o")
@@ -1054,7 +1059,7 @@ Item
         }
 
         Text {
-            y: 201
+            y: 211
             height: 17
             color: "#ffffff"
             text: translationsManager.translationTrigger + qsTr("o")
@@ -1083,7 +1088,7 @@ Item
             {
                 origin.x: 0
                 origin.y: minPointer.height
-                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : -115 * 0.88
+                angle: (Number(minAngField.text) >=-105 && Number(minAngField.text) <=105) ? Number(minAngField.text) : -105
             }
         }
 
@@ -1101,7 +1106,7 @@ Item
             {
                 origin.x: minPointerHandler.width / 2
                 origin.y: minPointerHandler.height / 2 + circle.height / 2
-                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : -115 * 0.88
+                angle: (Number(minAngField.text) >=-105 && Number(minAngField.text) <=105) ? Number(minAngField.text) : -105
             }
         }
 
@@ -1118,7 +1123,7 @@ Item
             {
                 origin.x: 0
                 origin.y: maxPointer.height
-                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 115 * 0.88
+                angle: (Number(maxAngField.text) >=-105 && Number(maxAngField.text) <=105) ? Number(maxAngField.text) : 105
             }
         }
 
@@ -1136,7 +1141,7 @@ Item
             {
                 origin.x: maxPointerHandler.width / 2
                 origin.y: maxPointerHandler.height / 2 + circle.height / 2
-                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 115 * 0.88
+                angle: (Number(maxAngField.text) >=-105 && Number(maxAngField.text) <=105) ? Number(maxAngField.text) : 105
             }
         }
 

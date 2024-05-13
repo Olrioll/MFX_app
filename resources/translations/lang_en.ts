@@ -141,12 +141,12 @@
         <translation>o</translation>
     </message>
     <message>
-        <source>-115</source>
-        <translation>-115</translation>
+        <source>-105</source>
+        <translation>-105</translation>
     </message>
     <message>
-        <source>+115</source>
-        <translation>+115</translation>
+        <source>+105</source>
+        <translation>+105</translation>
     </message>
     <message>
         <source>Effect type</source>

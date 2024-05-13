@@ -796,7 +796,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "-115"
+            text: "-105"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
