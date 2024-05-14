@@ -37,10 +37,13 @@ DMXWorker *DMXWorker::instance()
 
 void DMXWorker::setOperation(int deviceId, const Operation *op)
 {
-    if(op != NULL) {
+    if(op)
+    {
         m_dmxArray[(deviceId - 1) * 6] = op->angle(); // first channel
         m_dmxArray[(deviceId - 1) * 6 + 2] = op->active() ? 0xff: 0; // 0 = no fire / 255 = fire
-    } else {
+    }
+    else
+    {
         m_dmxArray.fill(0x0, 512);
     }
 }

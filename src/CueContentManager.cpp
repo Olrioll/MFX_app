@@ -354,7 +354,7 @@ void CueContentManager::refrestCueContentModel()
         return a1->startTime() < a2->startTime();
     });
 
-    for (auto* action : listActions)
+    for (const auto* action : listActions)
     {
         auto* device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById( action->deviceId() ));
         auto* cueContent = new CueContent(this);

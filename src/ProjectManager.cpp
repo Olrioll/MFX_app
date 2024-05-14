@@ -187,18 +187,23 @@ void ProjectManager::reloadCurrentProject()
     qDebug();
     QMutexLocker locker( &m_ProjectLocker );
 
-    for(auto cue : getChild("Cues")->namedChildren()) {
+    for(auto cue : getChild("Cues")->namedChildren())
+    {
         QString cueName = cue->properties().value("name").toString();
         emit addCue(cue->properties());
-        foreach(auto action, cue->listedChildren()) {
+
+        for(auto action : cue->listedChildren())
+        {
             QString pattern = action->properties().value("actionName").toString();
             quint64 deviceId = action->properties().value("patchId").toUInt();
             quint64 position = action->properties().value("position").toUInt();
             emit setActionProperty(cueName, pattern, deviceId, position);
         }
     }
+
     emit reloadPattern();
-    for(auto patch : getChild("Patches")->listedChildren()) {
+    for(auto patch : getChild("Patches")->listedChildren())
+    {
         QVariantList properties;
         QVariantMap propertiesMap;
         propertiesMap["propName"] = "ID";
@@ -586,13 +591,13 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
 //    patch->setProperty("act", "");
 //    patch->setProperty("checked", false);
 
-    foreach(const auto& prop, properties)
+    for(const auto& prop : properties)
     {
         if(!prop.toMap().isEmpty())
-        patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
+            patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
     }
 
-    for(auto & p : getChild("Patches")->listedChildren())
+    for(const auto p : getChild("Patches")->listedChildren())
     {
         if(p->property("ID") == patch->property("ID"))
         {

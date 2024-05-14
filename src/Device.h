@@ -38,6 +38,7 @@ public:
     virtual void finishChangeAngle( int angle ) = 0;
 
     qulonglong getDurationByPattern( const Pattern& pattern );
+    void clearCalcDurations();
 
 private:
     virtual qulonglong calcDurationByPattern( const Pattern& pattern ) const = 0;

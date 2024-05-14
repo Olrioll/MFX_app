@@ -111,7 +111,7 @@ void SequenceDevice::runPatternSingly( const Pattern* p, quint64 time )
             qDebug() << " --- " << x->angle() << x->duration();
     }*/
 
-    m_op = m_operations[0]; // first operation of pattern
+    m_op = m_operations.first(); // first operation of pattern
 
     m_patternTime = time;
     m_patternTimer.start();
@@ -145,16 +145,16 @@ void SequenceDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
         {
             m_opStartTime = time + 10;
             m_operations.removeFirst();
-            m_op = m_operations.count() ? m_operations[0] : nullptr;
+            m_op = m_operations.count() ? m_operations.first() : nullptr;
 
             setDMXOperation( id(), m_op, sendToWorker );
 
-            if( m_operations.count() <= 1 )
+            /*if( m_operations.count() <= 1 )
             {
                 m_operations.clear();
                 m_op = nullptr;
                 m_opStartTime = 0;
-            }
+            }*/
         }
     }
 }
@@ -187,7 +187,12 @@ void SequenceDevice::setDMXOperation(int deviceId, const Operation *op, bool sen
     if( angle < minAngle() || angle > maxAngle() )
     {
         if( skipOutOfAngles )
-            return;
+        {
+            m_operations.removeFirst();
+            m_op = m_operations.count() ? m_operations.first() : nullptr;
+
+            return setDMXOperation( deviceId, m_op, sendToWorker );
+        }
 
         if( angle < minAngle() )
             angle = minAngle();
@@ -244,17 +249,19 @@ qulonglong SequenceDevice::calcDurationByPattern( const Pattern& pattern ) const
             }
         }
 
-        if( !skipAngle && op->velocity() )
-        {
-            duration += abs( angle - posAngle ) / (op->velocity() / 19 * 56.8) * 1000;
-            duration /= 10;
-            duration *= 10;
-        }
-        else
-            duration += op->duration();
-
         if( !skipAngle )
+        {
+            if( op->velocity() )
+            {
+                duration += abs( angle - posAngle ) / (op->velocity() / 19 * 56.8) * 1000;
+                duration /= 10;
+                duration *= 10;
+            }
+            else
+                duration += op->duration();
+
             posAngle = angle;
+        }
     }
 
     return duration;

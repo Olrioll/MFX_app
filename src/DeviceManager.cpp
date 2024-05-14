@@ -121,6 +121,8 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
     if(isHeight)
         sequenceDevice->setheight(height);
 
+    device->clearCalcDurations();
+
     emit editChanged();
 }
 

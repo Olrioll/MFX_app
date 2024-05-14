@@ -1638,7 +1638,8 @@ Item
                         let l = p % 10;
                         if(l > 5)
                             p += 10 - l;
-                        else p -= l;
+                        else 
+                            p -= l;
                         currAction.position = p
                     })
                 }
@@ -1662,7 +1663,8 @@ Item
                         property double prefire: 0 // в мсек
                         property double duration: 0  // в мсек
                         property double positionCoeff: 0
-                        function updateCoeff(){
+                        function updateCoeff()
+                        {
                             positionCoeff = (position - cuePlate.firstAction.position) / cuePlate.duration
                             project.onSetActionProperty(cuePlate.name, name, patchId, "positionCoeff", positionCoeff)
                         }

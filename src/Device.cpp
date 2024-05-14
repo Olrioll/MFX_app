@@ -18,3 +18,8 @@ qulonglong Device::getDurationByPattern( const Pattern& pattern )
 
     return it.value();
 }
+
+void Device::clearCalcDurations()
+{
+    m_DurationsByPattern.clear();
+}
