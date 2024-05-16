@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQml.Models 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Components.Basic 1.0 as MFXUICB
 
 Item
 {
@@ -194,7 +195,8 @@ Item
         }
 
 
-        RowLayout {
+        RowLayout
+        {
             anchors.left: imageRect.right
             anchors.leftMargin: 10
             anchors.top: parent.top
@@ -231,7 +233,7 @@ Item
 
 
 
-        MfxMouseArea
+        MFXUICB.MfxMouseArea
         {
             id: mouseArea
             anchors.fill: parent
@@ -245,12 +247,12 @@ Item
             onClicked:
             {
                 project.setPatchProperty(patchId, "checked", !project.patchProperty(patchId, "checked"))
-                if(parentList)
-                {
-                    project.setCurrentGroup(parentList.groupName)
-                }
 
-                if(project.patchProperty(patchId, "checked"))cueContentManager.cleanSelectionRequest()
+                if(parentList)
+                    project.setCurrentGroup(parentList.groupName)
+
+                if(project.patchProperty(patchId, "checked"))
+                    cueContentManager.cleanSelectionRequest()
             }
 
             onPressed:

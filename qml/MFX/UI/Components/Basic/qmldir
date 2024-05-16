@@ -6,3 +6,4 @@ FramelessApplicationWindow 1.0 FramelessApplicationWindow.qml
 TransparentTextField 1.0 TransparentTextField.qml
 SelectableTableHeaderItem 1.0 SelectableTableHeaderItem.qml
 TextFieldWithBackground 1.0 TextFieldWithBackground.qml
+MfxMouseArea 1.0 MfxMouseArea.qml

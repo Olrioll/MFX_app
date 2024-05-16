@@ -1340,11 +1340,12 @@ FocusScope
                                         color: cueContentListViewDelegatePrivateProperties.calculateTextColor(currentRole)
 
                                         text: {
-                                            switch(cueContentManager.durationTypeSelectedTableRole) {
-                                            case MFXE.CueContentSelectedTableRole.Time:
-                                                return cueContentListViewDelegate.time
-                                            case MFXE.CueContentSelectedTableRole.Prefire:
-                                                return cueContentListViewDelegate.prefire
+                                            switch(cueContentManager.durationTypeSelectedTableRole)
+                                            {
+                                                case MFXE.CueContentSelectedTableRole.Time:
+                                                    return cueContentListViewDelegate.time
+                                                case MFXE.CueContentSelectedTableRole.Prefire:
+                                                    return cueContentListViewDelegate.prefire
                                             }
                                             return qsTr("---")
                                         }
@@ -2111,8 +2112,8 @@ FocusScope
                                                     id: draggedCuePlate
                                                     visible: false
 
-                                                x: draggedPlate.x /*+ draggedPlate.Drag.hotSpot.x*/
-                                                y: draggedPlate.y /*+ draggedPlate.Drag.hotSpot.y*/
+                                                    x: draggedPlate.x /*+ draggedPlate.Drag.hotSpot.x*/
+                                                    y: draggedPlate.y /*+ draggedPlate.Drag.hotSpot.y*/
 
                                                     height: 10
                                                     width: 100
@@ -2148,7 +2149,7 @@ FocusScope
                                                     ]
                                                 }
 
-                                                MfxMouseArea
+                                                MFXUICB.MfxMouseArea
                                                 {
                                                     id: mouseArea
                                                     anchors.fill: parent
@@ -2358,7 +2359,7 @@ FocusScope
                             ]
                         }
 
-                        MfxMouseArea
+                        MFXUICB.MfxMouseArea
                         {
                             id: stackLayoutMouseArea
                             anchors.leftMargin: 40
@@ -3397,7 +3398,7 @@ FocusScope
                                 }
                             }
 
-                            MfxMouseArea
+                            MFXUICB.MfxMouseArea
                             {
                                 id:coords
                                 anchors.fill: parent

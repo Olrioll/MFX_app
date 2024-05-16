@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Components.Basic 1.0 as MFXUICB
 
 Item
 {
@@ -213,7 +214,7 @@ Item
             font.pixelSize: 12
         }
 
-        MfxMouseArea
+        MFXUICB.MfxMouseArea
         {
             anchors.fill: parent
             acceptedButtons: Qt.LeftButton | Qt.RightButton

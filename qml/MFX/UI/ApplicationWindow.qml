@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Components.Basic 1.0 as MFXUICB
 
 import "qrc:/"
 
@@ -109,7 +110,7 @@ ApplicationWindow
         }
     }
 
-    MfxMouseArea
+    MFXUICB.MfxMouseArea
     {
         id: overallArea
         anchors.fill: parent

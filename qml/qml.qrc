@@ -18,7 +18,6 @@
         <file>MFX/UI/MfxButton.qml</file>
         <file>MFX/UI/MfxHilightedButton.qml</file>
         <file>MFX/UI/MfxMenu.qml</file>
-        <file>MFX/UI/MfxMouseArea.qml</file>
         <file>MFX/UI/MfxTable.qml</file>
         <file>MFX/UI/MouseAreaWithHidingCursor.qml</file>
         <file>MFX/UI/OutputScreen.qml</file>
@@ -62,5 +61,10 @@
         <file>MFX/UI/Components/Templates/RoundedTriangleShape.qml</file>
         <file>MFX/UI/PreviewIcon.qml</file>
         <file>MFX/UI/ParticleEmiter.qml</file>
+        <file>MFX/UI/Components/CuePlate/CuePlateComponent.qml</file>
+        <file>MFX/UI/Components/CuePlate/qmldir</file>
+        <file>MFX/UI/Components/Basic/MfxMouseArea.qml</file>
+        <file>MFX/UI/Components/CuePlate/ActionMarkerComponent.qml</file>
+        <file>MFX/UI/Components/CuePlate/PrefireSpaceComponent.qml</file>
     </qresource>
 </RCC>
