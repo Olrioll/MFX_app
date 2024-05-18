@@ -68,18 +68,18 @@ Item
 
         enabled: particleEmiter.active
 
-        lifeSpan: 800
-        lifeSpanVariation: 200
-        emitRate: 800
-        size: 16
-        sizeVariation: 16
+        lifeSpan: 300
+        lifeSpanVariation: 50
+        emitRate: 900
+        size: 14
+        sizeVariation: 14
 
         velocity: AngleDirection
         {
             id: angleDir
             angle: -90
             angleVariation: 2
-            magnitude: 300
+            magnitude: 600
             magnitudeVariation: 100
         }
     }
