@@ -33,35 +33,33 @@ Component
         property alias caption: caption
 
         function updatePosition()
-        { console.log('updatePosition')
-            let actions = project.cueActions(cuePlate.name)
+        {
+            //let actions = project.cueActions(cuePlate.name)
             let endPosition = 0
             if(actionList.length)
             {
                 firstAction = actionList[0]
-                position = actionList[0].position
+                position = actionList[0].prefirePosition()
 
-                endPosition = actionList[0].position + project.cueActionDuration(cuePlate.name, actions[0].actionName)
+                //endPosition = actionList[0].position + project.cueActionDuration(cuePlate.name, actions[0].actionName)
+                endPosition = position + project.cueActionDuration(cuePlate.name, actionList[0].actionName)
             }
             else
                 return
 
             actionList.forEach(function(currActionMarker)
             {
-                if(currActionMarker.prefirePosition() < position)
-                {
-                    firstAction = currActionMarker
-                    position = currActionMarker.prefirePosition()
-                }
-
-                let currPosition = currActionMarker.position
+                let currPosition = currActionMarker.prefirePosition()
                 let currDuration = project.cueActionDuration(cuePlate.name, currActionMarker.name)
 
-                if(currPosition + currDuration > endPosition)
+                if(currPosition < position)
                 {
-                    endPosition = currPosition + currDuration
+                    firstAction = currActionMarker
+                    position = currPosition
                 }
 
+                if(currPosition + currDuration > endPosition)
+                    endPosition = currPosition + currDuration
             })
 
             duration = endPosition - position
@@ -354,7 +352,7 @@ Component
                         if(((currCuePlate.position + delta) <= 1) || ((currCuePlate.position + delta + currCuePlate.duration) >= playerWidget.projectDuration()))
                         {
                             isFitsLimits = false
-                            //                                    console.log(currCuePlate.name)
+                            //console.log(currCuePlate.name)
                             return;
                         }
                     })

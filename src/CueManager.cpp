@@ -242,10 +242,9 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
             if(pattern == nullptr)
                 continue;
 
-            if (a->startTime() == t)
+            if (a->startTime() - pattern->prefireDuration() == t)
             {
-                //qDebug() << time;
-                //emit runPattern(a->deviceId(), playerPosition(), a->patternName());
+                //qDebug() << "start" << time << pattern->prefireDuration();
                 emit runPatternSingly( a->deviceId(), playerPosition(), a->patternName() );
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
@@ -253,13 +252,13 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
 
             Device* device = m_deviceManager->deviceById( a->deviceId() );
             if( !device )
-                continue;;
+                continue;
 
             quint64 duration = device->getDurationByPattern( *pattern );
 
-            if(c->active() && a->startTime() + duration == t)
+            if(c->active() && a->startTime() - pattern->prefireDuration() + duration == t)
             {
-                //qDebug() << time;
+                //qDebug() << "stop" << time << duration;
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }

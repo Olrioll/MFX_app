@@ -53,6 +53,16 @@ Component
                 anchors.left: parent.left
                 source: "qrc:/actionStartMarker"
             }
+            
+            Rectangle
+            {
+                color: "white"
+                width: 1
+                height: cueView.expandedHeight - parent.height - frameBorderWidth
+                anchors.left: parent.left
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: parent.height
+            }
         }
 
         MFXUICB.MfxMouseArea

@@ -29,5 +29,16 @@ Component
             anchors.topMargin: frameBorderWidth
             anchors.bottomMargin: frameBorderWidth
         }
+
+        Rectangle
+        {
+            color: "white"
+            width: 1
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.topMargin: frameBorderWidth
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: frameBorderWidth
+        }
     }
 }
