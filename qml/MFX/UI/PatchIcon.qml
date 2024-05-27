@@ -25,9 +25,21 @@ Item
     {
         particleEmiter.stopAngleBehavior()
 
-        var angleChangeFinished = velocity != 0 && angle == particleEmiter.angle
-        var calcDuration = velocity == 0 ? 0 : Math.abs(angle - particleEmiter.angle) / (velocity / 19 * 56.8) * 1000
-        calcDuration = Math.round(calcDuration / 10) * 10
+        var angleChangeFinished = false
+        var calcDuration = 0
+
+        if(velocity != 0)
+        {
+            var min_velocity = 10
+            var calcVelocity = velocity < min_velocity ? min_velocity : velocity
+            var koef = 2.54 * calcVelocity + 8.55
+
+            calcDuration = Math.abs(angle - particleEmiter.angle) / koef * 1000
+            calcDuration = Math.round(calcDuration / 10) * 10
+
+            if(angle == particleEmiter.angle)
+                angleChangeFinished = true
+        }
 
         //console.log(duration, calcDuration, angle, particleEmiter.angle, velocity, active)
 

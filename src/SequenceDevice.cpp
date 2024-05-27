@@ -158,9 +158,10 @@ qulonglong SequenceDevice::calcDurationByPattern( const Pattern& pattern ) const
         {
             if( op->velocity() )
             {
-                duration += abs( angle - posAngle ) / (op->velocity() / 19 * 56.8) * 1000;
-                duration /= 10;
-                duration *= 10;
+                constexpr int min_velocity = 10;
+                const int velocity = op->velocity() < min_velocity ? min_velocity : op->velocity();
+                const double koef = 2.54 * velocity + 8.55;
+                duration += abs( angle - posAngle ) / koef * 1000;
             }
             else
                 duration += op->duration();
@@ -168,6 +169,9 @@ qulonglong SequenceDevice::calcDurationByPattern( const Pattern& pattern ) const
             posAngle = angle;
         }
     }
+
+    duration /= 10;
+    duration *= 10;
 
     return duration;
 }
