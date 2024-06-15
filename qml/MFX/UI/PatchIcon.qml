@@ -19,11 +19,15 @@ Item
     property string imageFile
     property real posXRatio: project.patchProperty(patchId, "posXRatio")
     property real posYRatio: project.patchProperty(patchId, "posYRatio")
+    property double emiterScale: project.property("sceneScaleFactor")
+
     signal drawOperation(var duration, var angle, var velocity, var active)
+    signal changeEmiterScale()
 
     onDrawOperation:
     {
         particleEmiter.stopAngleBehavior()
+        patchIcon.changeEmiterScale()
 
         var angleChangeFinished = false
         var calcDuration = 0
@@ -54,10 +58,16 @@ Item
             deviceManager.finishChangeAngle( patchId, angle )
     }
 
+    onChangeEmiterScale:
+    {
+        emiterScale = project.property("sceneScaleFactor")
+    }
+
     ParticleEmiter
     {
         id: particleEmiter
         anchors.fill: parent
+        transform: Scale { xScale: emiterScale; yScale: emiterScale }
     }
 
     Rectangle
@@ -130,12 +140,19 @@ Item
     Connections
     {
         target: project
+
         function onPatchCheckedChanged(checkedId, checked)
         {
             if(checkedId === patchIcon.patchId)
                 patchIcon.checked = checked
         }
+
+        function onChangeEmiterScale()
+        {
+            patchIcon.changeEmiterScale()
+        }
     }
+
     Connections
     {
         target: deviceManager

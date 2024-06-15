@@ -42,7 +42,7 @@ public slots:
     void newProject();
     void saveProject();
 
-    void saveProjectToFile( const QString& projectFile, const QString& saveFile, const QDir& saveDir );
+    void saveProjectToFile( const QString& saveFile );
 
     QString selectBackgroundImageDialog();
     QString selectAudioTrackDialog();
@@ -76,6 +76,7 @@ signals:
 public slots:
     void setProperty(const QString& name, QVariant value);
     QVariant property(const QString& name) const;
+    void setSceneScaleFactor( double scale );
 ///////////////////////////////////////////////////////////////////////////////
 ///                      Работа с сохранением данных END                     //
 ///////////////////////////////////////////////////////////////////////////////
@@ -109,6 +110,7 @@ signals:
     void patchListChanged();
     void patchCheckedChanged(int id, bool checked);
     void editPatch(QVariantList properties);
+    void changeEmiterScale();
 ///////////////////////////////////////////////////////////////////////////////
 ///                      Работа с патчами END                               //
 ///////////////////////////////////////////////////////////////////////////////

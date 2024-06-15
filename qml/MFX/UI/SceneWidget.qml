@@ -12,7 +12,7 @@ Item
     clip: true
 
     property alias backgroundImage: backgroundImage
-     property alias sceneFrameItem: sceneFrameItem
+    property alias sceneFrameItem: sceneFrameItem
     property var patchIcons: []
     property real scaleFactor: project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
     property real maxScaleFactor: 3.0
@@ -63,7 +63,7 @@ Item
         if(newScaleFactror <= maxScaleFactor && newScaleFactror >= minScaleFactor)
         {
             sceneWidget.scaleFactor = newScaleFactror
-            project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+            project.setSceneScaleFactor(sceneWidget.scaleFactor)
         }
     }
 
@@ -119,6 +119,11 @@ Item
             if(!project.isPatchHasGroup(patchIcons[i].patchId) && showAllButton.isNeedToBeChecked())
                 patchIcons[i].visible = true
         }
+    }
+
+    function showFrame()
+    {
+        sceneFrameItem.visible = true
     }
 
     Rectangle
@@ -489,7 +494,7 @@ Item
             if(newScaleFactror <= maxScaleFactor && newScaleFactror >= minScaleFactor)
             {
                 sceneWidget.scaleFactor = newScaleFactror
-                project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+                project.setSceneScaleFactor(sceneWidget.scaleFactor)
 
                 if(backgroundImage.width <= sceneWidget.width)
                 {
@@ -528,31 +533,31 @@ Item
         id: sceneFrameItem
         visible: false
 
-        property int minWidth: 12
-        property int minHeight: 12
+        property int minWidth: 10
+        property int minHeight: 10
 
         onVisibleChanged:
         {
             if(visible)
-            {
                 restorePreviousGeometry();
-            } else {
+            else
                 sceneWidget.hideSceneFrame()
-            }
         }
 
         function restorePreviousGeometry()
         {
             x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
             y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
-            width = project.property("sceneFrameWidth") / project.property("sceneImageWidth") * backgroundImage.width
+            width = project.property("sceneImageWidth") * backgroundImage.width
             height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
             frameHeightText.text = project.property("sceneFrameHeight") + " m"
             frameWidthText.text = project.property("sceneFrameWidth") + " m"
             //console.log( sceneWidget.scaleFactor , sceneWidget.width,sceneWidget.height,backgroundImage.x,backgroundImage.height)
-            if(sceneWidget.width > 0){
+            /*if(sceneWidget.width > 0)
+            {
                 sceneWidget.scaleFactor = project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
-                if(sceneWidget.width <= backgroundImage.width ){
+                if(sceneWidget.width <= backgroundImage.width )
+                {
                     sceneWidget.scaleFactor = sceneWidget.width / backgroundImage.sourceSize.width;
                 }
 
@@ -600,7 +605,7 @@ Item
                 y = currentSceneFrameY * newHeight + backgroundImage.y
                 width = width * scaleRatio
                 height = height * scaleRatio
-        }
+            }*/
         }
 
         Rectangle
@@ -848,8 +853,8 @@ Item
             {
                 project.setProperty("sceneFrameX", (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width)
                 project.setProperty("sceneFrameY", (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height)
-                project.setProperty("sceneImageHeight", backgroundImage.height / sceneFrame.height * project.property("sceneFrameHeight"))
-                project.setProperty("sceneImageWidth", backgroundImage.width / sceneFrame.width * project.property("sceneFrameWidth"))
+                project.setProperty("sceneImageHeight", sceneFrame.height / backgroundImage.height)
+                project.setProperty("sceneImageWidth", sceneFrame.width / backgroundImage.width)
                 sceneFrameItem.visible = false
                 patchScreen.deviceLibWidget.setActive(true)
                 patchScreen.deviceListWidget.setActive(true)
@@ -1172,7 +1177,7 @@ Item
                     var currHeightChange = newHeight - prevHeight
 
                     sceneWidget.scaleFactor = newScaleFactor
-                    project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+                    project.setSceneScaleFactor(sceneWidget.scaleFactor)
 
                     let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
                     backgroundImage.x -= dx
@@ -1248,7 +1253,7 @@ Item
                     currHeightChange = newHeight - prevHeight
 
                     sceneWidget.scaleFactor = newScaleFactor
-                    project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+                    project.setSceneScaleFactor(sceneWidget.scaleFactor)
                     let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
                     backgroundImage.x -= dx
 
@@ -1322,7 +1327,7 @@ Item
                     currHeightChange = newHeight - prevHeight
 
                     sceneWidget.scaleFactor = newScaleFactor
-                    project.setProperty("sceneScaleFactor", sceneWidget.scaleFactor)
+                    project.setSceneScaleFactor(sceneWidget.scaleFactor)
                     let dx = (areaCenterX - backgroundImage.x) / prevWidth * currWidthChange
                     backgroundImage.x -= dx
 

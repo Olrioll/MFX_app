@@ -105,6 +105,7 @@ bool ProjectManager::loadProject(const QString& fileName)
         emit backgroundImageChanged();
         emit audioTrackFileChanged();
         emit reloadPattern();
+        emit changeEmiterScale();
 
         for( auto patch : getChild( "Patches" )->listedChildren() )
         {
@@ -160,26 +161,14 @@ void ProjectManager::defaultProject()
 
     newProject();
 
-    setProperty( "sceneFrameWidth", defaultSceneFrameWidth );
-    setProperty( "sceneFrameHeight", defaultSceneFrameHeight );
     setAudioTrack( QDir( _settings.appDirectory() ).filePath( "default.mp3" ) );
     setBackgroundImage( QDir( _settings.appDirectory() ).filePath( "default.svg" ) );
 
-    if( property( "sceneFrameWidth" ).toInt() >= property( "sceneFrameHeight" ).toInt() )
-        setProperty( "sceneImageWidth", property( "sceneFrameWidth" ).toInt() * 2 );
-    else
-        setProperty( "sceneImageWidth", property( "sceneFrameWidth" ).toInt() * 20 );
-
-    if( property( "backgroundImageFile" ).toString() != "" && property( "sceneImageWidth" ).toInt() > 0 )
-    {
-        QImage img( property( "backgroundImageFile" ).toString() );
-
-        float xPos = ((img.width() - property( "sceneFrameWidth" ).toInt() / (float)property( "sceneImageWidth" ).toInt() * img.width()) / 2) / img.width();
-        float yPos = ((img.height() - property( "sceneFrameHeight" ).toInt() / (float)property( "sceneImageHeight" ).toInt() * img.height()) / 2) / img.height();
-
-        setProperty( "sceneFrameX", xPos );
-        setProperty( "sceneFrameY", yPos );
-    }
+    setProperty( "sceneFrameX", 0.37 );
+    setProperty( "sceneFrameY", 0.38 );
+    setProperty( "sceneFrameWidth", defaultSceneFrameWidth );
+    setProperty( "sceneFrameHeight", defaultSceneFrameHeight );
+    setProperty( "sceneImageWidth", 0.146515 );
 }
 
 void ProjectManager::reloadCurrentProject()
@@ -232,6 +221,7 @@ void ProjectManager::reloadCurrentProject()
 
     emit groupCountChanged();
     emit patchListChanged();
+    emit changeEmiterScale();
 }
 
 void ProjectManager::newProject()
@@ -245,12 +235,13 @@ void ProjectManager::newProject()
     clear();
 
     setCurrentProjectFile("");
+    setSceneScaleFactor( 1.0 );
+
     setProperty("backgroundImageFile", "");
     setProperty("audioTrackFile", "");
     setProperty("sceneFrameX", 0.1);
     setProperty("sceneFrameY", 0.1);
     setProperty("sceneImageWidth", 0);
-    setProperty("sceneScaleFactor", 1.0);
     setProperty("startPosition", -1);
 
     addChild("Patches");
@@ -275,7 +266,7 @@ void ProjectManager::saveProject()
 
     qDebug() << m_currentProjectFile;
 
-    saveProjectToFile( PROJECT_FILE, m_currentProjectFile, _settings.workDirectory() );
+    saveProjectToFile( m_currentProjectFile );
 
     //QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
     //QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
@@ -283,13 +274,13 @@ void ProjectManager::saveProject()
     _settings.setValue("lastProject", m_currentProjectFile);
 }
 
-void ProjectManager::saveProjectToFile( const QString& projectFile, const QString& saveFile, const QDir& saveDir )
+void ProjectManager::saveProjectToFile( const QString& saveFile )
 {
-    QFile jsonFile( saveDir.filePath( projectFile ) );
+    QDir workDir( _settings.workDirectory() );
+    QFile jsonFile( workDir.filePath( PROJECT_FILE ) );
+
     if( jsonFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
     {
-        qDebug() << jsonFile;
-
         QJsonDocument doc;
         {
             QMutexLocker locker( &m_ProjectLocker );
@@ -299,28 +290,28 @@ void ProjectManager::saveProjectToFile( const QString& projectFile, const QStrin
     }
     else
     {
-        qDebug() << "file " << projectFile << " not found";
+        qDebug() << "file " << jsonFile << " not found";
         return;
     }
 
     jsonFile.waitForBytesWritten( 30000 );
     jsonFile.close();
 
-    QFile::remove( saveDir.filePath( saveFile ) );
+    QFile::remove( saveFile );
 
     QProcess proc;
     proc.setProgram( "7z.exe" );
     QStringList args = {};
     args.append( "a" );
-    args.append( saveDir.filePath( saveFile ) );
+    args.append( saveFile );
     args.append( "-y" );
-    args.append( saveDir.filePath( projectFile ) );
+    args.append( jsonFile.fileName() );
 
     if( property( "backgroundImageFile" ).toString() != "" )
-        args.append( saveDir.filePath( property( "backgroundImageFile" ).toString() ) );
+        args.append( workDir.filePath( property( "backgroundImageFile" ).toString() ) );
 
     if( property( "audioTrackFile" ).toString() != "" )
-        args.append( saveDir.filePath( property( "audioTrackFile" ).toString() ) );
+        args.append( workDir.filePath( property( "audioTrackFile" ).toString() ) );
 
     proc.start( "7z.exe", args );
     proc.waitForFinished();
@@ -516,7 +507,7 @@ void ProjectManager::uncheckPatch()
 
 void ProjectManager::setProperty(const QString& name, QVariant value)
 {
-    //qDebug() << name << " " << value;
+    qDebug() << name << " " << value;
     QMutexLocker locker( &m_ProjectLocker );
 
     JsonSerializable::setProperty(name, value);
@@ -525,6 +516,12 @@ void ProjectManager::setProperty(const QString& name, QVariant value)
 QVariant ProjectManager::property(const QString& name) const
 {
     return JsonSerializable::property( name );
+}
+
+void ProjectManager::setSceneScaleFactor( double scale )
+{
+    setProperty( "sceneScaleFactor", scale );
+    emit changeEmiterScale();
 }
 
 int ProjectManager::lastPatchId() const
