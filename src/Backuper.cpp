@@ -31,7 +31,7 @@ Backuper::Backuper( ProjectManager& projectManager, SettingsManager& settngs )
 void Backuper::makeBackup()
 {
     if( mProjectManager.hasUnsavedChanges() )
-        mProjectManager.saveProjectToFile( PROJECT_FILE, BACKUP_FILE, mSettings.workDirectory() );
+        mProjectManager.saveProjectToFile( QDir( mSettings.workDirectory() ).filePath( BACKUP_FILE ) );
 }
 
 bool Backuper::restoreBackup()
