@@ -149,7 +149,8 @@ Item
                 }
             }
 
-            TextField {
+            TextField
+            {
                 id: heightField
                 x: 86
                 y: 43
@@ -160,7 +161,8 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: 8
                 padding: 0
-                background: Rectangle {
+                background: Rectangle
+                {
                     color: "#000000"
                     radius: 2
                 }
@@ -531,28 +533,25 @@ Item
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
 
-                if(Number(widthField.text) >= Number(heightField.text))
-                    project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
-                else
-                    project.setProperty("sceneImageWidth", Number(widthField.text) * 20)
-
-
                 if(projectSettingsWidget.choosenImageFile !== "")
                 {
                     project.setBackgroundImage(projectSettingsWidget.choosenImageFile)
                     sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
-                }else{
+                }
+                else
+                {
                     project.setBackgroundImage("qrc:/images/defaultBG.svg")
                     sceneWidget.backgroundImage.source = "qrc:/images/defaultBG.svg"
                 }
 
                 sceneWidget.centerBackgroundImage()
 
-                // Центруем рамку по фоновой картинке
-                let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneFrameWidth") / project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
-                project.setProperty("sceneFrameX", xPos)
+                project.setProperty("sceneImageWidth", project.property("sceneFrameWidth") * 20 / sceneWidget.backgroundImage.width)
 
-//                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
+                // Центруем рамку по фоновой картинке
+                let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
+
+                project.setProperty("sceneFrameX", xPos)
                 project.setProperty("sceneFrameY", 0.3)
 
                 if(choosenAudioFile !== "")

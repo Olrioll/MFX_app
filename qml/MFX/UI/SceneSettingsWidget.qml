@@ -367,15 +367,6 @@ Item
             {
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
-//                if(project.property("sceneImageWidth") === 0 || !project.property("sceneImageWidth"))
-//                {
-                    if(Number(widthField.text) >= Number(heightField.text))
-                        project.setProperty("sceneImageWidth", Number(widthField.text) * 2)
-                    else
-                        project.setProperty("sceneImageWidth", Number(widthField.text) * 20)
-
-
-//                }
 
                 if(sceneSettingsWidget.choosenImageFile !== "")
                 {
@@ -383,11 +374,13 @@ Item
                     sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
                 }
 
+                project.setProperty("sceneImageWidth", project.property("sceneFrameWidth") * 20 / sceneWidget.backgroundImage.width)
+
                 // Центруем рамку по фоновой картинке
-                let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneFrameWidth") / project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
+                let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
                 project.setProperty("sceneFrameX", xPos)
 
-                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneFrameHeight") / project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
+                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
                 project.setProperty("sceneFrameY", yPos)
 
                 if(choosenAudioFile !== "")

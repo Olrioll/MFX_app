@@ -441,6 +441,14 @@ ApplicationWindow
                             preferencesPopup.caption = qsTr("Preferences")
                         }
                     }
+                    Action
+                    {
+                        text: translationsManager.translationTrigger + qsTr("View Frame")
+                        onTriggered:
+                        {
+                            sceneWidget.showFrame()
+                        }
+                    }
 
                     onClosed: fileMenuButton.checked = false
                 }
