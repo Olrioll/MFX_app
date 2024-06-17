@@ -57,11 +57,11 @@ public slots:
     void removePatches(const QList<int> patchIds);
     void removeSelectedPatches();
     bool isPatchHasGroup(int patchId) const;
+    void onBackgroundImageChanged();
 
 signals:
     void audioTrackFileChanged();
     void backgroundImageChanged();
-    void sceneFrameWidthChanged(double sceneFrameWidth);
 ///////////////////////////////////////////////////////////////////////////////
 ///                          Работа с проектом END                           //
 ///////////////////////////////////////////////////////////////////////////////
@@ -193,6 +193,7 @@ signals:
 private:
     void updateCoeffByName(QString cueName);
     void cleanWorkDirectory();
+    void correctSceneFrame();
 
     SettingsManager& _settings;
     DeviceManager* m_DeviceManager;

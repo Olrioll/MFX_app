@@ -853,8 +853,7 @@ Item
             {
                 project.setProperty("sceneFrameX", (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width)
                 project.setProperty("sceneFrameY", (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height)
-                project.setProperty("sceneImageHeight", sceneFrame.height / backgroundImage.height)
-                project.setProperty("sceneImageWidth", sceneFrame.width / backgroundImage.width)
+                project.setProperty("sceneImageWidth", sceneFrameItem.width / backgroundImage.width)
                 sceneFrameItem.visible = false
                 patchScreen.deviceLibWidget.setActive(true)
                 patchScreen.deviceListWidget.setActive(true)

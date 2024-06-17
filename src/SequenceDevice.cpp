@@ -119,7 +119,7 @@ void SequenceDevice::setDMXOperation(int deviceId, const Operation *op, bool sen
 
 void SequenceDevice::setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active )
 {
-    emit m_manager->drawOperationInGui( deviceId, duration, angle, velocity, active );
+    emit m_manager->drawOperationInGui( deviceId, duration, angle, velocity, m_height, active );
 }
 
 void SequenceDevice::finishChangeAngle( int angle )

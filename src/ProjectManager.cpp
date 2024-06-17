@@ -100,12 +100,14 @@ bool ProjectManager::loadProject(const QString& fileName)
         setCurrentProjectFile(fileName);
         fromJsonObject(QJsonDocument::fromJson(file.readAll()).object());
 
+        onBackgroundImageChanged();
+        correctSceneFrame();
+        setSceneScaleFactor( 1.0 );
+
         emit groupCountChanged();
         emit patchListChanged();
-        emit backgroundImageChanged();
         emit audioTrackFileChanged();
         emit reloadPattern();
-        emit changeEmiterScale();
 
         for( auto patch : getChild( "Patches" )->listedChildren() )
         {
@@ -168,7 +170,7 @@ void ProjectManager::defaultProject()
     setProperty( "sceneFrameY", 0.38 );
     setProperty( "sceneFrameWidth", defaultSceneFrameWidth );
     setProperty( "sceneFrameHeight", defaultSceneFrameHeight );
-    setProperty( "sceneImageWidth", 0.146515 );
+    setProperty( "sceneImageWidth", 0.15 );
 }
 
 void ProjectManager::reloadCurrentProject()
@@ -695,13 +697,17 @@ void ProjectManager::setBackgroundImage(const QString& fileName)
     qDebug() << fileName;
     QMutexLocker locker( &m_ProjectLocker );
 
-    QFileInfo info(fileName);
-    if((info.completeBaseName() + "." + info.completeSuffix()) != property("backgroundImageFile").toString())
+    QFileInfo info( fileName );
+    if( info.fileName() != property( "backgroundImageFile" ).toString() )
     {
-        QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
-        QString shortName = info.completeBaseName();
-        QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
-        setProperty("backgroundImageFile", info.completeBaseName() + "." + info.completeSuffix());
+        QDir workDir( _settings.workDirectory() );
+
+        QFile::remove( workDir.filePath( property( "backgroundImageFile" ).toString() ) );
+        QFile::copy( fileName, workDir.filePath( info.fileName() ) );
+
+        setProperty( "backgroundImageFile", info.fileName() );
+
+        onBackgroundImageChanged();
     }
 }
 
@@ -714,7 +720,6 @@ void ProjectManager::setAudioTrack(const QString& fileName)
     if((info.completeBaseName() + "." + info.completeSuffix()) != property("audioTrackFile").toString())
     {
         QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
-        QString shortName = info.completeBaseName();
         QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
         setProperty("audioTrackFile", info.completeBaseName() + "." + info.completeSuffix());
 
@@ -1354,4 +1359,18 @@ void ProjectManager::updateCoeffByName(QString cueName){
 //        ++i;
 //    }
 
+}
+
+void ProjectManager::correctSceneFrame()
+{
+    if( property( "sceneImageWidth" ).toDouble() > 1 )
+        setProperty( "sceneImageWidth", 0.15 );
+}
+
+void ProjectManager::onBackgroundImageChanged()
+{
+    QImage img( QDir( _settings.workDirectory() ).filePath( property( "backgroundImageFile" ).toString() ) );
+    setProperty( "backgroundImageWidth", img.width() );
+
+    emit backgroundImageChanged();
 }

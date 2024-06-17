@@ -369,10 +369,7 @@ Item
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
 
                 if(sceneSettingsWidget.choosenImageFile !== "")
-                {
                     project.setBackgroundImage(sceneSettingsWidget.choosenImageFile)
-                    sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
-                }
 
                 project.setProperty("sceneImageWidth", project.property("sceneFrameWidth") * 20 / sceneWidget.backgroundImage.width)
 
@@ -380,7 +377,9 @@ Item
                 let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
                 project.setProperty("sceneFrameX", xPos)
 
-                let yPos = ((sceneWidget.backgroundImage.height - project.property("sceneImageHeight") * sceneWidget.backgroundImage.height) / 2) / sceneWidget.backgroundImage.height
+                let sceneImageHeight = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * project.property("sceneImageWisth") * sceneWidget.backgroundImage.width
+
+                let yPos = ((sceneWidget.backgroundImage.height - sceneImageHeight) / 2) / sceneWidget.backgroundImage.height
                 project.setProperty("sceneFrameY", yPos)
 
                 if(choosenAudioFile !== "")

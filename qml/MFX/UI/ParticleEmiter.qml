@@ -5,6 +5,8 @@ Item
 {
     property int duration: 0
     property int angle: -90
+    property int fireHeight: 10
+    property double fireLife: 200
     property bool active: false
     property bool notifyFinishChangeAngle: false
 
@@ -68,8 +70,8 @@ Item
 
         enabled: particleEmiter.active
 
-        lifeSpan: 300
-        lifeSpanVariation: 50
+        lifeSpan: particleEmiter.fireLife
+        lifeSpanVariation: lifeSpan * 0.1
         emitRate: 900
         size: 14
         sizeVariation: 14
@@ -80,7 +82,7 @@ Item
             angle: -90
             angleVariation: 2
             magnitude: 600
-            magnitudeVariation: 100
+            magnitudeVariation: 40
         }
     }
 }

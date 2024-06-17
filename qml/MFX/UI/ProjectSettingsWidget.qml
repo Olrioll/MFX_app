@@ -534,15 +534,9 @@ Item
                 project.setProperty("sceneFrameHeight", Number(heightField.text))
 
                 if(projectSettingsWidget.choosenImageFile !== "")
-                {
                     project.setBackgroundImage(projectSettingsWidget.choosenImageFile)
-                    sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
-                }
                 else
-                {
                     project.setBackgroundImage("qrc:/images/defaultBG.svg")
-                    sceneWidget.backgroundImage.source = "qrc:/images/defaultBG.svg"
-                }
 
                 sceneWidget.centerBackgroundImage()
 

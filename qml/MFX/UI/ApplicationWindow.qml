@@ -443,7 +443,7 @@ ApplicationWindow
                     }
                     Action
                     {
-                        text: translationsManager.translationTrigger + qsTr("View Frame")
+                        text: translationsManager.translationTrigger + qsTr("View Scene Frame")
                         onTriggered:
                         {
                             sceneWidget.showFrame()

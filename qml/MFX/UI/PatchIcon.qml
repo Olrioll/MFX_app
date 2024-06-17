@@ -7,8 +7,8 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item
 {
     id: patchIcon
-    width: Math.max(rectId.width, realSizeWidth * backgroundImage.width / project.property("sceneImageWidth"))
-    height: Math.max(rectId.height, realSizeHeight * backgroundImage.width / project.property("sceneImageWidth"))
+    width: Math.max(rectId.width, realSizeWidth * backgroundImage.width * project.property("sceneImageWidth") / project.property("sceneFrameWidth"))
+    height: Math.max(rectId.height, realSizeHeight * backgroundImage.width * project.property("sceneImageWidth") / project.property("sceneFrameWidth"))
     x: posXRatio * backgroundImage.width
     y: posYRatio * backgroundImage.height
 
@@ -21,7 +21,7 @@ Item
     property real posYRatio: project.patchProperty(patchId, "posYRatio")
     property double emiterScale: project.property("sceneScaleFactor")
 
-    signal drawOperation(var duration, var angle, var velocity, var active)
+    signal drawOperation(var duration, var angle, var velocity, var fireHeight, var active)
     signal changeEmiterScale()
 
     onDrawOperation:
@@ -49,6 +49,8 @@ Item
 
         particleEmiter.duration = velocity == 0 ? duration : calcDuration
         particleEmiter.angle = angle
+        particleEmiter.fireHeight = fireHeight
+        particleEmiter.fireLife = fireHeight * project.property("sceneImageWidth") * project.property("backgroundImageWidth") / 12
         particleEmiter.active = active
         particleEmiter.notifyFinishChangeAngle = velocity != 0
 
@@ -156,10 +158,10 @@ Item
     Connections
     {
         target: deviceManager
-        function onDrawOperationInGui(deviceId, duration, angle, velocity, active)
+        function onDrawOperationInGui(deviceId, duration, angle, velocity, fireHeight, active)
         {
             if(deviceId === patchId)
-                patchIcon.drawOperation(duration, angle, velocity, active)
+                patchIcon.drawOperation(duration, angle, velocity, fireHeight, active)
         }
     }
 }
