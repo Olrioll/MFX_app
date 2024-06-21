@@ -77,6 +77,9 @@ public slots:
     void setProperty(const QString& name, QVariant value);
     QVariant property(const QString& name) const;
     void setSceneScaleFactor( double scale );
+    const QDir& workDir() const;
+    QString workDirStr() const;
+    QString fileName( const QString& file ) const;
 ///////////////////////////////////////////////////////////////////////////////
 ///                      Работа с сохранением данных END                     //
 ///////////////////////////////////////////////////////////////////////////////

@@ -709,6 +709,9 @@ Item
             target: project
             function onAudioTrackFileChanged()
             {
+                mainScreen.playerWidget.hidePlayerElements()
+                mainScreen.playerWidget.waitingText.text = qsTr("Not available")
+
 //                playButton.checked = false
                 waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
             }

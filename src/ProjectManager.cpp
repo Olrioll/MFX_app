@@ -47,8 +47,7 @@ void ProjectManager::setPrefire( const QMap<QString, int>& pref)
 
 void ProjectManager::cleanWorkDirectory()
 {
-    QDir workDir(_settings.workDirectory());
-    auto fileNamesList = workDir.entryList(QDir::Files);
+    auto fileNamesList = workDir().entryList(QDir::Files);
 
     QStringList exceptionList = {"settings.ini", "project.backup"};
 
@@ -60,7 +59,7 @@ void ProjectManager::cleanWorkDirectory()
         if(!exceptionList.contains(entry))
         {
             qDebug() << entry;
-            QFile::remove(_settings.workDirectory() + "/" + entry);
+            QFile::remove( workDir().filePath( entry ) );
         }
     }
 }
@@ -76,15 +75,14 @@ bool ProjectManager::loadProject(const QString& fileName)
         return false;
     }
 
-    QDir dir( _settings.workDirectory() );
-    QFile::remove( dir.filePath( property( "backgroundImageFile" ).toString() ) );
-    QFile::remove( dir.filePath( property( "audioTrackFile" ).toString() ) );
+    QFile::remove( workDir().filePath( property( "backgroundImageFile" ).toString() ) );
+    QFile::remove( workDir().filePath( property( "audioTrackFile" ).toString() ) );
 
     QProcess proc;
     proc.setProgram("7z.exe");
     QStringList args = {};
     args.append("e");
-    args.append("-o" + _settings.workDirectory());
+    args.append("-o" + workDirStr());
     args.append("-y");
     args.append(fileName);
     proc.start("7z.exe", args);
@@ -92,7 +90,7 @@ bool ProjectManager::loadProject(const QString& fileName)
 
     emit deleteAllCue();
 
-    QFile file( dir.filePath( PROJECT_FILE ) );
+    QFile file( workDir().filePath( PROJECT_FILE ) );
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
@@ -278,8 +276,7 @@ void ProjectManager::saveProject()
 
 void ProjectManager::saveProjectToFile( const QString& saveFile )
 {
-    QDir workDir( _settings.workDirectory() );
-    QFile jsonFile( workDir.filePath( PROJECT_FILE ) );
+    QFile jsonFile( workDir().filePath( PROJECT_FILE ) );
 
     if( jsonFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
     {
@@ -310,10 +307,10 @@ void ProjectManager::saveProjectToFile( const QString& saveFile )
     args.append( jsonFile.fileName() );
 
     if( property( "backgroundImageFile" ).toString() != "" )
-        args.append( workDir.filePath( property( "backgroundImageFile" ).toString() ) );
+        args.append( workDir().filePath( property( "backgroundImageFile" ).toString() ) );
 
     if( property( "audioTrackFile" ).toString() != "" )
-        args.append( workDir.filePath( property( "audioTrackFile" ).toString() ) );
+        args.append( workDir().filePath( property( "audioTrackFile" ).toString() ) );
 
     proc.start( "7z.exe", args );
     proc.waitForFinished();
@@ -526,6 +523,22 @@ void ProjectManager::setSceneScaleFactor( double scale )
     emit changeEmiterScale();
 }
 
+const QDir& ProjectManager::workDir() const
+{
+    static QDir wd( _settings.workDirectory() );
+    return wd;
+}
+
+QString ProjectManager::workDirStr() const
+{
+    return workDir().absolutePath();
+}
+
+QString ProjectManager::fileName( const QString& file ) const
+{
+    return QFileInfo( file ).fileName();
+}
+
 int ProjectManager::lastPatchId() const
 {
     int id = 0;
@@ -700,10 +713,8 @@ void ProjectManager::setBackgroundImage(const QString& fileName)
     QFileInfo info( fileName );
     if( info.fileName() != property( "backgroundImageFile" ).toString() )
     {
-        QDir workDir( _settings.workDirectory() );
-
-        QFile::remove( workDir.filePath( property( "backgroundImageFile" ).toString() ) );
-        QFile::copy( fileName, workDir.filePath( info.fileName() ) );
+        QFile::remove( workDir().filePath( property( "backgroundImageFile" ).toString() ) );
+        QFile::copy( fileName, workDir().filePath( info.fileName() ) );
 
         setProperty( "backgroundImageFile", info.fileName() );
 
@@ -717,11 +728,12 @@ void ProjectManager::setAudioTrack(const QString& fileName)
     QMutexLocker locker( &m_ProjectLocker );
 
     QFileInfo info(fileName);
-    if((info.completeBaseName() + "." + info.completeSuffix()) != property("audioTrackFile").toString())
+    if( info.fileName() != property("audioTrackFile").toString() )
     {
-        QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
-        QFile::copy(fileName, _settings.workDirectory() + "/" + info.completeBaseName() + "." + info.completeSuffix());
-        setProperty("audioTrackFile", info.completeBaseName() + "." + info.completeSuffix());
+        QFile::remove( workDir().filePath( property("audioTrackFile").toString() ) );
+        QFile::copy( fileName, workDir().filePath( info.fileName() ) );
+
+        setProperty( "audioTrackFile", info.fileName() );
 
         emit audioTrackFileChanged();
     }
@@ -1369,7 +1381,7 @@ void ProjectManager::correctSceneFrame()
 
 void ProjectManager::onBackgroundImageChanged()
 {
-    QImage img( QDir( _settings.workDirectory() ).filePath( property( "backgroundImageFile" ).toString() ) );
+    QImage img( workDir().filePath( property( "backgroundImageFile" ).toString() ) );
     setProperty( "backgroundImageWidth", img.width() );
 
     emit backgroundImageChanged();

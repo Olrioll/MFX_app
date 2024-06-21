@@ -20,7 +20,7 @@ Item
     property int prevWidth
     property int dWidth
     property bool blockEditions: false //Блокирует изменение позиций устройств
-    signal hideSceneFrame
+    //signal hideSceneFrame
 
     function loadPatches()
     {
@@ -540,8 +540,8 @@ Item
         {
             if(visible)
                 restorePreviousGeometry();
-            else
-                sceneWidget.hideSceneFrame()
+            //else
+            //    sceneWidget.hideSceneFrame()
         }
 
         function restorePreviousGeometry()
@@ -855,9 +855,9 @@ Item
                 project.setProperty("sceneFrameY", (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height)
                 project.setProperty("sceneImageWidth", sceneFrameItem.width / backgroundImage.width)
                 sceneFrameItem.visible = false
-                patchScreen.deviceLibWidget.setActive(true)
-                patchScreen.deviceListWidget.setActive(true)
-                patchScreen.groupListWidget.setActive(true)
+                //patchScreen.deviceLibWidget.setActive(true)
+                //patchScreen.deviceListWidget.setActive(true)
+                //patchScreen.groupListWidget.setActive(true)
             }
         }
 
@@ -885,9 +885,9 @@ Item
             onClicked:
             {
                 sceneFrameItem.visible = false
-                patchScreen.deviceLibWidget.setActive(true)
-                patchScreen.deviceListWidget.setActive(true)
-                patchScreen.groupListWidget.setActive(true)
+                //patchScreen.deviceLibWidget.setActive(true)
+                //patchScreen.deviceListWidget.setActive(true)
+                //patchScreen.groupListWidget.setActive(true)
             }
         }
 
@@ -962,9 +962,6 @@ Item
         {
             applicationWindow.projectSettingsWidget.isNewProject = false
             applicationWindow.projectSettingsWidget.visible = true
-//            var sceneSettingsWidget = Qt.createComponent("SceneSettingsWidget.qml").createObject(applicationWindow);
-//            sceneSettingsWidget.x = applicationWindow.width / 2 - sceneSettingsWidget.width / 2
-//            sceneSettingsWidget.y = applicationWindow.height / 2 - sceneSettingsWidget.height / 2
 
             patchScreen.deviceLibWidget.setActive(false)
             patchScreen.deviceListWidget.setActive(false)

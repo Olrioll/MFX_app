@@ -77,6 +77,7 @@ ApplicationWindow
         patchScreen.deviceListWidget.setActive(false)
         patchScreen.groupListWidget.setActive(false)
 
+        projectSettingsWidget.isNewProject = true
         projectSettingsWidget.visible = true
     }
 
@@ -103,11 +104,11 @@ ApplicationWindow
         id: sceneWidget
 
         blockEditions: screensLayout.currentIndex !== 1
-        onHideSceneFrame: {
+        /*onHideSceneFrame: {
             patchScreen.deviceLibWidget.expandButton.clicked()
             patchScreen.deviceListWidget.expandButton.clicked()
             patchScreen.groupListWidget.expandButton.clicked()
-        }
+        }*/
     }
 
     MFXUICB.MfxMouseArea
@@ -441,19 +442,73 @@ ApplicationWindow
                             preferencesPopup.caption = qsTr("Preferences")
                         }
                     }
+
+                    onClosed: fileMenuButton.checked = false
+                }
+            }
+
+            Button
+            {
+                id: editMenuButton
+                text: translationsManager.translationTrigger + qsTr("Edit")
+                width: 48
+                height: 28
+                anchors.left: fileMenuButton.right
+                anchors.leftMargin: 4
+                layer.enabled: false
+                checkable: true
+
+                bottomPadding: 2
+                topPadding: 2
+                rightPadding: 2
+                leftPadding: 2
+
+                background: Rectangle
+                {
+                    color: parent.checked ? "#222222" : "#111111"
+                }
+
+                contentItem: Text
+                {
+                    color: parent.checked ? "#ffffff" : "#777777"
+                    text: parent.text
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    elide: Text.ElideRight
+                    font.family: MFXUIS.Fonts.robotoRegular.name
+                }
+
+                onCheckedChanged:
+                {
+                    checked ? editMenu.open() : editMenu.close()
+                }
+
+                MfxMenu
+                {
+                    id: editMenu
+                    y: editMenuButton.height
+
                     Action
                     {
-                        text: translationsManager.translationTrigger + qsTr("View Scene Frame")
+                        text: translationsManager.translationTrigger + qsTr("Scene frame")
                         onTriggered:
                         {
                             sceneWidget.showFrame()
                         }
                     }
 
-                    onClosed: fileMenuButton.checked = false
+                    Action
+                    {
+                        text: translationsManager.translationTrigger + qsTr("Project settings")
+                        onTriggered:
+                        {
+                            projectSettingsWidget.isNewProject = false
+                            projectSettingsWidget.visible = true
+                        }
+                    }
+
+                    onClosed: editMenuButton.checked = false
                 }
-
-
             }
 
             Button
@@ -462,7 +517,7 @@ ApplicationWindow
                 text: translationsManager.translationTrigger + qsTr("Patch")
                 width: 48
                 height: 28
-                anchors.left: fileMenuButton.right
+                anchors.left: editMenuButton.right
                 anchors.leftMargin: 4
                 layer.enabled: false
                 checkable: true

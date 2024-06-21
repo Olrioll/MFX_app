@@ -81,12 +81,11 @@ Item
             onClicked:
             {
                 applicationWindow.isPatchEditorOpened = false
-
                 projectSettingsWidget.visible = false
 
-                patchScreen.deviceLibWidget.setActive(true)
-                patchScreen.deviceListWidget.setActive(true)
-                patchScreen.groupListWidget.setActive(true)
+                //patchScreen.deviceLibWidget.setActive(true)
+                //patchScreen.deviceListWidget.setActive(true)
+                //patchScreen.groupListWidget.setActive(true)
             }
         }
 
@@ -131,7 +130,6 @@ Item
                 y: 43
                 width: 50
                 height: 18
-                text: isNewProject ? "" : project.property("sceneFrameWidth")
                 color: "#ffffff"
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: 8
@@ -157,7 +155,6 @@ Item
                 width: 50
                 height: 18
                 color: "#ffffff"
-                text: isNewProject ? "" : project.property("sceneFrameHeight")
                 horizontalAlignment: Text.AlignHCenter
                 font.pointSize: 8
                 padding: 0
@@ -297,12 +294,6 @@ Item
                     color: "#000000"
                     radius: 2
                 }
-
-                text: project.currentProjectName
-
-                onEditingFinished: () => {
-                    project.currentProjectName = text
-                }
             }
         }
 
@@ -358,7 +349,8 @@ Item
                 }
 
 
-                Text {
+                Text
+                {
                     id: trackButtonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
@@ -366,7 +358,7 @@ Item
                     anchors.right: parent.right
 
                     color: "#888888"
-                    text: choosenAudioFile
+                    text: project.fileName( choosenAudioFile )
                     elide: Text.ElideLeft
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -376,7 +368,8 @@ Item
                     visible: choosenAudioFile !== ""
                 }
 
-                Text {
+                Text
+                {
                     id: defaultTrackButtonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
@@ -406,7 +399,6 @@ Item
                         if(trackFileName)
                         {
                             choosenAudioFile = trackFileName
-                            trackButtonText.text = choosenAudioFile
                         }
                     }
                 }
@@ -445,9 +437,6 @@ Item
                 elide: Text.ElideMiddle
             }
 
-
-
-
             Rectangle
             {
                 anchors.fill: parent
@@ -467,9 +456,9 @@ Item
                     source: "qrc:/imagePlaceholder"
                 }
 
-
-                Text {
-                    id: buttonText
+                Text
+                {
+                    id: defaultImageButtonText
                     anchors.topMargin: 56
                     anchors.top: parent.top
                     anchors.left: parent.left
@@ -484,13 +473,15 @@ Item
                     verticalAlignment: Text.AlignVCenter
                     font.family: MFXUIS.Fonts.robotoRegular.name
                     font.pixelSize: 10
+
+                    visible: choosenImageFile === ""
                 }
 
                 Image
                 {
                     id: previewImage
                     anchors.fill: parent
-                    source: projectSettingsWidget.choosenImageFile === "" ? "" : "file:///" + projectSettingsWidget.choosenImageFile
+                    source: "file:///" + choosenImageFile
                 }
 
                 MouseArea
@@ -499,7 +490,11 @@ Item
 
                     onClicked:
                     {
-                        projectSettingsWidget.choosenImageFile = project.selectBackgroundImageDialog();
+                        let imageFile = project.selectBackgroundImageDialog();
+                        if( imageFile )
+                        {
+                            choosenImageFile = imageFile
+                        }
                     }
                 }
             }
@@ -527,26 +522,7 @@ Item
                 if(isNewProject)
                     project.newProject()
 
-                mainScreen.playerWidget.hidePlayerElements()
-                mainScreen.playerWidget.waitingText.text = qsTr("Not available")
-
-                project.setProperty("sceneFrameWidth", Number(widthField.text))
-                project.setProperty("sceneFrameHeight", Number(heightField.text))
-
-                if(projectSettingsWidget.choosenImageFile !== "")
-                    project.setBackgroundImage(projectSettingsWidget.choosenImageFile)
-                else
-                    project.setBackgroundImage("qrc:/images/defaultBG.svg")
-
-                sceneWidget.centerBackgroundImage()
-
-                project.setProperty("sceneImageWidth", project.property("sceneFrameWidth") * 20 / sceneWidget.backgroundImage.width)
-
-                // Центруем рамку по фоновой картинке
-                let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
-
-                project.setProperty("sceneFrameX", xPos)
-                project.setProperty("sceneFrameY", 0.3)
+                project.currentProjectName = projectNameField.text
 
                 if(choosenAudioFile !== "")
                 {
@@ -554,21 +530,60 @@ Item
                     project.setAudioTrack(choosenAudioFile)
                 }
 
-                sceneWidget.sceneFrameItem.visible = true
-                sceneWidget.sceneFrameItem.restorePreviousGeometry()
+                project.setProperty("sceneFrameWidth", Number(widthField.text))
+                project.setProperty("sceneFrameHeight", Number(heightField.text))
+
+                if(projectSettingsWidget.choosenImageFile !== "")
+                    project.setBackgroundImage(projectSettingsWidget.choosenImageFile)
+                else
+                    project.setBackgroundImage("default.svg")
+
+                sceneWidget.centerBackgroundImage()
 
                 applicationWindow.isPatchEditorOpened = false
-
                 projectSettingsWidget.visible = false
 
                 if(isNewProject)
                 {
+                    project.setProperty("sceneImageWidth", project.property("sceneFrameWidth") * 20 / sceneWidget.backgroundImage.width)
+
+                    // Центруем рамку по фоновой картинке
+                    let xPos = ((sceneWidget.backgroundImage.width - project.property("sceneImageWidth") * sceneWidget.backgroundImage.width) / 2) / sceneWidget.backgroundImage.width
+
+                    project.setProperty("sceneFrameX", xPos)
+                    project.setProperty("sceneFrameY", 0.3)
+
+                    sceneWidget.sceneFrameItem.visible = true
+
                     applicationWindow.showPatchScreen()
 
                     patchScreen.deviceLibWidget.setActive(false)
                     patchScreen.deviceListWidget.setActive(false)
                     patchScreen.groupListWidget.setActive(false)
                 }
+            }
+        }
+    }
+
+    onVisibleChanged:
+    {
+        if(visible)
+        {
+            if(isNewProject)
+            {
+                choosenAudioFile = ""
+                choosenImageFile = ""
+                widthField.text = ""
+                heightField.text = ""
+                projectNameField.text = ""
+            }
+            else
+            {
+                choosenAudioFile = project.workDirStr() + "/" + project.property("audioTrackFile")
+                choosenImageFile = project.workDirStr() + "/" + project.property("backgroundImageFile")
+                widthField.text = project.property("sceneFrameWidth")
+                heightField.text = project.property("sceneFrameHeight")
+                projectNameField.text = project.currentProjectName
             }
         }
     }
