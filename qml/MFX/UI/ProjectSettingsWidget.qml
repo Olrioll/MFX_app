@@ -481,7 +481,7 @@ Item
                 {
                     id: previewImage
                     anchors.fill: parent
-                    source: "file:///" + choosenImageFile
+                    source: choosenImageFile === "" ? "" : "file:///" + choosenImageFile
                 }
 
                 MouseArea

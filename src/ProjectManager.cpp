@@ -94,7 +94,7 @@ bool ProjectManager::loadProject(const QString& fileName)
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
-        _settings.setValue("lastProject", fileName);
+        //_settings.setValue("lastProject", fileName);
         setCurrentProjectFile(fileName);
         fromJsonObject(QJsonDocument::fromJson(file.readAll()).object());
 
@@ -271,7 +271,7 @@ void ProjectManager::saveProject()
     //QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
     //QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
 
-    _settings.setValue("lastProject", m_currentProjectFile);
+    //_settings.setValue("lastProject", m_currentProjectFile);
 }
 
 void ProjectManager::saveProjectToFile( const QString& saveFile )

@@ -3186,7 +3186,7 @@ Item
             waitingText.visible = false
             showPlayerElements()
 
-            if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
+            //if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
             {
                 project.setProperty("startPosition", 0)
                 project.setProperty("stopPosition", waveformWidget.duration())

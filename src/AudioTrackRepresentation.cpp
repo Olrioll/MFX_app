@@ -5,7 +5,76 @@
 
 #include <QDebug>
 
+FrameBlock::FrameBlock( const size_t len )
+{
+    std::memset( mSamples, 0, sizeof mSamples );
+    std::memset( mMaxLut, 0, sizeof mMaxLut );
+    std::memset( mMinLut, 0, sizeof mMinLut );
+    std::memset( mRms, 0, sizeof mRms );
+    mLen = len;
 
+    assert( mLen <= MAX_FRAMES );
+}
+
+void FrameBlock::addSample( const qint16 val )
+{
+    assert( mLen < MAX_FRAMES );
+    mSamples[mLen++] = val;
+}
+
+void FrameBlock::initLuts()
+{
+    if( mLen == MAX_FRAMES )
+    {
+        std::iota( std::begin( mMaxLut ), std::end( mMaxLut ), 0 );
+        std::for_each( std::execution::par, std::cbegin( mMaxLut ), std::cend( mMaxLut ),
+            [&]( const qint16& n )
+        {
+            const auto i = n;
+            const auto it = i * FRAMES_PER_LUT;
+            qint16* currentSample = mSamples + it;
+            qint16 _min = INT16_MAX;
+            qint16 _max = INT16_MIN;
+            float _rms = 0.f;
+            for( unsigned j = 0; j < FRAMES_PER_LUT; j++ )
+            {
+                _rms += static_cast<float>(*currentSample) * static_cast<float>(*currentSample);
+                _min = FRAMES_MIN( *currentSample, _min );
+                _max = FRAMES_MAX( *currentSample, _max );
+                currentSample++;
+            }
+            mRms[i] = _rms;
+            mMaxLut[i] = _max;
+            mMinLut[i] = _min;
+        } );
+    }
+    else
+    {
+        qint16* currentSample = mSamples;
+        qint16* lastSample = mSamples + mLen;
+        for( unsigned i = 0; i < LUT_SIZE; i++ )
+        {
+            qint16 _min = INT16_MAX;
+            qint16 _max = INT16_MIN;
+            float _rms = 0.f;
+            for( unsigned j = 0; j < FRAMES_PER_LUT; j++ )
+            {
+                if( currentSample >= lastSample )
+                    break;
+
+                _rms += static_cast<float>(*currentSample) * static_cast<float>(*currentSample);
+                _min = FRAMES_MIN( *currentSample, _min );
+                _max = FRAMES_MAX( *currentSample, _max );
+                currentSample++;
+            }
+            mRms[i] = _rms;
+            mMaxLut[i] = _max;
+            mMinLut[i] = _min;
+        }
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
 size_t WaveFormChannel::getLength() const
 {
 	size_t len = 0;
@@ -73,13 +142,13 @@ void WaveFormChannel::insertSilent(const size_t _size)
 {
     size_t size = _size;
     while (size > FrameBlock::MAX_FRAMES)
-	{
-		m_blocks.emplace(m_blocks.begin(), size);
+    {
+        m_blocks.emplace(m_blocks.begin(), FrameBlock::MAX_FRAMES);
         size -= FrameBlock::MAX_FRAMES;
-	}
+    }
 
-	if (size > 0)
-		m_blocks.emplace(m_blocks.begin(), size);
+    if (size > 0)
+        m_blocks.emplace(m_blocks.begin(), size);
 }
 
 
