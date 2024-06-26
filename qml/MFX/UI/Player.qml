@@ -814,7 +814,7 @@ Item
         anchors.fill: waveformBackground
         contentHeight: waveformBackground.height > cueView.height ? waveformBackground.height : cueView.height
         clip: true
-        focus: cueViewFlickableMouseArea.containsMouse
+        //focus: cueViewFlickableMouseArea.containsMouse
 
         Keys.onDeletePressed:
         {
@@ -2790,13 +2790,13 @@ Item
                         color: "transparent"
                     }
 
-                    onFocusChanged:
+                    /*onFocusChanged:
                     {
                         if(focus)
                         {
                             selectAll()
                         }
-                    }
+                    }*/
                 }
 
                 Text
@@ -2838,13 +2838,13 @@ Item
                         color: "transparent"
                     }
 
-                    onFocusChanged:
+                    /*onFocusChanged:
                     {
                         if(focus)
                         {
                             selectAll()
                         }
-                    }
+                    }*/
                 }
 
                 Text
@@ -2886,13 +2886,13 @@ Item
                         color: "transparent"
                     }
 
-                    onFocusChanged:
+                    /*onFocusChanged:
                     {
                         if(focus)
                         {
                             selectAll()
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -2988,13 +2988,13 @@ Item
                         color: "transparent"
                     }
 
-                    onFocusChanged:
+                    /*onFocusChanged:
                     {
                         if(focus)
                         {
                             selectAll()
                         }
-                    }
+                    }*/
                 }
 
                 Text
@@ -3036,13 +3036,13 @@ Item
                         color: "transparent"
                     }
 
-                    onFocusChanged:
+                    /*onFocusChanged:
                     {
                         if(focus)
                         {
                             selectAll()
                         }
-                    }
+                    }*/
                 }
 
                 Text
@@ -3084,13 +3084,13 @@ Item
                         color: "transparent"
                     }
 
-                    onFocusChanged:
+                    /*onFocusChanged:
                     {
                         if(focus)
                         {
                             selectAll()
                         }
-                    }
+                    }*/
                 }
             }
 
@@ -3190,17 +3190,25 @@ Item
             playerWidget.min = 0
             playerWidget.max = playerWidget.projectDuration()
 
-            waveformWidget.showAll();
-
             startLoopMarker.position = project.property("startLoop")
             stopLoopMarker.position = project.property("stopLoop")
             startPositionMarker.position = project.property("startPosition")
             stopPositionMarker.position = project.property("stopPosition")
             positionCursor.position = startPositionMarker.position
 
-            timelineSettingsWidget.updateFields()
-
             cueView.loadCues()
+
+            cueView.cuePlates.forEach(function(cue)
+            {
+                if(cue.position + cue.duration > playerWidget.projectDuration())
+                {
+                    project.setProperty("postPlayInterval", cue.position + cue.duration - project.property("prePlayInterval") - waveformWidget.duration())
+                    playerWidget.max = playerWidget.projectDuration()
+                }
+            })
+
+            timelineSettingsWidget.updateFields()
+            waveformWidget.showAll();
         }
     }
 
