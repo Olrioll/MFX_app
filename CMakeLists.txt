@@ -182,6 +182,8 @@ target_link_libraries(${MFX_PROJECT_NAME}
 #    QuaZip::QuaZip
 )
 
+target_compile_definitions(${MFX_PROJECT_NAME} PUBLIC QT_MESSAGELOGCONTEXT)
+
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     target_link_libraries(${MFX_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/libs/CloudSyncD.lib)
 else()
