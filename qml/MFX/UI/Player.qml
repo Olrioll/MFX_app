@@ -208,66 +208,60 @@ Item
                 coeff = 4
 
             let currInterval = playerWidget.max - playerWidget.min
-            let dX = currInterval / playerWidget.width * Math.abs(dx) * coeff
+            let msecPerPx1 = currInterval / playerWidget.width
+            let dX = msecPerPx1 * Math.abs(dx) * coeff
 
             if(dx < 0)
             {
+                if(playerWidget.max + dX > playerWidget.projectDuration())
+                    dX = playerWidget.projectDuration() - playerWidget.max
+
                 if(playerWidget.max + dX <= playerWidget.projectDuration())
                 {
-                    let msecPerPx1 = (playerWidget.max - playerWidget.min) / playerWidget.width
-
                     playerWidget.max += Math.floor(dX/msecPerPx1)*msecPerPx1
                     playerWidget.min += Math.floor(dX/msecPerPx1)*msecPerPx1
 
+                    let max1 = playerWidget.max
+                    let min1 = playerWidget.min
+                    let msecPerPx = (max1 - min1) / playerWidget.width
+
                     if(resizingCenterMarker.x - Math.abs(dx) * coeff > 0)
                     {
-//                        resizingCenterMarker.x -= Math.abs(dx) * coeff
-                        let max1 = playerWidget.max
-                        let min1 = playerWidget.min
-                        let msecPerPx = (max1 - min1) / playerWidget.width
                         resizingCenterMarker.x = Math.round((resizingCenterMarker.oldXposition - min1)/msecPerPx)
                     }
-
                     else
                     {
-                        let max1 = playerWidget.max
-                        let min1 = playerWidget.min
-                        let msecPerPx = (max1 - min1) / playerWidget.width
                         resizingCenterMarker.oldXposition = (1 * msecPerPx) + min;
                         resizingCenterMarker.x = 1
                     }
                 }
             }
-
             else
             {
+                if(playerWidget.min - dX < 0)
+                    dX = playerWidget.min
+
                 if(playerWidget.min - dX >= 0)
                 {
-                    let msecPerPx1 = (playerWidget.max - playerWidget.min) / playerWidget.width
                     playerWidget.max -= Math.floor(dX/msecPerPx1)*msecPerPx1
                     playerWidget.min -= Math.floor(dX/msecPerPx1)*msecPerPx1
 
+                    let max1 = playerWidget.max
+                    let min1 = playerWidget.min
+                    let msecPerPx = (max1 - min1) / playerWidget.width
+
                     if(resizingCenterMarker.x + Math.abs(dx) * coeff < width - 9)
                     {
-//                        resizingCenterMarker.x += Math.abs(dx) * coeff
-                        let max1 = playerWidget.max
-                        let min1 = playerWidget.min
-                        let msecPerPx = (max1 - min1) / playerWidget.width
                         resizingCenterMarker.x = Math.round((resizingCenterMarker.oldXposition - min1)/msecPerPx)
                     }
-
                     else
                     {
-                        let max1 = playerWidget.max
-                        let min1 = playerWidget.min
-                        let msecPerPx = (max1 - min1) / playerWidget.width
                         resizingCenterMarker.oldXposition = ((width - 1) * msecPerPx) + min;
                         resizingCenterMarker.x = Math.round(width - 1)
                     }
                 }
             }
         }
-
         else if(Math.abs(dy)>1) // Работаем с зумом
         {
 
@@ -1026,13 +1020,9 @@ Item
             onWheel:
             {
                 if(wheel.modifiers & Qt.ControlModifier)
-                {
                     playerWidget.zoom(wheel.angleDelta.y > 0 ? 2 : -2)
-                }
                 else if(wheel.modifiers & Qt.ShiftModifier)
-                {
                     playerWidget.move(wheel.angleDelta.y, 0)
-                }
                 else
                     wheel.accepted = false
             }
