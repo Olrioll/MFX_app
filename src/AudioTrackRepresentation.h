@@ -10,17 +10,12 @@
 #include <cstring>
 
 
-#define FRAMES_MIN(a,b) ((a) < (b) ? (a) : (b))
-#define FRAMES_MAX(a,b) ((a) > (b) ? (a) : (b))
+constexpr size_t MAX_FRAMES = 131072;
+constexpr size_t FRAMES_PER_LUT = 256;
+constexpr size_t LUT_SIZE = MAX_FRAMES / FRAMES_PER_LUT;
 
 struct FrameBlock
 {
-    static const size_t MAX_FRAMES = 131072;
-
-	static const size_t FRAMES_PER_LUT = 256;
-
-	static const size_t LUT_SIZE = MAX_FRAMES / FRAMES_PER_LUT;
-
     qint16 mSamples[MAX_FRAMES]{};
     qint16 mMaxLut[LUT_SIZE]{};
     qint16 mMinLut[LUT_SIZE]{};
@@ -67,7 +62,7 @@ private:
 	qint16 maxAmplitude = 0;
 
 public:
-	FramePos getFramePosFromSampleIdx(size_t sampleIdx);
+	FramePos getFramePosFromSampleIdx(size_t sampleIdx) const;
 	FrameBlock* incrementFramePos(FramePos* pos, size_t numSamples);
 	void insertSilent(const size_t size);
 	std::vector<FrameBlock> m_blocks;
@@ -98,6 +93,8 @@ public slots:
 	void decodeFinished();
 	void deleteAudioDecoder();
     void decodeError();
+	void onTrackDownloaded();
+
 signals:
 	void bufferCreated();
 	void trackDownloaded();
