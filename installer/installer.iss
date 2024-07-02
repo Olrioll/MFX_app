@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "MFX"
-#define MyAppVersion "0.1.15"
+#define MyAppVersion "0.1.16"
 #define MyAppPublisher "MFX"
 #define MyAppURL "mfx.com"
 #define MyAppExeName "MFXLauncher.exe"
