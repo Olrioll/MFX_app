@@ -78,9 +78,9 @@ Item
             onClicked:
             {
                 applicationWindow.isPatchEditorOpened = false
-                //patchScreen.deviceLibWidget.setActive(true)
-                //patchScreen.deviceListWidget.setActive(true)
-                //patchScreen.groupListWidget.setActive(true)
+                patchScreen.deviceLibWidget.setActive(true)
+                patchScreen.deviceListWidget.setActive(true)
+                patchScreen.groupListWidget.setActive(true)
                 sceneSettingsWidget.destroy()
             }
         }

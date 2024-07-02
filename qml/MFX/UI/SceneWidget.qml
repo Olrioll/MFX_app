@@ -855,9 +855,9 @@ Item
                 project.setProperty("sceneFrameY", (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height)
                 project.setProperty("sceneImageWidth", sceneFrameItem.width / backgroundImage.width)
                 sceneFrameItem.visible = false
-                //patchScreen.deviceLibWidget.setActive(true)
-                //patchScreen.deviceListWidget.setActive(true)
-                //patchScreen.groupListWidget.setActive(true)
+                patchScreen.deviceLibWidget.setActive(true)
+                patchScreen.deviceListWidget.setActive(true)
+                patchScreen.groupListWidget.setActive(true)
             }
         }
 
@@ -885,9 +885,9 @@ Item
             onClicked:
             {
                 sceneFrameItem.visible = false
-                //patchScreen.deviceLibWidget.setActive(true)
-                //patchScreen.deviceListWidget.setActive(true)
-                //patchScreen.groupListWidget.setActive(true)
+                patchScreen.deviceLibWidget.setActive(true)
+                patchScreen.deviceListWidget.setActive(true)
+                patchScreen.groupListWidget.setActive(true)
             }
         }
 
