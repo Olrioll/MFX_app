@@ -88,11 +88,6 @@ ApplicationWindow
         {
             project.loadProject(openingProject);
 
-            if(project.property("audioTrackFile") !== "")
-                mainScreen.playerWidget.waitingText.text = qsTr("Downloading...")
-            else
-                mainScreen.playerWidget.waitingText.text = qsTr("Not available")
-
             patchMenuButton.checked = true
             sceneWidget.sceneFrameItem.restorePreviousGeometry()
         }

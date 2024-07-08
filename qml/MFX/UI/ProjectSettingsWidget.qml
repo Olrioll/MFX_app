@@ -525,10 +525,7 @@ Item
                 project.currentProjectName = projectNameField.text
 
                 if(choosenAudioFile !== "")
-                {
-                    mainScreen.playerWidget.waitingText.text = qsTr("Downloading...")
                     project.setAudioTrack(choosenAudioFile)
-                }
 
                 project.setProperty("sceneFrameWidth", Number(widthField.text))
                 project.setProperty("sceneFrameHeight", Number(heightField.text))

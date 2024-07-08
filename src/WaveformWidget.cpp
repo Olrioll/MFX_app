@@ -65,6 +65,14 @@ WaveformWidget::WaveformWidget(QQuickItem* parent) : QQuickPaintedItem(parent) /
         prevPos = pos;
     });
 
+    connect( &_player, &QMediaPlayer::mediaStatusChanged, [this]( QMediaPlayer::MediaStatus status )
+    {
+        qDebug() << status;
+
+        if( status == QMediaPlayer::InvalidMedia )
+            emit trackFail();
+    } );
+
     //changind to QMediaPlayer::positionChanged
     //    connect(&_valueForPositionTimer, &QTimer::timeout, [this]()
     //    {
@@ -795,7 +803,8 @@ void WaveformWidget::setAudioTrackFile(const QString& fileName)
     _audioTrackFile = fileName;
     _player.setMedia(QUrl::fromLocalFile(fileName));
     _track.loadFile(_audioTrackFile);
-    //     emit trackDownloaded();
+
+    emit trackDownloading();
 }
 
 qint64 WaveformWidget::duration() const

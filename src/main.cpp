@@ -123,6 +123,7 @@ QSurfaceFormat::setDefaultFormat(format);
     PatternFilteringModel::qmlRegister();
     CueContentManager::qmlRegister();
     CueContentSortingModel::qmlRegister();
+    ProjectManager::qmlRegister();
 
     QQmlApplicationEngine engine;
 

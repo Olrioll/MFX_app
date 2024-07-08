@@ -1,27 +1,31 @@
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#pragma once
 
 #include <QObject>
 #include <QSettings>
 #include <QRecursiveMutex>
+#include <QFutureWatcher>
 
 #include <QSuperMacros.h>
 #include <QQmlConstRefPropertyHelpers.h>
-//#include <quazipfile.h>
+#include <QQmlEnumClassHelper.h>
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
 
 class DeviceManager;
 
+QSM_ENUM_CLASS( AudioTrackStatus, Invalid = 0, Importing, Imported, Loading, Loaded );
+Q_DECLARE_METATYPE( AudioTrackStatus::Type )
+
 class ProjectManager : public QObject, public JsonSerializable
 {
-
     Q_OBJECT
 public:
 
     explicit ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
-    virtual ~ProjectManager();
+    ~ProjectManager() override;
+
+    static void qmlRegister();
 
     void SetDeviceManager( DeviceManager* deviceManager );
 
@@ -34,6 +38,7 @@ private:
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrack, CurrentProjectAudioTrack, "") //Имя текущего выбранного музыкального файла
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrackPath, CurrentProjectAudioTrackPath, "") //Абсолютный путь к текущему выбранному музыкальному файлу
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(qlonglong, currentProjectAudioTrackDuration, CurrentProjectAudioTrackDuration, 0) //Длительность текущего выбранного музыкального файла в миллисекундах
+    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT( AudioTrackStatus::Type, trackStatus, TrackStatus, AudioTrackStatus::Invalid )
 
 public slots:
     bool loadProject(const QString& fileName);
@@ -51,6 +56,8 @@ public slots:
 
     void setBackgroundImage(const QString& fileName);
     void setAudioTrack(const QString& fileName);
+    void importAudioTrack( const QString& fileName );
+    void importAudioTrackFinished();
     void setPrefire( const QMap<QString, int>& pref );
 
     bool hasUnsavedChanges() const; //Отвечает за индикацию, был ли проект изменен (значит, нужно попросить сохранить данные при закрытии программы)
@@ -60,7 +67,6 @@ public slots:
     void onBackgroundImageChanged();
 
 signals:
-    void audioTrackFileChanged();
     void backgroundImageChanged();
 ///////////////////////////////////////////////////////////////////////////////
 ///                          Работа с проектом END                           //
@@ -207,6 +213,5 @@ private:
     //FireBaseClouds clouds;
     double msperpx = 1;
     mutable QRecursiveMutex m_ProjectLocker;
+    QFutureWatcher<QString> m_ImportAudioTrackWatcher;
 };
-
-#endif // PROJECTMANAGER_H

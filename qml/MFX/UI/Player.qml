@@ -5,6 +5,8 @@ import MFX.UI.Styles 1.0 as MFXUIS
 import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Components.CuePlate 1.0
 
+import MFX.Enums 1.0 as MFXE
+
 import WaveformWidget 1.0
 import "qrc:/"
 
@@ -85,6 +87,8 @@ Item
         stopLoopMarker.visible = true
         positionCursor.visible = true
 //        cueViewFlickable.visible = true
+
+        waitingText.visible = false
     }
 
     function updatePlayerElements()
@@ -701,13 +705,32 @@ Item
         Connections
         {
             target: project
-            function onAudioTrackFileChanged()
-            {
-                mainScreen.playerWidget.hidePlayerElements()
-                mainScreen.playerWidget.waitingText.text = qsTr("Not available")
 
-//                playButton.checked = false
-                waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+            function onTrackStatusChanged(status)
+            {
+                switch(status)
+                {
+                    case MFXE.AudioTrackStatus.Importing:
+                        mainScreen.playerWidget.hidePlayerElements()
+                        mainScreen.playerWidget.waitingText.text = qsTr("Importing...")
+                        break
+                    case MFXE.AudioTrackStatus.Imported:
+                        mainScreen.playerWidget.hidePlayerElements()
+                        mainScreen.playerWidget.waitingText.text = qsTr("Importing...")
+                        waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
+                        break
+                    case MFXE.AudioTrackStatus.Loading:
+                        mainScreen.playerWidget.hidePlayerElements()
+                        mainScreen.playerWidget.waitingText.text = qsTr("Loading...")
+                        break
+                    case MFXE.AudioTrackStatus.Loaded:
+                        mainScreen.playerWidget.showPlayerElements()
+                        break
+                    default:
+                        mainScreen.playerWidget.hidePlayerElements()
+                        mainScreen.playerWidget.waitingText.text = qsTr("Not available")
+                        break
+                }
             }
         }
 
@@ -3170,31 +3193,26 @@ Item
     Connections
     {
         target: waveformWidget
+
+        function onTrackDownloading()
+        {
+            console.log("onTrackDownloading")
+
+            project.trackStatus = MFXE.AudioTrackStatus.Loading
+        }
+
         function onTrackDownloaded()
         {
-            // scrollBackgroundWaveform.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
-            waitingText.visible = false
-            showPlayerElements()
+            console.log("onTrackDownloaded", waveformWidget.duration())
 
-            //if(project.property("startPosition") === -1) // Загрузили трек для нового проекта
-            {
-                project.setProperty("startPosition", 0)
-                project.setProperty("stopPosition", waveformWidget.duration())
-                project.setProperty("startLoop", 0)
-                project.setProperty("stopLoop", waveformWidget.duration())
-
-                project.setProperty("prePlayInterval", 0)
-                project.setProperty("postPlayInterval", 0)
-            }
+            startLoopMarker.position = project.property("startLoop")
+            stopLoopMarker.position = project.property("stopLoop") === -1 ? waveformWidget.duration() : project.property("stopLoop")
+            startPositionMarker.position = project.property("startPosition")
+            stopPositionMarker.position = project.property("stopPosition") === -1 ? waveformWidget.duration() : project.property("stopPosition")
+            positionCursor.position = startPositionMarker.position
 
             playerWidget.min = 0
             playerWidget.max = playerWidget.projectDuration()
-
-            startLoopMarker.position = project.property("startLoop")
-            stopLoopMarker.position = project.property("stopLoop")
-            startPositionMarker.position = project.property("startPosition")
-            stopPositionMarker.position = project.property("stopPosition")
-            positionCursor.position = startPositionMarker.position
 
             cueView.loadCues()
 
@@ -3209,6 +3227,15 @@ Item
 
             timelineSettingsWidget.updateFields()
             waveformWidget.showAll();
+
+            project.trackStatus = MFXE.AudioTrackStatus.Loaded
+        }
+
+        function onTrackFail()
+        {
+            console.log("onTrackFail")
+
+            project.trackStatus = MFXE.AudioTrackStatus.Invalid
         }
     }
 

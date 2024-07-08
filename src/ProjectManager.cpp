@@ -8,6 +8,8 @@
 #include <QProcess>
 #include <QJsonValue>
 #include <QJsonArray>
+#include <QtConcurrent>
+
 #include <algorithm>
 #include <random>
 
@@ -20,9 +22,12 @@
 
 constexpr int defaultSceneFrameWidth = 20;
 constexpr int defaultSceneFrameHeight = 10;
+constexpr char MUS_SUFFIX[] = "mus";
 
 ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
 {
+    connect( &m_ImportAudioTrackWatcher, &QFutureWatcher<QString>::finished, this, &ProjectManager::importAudioTrackFinished );
+
     QMutexLocker locker( &m_ProjectLocker );
 
     addChild("Patches");
@@ -33,6 +38,11 @@ ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObj
 ProjectManager::~ProjectManager()
 {
     cleanWorkDirectory();
+}
+
+void ProjectManager::qmlRegister()
+{
+    AudioTrackStatus::registerToQml( "MFX.Enums", 1, 0 );
 }
 
 void ProjectManager::SetDeviceManager( DeviceManager* deviceManager )
@@ -101,10 +111,10 @@ bool ProjectManager::loadProject(const QString& fileName)
         onBackgroundImageChanged();
         correctSceneFrame();
         setSceneScaleFactor( 1.0 );
+        importAudioTrack( workDir().filePath( property( "audioTrackFile" ).toString() ) );
 
         emit groupCountChanged();
         emit patchListChanged();
-        emit audioTrackFileChanged();
         emit reloadPattern();
 
         for( auto patch : getChild( "Patches" )->listedChildren() )
@@ -161,7 +171,7 @@ void ProjectManager::defaultProject()
 
     newProject();
 
-    setAudioTrack( QDir( _settings.appDirectory() ).filePath( "default.mp3" ) );
+    setAudioTrack( QDir( _settings.appDirectory() ).filePath( "default.mus" ) );
     setBackgroundImage( QDir( _settings.appDirectory() ).filePath( "default.svg" ) );
 
     setProperty( "sceneFrameX", 0.37 );
@@ -506,7 +516,10 @@ void ProjectManager::uncheckPatch()
 
 void ProjectManager::setProperty(const QString& name, QVariant value)
 {
+#if _DEBUG
     qDebug() << name << " " << value;
+#endif
+
     QMutexLocker locker( &m_ProjectLocker );
 
     JsonSerializable::setProperty(name, value);
@@ -727,16 +740,70 @@ void ProjectManager::setAudioTrack(const QString& fileName)
     qDebug() << fileName;
     QMutexLocker locker( &m_ProjectLocker );
 
-    QFileInfo info(fileName);
+    QFileInfo info( fileName );
     if( info.fileName() != property("audioTrackFile").toString() )
     {
-        QFile::remove( workDir().filePath( property("audioTrackFile").toString() ) );
-        QFile::copy( fileName, workDir().filePath( info.fileName() ) );
+        QFile::remove( workDir().filePath( property( "audioTrackFile" ).toString() ) );
 
-        setProperty( "audioTrackFile", info.fileName() );
+        setProperty( "startPosition", 0 );
+        setProperty( "stopPosition", -1 );
+        setProperty( "startLoop", 0 );
+        setProperty( "stopLoop", -1 );
+        setProperty( "prePlayInterval", 0 );
+        setProperty( "postPlayInterval", 0 );
 
-        emit audioTrackFileChanged();
+        importAudioTrack( fileName );
     }
+}
+
+void ProjectManager::importAudioTrack( const QString& fileName )
+{
+    setTrackStatus( AudioTrackStatus::Importing );
+
+    QFuture<QString> future = QtConcurrent::run( [this]( const QString& fileName)
+    {
+        QFileInfo info( fileName );
+        if( info.suffix() == MUS_SUFFIX )
+        {
+            if( info.absolutePath() != workDir().absolutePath() )
+                QFile::copy( fileName, workDir().filePath( info.fileName() ) );
+
+            return info.fileName();
+        }
+        else
+        {
+            QString musFileName = info.baseName().append( "." ).append( MUS_SUFFIX );
+
+            QStringList args;
+            args.append( "-i" );
+            args.append( info.absoluteFilePath() );
+            args.append( "-f" );
+            args.append( "mp3" );
+            args.append( "-ab" );
+            args.append( "128K" );
+            args.append( workDir().filePath( musFileName ) );
+
+            QProcess proc;
+            proc.start( "ffmpeg.exe", args );
+            proc.waitForFinished();
+
+            if( proc.exitCode() )
+            {
+                qDebug() << proc.readAllStandardError();
+                return QString();
+            }
+
+            return musFileName;
+        }
+    }, fileName );
+
+    m_ImportAudioTrackWatcher.setFuture( future );
+}
+
+void ProjectManager::importAudioTrackFinished()
+{
+    setProperty( "audioTrackFile", m_ImportAudioTrackWatcher.result() );
+    setTrackStatus( m_ImportAudioTrackWatcher.result().isEmpty() ? AudioTrackStatus::Invalid : AudioTrackStatus::Imported );
 }
 
 QString ProjectManager::currentGroup() const

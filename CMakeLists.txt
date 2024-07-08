@@ -59,6 +59,7 @@ project(${MFX_PROJECT_NAME}
 )
 
 find_package(Qt5 ${QT_VERSION} COMPONENTS
+    Concurrent
     Core
     Gui
     Network
@@ -169,6 +170,7 @@ target_link_libraries(${MFX_PROJECT_NAME}
     PRIVATE
     ${CMAKE_SOURCE_DIR}/libs/ftd2xx.lib
     ${CMAKE_SOURCE_DIR}/libs/libcurl.lib
+    Qt5::Concurrent
     Qt5::Widgets
     Qt5::Qml
     Qt5::Quick

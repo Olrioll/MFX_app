@@ -326,8 +326,6 @@ void AudioTrackRepresentation::initAudioDecoder()
 	connect(_decoder, SIGNAL(bufferReady()), &_trackDownloadingTimer, SLOT(start()));
     connect(_decoder, SIGNAL(error(QAudioDecoder::Error)), this, SLOT(decodeError()));
 	connect(_decoder, &QAudioDecoder::finished, this, &AudioTrackRepresentation::decodeFinished);
-
-
 }
 
 void AudioTrackRepresentation::deleteAudioDecoder()
@@ -381,7 +379,6 @@ void AudioTrackRepresentation::loadFile(const QString& fileName)
 
 	_decoder->setSourceFilename(fileName);
 	_decoder->start();
-    //    _trackDownloadingTimer.start(1000);
 }
 
 

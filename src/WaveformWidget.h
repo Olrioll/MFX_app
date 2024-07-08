@@ -66,8 +66,9 @@ public slots:
     void stop();
 
 signals:
-
+    void trackDownloading();
     void trackDownloaded();
+    void trackFail();
     void maxChanged(qint64 max);
     void minChanged(qint64 min);
     void scaleFactorChanged(float scaleFactor);
