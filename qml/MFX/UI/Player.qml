@@ -3205,14 +3205,20 @@ Item
         {
             console.log("onTrackDownloaded", waveformWidget.duration())
 
-            startLoopMarker.position = project.property("startLoop")
-            stopLoopMarker.position = project.property("stopLoop") === -1 ? waveformWidget.duration() : project.property("stopLoop")
-            startPositionMarker.position = project.property("startPosition")
-            stopPositionMarker.position = project.property("stopPosition") === -1 ? waveformWidget.duration() : project.property("stopPosition")
-            positionCursor.position = startPositionMarker.position
-
             playerWidget.min = 0
             playerWidget.max = playerWidget.projectDuration()
+
+            var startLoop = project.property("startLoop") 
+            var stopLoop = project.property("stopLoop")
+            var startPosition = project.property("startPosition")
+            var stopPosition = project.property("stopPosition")
+
+            startLoopMarker.position = startLoop === null ? 0 : startLoop
+            stopLoopMarker.position = stopLoop === null || stopLoop === -1 ? waveformWidget.duration() : stopLoop
+            startPositionMarker.position = startPosition === null ? 0 : startPosition
+            stopPositionMarker.position = stopPosition === null || stopPosition === -1 ? waveformWidget.duration() : stopPosition
+
+            positionCursor.position = startPositionMarker.position
 
             cueView.loadCues()
 
