@@ -379,6 +379,7 @@ ApplicationWindow
                     Action
                     {
                         text: translationsManager.translationTrigger + qsTr("Open")
+
                         onTriggered:
                         {
                             if(project.hasUnsavedChanges())
@@ -404,23 +405,32 @@ ApplicationWindow
                                     applicationWindow.openProject()
                                 })
                             }
-
                             else
                                 applicationWindow.openProject()
                         }
                     }
 
-                    MfxMenu
+                    Action
                     {
-                        title: qsTr("Save")
-                        id: saveSubMenu
+                        text: translationsManager.translationTrigger + qsTr("Save")
+                        shortcut: "Ctrl+S"
 
-                        Action { text: translationsManager.translationTrigger + qsTr("Project") }
-                        Action { text: translationsManager.translationTrigger + qsTr("Workspace") }
-                        Action { text: translationsManager.translationTrigger + qsTr("Patch") }
+                        onTriggered:
+                        {
+                            project.saveProject()
+                        }
                     }
 
-                    Action { text: translationsManager.translationTrigger + qsTr("Export") }
+                    Action
+                    {
+                        text: translationsManager.translationTrigger + qsTr("Import")
+                    }
+
+                    Action
+                    {
+                        text: translationsManager.translationTrigger + qsTr("Export")
+                    }
+
                     Action
                     {
                         text: translationsManager.translationTrigger + qsTr("Preferences")
