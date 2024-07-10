@@ -77,7 +77,7 @@ Item
 
                                 color: "#FFFFFF"
 
-                                text: translationsManager.translationTrigger + qsTr("Project: ") + project.currentProjectName
+                                text: translationsManager.translationTrigger + qsTr("Project: ") + project.property("projectName")
                             }
 
                             MFXUICT.LayoutSpacer {

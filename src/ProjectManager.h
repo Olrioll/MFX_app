@@ -33,7 +33,6 @@ public:
 ///                          Работа с проектом                               //
 ///////////////////////////////////////////////////////////////////////////////
 private:
-    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectName, CurrentProjectName, "") //Название текущего проекта
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectFile, CurrentProjectFile, "") //Абсолютный путь к текущему проекту
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrack, CurrentProjectAudioTrack, "") //Имя текущего выбранного музыкального файла
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, currentProjectAudioTrackPath, CurrentProjectAudioTrackPath, "") //Абсолютный путь к текущему выбранному музыкальному файлу
@@ -48,6 +47,9 @@ public slots:
     void saveProject();
 
     void saveProjectToFile( const QString& saveFile );
+
+    void importAudioTrack();
+    void importBackgroundImage();
 
     void exportAudioTrack();
     void exportBackgroundImage();

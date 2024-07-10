@@ -431,11 +431,21 @@ ApplicationWindow
                         Action
                         {
                             text: translationsManager.translationTrigger + qsTr("Audio track")
+
+                            onTriggered:
+                            {
+                                project.importAudioTrack()
+                            }
                         }
 
                         Action
                         {
                             text: translationsManager.translationTrigger + qsTr("Background img")
+
+                            onTriggered:
+                            {
+                                project.importBackgroundImage()
+                            }
                         }
                     }
 

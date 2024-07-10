@@ -1489,6 +1489,8 @@ Item
                 backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
             else
                 backgroundImage.source = ""
+
+            centerBackgroundImage()
         }
     }
 

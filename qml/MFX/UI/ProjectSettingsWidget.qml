@@ -522,7 +522,7 @@ Item
                 if(isNewProject)
                     project.newProject()
 
-                project.currentProjectName = projectNameField.text
+                project.setProperty("projectName", projectNameField.text)
 
                 if(choosenAudioFile !== "")
                     project.setAudioTrack(choosenAudioFile)
@@ -580,7 +580,7 @@ Item
                 choosenImageFile = project.workDirStr() + "/" + project.property("backgroundImageFile")
                 widthField.text = project.property("sceneFrameWidth")
                 heightField.text = project.property("sceneFrameHeight")
-                projectNameField.text = project.currentProjectName
+                projectNameField.text = project.property("projectName")
             }
         }
     }

@@ -330,7 +330,9 @@ void ProjectManager::saveProjectToFile( const QString& saveFile )
 
 QString ProjectManager::saveProjectDialog()
 {
-    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), getLastOpenDir(), tr("MFX projects (*.mfx)"));
+    const QString projectName = property( "projectName" ).toString();
+    const QString saveFile = QDir( getLastOpenDir() ).filePath( projectName.isEmpty() ? "NewProject" : projectName );
+    const QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), saveFile, tr("MFX projects (*.mfx)"));
     qDebug() << fileName;
 
     if(fileName.size())
@@ -1109,6 +1111,24 @@ void ProjectManager::changeAction(QString cueName, int deviceId, QString pattern
             return;
         }
     }
+}
+
+void ProjectManager::importAudioTrack()
+{
+    const QString fileName = selectAudioTrackDialog();
+    if( fileName.isEmpty() )
+        return;
+
+    setAudioTrack( fileName );
+}
+
+void ProjectManager::importBackgroundImage()
+{
+    const QString fileName = selectBackgroundImageDialog();
+    if( fileName.isEmpty() )
+        return;
+
+    setBackgroundImage( fileName );
 }
 
 void ProjectManager::exportAudioTrack()
