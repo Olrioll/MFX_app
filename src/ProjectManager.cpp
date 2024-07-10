@@ -330,10 +330,7 @@ void ProjectManager::saveProjectToFile( const QString& saveFile )
 
 QString ProjectManager::saveProjectDialog()
 {
-    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
-    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
-
-    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), lastOpenedDir, tr("MFX projects (*.mfx)"));
+    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save current MFX project"), getLastOpenDir(), tr("MFX projects (*.mfx)"));
     qDebug() << fileName;
 
     if(fileName.size())
@@ -347,10 +344,7 @@ QString ProjectManager::saveProjectDialog()
 
 QString ProjectManager::openProjectDialog()
 {
-    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
-    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
-
-    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), lastOpenedDir, tr("MFX projects (*.mfx)"));
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open MFX project file"), getLastOpenDir(), tr("MFX projects (*.mfx)"));
     qDebug() << fileName;
 
     if(fileName.size())
@@ -688,10 +682,7 @@ QVariantList ProjectManager::patchesIdList(const QString& groupName) const
 
 QString ProjectManager::selectAudioTrackDialog()
 {
-    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
-    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
-
-    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Audio Track"), lastOpenedDir, tr("Audio Files (*.wav *.mp3)"));
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Audio Track"), getLastOpenDir(), tr("Audio Files (*.wav *.mp3)"));
 
     if(fileName.size())
     {
@@ -704,10 +695,7 @@ QString ProjectManager::selectAudioTrackDialog()
 
 QString ProjectManager::selectBackgroundImageDialog()
 {
-    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
-    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
-
-    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Image"), lastOpenedDir, tr("Image Files (*.png *.jpg *.bmp)"));
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Image"), getLastOpenDir(), tr("Image Files (*.png *.jpg *.bmp)"));
 
     if(fileName.size())
     {
@@ -772,7 +760,7 @@ void ProjectManager::importAudioTrack( const QString& fileName )
         }
         else
         {
-            QString musFileName = info.baseName().append( "." ).append( MUS_SUFFIX );
+            QString musFileName = info.completeBaseName().append( "." ).append( MUS_SUFFIX );
 
             QStringList args;
             args.append( "-i" );
@@ -1123,15 +1111,41 @@ void ProjectManager::changeAction(QString cueName, int deviceId, QString pattern
     }
 }
 
-void ProjectManager::saveJsonOut()
+void ProjectManager::exportAudioTrack()
 {
-    QString lastOpenedDir = _settings.value("lastOpenedDirectory").toString();
-    lastOpenedDir = lastOpenedDir == "" ? QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) : lastOpenedDir;
-    QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save json output file"), lastOpenedDir);
+    const QFileInfo info( workDir().filePath( property( "audioTrackFile" ).toString() ) );
+    if( !info.exists() )
+        return;
+
+    const QString saveFile = QDir( getLastOpenDir() ).filePath( info.completeBaseName() ) + ".mp3";
+    const QString fileName = QFileDialog::getSaveFileName( nullptr, tr( "Save audio track" ), saveFile );
+
+    exportFile( info.absoluteFilePath(), fileName );
+}
+
+void ProjectManager::exportBackgroundImage()
+{
+    const QFileInfo info( workDir().filePath( property( "backgroundImageFile" ).toString() ) );
+    if( !info.exists() )
+        return;
+
+    const QString saveFile = QDir( getLastOpenDir() ).filePath( info.fileName() );
+    const QString fileName = QFileDialog::getSaveFileName( nullptr, tr( "Save background image" ), saveFile );
+
+    exportFile( info.absoluteFilePath(), fileName );
+}
+
+void ProjectManager::exportOutputJson( bool sendToCloud )
+{
+    const QString saveFile = QDir( getLastOpenDir() ).filePath( "output.json" );
+    const QString fileName = QFileDialog::getSaveFileName(nullptr, tr("Save output json file"), saveFile );
 
     QFile jsonFile(fileName);
     if( !jsonFile.open( QIODevice::WriteOnly | QIODevice::Truncate ) )
         return;
+
+    const QFileInfo info( fileName );
+    _settings.setValue( "lastOpenedDirectory", info.canonicalPath() );
 
     QMutexLocker locker( &m_ProjectLocker );
 
@@ -1200,34 +1214,38 @@ void ProjectManager::saveJsonOut()
 
     const auto jsonout = QJsonDocument(arr).toJson();
     jsonFile.write(jsonout);
-    const auto l = _settings.value("cloudLogin").toString().toStdString();
-    const auto p = _settings.value("cloudPassword").toString().toStdString();
-    
-    if(!l.empty() && !p.empty())
+
+    if( sendToCloud )
     {
-        QFileInfo info(fileName);
-        auto fname =info.fileName();
-        if(fname>0)
+        const auto l = _settings.value( "cloudLogin" ).toString().toStdString();
+        const auto p = _settings.value( "cloudPassword" ).toString().toStdString();
+
+        if( !l.empty() && !p.empty() )
         {
-            if(fname.size() + 1>12)
+            QFileInfo info( fileName );
+            auto fname = info.fileName();
+            if( fname > 0 )
             {
-                const auto s = fname.size() - 12;
-                fname = fname.remove(12,s-1);
-            }
+                if( fname.size() + 1 > 12 )
+                {
+                    const auto s = fname.size() - 12;
+                    fname = fname.remove( 12, s - 1 );
+                }
 
-            std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
+                std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
 
-            try
-            {
-                auto credentials = CloudSync::BasicCredentials::from_username_password( l, p );
-                auto cloud = CloudSync::CloudFactory().create_nextcloud( "https://cloud.mainfx.ru/", credentials );
+                try
+                {
+                    auto credentials = CloudSync::BasicCredentials::from_username_password( l, p );
+                    auto cloud = CloudSync::CloudFactory().create_nextcloud( "https://cloud.mainfx.ru/", credentials );
 
-                auto file = cloud->root()->create_file( fname.toStdString() );
-                file->write_binary( content );
-            }
-            catch( const CloudSync::exceptions::cloud::CloudException& e )
-            {
-                qCritical() << "Sth went wrong: " << e.what();
+                    auto file = cloud->root()->create_file( fname.toStdString() );
+                    file->write_binary( content );
+                }
+                catch( const CloudSync::exceptions::cloud::CloudException& e )
+                {
+                    qCritical() << "Sth went wrong: " << e.what();
+                }
             }
         }
     }
@@ -1452,4 +1470,26 @@ void ProjectManager::onBackgroundImageChanged()
     setProperty( "backgroundImageWidth", img.width() );
 
     emit backgroundImageChanged();
+}
+
+QString ProjectManager::getLastOpenDir() const
+{
+    QString lastOpenedDir = _settings.value( "lastOpenedDirectory" ).toString();
+    if( !lastOpenedDir.isEmpty() )
+        return lastOpenedDir;
+        
+    return QStandardPaths::writableLocation( QStandardPaths::DocumentsLocation );
+}
+
+void ProjectManager::exportFile( const QString& fromFile, const QString& toFile )
+{
+    qDebug() << fromFile << toFile;
+
+    if( fromFile.isEmpty() || toFile.isEmpty() )
+        return;
+
+    QFile::copy( fromFile, toFile );
+
+    QFileInfo info( toFile );
+    _settings.setValue( "lastOpenedDirectory", info.canonicalPath() );
 }

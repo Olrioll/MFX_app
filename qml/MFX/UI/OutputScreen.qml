@@ -161,10 +161,9 @@ Item
 
                                         text: translationsManager.translationTrigger + qsTr("Save Audio as")
 
-                                        onClicked: {
-
-                                         project.saveJsonOut();
-
+                                        onClicked:
+                                        {
+                                             project.exportOutputJson(true);
                                         }
                                     }
                                 }

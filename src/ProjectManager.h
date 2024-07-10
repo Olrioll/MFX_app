@@ -49,6 +49,10 @@ public slots:
 
     void saveProjectToFile( const QString& saveFile );
 
+    void exportAudioTrack();
+    void exportBackgroundImage();
+    void exportOutputJson(bool sendToCloud);
+
     QString selectBackgroundImageDialog();
     QString selectAudioTrackDialog();
     QString openProjectDialog();
@@ -165,7 +169,6 @@ public slots:
     void deleteCues(QStringList deletedCueNames);
     void copyCues(QStringList copyCueNames);
     void changeAction(QString cueName, int deviceId, QString pattern);
-    void saveJsonOut();
     void onMirror(const QString &cueName, QList<int> deviceId);
     void onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside);
     void onRandom(const QString &cueName, QList<int> deviceId);
@@ -203,6 +206,8 @@ private:
     void updateCoeffByName(QString cueName);
     void cleanWorkDirectory();
     void correctSceneFrame();
+    QString getLastOpenDir() const;
+    void exportFile( const QString& fromFile, const QString& toFile );
 
     SettingsManager& _settings;
     DeviceManager* m_DeviceManager;

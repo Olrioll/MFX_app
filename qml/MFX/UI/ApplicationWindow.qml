@@ -369,7 +369,9 @@ ApplicationWindow
 
                     Action
                     {
-                        text: translationsManager.translationTrigger + qsTr("New")
+                        text: translationsManager.translationTrigger + qsTr("New") + " (Ctrl + N)"
+                        shortcut: "Ctrl+N"
+
                         onTriggered:
                         {
                             applicationWindow.createNewProject()
@@ -378,7 +380,8 @@ ApplicationWindow
 
                     Action
                     {
-                        text: translationsManager.translationTrigger + qsTr("Open")
+                        text: translationsManager.translationTrigger + qsTr("Open") + " (Ctrl + O)"
+                        shortcut: "Ctrl+O"
 
                         onTriggered:
                         {
@@ -412,7 +415,7 @@ ApplicationWindow
 
                     Action
                     {
-                        text: translationsManager.translationTrigger + qsTr("Save")
+                        text: translationsManager.translationTrigger + qsTr("Save") + " (Ctrl + S)"
                         shortcut: "Ctrl+S"
 
                         onTriggered:
@@ -421,14 +424,54 @@ ApplicationWindow
                         }
                     }
 
-                    Action
+                    MfxMenu
                     {
-                        text: translationsManager.translationTrigger + qsTr("Import")
+                        title: translationsManager.translationTrigger + qsTr("Import")
+
+                        Action
+                        {
+                            text: translationsManager.translationTrigger + qsTr("Audio track")
+                        }
+
+                        Action
+                        {
+                            text: translationsManager.translationTrigger + qsTr("Background img")
+                        }
                     }
 
-                    Action
+                    MfxMenu
                     {
-                        text: translationsManager.translationTrigger + qsTr("Export")
+                        title: translationsManager.translationTrigger + qsTr("Export")
+
+                        Action
+                        {
+                            text: translationsManager.translationTrigger + qsTr("Audio track")
+
+                            onTriggered:
+                            {
+                                project.exportAudioTrack()
+                            }
+                        }
+
+                        Action
+                        {
+                            text: translationsManager.translationTrigger + qsTr("Background img")
+
+                            onTriggered:
+                            {
+                                project.exportBackgroundImage()
+                            }
+                        }
+
+                        Action
+                        {
+                            text: translationsManager.translationTrigger + qsTr("Output json file")
+
+                            onTriggered:
+                            {
+                                project.exportOutputJson(false)
+                            }
+                        }
                     }
 
                     Action
