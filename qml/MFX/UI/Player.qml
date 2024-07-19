@@ -978,6 +978,7 @@ Item
             id: cueViewFlickableMouseArea
             anchors.fill: parent
             hoverEnabled: true
+            property bool showSelectRect: false
 
             onPressed:
             {
@@ -991,8 +992,8 @@ Item
 
             onClicked:
             {
-
-                if(cueCopy.isCopy){
+                if(cueCopy.isCopy)
+                {
                     console.log("copydelete")
                     cueView.deleteIntersected();
                     cueCopy.isCopy=false;
@@ -1014,6 +1015,11 @@ Item
                 })
 
                 cueView.collapseAll()
+
+                if( showSelectRect )
+                    showSelectRect = false
+                else
+                    playerWidget.position = playerWidget.min + pixelsToMsec( mouseX )
             }
 
             onPositionChanged:
@@ -1025,6 +1031,9 @@ Item
                     selectRect.x = mapToItem(cueView, pressedX, pressedY).x - selectRect.width
                 if(dy < 0)
                     selectRect.y = mapToItem(cueView, pressedX, pressedY).y - selectRect.height
+
+                if( selectRect.visible )
+                    showSelectRect = true
             }
 
             onReleased:
