@@ -1019,7 +1019,10 @@ Item
                 if( showSelectRect )
                     showSelectRect = false
                 else
+                {
                     playerWidget.position = playerWidget.min + pixelsToMsec( mouseX )
+                    waveformWidget.setPlayerPosition( playerWidget.position - project.property( "prePlayInterval" ) )
+                }
             }
 
             onPositionChanged:
