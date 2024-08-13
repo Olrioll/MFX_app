@@ -142,6 +142,9 @@ bool ProjectManager::loadProject(const QString& fileName)
             propertiesMap["propName"] = "height";
             propertiesMap["propValue"] = patch->properties().value( "height" ).toInt();
             properties.append( propertiesMap );
+            propertiesMap["propName"] = "color type";
+            propertiesMap["propValue"] = patch->properties().value( "color type" ).toString();
+            properties.append( propertiesMap );
             emit editPatch( properties );
         }
 
@@ -570,10 +573,8 @@ void ProjectManager::addPatch(const QString& type, const QVariantList& propertie
     patch->setProperty("act", "");
     patch->setProperty("checked", false);
 
-    foreach(const auto& prop, properties)
-    {
+    for(const auto& prop : properties)
         patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
-    }
 
     getChild("Patches")->addChild(patch);
 
@@ -591,8 +592,9 @@ void ProjectManager::addPatch(const QString& type, const QVariantList& propertie
 
         if(!hasUnplacedPatch)
         {
-             getChild("Patches")->listedChildren().last()->setProperty("posXRatio", (0.05 + 0.01 * i));
+            getChild("Patches")->listedChildren().last()->setProperty("posXRatio", (0.05 + 0.01 * i));
             getChild("Patches")->listedChildren().last()->setProperty("posYRatio", (0.05 + 0.01 * i));
+
             emit patchListChanged();
             return;
         }
@@ -608,17 +610,12 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
     QMutexLocker locker( &m_ProjectLocker );
 
     JsonSerializable* patch = new JsonSerializable;
-//    patch->setProperty("type", type);
-//    patch->setProperty("act", "");
-//    patch->setProperty("checked", false);
 
     for(const auto& prop : properties)
-    {
         if(!prop.toMap().isEmpty())
             patch->setProperty(prop.toMap().first().toString(), prop.toMap().last());
-    }
 
-    for(const auto p : getChild("Patches")->listedChildren())
+    for(const auto& p : getChild("Patches")->listedChildren())
     {
         if(p->property("ID") == patch->property("ID"))
         {
@@ -646,6 +643,8 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
             if(patch->property("height").isNull())
                 patch->setProperty("height", p->property("height"));
 
+            if( patch->property( "color type" ).isNull() )
+                patch->setProperty( "color type", p->property( "color type" ) );
 
             getChild("Patches")->replaceChild(p, patch);
             emit patchListChanged();

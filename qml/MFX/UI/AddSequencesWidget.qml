@@ -17,6 +17,7 @@ Item
     property bool isOneDevice
     property string groupName: ""
     property var currentInput: quantityField
+    property string selColor: isOneDevice ? "yellow" : ""
 
     function markAllInputsInactive()
     {
@@ -42,8 +43,6 @@ Item
             if(operatorIndex !== -1)
                 isNegative = true
         }
-
-
 
         let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
 
@@ -116,7 +115,8 @@ Item
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "min ang", propValue: Number(minAngField.text)},
                               {propName: "max ang", propValue: Number(maxAngField.text)},
-                              {propName: "height", propValue: Number(heightField.text)}
+                              {propName: "height", propValue: Number(heightField.text)},
+                              {propName: "color type", propValue: addSequWindow.selColor}
                              ])
             deviceManager.onEditPatch(
                                     [
@@ -126,7 +126,8 @@ Item
                                      {propName: "RF ch", propValue: currentRfChValue},
                                      {propName: "min ang", propValue: Number(minAngField.text)},
                                      {propName: "max ang", propValue: Number(maxAngField.text)},
-                                     {propName: "height", propValue: Number(heightField.text)}
+                                     {propName: "height", propValue: Number(heightField.text)},
+                                     {propName: "color type", propValue: addSequWindow.selColor}
                                     ])
 
             if(groupName)
@@ -156,8 +157,6 @@ Item
                 isNegative = true
         }
 
-
-
         let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
 
         let dmxIncrement = 0
@@ -180,8 +179,6 @@ Item
             if(operatorIndex !== -1)
                 isNegative = true
         }
-
-
 
         let currentRfPosValue = (operatorIndex === -1) ? Number(rfPosField.text) : Number(rfPosField.text.slice(0, operatorIndex))
 
@@ -206,8 +203,6 @@ Item
                 isNegative = true
         }
 
-
-
         let currentRfChValue = (operatorIndex === -1) ? Number(rfChField.text) : Number(rfChField.text.slice(0, operatorIndex))
 
         let rfChIncrement = 0
@@ -221,6 +216,7 @@ Item
         let isMinAng  =  minAngField.text == "~"
         let isMaxAng  =  maxAngField.text == "~"
         let isHeight  =  heightField.text == "~"
+        let isColor   =  addSequWindow.selColor == ""
         deviceManager.reloadPattern();
         for(let i = 0; i < changedIdList.length; i++)
         {
@@ -232,7 +228,8 @@ Item
                               isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
                               isRfPoxUnused?{}: {propName: "RF pos", propValue:  currentRfPosValue},
                               isRfChFieldUnused?{}:{propName: "RF ch", propValue: currentRfChValue},
-                              isHeight?{}:{propName: "height", propValue: Number(heightField.text)}
+                              isHeight?{}:{propName: "height", propValue: Number(heightField.text)},
+                              isColor?{}:{propName: "color type", propValue: addSequWindow.selColor}
                              ])
             deviceManager.onEditPatch(
                         [
@@ -242,7 +239,8 @@ Item
                          isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
                          isRfPoxUnused?{}:{propName: "RF pos", propValue: currentRfPosValue},
                          isRfChFieldUnused?{}:{propName: "RF ch", propValue: currentRfChValue},
-                         isHeight?{}:{propName: "height", propValue: Number(heightField.text)}
+                         isHeight?{}:{propName: "height", propValue: Number(heightField.text)},
+                         isColor?{}:{propName: "color type", propValue: addSequWindow.selColor}
                         ])
 
             currentDmxValue += dmxIncrement
@@ -1186,6 +1184,8 @@ Item
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addSequWindow.selColor
+            onClicked: addSequWindow.selColor = colorType
 
             property string colorType: "red"
 
@@ -1213,6 +1213,8 @@ Item
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addSequWindow.selColor
+            onClicked: addSequWindow.selColor = colorType
 
             property string colorType: "blue"
 
@@ -1240,6 +1242,8 @@ Item
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addSequWindow.selColor
+            onClicked: addSequWindow.selColor = colorType
 
             property string colorType: "green"
 
@@ -1267,6 +1271,8 @@ Item
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addSequWindow.selColor
+            onClicked: addSequWindow.selColor = colorType
 
             property string colorType: "yellow"
 
@@ -1294,6 +1300,8 @@ Item
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addSequWindow.selColor
+            onClicked: addSequWindow.selColor = colorType
 
             property string colorType: "purple"
 
@@ -1359,6 +1367,10 @@ Item
             heightField.text = propValuesList[propNamesList.indexOf("height")];
             minAngField.text = propValuesList[propNamesList.indexOf("min ang")];
             maxAngField.text = propValuesList[propNamesList.indexOf("max ang")];
+
+            var colorInd = propNamesList.indexOf( "color type" )
+            if( colorInd != -1 )
+                addSequWindow.selColor = propValuesList[colorInd]
         }
     }
 }

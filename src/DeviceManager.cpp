@@ -61,11 +61,14 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
     int minAng = MIN_ANGLE;
     int maxAng = MAX_ANGLE;
     int height = -1;
+    QString colorType = "";
 
 //    bool isId = false;
     bool isMinAng = false;
     bool isMaxAng = false;
     bool isHeight = false;
+    bool isColorType = false;
+
     //qDebug()<< "EditPatch"<<properties;
     for(const auto prop : properties)
     {
@@ -104,6 +107,14 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
                 isHeight = true;
             }
         }
+        else if( stringFirst == "color type" )
+        {
+            if( !last.isNull() )
+            {
+                colorType = last.toString();
+                isColorType = true;
+            }
+        }
     }
 
     Device* device = deviceById(id);
@@ -120,6 +131,9 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
 
     if(isHeight)
         sequenceDevice->setheight(height);
+
+    if( isColorType )
+        sequenceDevice->setColorType( colorType );
 
     device->clearCalcDurations();
 

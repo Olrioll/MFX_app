@@ -7,6 +7,7 @@ Item
     property int angle: -90
     property int fireHeight: 10
     property double fireLife: 200
+    property string colorType: "#FFD700"
     property bool active: false
     property bool notifyFinishChangeAngle: false
 
@@ -49,7 +50,7 @@ Item
     {
         source: "qrc:///particleresources/glowdot.png"
         system: particleSystem
-        color: '#FFD700'
+        color: particleEmiter.colorType
         colorVariation: 0.2
         rotation: 0
         rotationVariation: 45

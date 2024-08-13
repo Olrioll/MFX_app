@@ -33,7 +33,7 @@ public:
     Device* deviceById(int id) const;
 
 signals:
-    void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, int fireHeight, bool active);
+    void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, int fireHeight, const QString& colorType, bool active);
     void endOfPattern(qulonglong deviceId);
     void drawPreviewInGui( int duration, int angle, int velocity, bool active );
     void endOfPreview();

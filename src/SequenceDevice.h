@@ -15,6 +15,7 @@
 class SequenceDevice : public Device {
     Q_OBJECT
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, comPort, ComPort, "") //ComPort устройства
+    QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, colorType, ColorType, "")
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, dmx, Dmx, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, rfChannel, RfChannel, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, rfPosition, RfPosition, 0) //DMX
