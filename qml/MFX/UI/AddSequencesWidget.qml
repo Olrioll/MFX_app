@@ -8,7 +8,7 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item
 {
     id: addSequWindow
-    width: 300
+    width: 324
     height: 294
 
     property bool isEditMode: false
@@ -17,7 +17,7 @@ Item
     property bool isOneDevice
     property string groupName: ""
     property var currentInput: quantityField
-    property string selColor: isOneDevice ? "yellow" : ""
+    property string selColor: isOneDevice ? "#FFD700" : ""
 
     function markAllInputsInactive()
     {
@@ -330,67 +330,365 @@ Item
         {
             x: 4
             y: 34
-            width: 164
-            height: 70
+            width: 188
+            height: 72
             color: "#222222"
             radius: 2
-        }
 
-        Text
-        {
-            id: quantityText
-            y: 40
-            height: 17
-            color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("Quantity")
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.rightMargin: 194
-            anchors.leftMargin: 35
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            font.family: MFXUIS.Fonts.robotoRegular.name
-
-            visible: !(changedIdList.length > 1)
-        }
-
-        TextField
-        {
-            id: quantityField
-            x: 99
-            y: 40
-            width: 36
-            height: 18
-            text: "1"
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-            visible: !(changedIdList.length > 1)
-
-            property bool isActiveInput: true
-            property string lastSelectedText
-
-            validator: RegExpValidator { regExp: /[0-9]+/ }
-            maximumLength: 2
-
-            background: Rectangle
+            GridLayout
             {
-                color: "#000000"
-                radius: 2
-            }
+                anchors.fill: parent
+                anchors.margins: 4
+                rows: 2
 
-            onFocusChanged:
-            {
-                if(focus)
+                Switch
                 {
-                    markAllInputsInactive();
-                    isActiveInput = true;
-                    addSequWindow.currentInput = this;
-                    selectAll();
-                    lastSelectedText = selectedText
+                    Layout.row: 0
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+
+                    id: modeSwitch
+
+                    indicator: Rectangle
+                    {
+                        width: modeSwitch.width
+                        height: modeSwitch.height
+                        x: 0
+                        y: 0
+
+                        radius: 2
+                        color: "#000000"
+
+                        Rectangle
+                        {
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+
+                            width: modeSwitch.width / 2
+                            x: modeSwitch.checked ? modeSwitch.width - width : 0
+
+                            radius: 2
+
+                            color: modeSwitch.down ? "#649ce8" : "#2F80ED"
+
+                            Behavior on x { SmoothedAnimation { duration: 175 } }
+                        }
+
+                        Text
+                        {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            width: parent.width / 2
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            lineHeightMode: Text.FixedHeight
+                            lineHeight: 26
+
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            font.pixelSize: 12
+
+                            color: !modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
+
+                            Behavior on color { ColorAnimation { duration : 175 } }
+
+                            text: translationsManager.translationTrigger + qsTr("DMX")
+                        }
+
+                        Text
+                        {
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            width: parent.width / 2
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            lineHeightMode: Text.FixedHeight
+                            lineHeight: 26
+
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            font.pixelSize: 12
+
+                            color: modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
+
+                            Behavior on color { ColorAnimation { duration : 175 } }
+
+                            text: translationsManager.translationTrigger + qsTr("RF")
+                        }
+                    }
+
+                    contentItem: Item {}
+                }
+
+                GridLayout
+                {
+                    Layout.row: 1
+                    rows: 2
+                    columns: 4
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 0
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("Qty")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                        visible: !addSequWindow.isEditMode
+                    }
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 1
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF pos") : qsTr("DMX pos"))
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 2
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF ch") : qsTr("DMX ch"))
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 3
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("Height")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 0
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: quantityField
+                        text: "1"
+                        color: "#ffffff"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+                        visible: !addSequWindow.isEditMode
+
+                        property bool isActiveInput: true
+                        property string lastSelectedText
+
+                        validator: RegExpValidator { regExp: /[0-9]+/ }
+                        maximumLength: 2
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true;
+                                addSequWindow.currentInput = this;
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 1
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: rfPosField
+                        color: "#ffffff"
+                        text: isOneDevice? "1":"~"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            let operatorIndex = text.indexOf('+')
+
+                            if(operatorIndex === -1)
+                                operatorIndex = text.indexOf('-')
+
+                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                            return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
+                        }
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addSequWindow.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 2
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: rfChField
+                        color: "#ffffff"
+                        text: isOneDevice? "1":"~"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            let operatorIndex = text.indexOf('+')
+
+                            if(operatorIndex === -1)
+                                operatorIndex = text.indexOf('-')
+
+                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                            return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+                        }
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addSequWindow.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 3
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: heightField
+                        color: "#ffffff"
+                        text: isOneDevice? 10: "~"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            return (Number(text) >= 0 && Number(text) < 200)
+                        }
+
+                        validator: RegExpValidator { regExp: /[0-9]+/ }
+                        maximumLength: 3
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addSequWindow.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -408,6 +706,7 @@ Item
             padding: 0
             leftPadding: -2
             font.pointSize: 8
+            visible: false
 
             property bool isActiveInput: false
             property string lastSelectedText
@@ -448,223 +747,10 @@ Item
             }
         }
 
-        TextField
-        {
-            id: rfPosField
-            x: 48
-            y: 82
-            width: 36
-            height: 18
-            color: "#ffffff"
-            text: isOneDevice? "1":"~"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
-            }
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-        TextField
-        {
-            id: rfChField
-            x: 88
-            y: 82
-            width: 36
-            height: 18
-            color: "#ffffff"
-            text: isOneDevice? "1":"~"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
-            }
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-        TextField
-        {
-            id: heightField
-            x: 128
-            y: 82
-            width: 36
-            height: 18
-            color: "#ffffff"
-            text: isOneDevice? 10: "~"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                return (Number(text) >= 0 && Number(text) < 200)
-            }
-
-            validator: RegExpValidator { regExp: /[0-9]+/ }
-            maximumLength: 3
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-
-
-        Text {
-            y: 64
-            height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("DMX")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            minimumPixelSize: 10
-            anchors.leftMargin: 8
-            anchors.rightMargin: 256
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
-        Text {
-            y: 64
-            height: 17
-            color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("RF pos")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 48
-            anchors.rightMargin: 216
-            minimumPixelSize: 10
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
-        Text {
-            y: 64
-            height: 17
-            color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("RF ch")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 88
-            anchors.rightMargin: 176
-            minimumPixelSize: 10
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
-        Text {
-            y: 64
-            height: 17
-            color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("height")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 128
-            anchors.rightMargin: 136
-            minimumPixelSize: 10
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
         CalcWidget
         {
             id: calcWidget
-            x: 172
+            x: 196
             y: 34
 
             minusButtonText: heightField.isActiveInput ? "." : "-"
@@ -673,7 +759,7 @@ Item
         MfxButton
         {
             id: setButton
-            x: 172
+            x: 196
             y: 226
             width: 124
             color: "#2F80ED"
@@ -1164,7 +1250,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             anchors.rightMargin: 200
-            anchors.leftMargin: 35
+            anchors.leftMargin: 59
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
@@ -1179,7 +1265,7 @@ Item
         Button
         {
             id: colorButton1
-            x: 120
+            x: 144
             y: 258
             width: 32
             height: 32
@@ -1208,7 +1294,7 @@ Item
         Button
         {
             id: colorButton2
-            x: 156
+            x: 180
             y: 258
             width: 32
             height: 32
@@ -1237,7 +1323,7 @@ Item
         Button
         {
             id: colorButton3
-            x: 192
+            x: 216
             y: 258
             width: 32
             height: 32
@@ -1266,7 +1352,7 @@ Item
         Button
         {
             id: colorButton4
-            x: 228
+            x: 252
             y: 258
             width: 32
             height: 32
@@ -1274,7 +1360,7 @@ Item
             checked: colorType == addSequWindow.selColor
             onClicked: addSequWindow.selColor = colorType
 
-            property string colorType: "yellow"
+            property string colorType: "#FFD700"
 
             background: Rectangle
             {
@@ -1295,7 +1381,7 @@ Item
         Button
         {
             id: colorButton5
-            x: 264
+            x: 288
             y: 258
             width: 32
             height: 32
@@ -1330,8 +1416,6 @@ Item
             when: addSequWindow.isEditMode
             PropertyChanges {target: windowTitle; text: translationsManager.translationTrigger + qsTr("Edit sequences")}
             PropertyChanges {target: setButton; text: translationsManager.translationTrigger + qsTr("Apply")}
-            PropertyChanges {target: quantityText; text: translationsManager.translationTrigger + qsTr("Patch ID")}
-            PropertyChanges {target: quantityField; maximumLength: 3}
         }
     ]
 
@@ -1360,7 +1444,7 @@ Item
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
-            quantityField.text = propValuesList[propNamesList.indexOf("ID")];
+            //quantityField.text = propValuesList[propNamesList.indexOf("ID")];
             dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];

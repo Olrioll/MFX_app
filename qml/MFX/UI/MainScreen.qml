@@ -1889,7 +1889,7 @@ FocusScope
                                     //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
                                     //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
         //                            groupListModel.append({groupName: "Dimmer"})
-        //                            groupListModel.append({groupName: "Shot"})
+                                    groupListModel.append({groupName: "Shot"})
         //                            groupListModel.append({groupName: "Pyro"})
                                 }
 
@@ -3055,8 +3055,6 @@ FocusScope
 
             ButtonGroup.group: rightButtonsGroup
 
-            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
-            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
             visible: true
         }
 
@@ -3095,9 +3093,7 @@ FocusScope
 
             ButtonGroup.group: rightButtonsGroup
 
-            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
-            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
-            visible: false
+            visible: true
         }
 
         MfxButton
