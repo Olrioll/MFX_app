@@ -22,9 +22,10 @@ Item
     function markAllInputsInactive()
     {
         quantityField.isActiveInput = false
-        dmxField.isActiveInput = false
+        //dmxField.isActiveInput = false
         rfPosField.isActiveInput = false
         rfChField.isActiveInput = false
+        dmxChField.isActiveInput = false
         heightField.isActiveInput = false
         minAngField.isActiveInput = false
         maxAngField.isActiveInput = false
@@ -35,29 +36,29 @@ Item
         //--- Определяем инкремент канала DMX
 
         let isNegative = false
-        let operatorIndex = dmxField.text.indexOf('+')
-
-        if(operatorIndex === -1)
-        {
-            operatorIndex = dmxField.text.indexOf('-')
-            if(operatorIndex !== -1)
-                isNegative = true
-        }
-
-        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-        let dmxIncrement = 0
-        if(operatorIndex !== -1)
-        {
-            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-            if(isNegative)
-                dmxIncrement = -dmxIncrement
-        }
+        //let operatorIndex = dmxField.text.indexOf('+')
+        //
+        //if(operatorIndex === -1)
+        //{
+        //    operatorIndex = dmxField.text.indexOf('-')
+        //    if(operatorIndex !== -1)
+        //        isNegative = true
+        //}
+        //
+        //let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+        //
+        //let dmxIncrement = 0
+        //if(operatorIndex !== -1)
+        //{
+        //    dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+        //    if(isNegative)
+        //        dmxIncrement = -dmxIncrement
+        //}
 
         //--- Определяем инкремент RF pos
 
         isNegative = false
-        operatorIndex = rfPosField.text.indexOf('+')
+        let operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
         {
@@ -65,8 +66,6 @@ Item
             if(operatorIndex !== -1)
                 isNegative = true
         }
-
-
 
         let currentRfPosValue = (operatorIndex === -1) ? Number(rfPosField.text) : Number(rfPosField.text.slice(0, operatorIndex))
 
@@ -90,8 +89,6 @@ Item
                 isNegative = true
         }
 
-
-
         let currentRfChValue = (operatorIndex === -1) ? Number(rfChField.text) : Number(rfChField.text.slice(0, operatorIndex))
 
         let rfChIncrement = 0
@@ -102,6 +99,29 @@ Item
                 rfChIncrement = -rfChIncrement
         }
 
+        //--- Определяем инкремент Dmx ch
+
+        isNegative = false
+        operatorIndex = dmxChField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = dmxChField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+        let currentDmxChValue = (operatorIndex === -1) ? Number(dmxChField.text) : Number(dmxChField.text.slice(0, operatorIndex))
+
+        let dmxChIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            dmxChIncrement = Number(dmxChField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                dmxChIncrement = -dmxChIncrement
+        }
+
+
         let currentId = project.lastPatchId() + 1;
         deviceManager.reloadPattern()
 
@@ -110,24 +130,28 @@ Item
             project.addPatch( "Sequences",
                              [
                               {propName: "ID", propValue: currentId},
-                              {propName: "DMX", propValue: currentDmxValue},
+                              //{propName: "DMX", propValue: currentDmxValue},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
+                              {propName: "DMX ch", propValue: currentDmxChValue},
                               {propName: "min ang", propValue: Number(minAngField.text)},
                               {propName: "max ang", propValue: Number(maxAngField.text)},
                               {propName: "height", propValue: Number(heightField.text)},
-                              {propName: "color type", propValue: addSequWindow.selColor}
+                              {propName: "color type", propValue: addSequWindow.selColor},
+                              {propName: "RF mode", propValue: modeSwitch.checked}
                              ])
             deviceManager.onEditPatch(
                                     [
                                      {propName: "ID", propValue: currentId},
-                                     {propName: "DMX", propValue: currentDmxValue},
+                                     //{propName: "DMX", propValue: currentDmxValue},
                                      {propName: "RF pos", propValue: currentRfPosValue},
                                      {propName: "RF ch", propValue: currentRfChValue},
+                                     {propName: "DMX ch", propValue: currentDmxChValue},
                                      {propName: "min ang", propValue: Number(minAngField.text)},
                                      {propName: "max ang", propValue: Number(maxAngField.text)},
                                      {propName: "height", propValue: Number(heightField.text)},
-                                     {propName: "color type", propValue: addSequWindow.selColor}
+                                     {propName: "color type", propValue: addSequWindow.selColor},
+                                     {propName: "RF mode", propValue: modeSwitch.checked}
                                     ])
 
             if(groupName)
@@ -135,9 +159,10 @@ Item
                 project.addPatchToGroup(groupName, currentId)
             }
 
-            currentDmxValue += dmxIncrement
+            //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
+            currentDmxChValue += dmxChIncrement
             currentId++
         }
     }
@@ -147,31 +172,31 @@ Item
         //--- Определяем инкремент канала DMX
 
         let isNegative = false
-        let isDmxUnused = dmxField.text == "~"
-        let operatorIndex = dmxField.text.indexOf('+')
-
-        if(operatorIndex === -1)
-        {
-            operatorIndex = dmxField.text.indexOf('-')
-            if(operatorIndex !== -1)
-                isNegative = true
-        }
-
-        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-        let dmxIncrement = 0
-        if(operatorIndex !== -1)
-        {
-            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-            if(isNegative)
-                dmxIncrement = -dmxIncrement
-        }
+        //let isDmxUnused = dmxField.text == "~"
+        //let operatorIndex = dmxField.text.indexOf('+')
+        //
+        //if(operatorIndex === -1)
+        //{
+        //    operatorIndex = dmxField.text.indexOf('-')
+        //    if(operatorIndex !== -1)
+        //        isNegative = true
+        //}
+        //
+        //let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+        //
+        //let dmxIncrement = 0
+        //if(operatorIndex !== -1)
+        //{
+        //    dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+        //    if(isNegative)
+        //        dmxIncrement = -dmxIncrement
+        //}
 
         //--- Определяем инкремент RF pos
 
         isNegative = false
-        let isRfPoxUnused = rfPosField.text == "~"
-        operatorIndex = rfPosField.text.indexOf('+')
+        let isRfPosUnused = rfPosField.text == "~"
+        let operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
         {
@@ -213,6 +238,29 @@ Item
                 rfChIncrement = -rfChIncrement
         }
 
+        //--- Определяем инкремент Dmx ch
+
+        isNegative = false
+        let isDmxChFieldUnused = dmxChField.text == "~"
+        operatorIndex = dmxChField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = dmxChField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+        let currentDmxChValue = (operatorIndex === -1) ? Number(dmxChField.text) : Number(dmxChField.text.slice(0, operatorIndex))
+
+        let dmxChIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            dmxChIncrement = Number(dmxChField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                dmxChIncrement = -dmxChIncrement
+        }
+
         let isMinAng  =  minAngField.text == "~"
         let isMaxAng  =  maxAngField.text == "~"
         let isHeight  =  heightField.text == "~"
@@ -223,29 +271,34 @@ Item
             project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
-                              isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
+                              //isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
                               isMinAng?{}:{propName: "min ang", propValue: Number(minAngField.text)},
                               isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
-                              isRfPoxUnused?{}: {propName: "RF pos", propValue:  currentRfPosValue},
+                              isRfPosUnused?{}: {propName: "RF pos", propValue:  currentRfPosValue},
                               isRfChFieldUnused?{}:{propName: "RF ch", propValue: currentRfChValue},
+                              isDmxChFieldUnused?{}:{propName: "DMX ch", propValue: currentDmxChValue},
                               isHeight?{}:{propName: "height", propValue: Number(heightField.text)},
-                              isColor?{}:{propName: "color type", propValue: addSequWindow.selColor}
+                              isColor?{}:{propName: "color type", propValue: addSequWindow.selColor},
+                              {propName: "RF mode", propValue: modeSwitch.checked}
                              ])
             deviceManager.onEditPatch(
                         [
                          {propName: "ID", propValue: changedIdList[i]},
-                         isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
+                         //isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
                          isMinAng?{}:{propName: "min ang", propValue: Number(minAngField.text)},
                          isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
-                         isRfPoxUnused?{}:{propName: "RF pos", propValue: currentRfPosValue},
+                         isRfPosUnused?{}:{propName: "RF pos", propValue: currentRfPosValue},
                          isRfChFieldUnused?{}:{propName: "RF ch", propValue: currentRfChValue},
+                         isDmxChFieldUnused?{}:{propName: "DMX ch", propValue: currentDmxChValue},
                          isHeight?{}:{propName: "height", propValue: Number(heightField.text)},
-                         isColor?{}:{propName: "color type", propValue: addSequWindow.selColor}
+                         isColor?{}:{propName: "color type", propValue: addSequWindow.selColor},
+                         {propName: "RF mode", propValue: modeSwitch.checked}
                         ])
 
-            currentDmxValue += dmxIncrement
+            //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
+            currentDmxChValue += dmxChIncrement
         }
     }
 
@@ -438,7 +491,7 @@ Item
                         Layout.alignment: Qt.AlignHCenter
 
                         color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Qty")
+                        text: translationsManager.translationTrigger + qsTr("Quantity")
                         elide: Text.ElideMiddle
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -455,12 +508,13 @@ Item
                         Layout.alignment: Qt.AlignHCenter
 
                         color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF pos") : qsTr("DMX pos"))
+                        text: translationsManager.translationTrigger + qsTr("RF pos")
                         elide: Text.ElideMiddle
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                         minimumPixelSize: 10
                         font.family: MFXUIS.Fonts.robotoRegular.name
+                        visible: modeSwitch.checked
                     }
 
                     Text
@@ -470,7 +524,7 @@ Item
                         Layout.fillWidth: true
                         Layout.alignment: Qt.AlignHCenter
 
-                        color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
+                        color: modeSwitch.checked && rfChField.isActiveInput ? "#27AE60" : !modeSwitch.checked && dmxChField.isActiveInput ? "#27AE60" : "#ffffff"
                         text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF ch") : qsTr("DMX ch"))
                         elide: Text.ElideMiddle
                         horizontalAlignment: Text.AlignHCenter
@@ -552,6 +606,7 @@ Item
                         padding: 0
                         leftPadding: -2
                         font.pointSize: 8
+                        visible: modeSwitch.checked
 
                         property bool isActiveInput: false
                         property string lastSelectedText
@@ -604,6 +659,60 @@ Item
                         padding: 0
                         leftPadding: -2
                         font.pointSize: 8
+                        visible: modeSwitch.checked
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            let operatorIndex = text.indexOf('+')
+
+                            if(operatorIndex === -1)
+                                operatorIndex = text.indexOf('-')
+
+                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                            return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+                        }
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addSequWindow.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 2
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: dmxChField
+                        color: "#ffffff"
+                        text: isOneDevice? "1":"~"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+                        visible: !modeSwitch.checked
 
                         property bool isActiveInput: false
                         property string lastSelectedText
@@ -651,7 +760,7 @@ Item
 
                         id: heightField
                         color: "#ffffff"
-                        text: isOneDevice? 10: "~"
+                        text: isOneDevice? "10" : "~"
                         horizontalAlignment: Text.AlignHCenter
                         padding: 0
                         leftPadding: -2
@@ -693,7 +802,7 @@ Item
             }
         }
 
-        TextField
+        /*TextField
         {
             id: dmxField
             x: 8
@@ -745,7 +854,7 @@ Item
                     lastSelectedText = selectedText
                 }
             }
-        }
+        }*/
 
         CalcWidget
         {
@@ -768,9 +877,10 @@ Item
             {
                 (addSequWindow.isEditMode && !isOneDevice)?
                  true:
-                        dmxField.checkValue() &&
+                        //dmxField.checkValue() &&
                         rfPosField.checkValue() &&
                         rfChField.checkValue() &&
+                        dmxChField.checkValue() &&
                         heightField.checkValue() &&
                         minAngField.checkValue() &&
                         maxAngField.checkValue()
@@ -1445,16 +1555,24 @@ Item
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
             //quantityField.text = propValuesList[propNamesList.indexOf("ID")];
-            dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
+            //dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
             heightField.text = propValuesList[propNamesList.indexOf("height")];
             minAngField.text = propValuesList[propNamesList.indexOf("min ang")];
             maxAngField.text = propValuesList[propNamesList.indexOf("max ang")];
 
-            var colorInd = propNamesList.indexOf( "color type" )
-            if( colorInd != -1 )
-                addSequWindow.selColor = propValuesList[colorInd]
+            var ind = propNamesList.indexOf( "color type" )
+            if( ind != -1 )
+                addSequWindow.selColor = propValuesList[ind]
+
+            ind = propNamesList.indexOf( "DMX ch" )
+            if( ind != -1 )
+                dmxChField.text = propValuesList[ind];
+
+            ind = propNamesList.indexOf( "RF mode" )
+            if( ind != -1 )
+                modeSwitch.checked = propValuesList[ind];
         }
     }
 }

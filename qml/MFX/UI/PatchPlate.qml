@@ -65,14 +65,19 @@ Item
         if("ID" in patchProperties)
             cellListModel.append({propName: "ID", propValue: patchProperties["ID"]})
 
-        if("DMX" in patchProperties)
-            cellListModel.append({propName: "DMX", propValue: patchProperties["DMX"]})
+        //if("DMX" in patchProperties)
+        //    cellListModel.append({propName: "DMX", propValue: patchProperties["DMX"]})
+
+        var isRfMode = ("RF mode" in patchProperties && patchProperties["RF mode"] === true)
+
+        if("DMX ch" in patchProperties)
+            cellListModel.append({propName: "DMX ch", propValue: (isRfMode ? "" : patchProperties["DMX ch"])})
 
         if("RF ch" in patchProperties)
-            cellListModel.append({propName: "RF ch", propValue: patchProperties["RF ch"]})
+            cellListModel.append({propName: "RF ch", propValue: (isRfMode ? patchProperties["RF ch"] : "")})
 
         if("RF pos" in patchProperties)
-            cellListModel.append({propName: "RF pos", propValue: patchProperties["RF pos"]})
+            cellListModel.append({propName: "RF pos", propValue: (isRfMode ? patchProperties["RF pos"] : "")})
 
         if("max ang" in patchProperties)
             cellListModel.append({propName: "max ang", propValue: patchProperties["max ang"]})

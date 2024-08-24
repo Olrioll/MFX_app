@@ -124,9 +124,9 @@ bool ProjectManager::loadProject(const QString& fileName)
             propertiesMap["propName"] = "ID";
             propertiesMap["propValue"] = patch->properties().value( "ID" ).toUInt();
             properties.append( propertiesMap );
-            propertiesMap["propName"] = "DMX";
-            propertiesMap["propValue"] = patch->properties().value( "DMX" ).toInt();
-            properties.append( propertiesMap );
+            //propertiesMap["propName"] = "DMX";
+            //propertiesMap["propValue"] = patch->properties().value( "DMX" ).toInt();
+            //properties.append( propertiesMap );
             propertiesMap["propName"] = "min ang";
             propertiesMap["propValue"] = patch->properties().value( "min ang" ).toInt();
             properties.append( propertiesMap );
@@ -139,11 +139,17 @@ bool ProjectManager::loadProject(const QString& fileName)
             propertiesMap["propName"] = "RF ch";
             propertiesMap["propValue"] = patch->properties().value( "RF ch" ).toInt();
             properties.append( propertiesMap );
+            propertiesMap["propName"] = "DMX ch";
+            propertiesMap["propValue"] = patch->properties().value( "DMX ch" ).toInt();
+            properties.append( propertiesMap );
             propertiesMap["propName"] = "height";
             propertiesMap["propValue"] = patch->properties().value( "height" ).toInt();
             properties.append( propertiesMap );
             propertiesMap["propName"] = "color type";
             propertiesMap["propValue"] = patch->properties().value( "color type" ).toString();
+            properties.append( propertiesMap );
+            propertiesMap["propName"] = "RF mode";
+            propertiesMap["propValue"] = patch->properties().value( "RF mode" ).toBool();
             properties.append( propertiesMap );
             emit editPatch( properties );
         }
@@ -211,9 +217,9 @@ void ProjectManager::reloadCurrentProject()
         propertiesMap["propName"] = "ID";
         propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
         properties.append(propertiesMap);
-        propertiesMap["propName"] = "DMX";
-        propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
-        properties.append(propertiesMap);
+        //propertiesMap["propName"] = "DMX";
+        //propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
+        //properties.append(propertiesMap);
         propertiesMap["propName"] = "min ang";
         propertiesMap["propValue"] = patch->properties().value("min ang").toInt();
         properties.append(propertiesMap);
@@ -226,9 +232,18 @@ void ProjectManager::reloadCurrentProject()
         propertiesMap["propName"] = "RF ch";
         propertiesMap["propValue"] = patch->properties().value("RF ch").toInt();
         properties.append(propertiesMap);
+        propertiesMap["propName"] = "DMX ch";
+        propertiesMap["propValue"] = patch->properties().value( "DMX ch" ).toInt();
+        properties.append( propertiesMap );
         propertiesMap["propName"] = "height";
         propertiesMap["propValue"] = patch->properties().value("height").toInt();
         properties.append(propertiesMap);
+        propertiesMap["propName"] = "color type";
+        propertiesMap["propValue"] = patch->properties().value( "color type" ).toString();
+        properties.append( propertiesMap );
+        propertiesMap["propName"] = "RF mode";
+        propertiesMap["propValue"] = patch->properties().value( "RF mode" ).toBool();
+        properties.append( propertiesMap );
         emit editPatch(properties);
     }
 
@@ -625,8 +640,8 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
             patch->setProperty("posXRatio", p->property("posXRatio"));
             patch->setProperty("posYRatio", p->property("posYRatio"));
 
-            if(patch->property("DMX").isNull())
-                patch->setProperty("DMX", p->property("DMX"));
+            //if(patch->property("DMX").isNull())
+            //    patch->setProperty("DMX", p->property("DMX"));
 
             if(patch->property("min ang").isNull())
                 patch->setProperty("min ang", p->property("min ang"));
@@ -640,11 +655,17 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
             if(patch->property("RF ch").isNull())
                 patch->setProperty("RF ch", p->property("RF ch"));
 
+            if( patch->property( "DMX ch" ).isNull() )
+                patch->setProperty( "DMX ch", p->property( "DMX ch" ) );
+
             if(patch->property("height").isNull())
                 patch->setProperty("height", p->property("height"));
 
             if( patch->property( "color type" ).isNull() )
                 patch->setProperty( "color type", p->property( "color type" ) );
+
+            if( patch->property( "RF mode" ).isNull() )
+                patch->setProperty( "RF mode", p->property( "RF mode" ) );
 
             getChild("Patches")->replaceChild(p, patch);
             emit patchListChanged();
