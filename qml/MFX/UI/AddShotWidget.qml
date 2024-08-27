@@ -8,20 +8,22 @@ import MFX.UI.Styles 1.0 as MFXUIS
 Item
 {
     id: addShotWidget
-    width: 310
+    width: 324
     height: 304
 
     property bool isEditMode: false
     property var changedIdList: []
     property string groupName: ""
     property var currentInput: quantityField
+    property string selColor: "#FFD700"
 
     function markAllInputsInactive()
     {
         quantityField.isActiveInput = false
-        dmxField.isActiveInput = false
+        //dmxField.isActiveInput = false
         rfPosField.isActiveInput = false
         rfChField.isActiveInput = false
+        dmxChField.isActiveInput = false
         heightField.isActiveInput = false
         angField.isActiveInput = false
     }
@@ -31,31 +33,31 @@ Item
         //--- Определяем инкремент канала DMX
 
         let isNegative = false
-        let operatorIndex = dmxField.text.indexOf('+')
-
-        if(operatorIndex === -1)
-        {
-            operatorIndex = dmxField.text.indexOf('-')
-            if(operatorIndex !== -1)
-                isNegative = true
-        }
-
-
-
-        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-        let dmxIncrement = 0
-        if(operatorIndex !== -1)
-        {
-            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-            if(isNegative)
-                dmxIncrement = -dmxIncrement
-        }
+        //let operatorIndex = dmxField.text.indexOf('+')
+        //
+        //if(operatorIndex === -1)
+        //{
+        //    operatorIndex = dmxField.text.indexOf('-')
+        //    if(operatorIndex !== -1)
+        //        isNegative = true
+        //}
+        //
+        //
+        //
+        //let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+        //
+        //let dmxIncrement = 0
+        //if(operatorIndex !== -1)
+        //{
+        //    dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+        //    if(isNegative)
+        //        dmxIncrement = -dmxIncrement
+        //}
 
         //--- Определяем инкремент RF pos
 
         isNegative = false
-        operatorIndex = rfPosField.text.indexOf('+')
+        let operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
         {
@@ -98,6 +100,28 @@ Item
             rfChIncrement = Number(rfChField.text.slice(operatorIndex + 1))
             if(isNegative)
                 rfChIncrement = -rfChIncrement
+        }
+
+        //--- Определяем инкремент Dmx ch
+
+        isNegative = false
+        operatorIndex = dmxChField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = dmxChField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+        let currentDmxChValue = (operatorIndex === -1) ? Number(dmxChField.text) : Number(dmxChField.text.slice(0, operatorIndex))
+
+        let dmxChIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            dmxChIncrement = Number(dmxChField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                dmxChIncrement = -dmxChIncrement
         }
 
         let currentId = project.lastPatchId() + 1;
@@ -107,11 +131,14 @@ Item
             project.addPatch( "Shot",
                              [
                               {propName: "ID", propValue: currentId},
-                              {propName: "DMX", propValue: currentDmxValue},
+                              //{propName: "DMX", propValue: currentDmxValue},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
+                              {propName: "DMX ch", propValue: currentDmxChValue},
                               {propName: "angle", propValue: Number(angField.text)},
-                              {propName: "height", propValue: Number(heightField.text)}
+                              {propName: "height", propValue: Number(heightField.text)},
+                              {propName: "color type", propValue: addShotWidget.selColor},
+                              {propName: "RF mode", propValue: modeSwitch.checked}
                              ])
 
             if(groupName)
@@ -119,9 +146,10 @@ Item
                 project.addPatchToGroup(groupName, currentId)
             }
 
-            currentDmxValue += dmxIncrement
+            //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
+            currentDmxChValue += dmxChIncrement
             currentId++
         }
     }
@@ -131,31 +159,31 @@ Item
         //--- Определяем инкремент канала DMX
 
         let isNegative = false
-        let operatorIndex = dmxField.text.indexOf('+')
-
-        if(operatorIndex === -1)
-        {
-            operatorIndex = dmxField.text.indexOf('-')
-            if(operatorIndex !== -1)
-                isNegative = true
-        }
-
-
-
-        let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
-
-        let dmxIncrement = 0
-        if(operatorIndex !== -1)
-        {
-            dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
-            if(isNegative)
-                dmxIncrement = -dmxIncrement
-        }
+        //let operatorIndex = dmxField.text.indexOf('+')
+        //
+        //if(operatorIndex === -1)
+        //{
+        //    operatorIndex = dmxField.text.indexOf('-')
+        //    if(operatorIndex !== -1)
+        //        isNegative = true
+        //}
+        //
+        //
+        //
+        //let currentDmxValue = (operatorIndex === -1) ? Number(dmxField.text) : Number(dmxField.text.slice(0, operatorIndex))
+        //
+        //let dmxIncrement = 0
+        //if(operatorIndex !== -1)
+        //{
+        //    dmxIncrement = Number(dmxField.text.slice(operatorIndex + 1))
+        //    if(isNegative)
+        //        dmxIncrement = -dmxIncrement
+        //}
 
         //--- Определяем инкремент RF pos
 
         isNegative = false
-        operatorIndex = rfPosField.text.indexOf('+')
+        let operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
         {
@@ -200,21 +228,47 @@ Item
                 rfChIncrement = -rfChIncrement
         }
 
+        //--- Определяем инкремент Dmx ch
+
+        isNegative = false
+        operatorIndex = dmxChField.text.indexOf('+')
+
+        if(operatorIndex === -1)
+        {
+            operatorIndex = dmxChField.text.indexOf('-')
+            if(operatorIndex !== -1)
+                isNegative = true
+        }
+
+        let currentDmxChValue = (operatorIndex === -1) ? Number(dmxChField.text) : Number(dmxChField.text.slice(0, operatorIndex))
+
+        let dmxChIncrement = 0
+        if(operatorIndex !== -1)
+        {
+            dmxChIncrement = Number(dmxChField.text.slice(operatorIndex + 1))
+            if(isNegative)
+                dmxChIncrement = -dmxChIncrement
+        }
+
         for(let i = 0; i < changedIdList.length; i++)
         {
             project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
-                              {propName: "DMX", propValue: currentDmxValue},
+                              //{propName: "DMX", propValue: currentDmxValue},
                               {propName: "angle", propValue: Number(angField.text)},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
-                              {propName: "height", propValue: Number(heightField.text)}
+                              {propName: "DMX ch", propValue: currentDmxChValue},
+                              {propName: "height", propValue: Number(heightField.text)},
+                              {propName: "color type", propValue: addShotWidget.selColor},
+                              {propName: "RF mode", propValue: modeSwitch.checked}
                              ])
 
-            currentDmxValue += dmxIncrement
+            //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
+            currentDmxChValue += dmxChIncrement
         }
     }
 
@@ -299,341 +353,754 @@ Item
         {
             x: 4
             y: 34
-            width: 164
+            width: 188
             height: 70
             color: "#222222"
             radius: 2
-        }
 
-        Text
-        {
-            id: quantityText
-            y: 40
-            height: 17
-            color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("Quantity")
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.rightMargin: 199
-            anchors.leftMargin: 30
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            font.family: MFXUIS.Fonts.robotoRegular.name
-
-            visible: !(changedIdList.length > 1)
-        }
-
-        TextField
-        {
-            id: quantityField
-            x: 99
-            y: 40
-            width: 36
-            height: 18
-            text: "1"
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-            visible: !(changedIdList.length > 1)
-
-            property bool isActiveInput: true
-            property string lastSelectedText
-
-            validator: RegExpValidator { regExp: /[0-9]+/ }
-            maximumLength: 2
-
-            background: Rectangle
+            GridLayout
             {
-                color: "#000000"
-                radius: 2
-            }
+                anchors.fill: parent
+                anchors.margins: 4
+                rows: 2
 
-            onFocusChanged:
-            {
-                if(focus)
+                Switch
                 {
-                    markAllInputsInactive();
-                    isActiveInput = true;
-                    addShotWidget.currentInput = this;
-                    selectAll();
-                    lastSelectedText = selectedText
+                    Layout.row: 0
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+
+                    id: modeSwitch
+
+                    indicator: Rectangle
+                    {
+                        width: modeSwitch.width
+                        height: modeSwitch.height
+                        x: 0
+                        y: 0
+
+                        radius: 2
+                        color: "#000000"
+
+                        Rectangle
+                        {
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+
+                            width: modeSwitch.width / 2
+                            x: modeSwitch.checked ? modeSwitch.width - width : 0
+
+                            radius: 2
+
+                            color: modeSwitch.down ? "#649ce8" : "#2F80ED"
+
+                            Behavior on x { SmoothedAnimation { duration: 175 } }
+                        }
+
+                        Text
+                        {
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            width: parent.width / 2
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            lineHeightMode: Text.FixedHeight
+                            lineHeight: 26
+
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            font.pixelSize: 12
+
+                            color: !modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
+
+                            Behavior on color { ColorAnimation { duration : 175 } }
+
+                            text: translationsManager.translationTrigger + qsTr("DMX")
+                        }
+
+                        Text
+                        {
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+                            width: parent.width / 2
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            lineHeightMode: Text.FixedHeight
+                            lineHeight: 26
+
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            font.pixelSize: 12
+
+                            color: modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
+
+                            Behavior on color { ColorAnimation { duration : 175 } }
+
+                            text: translationsManager.translationTrigger + qsTr("RF")
+                        }
+                    }
+
+                    contentItem: Item {}
+                }
+
+                GridLayout
+                {
+                    Layout.row: 1
+                    rows: 2
+                    columns: 4
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 0
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("Quantity")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                        visible: !addShotWidget.isEditMode
+                    }
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 1
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("RF pos")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                        visible: modeSwitch.checked
+                    }
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 2
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: modeSwitch.checked && rfChField.isActiveInput ? "#27AE60" : !modeSwitch.checked && dmxChField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF ch") : qsTr("DMX ch"))
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    Text
+                    {
+                        Layout.row: 0
+                        Layout.column: 3
+                        Layout.fillWidth: true
+                        Layout.alignment: Qt.AlignHCenter
+
+                        color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("Height")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 0
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: quantityField
+                        text: "1"
+                        color: "#ffffff"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+                        visible: !addShotWidget.isEditMode
+
+                        property bool isActiveInput: true
+                        property string lastSelectedText
+
+                        validator: RegExpValidator { regExp: /[0-9]+/ }
+                        maximumLength: 2
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true;
+                                addShotWidget.currentInput = this;
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 1
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: rfPosField
+                        color: "#ffffff"
+                        text: "1"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+                        visible: modeSwitch.checked
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            let operatorIndex = text.indexOf('+')
+
+                            if(operatorIndex === -1)
+                                operatorIndex = text.indexOf('-')
+
+                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                            return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
+                        }
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addShotWidget.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 2
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: rfChField
+                        color: "#ffffff"
+                        text: "1"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+                        visible: modeSwitch.checked
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            let operatorIndex = text.indexOf('+')
+
+                            if(operatorIndex === -1)
+                                operatorIndex = text.indexOf('-')
+
+                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                            return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+                        }
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addShotWidget.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 2
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: dmxChField
+                        color: "#ffffff"
+                        text: "1"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+                        visible: !modeSwitch.checked
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            let operatorIndex = text.indexOf('+')
+
+                            if(operatorIndex === -1)
+                                operatorIndex = text.indexOf('-')
+
+                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                            return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+                        }
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addShotWidget.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
+
+                    TextField
+                    {
+                        Layout.row: 1
+                        Layout.column: 3
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 18
+                        Layout.alignment: Qt.AlignHCenter
+
+                        id: heightField
+                        color: "#ffffff"
+                        text: "10"
+                        horizontalAlignment: Text.AlignHCenter
+                        padding: 0
+                        leftPadding: -2
+                        font.pointSize: 8
+
+                        property bool isActiveInput: false
+                        property string lastSelectedText
+
+                        function checkValue()
+                        {
+                            if(text === "")
+                                return false
+
+                            return (Number(text) >= 0 && Number(text) < 200)
+                        }
+
+                        validator: RegExpValidator { regExp: /[0-9]+/ }
+                        maximumLength: 3
+
+                        background: Rectangle
+                        {
+                            color: "#000000"
+                            radius: 2
+                        }
+
+                        onFocusChanged:
+                        {
+                            if(focus)
+                            {
+                                markAllInputsInactive();
+                                isActiveInput = true
+                                addShotWidget.currentInput = this
+                                selectAll();
+                                lastSelectedText = selectedText
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        TextField
-        {
-            id: dmxField
-            x: 8
-            y: 82
-            width: 36
-            height: 18
-            text: "1"
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 509)
-            }
-
-//            validator: RegExpValidator { regExp: /[0-9]+/ }
-//            maximumLength: 3
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addShotWidget.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-        TextField
-        {
-            id: rfPosField
-            x: 48
-            y: 82
-            width: 36
-            height: 18
-            color: "#ffffff"
-            text: "1"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
-            }
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addShotWidget.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-        TextField
-        {
-            id: rfChField
-            x: 88
-            y: 82
-            width: 36
-            height: 18
-            color: "#ffffff"
-            text: "1"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
-            }
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addShotWidget.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-        TextField
-        {
-            id: heightField
-            x: 128
-            y: 82
-            width: 36
-            height: 18
-            color: "#ffffff"
-            text: "10"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                return (Number(text) >= 0 && Number(text) < 200)
-            }
-
-            validator: RegExpValidator { regExp: /[0-9]+/ }
-            maximumLength: 3
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addShotWidget.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }
-
-
-
-        Text {
-            y: 64
-            height: 17
-            color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("DMX")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            minimumPixelSize: 10
-            anchors.leftMargin: 3
-            anchors.rightMargin: 261
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
-        Text {
-            y: 64
-            height: 17
-            color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("RF pos")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 43
-            anchors.rightMargin: 221
-            minimumPixelSize: 10
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
-        Text {
-            y: 64
-            height: 17
-            color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("RF ch")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 83
-            anchors.rightMargin: 181
-            minimumPixelSize: 10
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
-
-        Text {
-            y: 64
-            height: 17
-            color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
-            text: translationsManager.translationTrigger + qsTr("height")
-            elide: Text.ElideMiddle
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            anchors.leftMargin: 124
-            anchors.rightMargin: 140
-            minimumPixelSize: 10
-            font.family: MFXUIS.Fonts.robotoRegular.name
-        }
+        //Text
+        //{
+        //    id: quantityText
+        //    y: 40
+        //    height: 17
+        //    color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
+        //    text: translationsManager.translationTrigger + qsTr("Quantity")
+        //    horizontalAlignment: Text.AlignHCenter
+        //    verticalAlignment: Text.AlignVCenter
+        //    anchors.rightMargin: 199
+        //    anchors.leftMargin: 30
+        //    elide: Text.ElideMiddle
+        //    anchors.left: parent.left
+        //    anchors.right: parent.right
+        //    font.family: MFXUIS.Fonts.robotoRegular.name
+        //
+        //    visible: !(changedIdList.length > 1)
+        //}
+        //
+        //TextField
+        //{
+        //    id: quantityField
+        //    x: 99
+        //    y: 40
+        //    width: 36
+        //    height: 18
+        //    text: "1"
+        //    color: "#ffffff"
+        //    horizontalAlignment: Text.AlignHCenter
+        //    padding: 0
+        //    leftPadding: -2
+        //    font.pointSize: 8
+        //    visible: !(changedIdList.length > 1)
+        //
+        //    property bool isActiveInput: true
+        //    property string lastSelectedText
+        //
+        //    validator: RegExpValidator { regExp: /[0-9]+/ }
+        //    maximumLength: 2
+        //
+        //    background: Rectangle
+        //    {
+        //        color: "#000000"
+        //        radius: 2
+        //    }
+        //
+        //    onFocusChanged:
+        //    {
+        //        if(focus)
+        //        {
+        //            markAllInputsInactive();
+        //            isActiveInput = true;
+        //            addShotWidget.currentInput = this;
+        //            selectAll();
+        //            lastSelectedText = selectedText
+        //        }
+        //    }
+        //}
+        //
+        //TextField
+        //{
+        //    id: dmxField
+        //    x: 8
+        //    y: 82
+        //    width: 36
+        //    height: 18
+        //    text: "1"
+        //    color: "#ffffff"
+        //    horizontalAlignment: Text.AlignHCenter
+        //    padding: 0
+        //    leftPadding: -2
+        //    font.pointSize: 8
+        //
+        //    property bool isActiveInput: false
+        //    property string lastSelectedText
+        //
+        //    function checkValue()
+        //    {
+        //        if(text === "")
+        //            return false
+        //
+        //        let operatorIndex = text.indexOf('+')
+        //
+        //        if(operatorIndex === -1)
+        //            operatorIndex = text.indexOf('-')
+        //
+        //        let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+        //        return (Number(checkedText) >= 1 && Number(checkedText) < 509)
+        //    }
+        //
+//      //      validator: RegExpValidator { regExp: /[0-9]+/ }
+//      //      maximumLength: 3
+        //
+        //    background: Rectangle
+        //    {
+        //        color: "#000000"
+        //        radius: 2
+        //    }
+        //
+        //    onFocusChanged:
+        //    {
+        //        if(focus)
+        //        {
+        //            markAllInputsInactive();
+        //            isActiveInput = true
+        //            addShotWidget.currentInput = this
+        //            selectAll();
+        //            lastSelectedText = selectedText
+        //        }
+        //    }
+        //}
+        //
+        //TextField
+        //{
+        //    id: rfPosField
+        //    x: 48
+        //    y: 82
+        //    width: 36
+        //    height: 18
+        //    color: "#ffffff"
+        //    text: "1"
+        //    horizontalAlignment: Text.AlignHCenter
+        //    padding: 0
+        //    leftPadding: -2
+        //    font.pointSize: 8
+        //
+        //    property bool isActiveInput: false
+        //    property string lastSelectedText
+        //
+        //    function checkValue()
+        //    {
+        //        if(text === "")
+        //            return false
+        //
+        //        let operatorIndex = text.indexOf('+')
+        //
+        //        if(operatorIndex === -1)
+        //            operatorIndex = text.indexOf('-')
+        //
+        //        let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+        //        return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
+        //    }
+        //
+        //    background: Rectangle
+        //    {
+        //        color: "#000000"
+        //        radius: 2
+        //    }
+        //
+        //    onFocusChanged:
+        //    {
+        //        if(focus)
+        //        {
+        //            markAllInputsInactive();
+        //            isActiveInput = true
+        //            addShotWidget.currentInput = this
+        //            selectAll();
+        //            lastSelectedText = selectedText
+        //        }
+        //    }
+        //}
+        //
+        //TextField
+        //{
+        //    id: rfChField
+        //    x: 88
+        //    y: 82
+        //    width: 36
+        //    height: 18
+        //    color: "#ffffff"
+        //    text: "1"
+        //    horizontalAlignment: Text.AlignHCenter
+        //    padding: 0
+        //    leftPadding: -2
+        //    font.pointSize: 8
+        //
+        //    property bool isActiveInput: false
+        //    property string lastSelectedText
+        //
+        //    function checkValue()
+        //    {
+        //        if(text === "")
+        //            return false
+        //
+        //        let operatorIndex = text.indexOf('+')
+        //
+        //        if(operatorIndex === -1)
+        //            operatorIndex = text.indexOf('-')
+        //
+        //        let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+        //        return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+        //    }
+        //
+        //    background: Rectangle
+        //    {
+        //        color: "#000000"
+        //        radius: 2
+        //    }
+        //
+        //    onFocusChanged:
+        //    {
+        //        if(focus)
+        //        {
+        //            markAllInputsInactive();
+        //            isActiveInput = true
+        //            addShotWidget.currentInput = this
+        //            selectAll();
+        //            lastSelectedText = selectedText
+        //        }
+        //    }
+        //}
+        //
+        //TextField
+        //{
+        //    id: heightField
+        //    x: 128
+        //    y: 82
+        //    width: 36
+        //    height: 18
+        //    color: "#ffffff"
+        //    text: "10"
+        //    horizontalAlignment: Text.AlignHCenter
+        //    padding: 0
+        //    leftPadding: -2
+        //    font.pointSize: 8
+        //
+        //    property bool isActiveInput: false
+        //    property string lastSelectedText
+        //
+        //    function checkValue()
+        //    {
+        //        if(text === "")
+        //            return false
+        //
+        //        return (Number(text) >= 0 && Number(text) < 200)
+        //    }
+        //
+        //    validator: RegExpValidator { regExp: /[0-9]+/ }
+        //    maximumLength: 3
+        //
+        //    background: Rectangle
+        //    {
+        //        color: "#000000"
+        //        radius: 2
+        //    }
+        //
+        //    onFocusChanged:
+        //    {
+        //        if(focus)
+        //        {
+        //            markAllInputsInactive();
+        //            isActiveInput = true
+        //            addShotWidget.currentInput = this
+        //            selectAll();
+        //            lastSelectedText = selectedText
+        //        }
+        //    }
+        //}
+        //
+        //
+        //
+        //Text {
+        //    y: 64
+        //    height: 17
+        //    color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
+        //    text: translationsManager.translationTrigger + qsTr("DMX")
+        //    elide: Text.ElideMiddle
+        //    anchors.left: parent.left
+        //    anchors.right: parent.right
+        //    horizontalAlignment: Text.AlignHCenter
+        //    verticalAlignment: Text.AlignVCenter
+        //    minimumPixelSize: 10
+        //    anchors.leftMargin: 3
+        //    anchors.rightMargin: 261
+        //    font.family: MFXUIS.Fonts.robotoRegular.name
+        //}
+        //
+        //Text {
+        //    y: 64
+        //    height: 17
+        //    color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
+        //    text: translationsManager.translationTrigger + qsTr("RF pos")
+        //    elide: Text.ElideMiddle
+        //    anchors.left: parent.left
+        //    anchors.right: parent.right
+        //    horizontalAlignment: Text.AlignHCenter
+        //    verticalAlignment: Text.AlignVCenter
+        //    anchors.leftMargin: 43
+        //    anchors.rightMargin: 221
+        //    minimumPixelSize: 10
+        //    font.family: MFXUIS.Fonts.robotoRegular.name
+        //}
+        //
+        //Text {
+        //    y: 64
+        //    height: 17
+        //    color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
+        //    text: translationsManager.translationTrigger + qsTr("RF ch")
+        //    elide: Text.ElideMiddle
+        //    anchors.left: parent.left
+        //    anchors.right: parent.right
+        //    horizontalAlignment: Text.AlignHCenter
+        //    verticalAlignment: Text.AlignVCenter
+        //    anchors.leftMargin: 83
+        //    anchors.rightMargin: 181
+        //    minimumPixelSize: 10
+        //    font.family: MFXUIS.Fonts.robotoRegular.name
+        //}
+        //
+        //Text {
+        //    y: 64
+        //    height: 17
+        //    color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
+        //    text: translationsManager.translationTrigger + qsTr("height")
+        //    elide: Text.ElideMiddle
+        //    anchors.left: parent.left
+        //    anchors.right: parent.right
+        //    horizontalAlignment: Text.AlignHCenter
+        //    verticalAlignment: Text.AlignVCenter
+        //    anchors.leftMargin: 124
+        //    anchors.rightMargin: 140
+        //    minimumPixelSize: 10
+        //    font.family: MFXUIS.Fonts.robotoRegular.name
+        //}
 
         CalcWidget
         {
             id: calcWidget
-            x: 182
+            x: 196
             y: 34
 
             minusButtonText: heightField.isActiveInput ? "." : "-"
@@ -642,16 +1109,17 @@ Item
         MfxButton
         {
             id: setButton
-            x: 182
-            y: 221
+            x: 196
+            y: 236
             width: 124
             color: "#2F80ED"
             text: translationsManager.translationTrigger + qsTr("Set")
             enabled:
             {
-                dmxField.checkValue() &&
+                //dmxField.checkValue() &&
                         rfPosField.checkValue() &&
                         rfChField.checkValue() &&
+                        dmxChField.checkValue() &&
                         heightField.checkValue() &&
                         angField.checkValue()
 
@@ -1038,11 +1506,13 @@ Item
         Button
         {
             id: colorButton1
-            x: 130
+            x: 144
             y: 268
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addShotWidget.selColor
+            onClicked: addShotWidget.selColor = colorType
 
             property string colorType: "red"
 
@@ -1065,11 +1535,13 @@ Item
         Button
         {
             id: colorButton2
-            x: 166
+            x: 180
             y: 268
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addShotWidget.selColor
+            onClicked: addShotWidget.selColor = colorType
 
             property string colorType: "blue"
 
@@ -1092,11 +1564,13 @@ Item
         Button
         {
             id: colorButton3
-            x: 202
+            x: 216
             y: 268
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addShotWidget.selColor
+            onClicked: addShotWidget.selColor = colorType
 
             property string colorType: "green"
 
@@ -1119,13 +1593,15 @@ Item
         Button
         {
             id: colorButton4
-            x: 238
+            x: 252
             y: 268
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addShotWidget.selColor
+            onClicked: addShotWidget.selColor = colorType
 
-            property string colorType: "yellow"
+            property string colorType: "#FFD700"
 
             background: Rectangle
             {
@@ -1146,11 +1622,13 @@ Item
         Button
         {
             id: colorButton5
-            x: 274
+            x: 288
             y: 268
             width: 32
             height: 32
             checkable: true
+            checked: colorType == addShotWidget.selColor
+            onClicked: addShotWidget.selColor = colorType
 
             property string colorType: "purple"
 
@@ -1181,7 +1659,7 @@ Item
             when: addShotWidget.isEditMode
             PropertyChanges {target: windowTitle; text: translationsManager.translationTrigger + qsTr("Edit Shot")}
             PropertyChanges {target: setButton; text: translationsManager.translationTrigger + qsTr("Apply")}
-            PropertyChanges {target: quantityText; text: translationsManager.translationTrigger + qsTr("Patch ID")}
+            //PropertyChanges {target: quantityText; text: translationsManager.translationTrigger + qsTr("Patch ID")}
             PropertyChanges {target: quantityField; maximumLength: 3}
         }
     ]
@@ -1211,18 +1689,24 @@ Item
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
-            quantityField.text = propValuesList[propNamesList.indexOf("ID")];
-            dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
+            //quantityField.text = propValuesList[propNamesList.indexOf("ID")];
+            //dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
             heightField.text = propValuesList[propNamesList.indexOf("height")];
             angField.text = propValuesList[propNamesList.indexOf("angle")];
+
+            var ind = propNamesList.indexOf( "color type" )
+            if( ind != -1 )
+                addShotWidget.selColor = propValuesList[ind]
+
+            ind = propNamesList.indexOf( "DMX ch" )
+            if( ind != -1 )
+                dmxChField.text = propValuesList[ind];
+
+            ind = propNamesList.indexOf( "RF mode" )
+            if( ind != -1 )
+                modeSwitch.checked = propValuesList[ind];
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:3}
-}
-##^##*/

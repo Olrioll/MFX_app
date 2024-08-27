@@ -643,10 +643,10 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
             //if(patch->property("DMX").isNull())
             //    patch->setProperty("DMX", p->property("DMX"));
 
-            if(patch->property("min ang").isNull())
+            if(patch->property("min ang").isNull() && !p->property( "min ang" ).isNull() )
                 patch->setProperty("min ang", p->property("min ang"));
 
-            if(patch->property("max ang").isNull())
+            if(patch->property("max ang").isNull() && !p->property( "max ang" ).isNull() )
                 patch->setProperty("max ang", p->property("max ang"));
 
             if(patch->property("RF pos").isNull())
