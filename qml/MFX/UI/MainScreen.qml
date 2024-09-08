@@ -2020,15 +2020,15 @@ FocusScope
                                                     }
                                                 }
 
-                                            function selectAll()
-                                            {
-                                                for(let i = 0; i < deviceListModel.count; i++)
+                                                function selectAll()
                                                 {
-                                                    project.setPatchProperty(deviceListModel.get(i).currentId, "checked", true)
+                                                    for(let i = 0; i < deviceListModel.count; i++)
+                                                    {
+                                                        project.setPatchProperty(deviceListModel.get(i).currentId, "checked", true)
 
+                                                    }
+                                                    cueContentManager.cleanSelectionRequest()
                                                 }
-                                                cueContentManager.cleanSelectionRequest()
-                                            }
 
                                                 delegate: PatchPlate
                                                 {
@@ -2036,26 +2036,26 @@ FocusScope
                                                     anchors.right: deviceListView.contentItem.right
                                                     no: counter
                                                     patchId: currentId
-                                                property string ssss
-                                                DropArea{
-                                                    anchors.fill: parent;
-                                                    property bool isEnter: false
-                                                    onDropped: {
-                                                        console.log("Dropped")
-                                                        if(drop.source.name.startsWith("A")){
 
-
-                                                            project.setPatchProperty(currentId, "act", drop.source.name);
-                                                            project.setPatchProperty(patchId, "checked", false)
-                                                            isEnter = false;
-                                                            refreshCells()
-                                                }
-
+                                                    DropArea
+                                                    {
+                                                        anchors.fill: parent;
+                                                        property bool isEnter: false
+                                                        onDropped:
+                                                        {
+                                                            console.log("Dropped", drop.source.name)
+                                                            if(drop.source.name.startsWith("A"))
+                                                            {
+                                                                project.setPatchProperty(currentId, "act", drop.source.name);
+                                                                project.setPatchProperty(patchId, "checked", false)
+                                                                isEnter = false;
+                                                                refreshCells()
+                                                            }
+                                                        }
+                                                        onEntered: if(drag.source.name.startsWith("A")){ project.setPatchProperty(patchId, "checked", true); isEnter=true; }
+                                                        onExited: if(isEnter) project.setPatchProperty(patchId, "checked", false)
                                                     }
-                                                    onEntered: if(drag.source.name.startsWith("A")){ project.setPatchProperty(patchId, "checked", true); isEnter=true; }
-                                                    onExited: if(isEnter) project.setPatchProperty(patchId, "checked", false)
                                                 }
-                                            }
 
                                                 model: ListModel
                                                 {
@@ -3139,7 +3139,6 @@ FocusScope
         {
             id: rightButtonsGroup
             checkedButton: sequencesButton
-
         }
 
         MfxButton
@@ -3282,140 +3281,230 @@ FocusScope
                             : (SplitHandle.hovered ? Qt.lighter("#6F6F6F", 1.1) : "#6F6F6F")
                     }
 
-                    GridView
-                    {
-                        id: actionView
-                        SplitView.fillHeight: true
-
-                        interactive: true;//!held
-                        onFlickStarted: { applicationWindow.isMouseCursorVisible = true}
-                        onMovementStarted: { applicationWindow.isMouseCursorVisible = true}
-                        onMovementEnded: {/*console.log("movement");*/applicationWindow.isMouseCursorVisible = true}
-                        onFlickEnded: {/*console.log("flickEnded");*/applicationWindow.isMouseCursorVisible = true}
-                        property bool held: false
-                        clip: true
-
-                        cellWidth: 60
-                        cellHeight: 52
-
-                        ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
-
-                        model: patternManager.patternsFiltered
-                        property var pressedItem: null
-                        
-                        delegate: Item
+                    states:
+                    [
+                        State
                         {
-                            id: actionPlate
+                            name: "seq"; when: sequencesButton.checked
+                            PropertyChanges { target: actionStack; currentIndex: 0 }
+                            PropertyChanges { target: previewStack; currentIndex: 0 }
+                        },
+                        State
+                        {
+                            name: "shot"; when: shotButton.checked
+                            PropertyChanges { target: actionStack; currentIndex: 1 }
+                            PropertyChanges { target: previewStack; currentIndex: 1 }
+                        }
+                    ]
 
-                            property string name: model.name
-                            property bool checked: model.uuid === patternManager.selectedPatternUuid
+                    StackLayout
+                    {
+                        id: actionStack
+                        SplitView.fillHeight: true
+                        SplitView.fillWidth: true
+                        currentIndex: 0
 
-                            width: actionView.cellWidth
-                            height: actionView.cellHeight
-                            Drag.active: actionView.held
-                            Drag.source: actionView.pressedItem
-                            Drag.hotSpot.x: this.width / 2
-                            Drag.hotSpot.y: this.height / 2
-                            states:
-                            [
-                                State
-                                {
-                                    name: "inDrag"
-                                    when: actionPlate.checked && actionView.held
-                                    PropertyChanges { target: actionView.pressedItem; parent: mainScreen }
-                                    PropertyChanges { target: actionView.pressedItem; anchors.centerIn: undefined }
-                                    PropertyChanges { target: actionView.pressedItem; x: coords.currentMouseX }
-                                    PropertyChanges { target: actionView.pressedItem; y: coords.currentMouseY }
-                                }
-                            ]
+                        GridView
+                        {
+                            id: actionView
+                            interactive: true;//!held
+                            onFlickStarted: { applicationWindow.isMouseCursorVisible = true}
+                            onMovementStarted: { applicationWindow.isMouseCursorVisible = true}
+                            onMovementEnded: {/*console.log("movement");*/applicationWindow.isMouseCursorVisible = true}
+                            onFlickEnded: {/*console.log("flickEnded");*/applicationWindow.isMouseCursorVisible = true}
+                            property bool held: false
+                            clip: true
 
-                            Item
+                            cellWidth: 60
+                            cellHeight: 52
+
+                            ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
+
+                            model: patternManager.patternsFiltered
+                            property var pressedItem: null
+
+                            delegate: Item
                             {
-
-                                anchors.fill: parent
-
-                                Rectangle
+                                id: actionPlate
+                            
+                                property string name: model.name
+                                property bool checked: name === patternManager.selectedPatternName
+                            
+                                width: actionView.cellWidth
+                                height: actionView.cellHeight
+                                Drag.active: actionView.held
+                                Drag.source: actionView.pressedItem
+                                Drag.hotSpot.x: this.width / 2
+                                Drag.hotSpot.y: this.height / 2
+                                states:
+                                [
+                                    State
+                                    {
+                                        name: "inDrag"
+                                        when: actionPlate.checked && actionView.held
+                                        PropertyChanges { target: actionView.pressedItem; parent: mainScreen }
+                                        PropertyChanges { target: actionView.pressedItem; anchors.centerIn: undefined }
+                                        PropertyChanges { target: actionView.pressedItem; x: coords.currentMouseX }
+                                        PropertyChanges { target: actionView.pressedItem; y: coords.currentMouseY }
+                                    }
+                                ]
+                            
+                                Item
                                 {
-                                    width: actionView.cellWidth - 4
-                                    height: actionView.cellHeight - 4
-                                    id: actionPlateBAckground
-                                    anchors.centerIn: parent
-                                    color: "#666666"
-                                    radius: 2
-
+                            
+                                    anchors.fill: parent
+                            
                                     Rectangle
                                     {
-                                        color: "black"
+                                        width: actionView.cellWidth - 4
+                                        height: actionView.cellHeight - 4
+                                        id: actionPlateBAckground
+                                        anchors.centerIn: parent
+                                        color: "#666666"
                                         radius: 2
-
-                                        anchors.topMargin: 2
-                                        anchors.bottomMargin: 13
-                                        anchors.leftMargin: 2
-                                        anchors.rightMargin: 2
-                                        anchors.fill: parent
-
-                                        Image
+                            
+                                        Rectangle
                                         {
-                                            source: "qrc:/imagePlaceholder"
-                                            anchors.centerIn: parent
+                                            color: "black"
+                                            radius: 2
+                            
+                                            anchors.topMargin: 2
+                                            anchors.bottomMargin: 13
+                                            anchors.leftMargin: 2
+                                            anchors.rightMargin: 2
+                                            anchors.fill: parent
+                            
+                                            Image
+                                            {
+                                                source: "qrc:/imagePlaceholder"
+                                                anchors.centerIn: parent
+                                            }
+                                        }
+                            
+                                        Text
+                                        {
+                                            id: actionPlateName
+                                            text: actionPlate.name
+                            
+                                            horizontalAlignment: Text.AlignHCenter
+                                            verticalAlignment: Text.AlignVCenter
+                                            elide: Text.ElideMiddle
+                                            color: "#ffffff"
+                                            font.family: MFXUIS.Fonts.robotoRegular.name
+                                            font.pixelSize: 10
+                            
+                                            anchors.bottom: parent.bottom
+                                            anchors.horizontalCenter: parent.horizontalCenter
                                         }
                                     }
-
-                                    Text
+                            
+                                    Rectangle
                                     {
-                                        id: actionPlateName
-                                        text: actionPlate.name
-
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                        elide: Text.ElideMiddle
-                                        color: "#ffffff"
-                                        font.family: MFXUIS.Fonts.robotoRegular.name
-                                        font.pixelSize: 10
-
-                                        anchors.bottom: parent.bottom
-                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        width: actionView.cellWidth - 4
+                                        height: actionView.cellHeight - 4
+                                        id: actionPlateBorder
+                                        anchors.centerIn: parent
+                                        color: "transparent"
+                                        radius: 2
+                            
+                                        border.width: 2
+                                        border.color: "#27AE60"
+                            
+                                        visible: actionPlate.checked
                                     }
                                 }
-
-                                Rectangle
+                            
+                                MFXUICB.MfxMouseArea
                                 {
-                                    width: actionView.cellWidth - 4
-                                    height: actionView.cellHeight - 4
-                                    id: actionPlateBorder
-                                    anchors.centerIn: parent
-                                    color: "transparent"
-                                    radius: 2
-
-                                    border.width: 2
-                                    border.color: "#27AE60"
-
-                                    visible: actionPlate.checked
-                                }
-                            }
-
-                            MFXUICB.MfxMouseArea
-                            {
-                                id:coords
-                                anchors.fill: parent
-                                property bool wasDragged: false
-                                property int currentMouseX
-                                property int currentMouseY
-                                allwaysHide: true
-
-                                onPositionChanged:
-                                {
-
-                                    if(Math.abs(dx) > 5)
+                                    id:coords
+                                    anchors.fill: parent
+                                    property bool wasDragged: false
+                                    property int currentMouseX
+                                    property int currentMouseY
+                                    allwaysHide: true
+                            
+                                    onPositionChanged:
                                     {
-                                        if(!actionView.held)
+                            
+                                        if(Math.abs(dx) > 5)
                                         {
-                                            if(actionPlate.checked)
-                                                patternManager.cleanPatternSelectionRequest()
-
-                                            console.log(actionPlate.name)
-                                            patternManager.currentPatternChangeRequest(model.uuid)
+                                            if(!actionView.held)
+                                            {
+                                                if(actionPlate.checked)
+                                                    patternManager.cleanPatternSelectionRequest()
+                            
+                                                console.log(actionPlate.name)
+                                                patternManager.currentPatternChangeRequest(actionPlate.name)
+                                                cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                                actionView.pressedItem = actionPlate
+                                                if(actionView.pressedItem)
+                                                {
+                                                    actionView.draggedItemIndex = index;
+                                                    currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
+                                                    currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
+                                                    actionView.held = true
+                                                }
+                                            }
+                                        }
+                                    }
+                            
+                                    onClicked:
+                                    {
+                                        if(actionPlate.checked)
+                                        {
+                                            patternManager.cleanPatternSelectionRequest()
+                                        }
+                                        else
+                                        {
+                                            deviceManager.runPreviewPattern( actionPlate.name )
+                            
+                                            //TODO if(patchPanelFocused) {
+                                            currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
+                                            currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
+                                            patternManager.currentPatternChangeRequest(actionPlate.name)
+                                            let checkedPatches = project.checkedPatchesList()
+                            
+                                            checkedPatches.forEach(function(patchId)
+                                            {
+                                                project.setPatchProperty(patchId, "act", actionPlate.name);
+                                            })
+                            
+                            
+                                            let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                            selectedCue.forEach(function(idDevice)
+                                            {
+                                                project.changeAction(cueName, idDevice,actionPlate.name)
+                                            })
                                             cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                            //TODO }
+                                        }
+                                    }
+                            
+                                    drag.target: actionView.held ? actionView.pressedItem : undefined
+                                    drag.axis: Drag.XAndYAxis
+                                    drag.minimumX: 0
+                                    drag.maximumX: mainScreen.width - actionView.cellWidth
+                                    drag.minimumY: 0
+                                    drag.maximumY: mainScreen.height - actionView.cellHeight
+                            
+                                    onReleased:
+                                    {
+                                        if(drag.target)
+                                        {
+                                            drag.target.Drag.drop()
+                                            if (actionView.draggedItemIndex !== -1)
+                                            {
+                                                var draggedIndex = actionView.draggedItemIndex
+                                                actionView.draggedItemIndex = -1
+                                            }
+                                        }
+                                        actionView.held = false;
+                                    }
+                            
+                                    onPressed:
+                                    {
+                                        if(actionPlate.checked)
+                                        {
                                             actionView.pressedItem = actionPlate
                                             if(actionView.pressedItem)
                                             {
@@ -3427,146 +3516,404 @@ FocusScope
                                         }
                                     }
                                 }
-
-                                onClicked:
-                                {
-                                    if(actionPlate.checked)
-                                    {
-                                        patternManager.cleanPatternSelectionRequest()
-                                    }
-                                    else
-                                    {
-                                        deviceManager.runPreviewPattern( actionPlate.name )
-
-                                        //TODO if(patchPanelFocused) {
-                                        currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
-                                        currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
-                                        patternManager.currentPatternChangeRequest(model.uuid)
-                                        let checkedPatches = project.checkedPatchesList()
-
-                                        checkedPatches.forEach(function(patchId)
-                                        {
-                                            project.setPatchProperty(patchId, "act", actionPlate.name);
-                                        })
-
-
-                                        let selectedCue = cueContentManager.onGetSelectedDeviseList();
-                                        selectedCue.forEach(function(idDevice)
-                                        {
-                                            project.changeAction(cueName, idDevice,actionPlate.name)
-                                        })
-                                        cueContentManager.onSelectedChangeAction(actionPlate.name)
-                                        //TODO }
-                                    }
-                                }
-
-                                drag.target: actionView.held ? actionView.pressedItem : undefined
-                                drag.axis: Drag.XAndYAxis
-                                drag.minimumX: 0
-                                drag.maximumX: mainScreen.width - actionView.cellWidth
-                                drag.minimumY: 0
-                                drag.maximumY: mainScreen.height - actionView.cellHeight
-
-                                onReleased:
-                                {
-                                    if(drag.target)
-                                    {
-                                        drag.target.Drag.drop()
-                                        if (actionView.draggedItemIndex !== -1)
-                                        {
-                                            var draggedIndex = actionView.draggedItemIndex
-                                            actionView.draggedItemIndex = -1
-                                        }
-                                    }
-                                    actionView.held = false;
-                                }
-                            
-                                onPressed:
-                                {
-                                    if(actionPlate.checked)
-                                    {
-                                        actionView.pressedItem = actionPlate
-                                        if(actionView.pressedItem)
-                                        {
-                                            actionView.draggedItemIndex = index;
-                                            currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
-                                            currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
-                                            actionView.held = true
-                                        }
-                                    }
-                                }
                             }
-                        }
                         
-                        Item
-                        {
-                            id: topShadow
-                            height: 20
-                            width: parent.width
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-
-                            visible: actionView.contentY > 0
-
-                            LinearGradient
+                            Item
                             {
-                                anchors.fill: parent
-                                start: Qt.point(0, 0)
-                                end: Qt.point(0, parent.height)
-                                gradient: Gradient
+                                id: topShotShadow
+                                height: 20
+                                width: parent.width
+                                anchors.left: parent.left
+                                anchors.top: parent.top
+
+                                visible: actionView.contentY > 0
+
+                                LinearGradient
                                 {
-                                    GradientStop { position: 1.0; color: "#00000000" }
-                                    GradientStop { position: 0.0; color: "#FF000000" }
+                                    anchors.fill: parent
+                                    start: Qt.point(0, 0)
+                                    end: Qt.point(0, parent.height)
+                                    gradient: Gradient
+                                    {
+                                        GradientStop { position: 1.0; color: "#00000000" }
+                                        GradientStop { position: 0.0; color: "#FF000000" }
+                                    }
                                 }
+                            }
+
+                            Item
+                            {
+                                id: bottomShotShadow
+                                height: 20
+                                width: parent.width
+                                anchors.left: parent.left
+                                anchors.bottom: parent.bottom
+
+                                LinearGradient
+                                {
+                                    anchors.fill: parent
+                                    start: Qt.point(0, parent.height)
+                                    end: Qt.point(0, 0)
+                                    gradient: Gradient
+                                    {
+                                        GradientStop { position: 1.0; color: "#00000000" }
+                                        GradientStop { position: 0.0; color: "#FF000000" }
+                                    }
+                                }
+                            }
+                            property int draggedItemIndex: -1
+
+                            Item
+                            {
+                                id: dndShotContainer
+                                anchors.fill: parent
                             }
                         }
 
-                        Item
+                        ColumnLayout
                         {
-                            id: bottomShadow
-                            height: 20
-                            width: parent.width
-                            anchors.left: parent.left
-                            anchors.bottom: parent.bottom
-
-                            LinearGradient
+                            GridView
                             {
-                                anchors.fill: parent
-                                start: Qt.point(0, parent.height)
-                                end: Qt.point(0, 0)
-                                gradient: Gradient
+                                Layout.fillHeight: true
+                                Layout.fillWidth: true
+
+                                id: actionShotView
+                                interactive: true;//!held
+                                onFlickStarted: { applicationWindow.isMouseCursorVisible = true}
+                                onMovementStarted: { applicationWindow.isMouseCursorVisible = true}
+                                onMovementEnded: {/*console.log("movement");*/applicationWindow.isMouseCursorVisible = true}
+                                onFlickEnded: {/*console.log("flickEnded");*/applicationWindow.isMouseCursorVisible = true}
+                                property bool held: false
+                                clip: true
+
+                                cellWidth: 60
+                                cellHeight: 52
+
+                                ScrollBar.vertical: ScrollBar {policy: ScrollBar.AlwaysOn}
+
+                                model: patternManager.patternsShotFiltered
+                                property var pressedItem: null
+
+                                delegate: Item
                                 {
-                                    GradientStop { position: 1.0; color: "#00000000" }
-                                    GradientStop { position: 0.0; color: "#FF000000" }
+                                    id: actionPlate
+
+                                    property string name: model.name
+                                    property bool checked: name === patternManager.selectedShotPatternName
+                            
+                                    width: actionShotView.cellWidth
+                                    height: actionShotView.cellHeight
+                                    Drag.active: actionShotView.held
+                                    Drag.source: actionShotView.pressedItem
+                                    Drag.hotSpot.x: this.width / 2
+                                    Drag.hotSpot.y: this.height / 2
+                            
+                                    states:
+                                    [
+                                        State
+                                        {
+                                            name: "inDrag"
+                                            when: actionPlate.checked && actionShotView.held
+                                            PropertyChanges { target: actionShotView.pressedItem; parent: mainScreen }
+                                            PropertyChanges { target: actionShotView.pressedItem; anchors.centerIn: undefined }
+                                            PropertyChanges { target: actionShotView.pressedItem; x: coordsShot.currentMouseX }
+                                            PropertyChanges { target: actionShotView.pressedItem; y: coordsShot.currentMouseY }
+                                        }
+                                    ]
+                            
+                                    Item
+                                    {
+                                        anchors.fill: parent
+                            
+                                        Rectangle
+                                        {
+                                            width: actionShotView.cellWidth - 4
+                                            height: actionShotView.cellHeight - 4
+                                            id: actionPlateBAckground
+                                            anchors.centerIn: parent
+                                            color: "#666666"
+                                            radius: 2
+                            
+                                            Rectangle
+                                            {
+                                                color: "black"
+                                                radius: 2
+                            
+                                                anchors.topMargin: 2
+                                                anchors.bottomMargin: 13
+                                                anchors.leftMargin: 2
+                                                anchors.rightMargin: 2
+                                                anchors.fill: parent
+                            
+                                                Image
+                                                {
+                                                    source: "qrc:/imageAdd"
+                                                    anchors.centerIn: parent
+                                                }
+                                            }
+                            
+                                            Text
+                                            {
+                                                text: actionPlate.name
+                            
+                                                horizontalAlignment: Text.AlignHCenter
+                                                verticalAlignment: Text.AlignVCenter
+                                                elide: Text.ElideMiddle
+                                                color: "#ffffff"
+                                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                                font.pixelSize: 10
+                            
+                                                anchors.bottom: parent.bottom
+                                                anchors.horizontalCenter: parent.horizontalCenter
+                                            }
+                                        }
+                            
+                                        Rectangle
+                                        {
+                                            width: actionShotView.cellWidth - 4
+                                            height: actionShotView.cellHeight - 4
+                                            anchors.centerIn: parent
+                                            color: "transparent"
+                                            radius: 2
+                            
+                                            border.width: 2
+                                            border.color: "#27AE60"
+                            
+                                            visible: actionPlate.checked
+                                        }
+                                    }
+                            
+                                    MFXUICB.MfxMouseArea
+                                    {
+                                        id: coordsShot
+                                        anchors.fill: parent
+                                        property bool wasDragged: false
+                                        property int currentMouseX
+                                        property int currentMouseY
+                                        allwaysHide: true
+                            
+                                        onPositionChanged:
+                                        {
+                            
+                                            if(Math.abs(dx) > 5)
+                                            {
+                                                if(!actionShotView.held)
+                                                {
+                                                    if(actionPlate.checked)
+                                                        patternManager.cleanShotPatternSelectionRequest()
+                            
+                                                    console.log(actionPlate.name)
+                                                    patternManager.currentShotPatternChangeRequest(actionPlate.name)
+                                                    cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                                    actionShotView.pressedItem = actionPlate
+                                                    if(actionShotView.pressedItem)
+                                                    {
+                                                        actionShotView.draggedItemIndex = index;
+                                                        currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
+                                                        currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
+                                                        actionShotView.held = true
+                                                    }
+                                                }
+                                            }
+                                        }
+                            
+                                        onClicked:
+                                        {
+                                            if(actionPlate.checked)
+                                            {
+                                                patternManager.cleanShotPatternSelectionRequest()
+                                            }
+                                            else
+                                            {
+                                                //deviceManager.runPreviewPattern( actionPlate.name )
+                            
+                                                //TODO if(patchPanelFocused) {
+                                                currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
+                                                currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
+                                                patternManager.currentShotPatternChangeRequest(actionPlate.name)
+                                                let checkedPatches = project.checkedPatchesList()
+                                            
+                                                checkedPatches.forEach(function(patchId)
+                                                {
+                                                    project.setPatchProperty(patchId, "act", actionPlate.name);
+                                                })
+
+                                                let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                                                selectedCue.forEach(function(idDevice)
+                                                {
+                                                    project.changeAction(cueName, idDevice,actionPlate.name)
+                                                })
+                                                cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                                //TODO }
+                                            }
+                                        }
+                            
+                                        drag.target: actionShotView.held ? actionShotView.pressedItem : undefined
+                                        drag.axis: Drag.XAndYAxis
+                                        drag.minimumX: 0
+                                        drag.maximumX: mainScreen.width - actionShotView.cellWidth
+                                        drag.minimumY: 0
+                                        drag.maximumY: mainScreen.height - actionShotView.cellHeight
+                            
+                                        onReleased:
+                                        {
+                                            if(drag.target)
+                                            {
+                                                drag.target.Drag.drop()
+                                                if (actionShotView.draggedItemIndex !== -1)
+                                                {
+                                                    var draggedIndex = actionView.draggedItemIndex
+                                                    actionShotView.draggedItemIndex = -1
+                                                }
+                                            }
+                                            actionShotView.held = false;
+                                        }
+                            
+                                        onPressed:
+                                        {
+                                            if(actionPlate.checked)
+                                            {
+                                                actionShotView.pressedItem = actionPlate
+                                                if(actionShotView.pressedItem)
+                                                {
+                                                    actionShotView.draggedItemIndex = index;
+                                                    currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
+                                                    currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
+                                                    actionShotView.held = true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                Item
+                                {
+                                    id: topShadow
+                                    height: 20
+                                    width: parent.width
+                                    anchors.left: parent.left
+                                    anchors.top: parent.top
+
+                                    visible: actionShotView.contentY > 0
+
+                                    LinearGradient
+                                    {
+                                        anchors.fill: parent
+                                        start: Qt.point(0, 0)
+                                        end: Qt.point(0, parent.height)
+                                        gradient: Gradient
+                                        {
+                                            GradientStop { position: 1.0; color: "#00000000" }
+                                            GradientStop { position: 0.0; color: "#FF000000" }
+                                        }
+                                    }
+                                }
+
+                                Item
+                                {
+                                    id: bottomShadow
+                                    height: 20
+                                    width: parent.width
+                                    anchors.left: parent.left
+                                    anchors.bottom: parent.bottom
+
+                                    LinearGradient
+                                    {
+                                        anchors.fill: parent
+                                        start: Qt.point(0, parent.height)
+                                        end: Qt.point(0, 0)
+                                        gradient: Gradient
+                                        {
+                                            GradientStop { position: 1.0; color: "#00000000" }
+                                            GradientStop { position: 0.0; color: "#FF000000" }
+                                        }
+                                    }
+                                }
+
+                                property int draggedItemIndex: -1
+
+                                Item
+                                {
+                                    id: dndContainer
+                                    anchors.fill: parent
                                 }
                             }
-                        }
-                        property int draggedItemIndex: -1
 
-                        Item
-                        {
-                            id: dndContainer
-                            anchors.fill: parent
+                            RowLayout
+                            {
+                                Layout.leftMargin: 4
+                                Layout.rightMargin: 4
+                                Layout.bottomMargin: 2
+
+                                MfxHilightedButton
+                                {
+                                    Layout.fillWidth: true
+
+                                    id: addShotPattern
+                                    text: translationsManager.translationTrigger + qsTr("Add pattern")
+                                    color: "#2F80ED"
+
+                                    onClicked:
+                                    {
+                                        var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow );
+                                        addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
+                                        addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
+
+                                        addWindow.accepted.connect(() =>
+                                        {
+                                            patternManager.addPattern( MDFM.PatternType.Shot );
+                                        })
+                                    }
+                                }
+
+                                MfxHilightedButton
+                                {
+                                    Layout.fillWidth: true
+
+                                    id: delShotPattern
+                                    text: translationsManager.translationTrigger + qsTr("Delele pattern")
+                                    color: "#EB5757"
+
+                                    onClicked:
+                                    {
+                                        patternManager.deletePattern( patternManager.selectedShotPatternName );
+                                        patternManager.cleanShotPatternSelectionRequest();
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    Rectangle
+                    StackLayout
                     {
-                        id: previewWidget
+                        id: previewStack
                         SplitView.preferredHeight: 120
                         SplitView.maximumHeight: 200
                         SplitView.minimumHeight: 100
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        color: "black"
-                        clip: true
+                        currentIndex: 0
 
-                        PreviewIcon
+                        Rectangle
                         {
-                            id: previewIcon
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 20
+                            id: previewWidget
+                            color: "black"
+                            clip: true
+
+                            PreviewIcon
+                            {
+                                id: previewIcon
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 20
+                            }
+                        }
+
+                        Rectangle
+                        {
+                            id: previewShotWidget
+                            color: "black"
+                            clip: true
                         }
                     }
                 }

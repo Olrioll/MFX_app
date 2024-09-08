@@ -982,7 +982,7 @@ bool ProjectManager::isPatchHasGroup(int patchId) const
     return false;
 }
 
-void ProjectManager::onAddCue(QVariantMap properties)
+void ProjectManager::onAddCue(const QVariantMap& properties)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
@@ -1002,7 +1002,7 @@ QVariantList ProjectManager::getCues() const
     return cueList;
 }
 
-void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVariant value)
+void ProjectManager::setCueProperty(const QString& cueName, const QString& propertyName, QVariant value)
 {
     QMutexLocker locker( &m_ProjectLocker );
     auto cue = getChild( "Cues" )->getChild( cueName );
@@ -1010,7 +1010,7 @@ void ProjectManager::setCueProperty(QString cueName, QString propertyName, QVari
         cue->setProperty( propertyName, value );
 }
 
-void ProjectManager::addActionToCue(QString cueName, QString actionName, int patchId, int position)
+void ProjectManager::addActionToCue(const QString& cueName, const QString& actionName, int patchId, int position)
 {
     QMutexLocker locker( &m_ProjectLocker );
 

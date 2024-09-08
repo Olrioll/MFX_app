@@ -32,7 +32,7 @@ public slots:
 private:
     void doPlaybackTimeChanged( quint64 time, bool sendToWorker );
 
-    void runPatternSingly( const Pattern* p, quint64 time ) override;
+    void runPatternSingly( const Pattern& p, quint64 time ) override;
     void finishChangeAngle( int angle ) override;
 
     qulonglong calcDurationByPattern( const Pattern& pattern ) const override;

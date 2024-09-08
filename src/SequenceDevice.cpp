@@ -12,13 +12,13 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
     connect( &m_patternTimer, &QTimer::timeout, this, &SequenceDevice::onPatternTimerChanged );
 }
 
-void SequenceDevice::runPatternSingly( const Pattern* p, quint64 time )
+void SequenceDevice::runPatternSingly( const Pattern& p, quint64 time )
 {
-    if( !p || p->type() != PatternType::Sequential )
+    if( p.type() != PatternType::Sequential )
         return;
 
     m_opStartTime = time;
-    m_operations = p->operations()->toList();
+    m_operations = p.operations()->toList();
 
     if( m_operations.count() == 0 )
         return;

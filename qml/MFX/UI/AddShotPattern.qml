@@ -1,17 +1,16 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Shapes 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 
 Item
 {
-    id: dialog
-    width: 220
-    height: 120
+    id: addShotPatternWidget
+    width: 324
+    height: 304
 
-    property string caption
-    property string dialogText
     property string acceptButtonText: qsTr("Confirm")
     property string cancelButtonText: qsTr("Cancel")
     property string acceptButtonColor: "#4f4f4f"
@@ -25,8 +24,8 @@ Item
         id: blockingMouseInput
         color: "black"
         opacity: 0.5
-        x: -dialog.x
-        y: -dialog.y
+        x: -addShotPatternWidget.x
+        y: -addShotPatternWidget.y
         width: applicationWindow.width
         height: applicationWindow.height
 
@@ -47,7 +46,7 @@ Item
         Text
         {
             color: "#ffffff"
-            text: dialog.caption
+            text: "Add shot pattern"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideMiddle
@@ -65,13 +64,13 @@ Item
             anchors.left: parent.left
             anchors.right: parent.right
 
-            drag.target: dialog
+            drag.target: addShotPatternWidget
             drag.axis: Drag.XandYAxis
 
             drag.minimumX: applicationWindow.childWidgetsArea().x
-            drag.maximumX: applicationWindow.childWidgetsArea().width - dialog.width
+            drag.maximumX: applicationWindow.childWidgetsArea().width - addShotPatternWidget.width
             drag.minimumY: applicationWindow.childWidgetsArea().y
-            drag.maximumY: applicationWindow.childWidgetsArea().height - dialog.height
+            drag.maximumY: applicationWindow.childWidgetsArea().height - addShotPatternWidget.height
         }
 
         Button
@@ -101,7 +100,7 @@ Item
             onClicked:
             {
                 applicationWindow.contentItem.focus = true
-                dialog.destroy()
+                addShotPatternWidget.destroy()
             }
         }
 
@@ -116,28 +115,28 @@ Item
 
             color: "#222222"
 
-            Text
-            {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 8
-                anchors.top: parent.top
-                anchors.bottom: acceptButton.top
-                color: "#ffffff"
-                text: translationsManager.translationTrigger + dialog.dialogText
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                elide: Text.ElideNone
-                wrapMode: Text.WordWrap
-                font.family: MFXUIS.Fonts.robotoRegular.name
-                font.pixelSize: 12
-                topPadding: 20
-            }
+            //Text
+            //{
+            //    anchors.left: parent.left
+            //    anchors.right: parent.right
+            //    anchors.margins: 8
+            //    anchors.top: parent.top
+            //    anchors.bottom: acceptButton.top
+            //    color: "#ffffff"
+            //    text: translationsManager.translationTrigger + addShotPatternWidget.dialogText
+            //    horizontalAlignment: Text.AlignHCenter
+            //    verticalAlignment: Text.AlignVCenter
+            //    elide: Text.ElideNone
+            //    wrapMode: Text.WordWrap
+            //    font.family: MFXUIS.Fonts.robotoRegular.name
+            //    font.pixelSize: 12
+            //    topPadding: 20
+            //}
 
             MfxButton
             {
                 id: acceptButton
-                text: translationsManager.translationTrigger + dialog.acceptButtonText
+                text: translationsManager.translationTrigger + addShotPatternWidget.acceptButtonText
                 color: acceptButtonColor
                 width: (workArea.width - 3 * anchors.margins) / 2
                 anchors.margins: 2
@@ -148,14 +147,14 @@ Item
                 {
                     applicationWindow.contentItem.focus = true
                     accepted()
-                    dialog.destroy()
+                    addShotPatternWidget.destroy()
                 }
             }
 
             MfxButton
             {
                 id: cancelButton
-                text: dialog.cancelButtonText
+                text: addShotPatternWidget.cancelButtonText
                 color: cancelButtonColor
                 anchors.margins: 2
                 anchors.left: acceptButton.right
@@ -166,10 +165,9 @@ Item
                 {
                     applicationWindow.contentItem.focus = true
                     declined()
-                    dialog.destroy()
+                    addShotPatternWidget.destroy()
                 }
             }
         }
     }
 }
-

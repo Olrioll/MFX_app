@@ -131,13 +131,9 @@ void CueContentManager::onMirror()
 
 void CueContentManager::onSelectedChangeAction(const QString &name)
 {
-    for(auto * cueContentItem : m_cueContentItems->toList()){
+    for(auto * cueContentItem : m_cueContentItems->toList())
         if( cueContentItem->selected())
-        {
-
             cueContentItem->setAction(name);
-        }
-    }
 }
 
 void CueContentManager::onSelectItemRequest(const QUuid& id)

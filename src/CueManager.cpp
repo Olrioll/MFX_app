@@ -149,7 +149,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
 
     for( auto action : cue->actions()->toList() )
     {
-        Pattern* pattern = patternManager->patternByName(action->patternName());
+        const Pattern* pattern = patternManager->patternByName(action->patternName());
         if( !pattern )
             continue;
 

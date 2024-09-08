@@ -84,7 +84,6 @@ int main(int argc, char** argv)
     TranslationManager translationManager(settings);
     ProjectManager project(settings);
     PatternManager patternManager(settings);
-    patternManager.initPatterns();
     project.setPrefire(patternManager.getPrefire());
     DeviceManager deviceManager(&patternManager, &project);
     project.SetDeviceManager( &deviceManager );

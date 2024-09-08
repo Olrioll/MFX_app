@@ -164,10 +164,10 @@ signals:
 ///                      Работа с кью                                        //
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
-    void onAddCue(QVariantMap properties);
+    void onAddCue(const QVariantMap& properties);
     QVariantList getCues() const;
-    void addActionToCue(QString cueName, QString actionName, int patchId, int position);
-    void setCueProperty(QString cueName, QString propertyName, QVariant value);
+    void addActionToCue(const QString& cueName, const QString& actionName, int patchId, int position);
+    void setCueProperty(const QString& cueName, const QString& propertyName, QVariant value);
     void deleteCues(QStringList deletedCueNames);
     void copyCues(QStringList copyCueNames);
     void changeAction(QString cueName, int deviceId, QString pattern);

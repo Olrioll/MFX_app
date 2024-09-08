@@ -66,5 +66,6 @@
         <file>MFX/UI/Components/Basic/MfxMouseArea.qml</file>
         <file>MFX/UI/Components/CuePlate/ActionMarkerComponent.qml</file>
         <file>MFX/UI/Components/CuePlate/PrefireSpaceComponent.qml</file>
+        <file>MFX/UI/AddShotPattern.qml</file>
     </qresource>
 </RCC>

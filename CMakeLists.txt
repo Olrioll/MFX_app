@@ -150,7 +150,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/DMXDevice.cpp"
     "src/DMXPlugin.cpp"
     "src/DMXWriter.cpp"
- )
+    "src/CustomPatternStore.cpp")
 
 #target_link_directories(${MFX_PROJECT_NAME} PUBLIC "libs")
 

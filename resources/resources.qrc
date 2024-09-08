@@ -34,6 +34,7 @@
         <file alias="trackPlaceholder">images/trackPlaceholder.png</file>
         <file alias="actionPrefireMarker">images/actionPrefireMarker.png</file>
         <file alias="actionStartMarker">images/actionStartMarker.png</file>
+        <file alias="imageAdd">images/imageAdd.png</file>
         <file>fonts/Roboto/LICENSE.txt</file>
         <file>fonts/Roboto/Roboto-Black.ttf</file>
         <file>fonts/Roboto/Roboto-BlackItalic.ttf</file>

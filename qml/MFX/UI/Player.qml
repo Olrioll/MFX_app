@@ -1145,6 +1145,9 @@ Item
 
                         if(isNameFree)
                         {
+                            if( drag.source.checkedIDs === undefined )
+                                return
+
                             let checkedIDs = drag.source.checkedIDs
 
                             let hasAction = false

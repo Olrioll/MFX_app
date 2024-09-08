@@ -142,8 +142,7 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
 
 void DeviceManager::reloadPattern()
 {
-    qDebug();
-    m_patternManager->initPatterns();
+    m_patternManager->reloadPatterns();
 }
 
 /*
@@ -168,22 +167,22 @@ void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QStrin
     if( !device )
         return;
 
-    Pattern* p = m_patternManager->patternByName( patternName );
+    const Pattern* p = m_patternManager->patternByName( patternName );
     if( !p )
         return;
 
-    device->runPatternSingly( p, time );
+    device->runPatternSingly( *p, time );
 }
 
 void DeviceManager::runPreviewPattern( const QString& patternName )
 {
     //qDebug() << patternName;
 
-    Pattern* p = m_patternManager->patternByName( patternName );
+    const Pattern* p = m_patternManager->patternByName( patternName );
     if( !p )
         return;
 
-    m_previewDevice->runPatternSingly( p, 0 );
+    m_previewDevice->runPatternSingly( *p, 0 );
 }
 
 void DeviceManager::finishChangeAngle( int deviceId, int angle )
@@ -210,7 +209,7 @@ qulonglong DeviceManager::maxActionsDuration( const QList<int>& ids ) const
 
 qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId ) const
 {
-    Pattern* pattern = m_patternManager->patternByName( actName );
+    const Pattern* pattern = m_patternManager->patternByName( actName );
     Device* device = deviceById( deviceId );
 
     if( pattern && device )

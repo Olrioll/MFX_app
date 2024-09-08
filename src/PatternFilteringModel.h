@@ -15,7 +15,7 @@ class PatternFilteringModel : public QSortFilterProxyModel {
 public:
     using PatternSourceModel = QQmlObjectListModel<Pattern>;
 
-    explicit PatternFilteringModel(PatternSourceModel & patterns, QObject* parent = nullptr);
+    explicit PatternFilteringModel(PatternSourceModel & patterns, PatternType::Type type, QObject* parent = nullptr);
 
     Q_INVOKABLE void patternFilteringTypeChangeRequest(const PatternType::Type& filteringType);
 
