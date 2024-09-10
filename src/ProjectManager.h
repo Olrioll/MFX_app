@@ -11,6 +11,7 @@
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
+#include "Pattern.h"
 
 class DeviceManager;
 
@@ -106,11 +107,11 @@ public slots:
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
     int lastPatchId() const;
-    void addPatch(const QString& type, const QVariantList& properties);
+    void addPatch(PatternType::Type type, const QVariantList& properties);
     void onEditPatch(const QVariantList& properties);
     QVariant patchProperty(int id, const QString& propertyName) const;
     QVariant patchPropertyForIndex(int index, const QString& propertyName) const;
-    QString patchType(int index) const;
+    QString patchType(int id) const;
     QVariantMap patchProperties(int index) const;
     QStringList patchPropertiesNames(int index) const;
     QList<QVariant> patchPropertiesValues(int index) const;

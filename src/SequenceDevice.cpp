@@ -14,7 +14,7 @@ SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
 
 void SequenceDevice::runPatternSingly( const Pattern& p, quint64 time )
 {
-    if( p.type() != PatternType::Sequential )
+    if( p.type() != PatternType::Sequences )
         return;
 
     m_opStartTime = time;

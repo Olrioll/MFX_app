@@ -13,6 +13,7 @@ public:
 
     void load();
     void save();
+    void clear();
 
     const Pattern* getPattern( const QString& name ) const;
     void addPattern( Pattern* pattern );

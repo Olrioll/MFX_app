@@ -2007,8 +2007,10 @@ FocusScope
                                                     var listSize = project.patchCount()
                                                     for(let i = 0; i < listSize; i++)
                                                     {
-                                                        if(project.patchType(i) === deviceListView.groupName)
-                                                            deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, currentId: project.patchPropertyForIndex(i, "ID")})
+                                                        let patch_id = project.patchPropertyForIndex(i, "ID")
+
+                                                        if( project.patchType( patch_id ) === deviceListView.groupName )
+                                                            deviceListModel.insert( deviceListView.count, {counter: deviceListView.count + 1, currentId: patch_id} )
                                                     }
                                                 }
 
@@ -2041,19 +2043,31 @@ FocusScope
                                                     {
                                                         anchors.fill: parent;
                                                         property bool isEnter: false
+
                                                         onDropped:
                                                         {
-                                                            console.log("Dropped", drop.source.name)
-                                                            if(drop.source.name.startsWith("A"))
+                                                            console.log("Dropped", drop.source.name, drop.source.type)
+                                                            if( drop.source.type.toString() === project.patchType( patchId ) )
                                                             {
-                                                                project.setPatchProperty(currentId, "act", drop.source.name);
+                                                                project.setPatchProperty(patchId, "act", drop.source.name);
                                                                 project.setPatchProperty(patchId, "checked", false)
                                                                 isEnter = false;
                                                                 refreshCells()
                                                             }
                                                         }
-                                                        onEntered: if(drag.source.name.startsWith("A")){ project.setPatchProperty(patchId, "checked", true); isEnter=true; }
-                                                        onExited: if(isEnter) project.setPatchProperty(patchId, "checked", false)
+                                                        onEntered:
+                                                        {
+                                                            if( drag.source.type.toString() === project.patchType( patchId ) )
+                                                            {
+                                                                project.setPatchProperty(patchId, "checked", true);
+                                                                isEnter=true;
+                                                            }
+                                                        }
+                                                        onExited:
+                                                        {
+                                                            if(isEnter)
+                                                                project.setPatchProperty(patchId, "checked", false)
+                                                        }
                                                     }
                                                 }
 
@@ -3041,119 +3055,110 @@ FocusScope
             color: "#222222"
         }
 
-        MfxButton
+        RowLayout
         {
-            id: sequencesButton
-            checkable: true
-            width: 68
-            text: translationsManager.translationTrigger + qsTr("Sequences")
-            textSize: 10
-            color: "#2F80ED"
+            id: rightPanelButtons
 
-            anchors.top: parent.top
-            anchors.left: parent.left
+            MfxButton
+            {
+                Layout.fillWidth: true
+                Layout.preferredWidth: 68
 
-            ButtonGroup.group: rightButtonsGroup
+                id: sequencesButton
+                checkable: true
+                text: translationsManager.translationTrigger + qsTr("Sequences")
+                textSize: 10
+                color: "#2F80ED"
 
-            visible: true
-        }
+                ButtonGroup.group: rightButtonsGroup
 
-        MfxButton
-        {
-            id: dimmerButton
-            checkable: true
-            width: 68
-            text: translationsManager.translationTrigger + qsTr("Dimmer")
-            textSize: 10
-            color: "#2F80ED"
+                visible: true
+            }
 
-            anchors.top: parent.top
-            anchors.leftMargin: 2
-            anchors.left: sequencesButton.right
+            MfxButton
+            {
+                Layout.fillWidth: true
+                Layout.preferredWidth: 68
 
-            ButtonGroup.group: rightButtonsGroup
+                id: dimmerButton
+                checkable: true
+                text: translationsManager.translationTrigger + qsTr("Dimmer")
+                textSize: 10
+                color: "#2F80ED"
 
-            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
-            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
-            visible: false
-        }
+                ButtonGroup.group: rightButtonsGroup
 
-        MfxButton
-        {
-            id: shotButton
-            checkable: true
-            width: 68
-            text: translationsManager.translationTrigger + qsTr("Shot")
-            textSize: 10
-            color: "#2F80ED"
+                //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+                //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+                visible: false
+            }
 
-            anchors.top: parent.top
-            anchors.leftMargin: 2
-            anchors.left: dimmerButton.right
+            MfxButton
+            {
+                Layout.fillWidth: true
+                Layout.preferredWidth: 68
 
-            ButtonGroup.group: rightButtonsGroup
+                id: shotButton
+                checkable: true
+                text: translationsManager.translationTrigger + qsTr("Shot")
+                textSize: 10
+                color: "#2F80ED"
 
-            visible: true
-        }
+                ButtonGroup.group: rightButtonsGroup
 
-        MfxButton
-        {
-            id: pyroButton
-            checkable: true
-            width: 68
-            text: translationsManager.translationTrigger + qsTr("Pyro")
-            textSize: 10
-            color: "#2F80ED"
+                visible: true
+            }
 
-            anchors.top: parent.top
-            anchors.leftMargin: 2
-            anchors.left: shotButton.right
+            MfxButton
+            {
+                Layout.fillWidth: true
+                Layout.preferredWidth: 68
 
-            ButtonGroup.group: rightButtonsGroup
+                id: pyroButton
+                checkable: true
+                text: translationsManager.translationTrigger + qsTr("Pyro")
+                textSize: 10
+                color: "#2F80ED"
 
-            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
-            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
-            visible: false
-        }
+                ButtonGroup.group: rightButtonsGroup
 
-        MfxButton
-        {
-            id: cueButton
-            checkable: true
-            width: 60
-            text: translationsManager.translationTrigger + qsTr("Cue")
-            textSize: 10
+                //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+                //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+                visible: false
+            }
 
-            anchors.top: parent.top
-            anchors.leftMargin: 2
-            anchors.left: pyroButton.right
+            MfxButton
+            {
+                Layout.fillWidth: true
+                Layout.preferredWidth: 68
 
-            ButtonGroup.group: rightButtonsGroup
+                id: cueButton
+                checkable: true
+                text: translationsManager.translationTrigger + qsTr("Cue")
+                textSize: 10
 
-            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
-            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
-            visible: false
-        }
+                ButtonGroup.group: rightButtonsGroup
 
-        ButtonGroup
-        {
-            id: rightButtonsGroup
-            checkedButton: sequencesButton
-        }
+                //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+                //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+                visible: false
+            }
 
-        MfxButton
-        {
-            id: addButton
-            text: translationsManager.translationTrigger + qsTr("+")
+            ButtonGroup
+            {
+                id: rightButtonsGroup
+                checkedButton: sequencesButton
+            }
 
-            anchors.top: parent.top
-            anchors.leftMargin: 2
-            anchors.left: cueButton.right
-            anchors.right: parent.right
+            MfxButton
+            {
+                id: addButton
+                text: translationsManager.translationTrigger + qsTr("+")
 
-            //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
-            //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
-            visible: false
+                //TODO-DEVICES-TYPES пока не используем другие типы устройств - только Sequences, поэтому комментируем
+                //                   Когда понадобится восстановить, делаем поиск по TODO-DEVICES-TYPES
+                visible: false
+            }
         }
 
         Item
@@ -3161,7 +3166,7 @@ FocusScope
             id: actionViewWidget
 
             anchors.topMargin: 2
-            anchors.top: sequencesButton.bottom
+            anchors.top: rightPanelButtons.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -3196,7 +3201,7 @@ FocusScope
                 visible: !actionViewWidget.patternTypesFeatureHidden
 
                 onClicked: {
-                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Sequential)
+                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MFXE.PatternType.Sequences)
                 }
             }
 
@@ -3217,7 +3222,7 @@ FocusScope
                 visible: !actionViewWidget.patternTypesFeatureHidden
 
                 onClicked: {
-                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Dynamic)
+                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MFXE.PatternType.Dynamic)
                 }
             }
 
@@ -3238,7 +3243,7 @@ FocusScope
                 visible: !actionViewWidget.patternTypesFeatureHidden
 
                 onClicked: {
-                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MDFM.PatternType.Static)
+                    patternManager.patternsFiltered.patternFilteringTypeChangeRequest(MFXE.PatternType.Static)
                 }
             }
 
@@ -3328,6 +3333,7 @@ FocusScope
                                 id: actionPlate
                             
                                 property string name: model.name
+                                property var type: model.type
                                 property bool checked: name === patternManager.selectedPatternName
                             
                                 width: actionView.cellWidth
@@ -3433,7 +3439,7 @@ FocusScope
                                                 if(actionPlate.checked)
                                                     patternManager.cleanPatternSelectionRequest()
                             
-                                                console.log(actionPlate.name)
+                                                console.log(actionPlate.name, type)
                                                 patternManager.currentPatternChangeRequest(actionPlate.name)
                                                 cueContentManager.onSelectedChangeAction(actionPlate.name)
                                                 actionView.pressedItem = actionPlate
@@ -3599,6 +3605,7 @@ FocusScope
                                     id: actionPlate
 
                                     property string name: model.name
+                                    property var type: model.type
                                     property bool checked: name === patternManager.selectedShotPatternName
                             
                                     width: actionShotView.cellWidth
@@ -3647,7 +3654,7 @@ FocusScope
                             
                                                 Image
                                                 {
-                                                    source: "qrc:/imageAdd"
+                                                    source: "qrc:/imagePlaceholder"
                                                     anchors.centerIn: parent
                                                 }
                                             }
@@ -3861,7 +3868,7 @@ FocusScope
 
                                         addWindow.accepted.connect(() =>
                                         {
-                                            patternManager.addPattern( MDFM.PatternType.Shot );
+                                            patternManager.addPattern( MFXE.PatternType.Shot );
                                         })
                                     }
                                 }

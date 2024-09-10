@@ -18,7 +18,7 @@ PatternManager::PatternManager(SettingsManager& settingsManager, QObject* parent
     m_patterns = new QQmlObjectListModel<Pattern>(this);
     m_CustomPatterns = std::make_unique<CustomPatternStore>( m_settingsManager );
 
-    m_patternsFiltered = new PatternFilteringModel(*m_patterns, PatternType::Sequential, this);
+    m_patternsFiltered = new PatternFilteringModel(*m_patterns, PatternType::Sequences, this);
     m_patternsShotFiltered = new PatternFilteringModel( *m_CustomPatterns->getSourceModel(), PatternType::Shot, this );
 
     initConnections();
@@ -38,7 +38,7 @@ void PatternManager::initConnections()
 
 void PatternManager::qmlRegister()
 {
-    PatternType::registerToQml("MFX.Models", 1, 0);
+    PatternType::registerToQml("MFX.Enums", 1, 0);
     qRegisterMetaType<Pattern*>("Pattern*");
 }
 
@@ -161,7 +161,7 @@ void PatternManager::initPatterns()
                 pattern->operations()->append(operation);
             }
 
-            pattern->setType(PatternType::Sequential);
+            pattern->setType(PatternType::Sequences);
             pattern->setPrefireDuration(prefire);
             m_prefire.insert(name, prefire);
             m_patterns->append(pattern);
@@ -216,7 +216,4 @@ void PatternManager::deletePattern( const QString& name )
         type = pattern->type();
 
     m_CustomPatterns->deletePattern( name );
-
-    if( type == PatternType::Shot )
-        patternsShotFiltered()->invalidate();
 }

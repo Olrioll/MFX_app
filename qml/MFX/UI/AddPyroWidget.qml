@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0 as MFXE
 
 Item
 {
@@ -77,7 +78,7 @@ Item
 
         for(let i = 0; i < Number(quantityField.text); i++)
         {
-            project.addPatch( "Pyro",
+            project.addPatch( MFXE.PatternType.Pyro,
                              [
                               {propName: "ID", propValue: currentId},
                               {propName: "DMX", propValue: 0},

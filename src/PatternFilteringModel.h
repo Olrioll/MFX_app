@@ -11,7 +11,7 @@
 
 class PatternFilteringModel : public QSortFilterProxyModel {
     Q_OBJECT
-    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, filteringType, FilteringType, PatternType::Sequential)
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, filteringType, FilteringType, PatternType::Sequences)
 public:
     using PatternSourceModel = QQmlObjectListModel<Pattern>;
 

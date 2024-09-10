@@ -29,7 +29,7 @@ ListView
 
         for(var i = 0; i < patchesList.length; i++)
         {
-            let currType = project.patchType(project.patchIndexForId(patchesList[i]))
+            let currType = project.patchType( patchesList[i] )
 
             if(currType === "Sequences")
                 sequ.push(patchesList[i])

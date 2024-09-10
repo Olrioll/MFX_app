@@ -33,7 +33,7 @@ Item
 
         for(i = 0; i < project.patchCount(); i++)
         {
-            var deviceType = project.patchType(i)
+            var deviceType = project.patchType( project.patchPropertyForIndex( i, "ID" ) )
             var imageFile
             if (deviceType === "Sequences")
                 imageFile = "qrc:/device_sequences"

@@ -22,9 +22,6 @@ void PatternFilteringModel::patternFilteringTypeChangeRequest(const PatternType:
 
 void PatternFilteringModel::initConnections()
 {
-    //connect(&m_patterns, &QQmlObjectListModelBase::countChanged, [=](){
-    //    this->invalidateFilter();
-    //});
     connect(this, &PatternFilteringModel::filteringTypeChanged, [=](){
         this->invalidateFilter();
     });

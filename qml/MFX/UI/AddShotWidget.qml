@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0 as MFXE
 
 Item
 {
@@ -128,7 +129,7 @@ Item
 
         for(let i = 0; i < Number(quantityField.text); i++)
         {
-            project.addPatch( "Shot",
+            project.addPatch( MFXE.PatternType.Shot,
                              [
                               {propName: "ID", propValue: currentId},
                               //{propName: "DMX", propValue: currentDmxValue},

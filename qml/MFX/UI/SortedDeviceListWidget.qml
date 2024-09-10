@@ -26,8 +26,10 @@ ListView
         var listSize = project.patchCount()
         for(let i = 0; i < listSize; i++)
         {
-            if(project.patchType(i) === deviceListView.groupName)
-                deviceListModel.insert(deviceListView.count, {counter: deviceListView.count + 1, currentId: project.patchPropertyForIndex(i, "ID")})
+            let patch_id = project.patchPropertyForIndex(i, "ID")
+
+            if( project.patchType( patch_id ) === deviceListView.groupName  )
+                deviceListModel.insert( deviceListView.count, {counter: deviceListView.count + 1, currentId: patch_id} )
         }
     }
 

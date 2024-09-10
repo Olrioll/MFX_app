@@ -429,14 +429,9 @@ void ProjectManager::removePatchesByIDs(const QStringList &ids)
 
 QVariant ProjectManager::patchProperty(int id, const QString& propertyName) const
 {
-    auto patches = getChild("Patches")->listedChildren();
-    for(auto patch : patches)
-    {
-        if(patch->property("ID").toInt() == id)
-        {
-            return patch->property(propertyName);
-        }
-    }
+    for( const auto patch : getChild( "Patches" )->listedChildren() )
+        if( patch->property( "ID" ).toInt() == id )
+            return patch->property( propertyName );
 
     return 0;
 }
@@ -451,14 +446,13 @@ QVariant ProjectManager::patchPropertyForIndex(int index, const QString& propert
     return children.at(index)->property(propertyName);
 }
 
-QString ProjectManager::patchType(int index) const
+QString ProjectManager::patchType(int id) const
 {
-    auto& children = getChild( "Patches" )->listedChildren();
+    for( const auto patch : getChild( "Patches" )->listedChildren() )
+        if( patch->property( "ID" ).toInt() == id )
+            return patch->property( "type" ).toString();
 
-    if( index < 0 || index >= children.size() )
-        return {};
-
-    return children.at(index)->property("type").toString();
+    return "Unknown";
 }
 
 QVariantMap ProjectManager::patchProperties(int index) const
@@ -579,12 +573,12 @@ int ProjectManager::lastPatchId() const
     return id;
 }
 
-void ProjectManager::addPatch(const QString& type, const QVariantList& properties)
+void ProjectManager::addPatch(PatternType::Type type, const QVariantList& properties)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
     JsonSerializable* patch = new JsonSerializable;
-    patch->setProperty("type", type);
+    patch->setProperty("type", PatternType::toString( type ));
     patch->setProperty("act", "");
     patch->setProperty("checked", false);
 
