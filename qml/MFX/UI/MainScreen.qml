@@ -3865,11 +3865,6 @@ FocusScope
                                         var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow );
                                         addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
                                         addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
-
-                                        addWindow.accepted.connect(() =>
-                                        {
-                                            patternManager.addPattern( MFXE.PatternType.Shot );
-                                        })
                                     }
                                 }
 
