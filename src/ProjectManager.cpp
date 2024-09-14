@@ -446,13 +446,18 @@ QVariant ProjectManager::patchPropertyForIndex(int index, const QString& propert
     return children.at(index)->property(propertyName);
 }
 
-QString ProjectManager::patchType(int id) const
+PatternType::Type ProjectManager::patchType(int id) const
 {
     for( const auto patch : getChild( "Patches" )->listedChildren() )
         if( patch->property( "ID" ).toInt() == id )
-            return patch->property( "type" ).toString();
+            return Pattern::typeFromString( patch->property( "type" ).toString() );
 
-    return "Unknown";
+    return PatternType::Unknown;
+}
+
+QString ProjectManager::patchTypeStr( int id ) const
+{
+    return PatternType::toString( patchType( id ) );
 }
 
 QVariantMap ProjectManager::patchProperties(int index) const
@@ -486,7 +491,7 @@ QList<QVariant> ProjectManager::patchPropertiesValues(int index) const
     return children.at(index)->properties().values();
 }
 
-void ProjectManager::setPatchProperty(int id, const QString& propertyName, QVariant value)
+void ProjectManager::setPatchProperty(int id, const QString& propertyName, const QVariant& value)
 {
     //qDebug() << id << " " << propertyName << " " << value;
     QMutexLocker locker( &m_ProjectLocker );
@@ -522,10 +527,11 @@ void ProjectManager::uncheckPatch()
     }
 }
 
-void ProjectManager::setProperty(const QString& name, QVariant value)
+void ProjectManager::setProperty(const QString& name, const QVariant& value /*= QVariant()*/, bool doLog /*= true*/)
 {
 #if _DEBUG
-    qDebug() << name << " " << value;
+    if( doLog )
+        qDebug() << name << " " << value;
 #endif
 
     QMutexLocker locker( &m_ProjectLocker );
@@ -540,7 +546,7 @@ QVariant ProjectManager::property(const QString& name) const
 
 void ProjectManager::setSceneScaleFactor( double scale )
 {
-    setProperty( "sceneScaleFactor", scale );
+    setProperty( "sceneScaleFactor", scale, false );
     emit changeEmiterScale();
 }
 

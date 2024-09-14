@@ -1119,6 +1119,7 @@ Item
 
             onDropped:
             {
+                console.log("Player.onDropped", drag.source);
                 if(!drag.source.intersectionState)
                 {
                     let newX = mapToItem(cueView, drag.x, drag.y).x

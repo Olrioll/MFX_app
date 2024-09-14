@@ -12,12 +12,11 @@
 #include "Operation.h"
 
 //QSM_ENUM_CLASS(PatternType, Unknown = -1, Sequential = 0, Dynamic, Static)
-QSM_ENUM_CLASS( PatternType, Unknown = -1, Sequences = 0, Shot )
+QSM_ENUM_CLASS( PatternType, Unknown = -1, Sequences = 0, Dimmer, Shot, Pyro )
 
 class Pattern : public QObject
 {
     Q_OBJECT
-    //QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT( uint, seq, Seq, 0 )
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, name, Name, "")
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, type, Type, PatternType::Unknown)
@@ -31,6 +30,8 @@ public:
     void makeName();
     QVariantMap getProperties() const;
     void setProperties( const QVariantMap& properties );
+
+    static PatternType::Type typeFromString( const QString& str );
 };
 
-Q_DECLARE_METATYPE(Pattern *)
+Q_DECLARE_METATYPE( Pattern* )

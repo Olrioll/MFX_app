@@ -580,7 +580,7 @@ Item
                 choosenImageFile = project.workDirStr() + "/" + project.property("backgroundImageFile")
                 widthField.text = project.property("sceneFrameWidth")
                 heightField.text = project.property("sceneFrameHeight")
-                projectNameField.text = project.property("projectName")
+                projectNameField.text = project.property("projectName") === undefined ? "" : project.property("projectName")
             }
         }
     }

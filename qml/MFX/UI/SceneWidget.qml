@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0 as MFXE
 
 import "qrc:/"
 
@@ -34,14 +35,15 @@ Item
         for(i = 0; i < project.patchCount(); i++)
         {
             var deviceType = project.patchType( project.patchPropertyForIndex( i, "ID" ) )
+            console.log("deviceType:", deviceType)
             var imageFile
-            if (deviceType === "Sequences")
+            if (deviceType == MFXE.PatternType.Sequences)
                 imageFile = "qrc:/device_sequences"
-            else if (deviceType === "Pyro")
+            else if (deviceType == MFXE.PatternType.Pyro)
                 imageFile = "qrc:/device_pyro"
-            else if (deviceType === "Shot")
+            else if (deviceType == MFXE.PatternType.Shot)
                 imageFile = "qrc:/device_shot"
-            else if (deviceType === "Dimmer")
+            else if (deviceType == MFXE.PatternType.Dimmer)
                 imageFile = "qrc:/device_dimmer"
 
             patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(backgroundImage,
@@ -50,7 +52,8 @@ Item
                                                                                  checked: project.patchPropertyForIndex(i, "checked"),
                                                                                  posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
                                                                                  posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
-            if(deviceType === "Sequences") {
+            if(deviceType === MFXE.PatternType.Sequences)
+            {
                 deviceManager.setSequenceDeviceProperty(project.patchPropertyForIndex(i, "ID"), project.patchPropertyForIndex(i, "checked"),
                     project.patchPropertyForIndex(i, "posXRatio"), project.patchPropertyForIndex(i, "posYRatio"));
             }

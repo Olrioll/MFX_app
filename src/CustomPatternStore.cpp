@@ -66,7 +66,7 @@ void CustomPatternStore::clear()
     m_Patterns->clear();
 }
 
-const Pattern* CustomPatternStore::getPattern( const QString& name ) const
+Pattern* CustomPatternStore::getPattern( const QString& name ) const
 {
     for( const auto pattern : m_Patterns->toList() )
         if( pattern->name() == name )

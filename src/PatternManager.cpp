@@ -38,8 +38,8 @@ void PatternManager::initConnections()
 
 void PatternManager::qmlRegister()
 {
-    PatternType::registerToQml("MFX.Enums", 1, 0);
-    qRegisterMetaType<Pattern*>("Pattern*");
+    PatternType::registerToQml( "MFX.Enums", 1, 0 );
+    qRegisterMetaType<Pattern*>( "Pattern*" );
 }
 
 const QMap<QString, int>& PatternManager::getPrefire()
@@ -47,24 +47,19 @@ const QMap<QString, int>& PatternManager::getPrefire()
     return m_prefire;
 }
 
-void PatternManager::currentPatternChangeRequest(const QString& patternName)
+void PatternManager::currentPatternChangeRequest( PatternType::Type type, const QString& patternName )
 {
-    setSelectedPatternName(patternName);
+    qDebug() << PatternType::toString( type ) << patternName;
+
+    if( type == PatternType::Sequences )
+        setSelectedPatternName( patternName );
+    else if( type == PatternType::Shot )
+        setSelectedShotPatternName( patternName );
 }
 
-void PatternManager::cleanPatternSelectionRequest()
+void PatternManager::cleanPatternSelectionRequest( PatternType::Type type )
 {
-    setSelectedPatternName("");
-}
-
-void PatternManager::currentShotPatternChangeRequest( const QString& patternName )
-{
-    setSelectedShotPatternName( patternName );
-}
-
-void PatternManager::cleanShotPatternSelectionRequest()
-{
-    setSelectedShotPatternName( "" );
+    currentPatternChangeRequest( type, "" );
 }
 
 void PatternManager::reloadPatterns()
@@ -184,13 +179,15 @@ PatternFilteringModel* PatternManager::patternsShotFiltered() const
     return m_patternsShotFiltered;
 }
 
-const Pattern* PatternManager::patternByName(const QString &name) const
+Pattern* PatternManager::patternByName(const QString &name) const
 {
+    //qDebug() << name;
+
     for(auto * pattern : m_patterns->toList())
         if(name.compare(pattern->name(), Qt::CaseInsensitive) == 0)
             return pattern;
 
-    return nullptr;
+    return m_CustomPatterns->getPattern( name );
 }
 
 void PatternManager::addPattern( PatternType::Type type )
@@ -217,3 +214,8 @@ void PatternManager::deletePattern( const QString& name )
 
     m_CustomPatterns->deletePattern( name );
 }
+
+//QString PatternManager::patternTypeToString( PatternType::Type type )
+//{
+//    return PatternType::toString( type );
+//}

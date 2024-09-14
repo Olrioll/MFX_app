@@ -2,6 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import MFX.Enums 1.0 as MFXE
+
 import "qrc:/"
 
 ListView
@@ -31,16 +33,16 @@ ListView
         {
             let currType = project.patchType( patchesList[i] )
 
-            if(currType === "Sequences")
+            if(currType == MFXE.PatternType.Sequences)
                 sequ.push(patchesList[i])
 
-            else if(currType === "Dimmer")
+            else if(currType == MFXE.PatternType.Dimmer)
                 dimm.push(patchesList[i])
 
-            else if(currType === "Shot")
+            else if(currType == MFXE.PatternType.Shot)
                 shot.push(patchesList[i])
 
-            else if(currType === "Pyro")
+            else if(currType == MFXE.PatternType.Pyro)
                 pyro.push(patchesList[i])
         }
 
@@ -143,10 +145,13 @@ ListView
         no: counter
         patchId: currentId
         parentList: deviceListView
-        DropArea{
+        DropArea
+        {
             anchors.fill: parent;
             property bool isEnter: false
-            onDropped: {
+            onDropped:
+            {
+                console.log("!!!")
                 console.log("Dropped")
                 if(drop.source.name.startsWith("A")){
                     project.setPatchProperty(currentId, "act", drop.source.name);
@@ -155,8 +160,20 @@ ListView
                     refreshCells()
                 }
             }
-            onEntered: if(drag.source.name.startsWith("A")){ project.setPatchProperty(patchId, "checked", true); isEnter=true; }
-            onExited: if(isEnter) project.setPatchProperty(patchId, "checked", false)
+            onEntered:
+            {
+                console.log("!!!")
+                if(drag.source.name.startsWith("A"))
+                {
+                    project.setPatchProperty(patchId, "checked", true);
+                    isEnter=true;
+                }
+            }
+            onExited:
+            {
+                if(isEnter)
+                    project.setPatchProperty(patchId, "checked", false)
+            }
         }
     }
 

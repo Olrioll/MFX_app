@@ -87,7 +87,7 @@ signals:
 ///                      Работа с сохранением данных                         //
 ///////////////////////////////////////////////////////////////////////////////
 public slots:
-    void setProperty(const QString& name, QVariant value);
+    void setProperty(const QString& name, const QVariant& value, bool doLog = true);
     QVariant property(const QString& name) const;
     void setSceneScaleFactor( double scale );
     const QDir& workDir() const;
@@ -111,11 +111,12 @@ public slots:
     void onEditPatch(const QVariantList& properties);
     QVariant patchProperty(int id, const QString& propertyName) const;
     QVariant patchPropertyForIndex(int index, const QString& propertyName) const;
-    QString patchType(int id) const;
+    PatternType::Type patchType(int id) const;
+    QString patchTypeStr( int id ) const;
     QVariantMap patchProperties(int index) const;
     QStringList patchPropertiesNames(int index) const;
     QList<QVariant> patchPropertiesValues(int index) const;
-    void setPatchProperty(int id, const QString& propertyName, QVariant value);
+    void setPatchProperty(int id, const QString& propertyName, const QVariant& value);
     QVariantList patchesIdList(const QString& groupName) const;
     void uncheckPatch();
     int patchIndexForId(int id) const;

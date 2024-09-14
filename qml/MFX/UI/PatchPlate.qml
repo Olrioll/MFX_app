@@ -5,6 +5,7 @@ import QtQml.Models 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 import MFX.UI.Components.Basic 1.0 as MFXUICB
+import MFX.Enums 1.0 as MFXE
 
 Item
 {
@@ -17,7 +18,7 @@ Item
     property string name: "Patch Plate"
     property bool withBorder: false
     property bool halfChecked: isNeedToShowHalfChecked()
-    property string type: ""
+    property int type: MFXE.PatternType.Unknown
     property bool checked: isNeedToShowChecked();
     property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
     property string imageFile: ""
@@ -62,8 +63,7 @@ Item
         var patchProperties = project.patchProperties(project.patchIndexForId(patchId))
 
 
-        if("ID" in patchProperties)
-            cellListModel.append({propName: "ID", propValue: patchProperties["ID"]})
+        cellListModel.append({propName: "ID", propValue: patchId})
 
         //if("DMX" in patchProperties)
         //    cellListModel.append({propName: "DMX", propValue: patchProperties["DMX"]})
@@ -97,26 +97,25 @@ Item
         if("act" in patchProperties && showAction)
             cellListModel.append({propName: "act", propValue: patchProperties["act"]})
 
-        if("type" in patchProperties)
-            patchPlate.type = patchProperties["type"]
+        patchPlate.type = project.patchType( patchId )
 
-        switch (patchPlate.type)
+        switch( patchPlate.type )
         {
-        case "Sequences" :
-            imageFile = "qrc:/device_sequences"
-            break;
+            case MFXE.PatternType.Sequences:
+                imageFile = "qrc:/device_sequences"
+                break;
 
-        case "Pyro" :
-            imageFile = "qrc:/device_pyro"
-            break;
+            case MFXE.PatternType.Pyro:
+                imageFile = "qrc:/device_pyro"
+                break;
 
-        case "Shot" :
-            imageFile = "qrc:/device_shot"
-            break;
+            case MFXE.PatternType.Shot:
+                imageFile = "qrc:/device_shot"
+                break;
 
-        case "Dimmer" :
-            imageFile = "qrc:/device_dimmer"
-            break;
+            case MFXE.PatternType.Dimmer:
+                imageFile = "qrc:/device_dimmer"
+                break;
         }
     }
 

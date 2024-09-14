@@ -15,7 +15,7 @@ public:
     void save();
     void clear();
 
-    const Pattern* getPattern( const QString& name ) const;
+    Pattern* getPattern( const QString& name ) const;
     void addPattern( Pattern* pattern );
     void deletePattern( const QString& name );
     ulong getMaxSeq( PatternType::Type type ) const;

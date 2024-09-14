@@ -42,11 +42,15 @@ void Pattern::setProperties( const QVariantMap& properties )
     setSeq( properties.value( "seq" ).toInt() );
     setName( properties.value( "name" ).toString() );
     setPrefireDuration( properties.value( "prefireDuration" ).toULongLong() );
+    setType( typeFromString( properties.value( "type" ).toString() ) );
+}
 
-    const QString type = properties.value( "type" ).toString();
+PatternType::Type Pattern::typeFromString( const QString& str )
+{
+    if( str == "Sequences" )
+        return PatternType::Sequences;
+    else if( str == "Shot" )
+        return PatternType::Shot;
 
-    if( type == "Shot" )
-        setType( PatternType::Shot );
-    else
-        setType( PatternType::Unknown );
+    return PatternType::Unknown;
 }

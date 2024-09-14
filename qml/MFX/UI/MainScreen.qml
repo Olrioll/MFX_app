@@ -1358,7 +1358,8 @@ FocusScope
                                 Drag.source: cueContentListViewDelegate
                                 Drag.hotSpot.x: width / 2
                                 Drag.hotSpot.y: height / 2
-                                MouseArea {
+                                MouseArea
+                                {
                                     anchors.fill: parent
                                     id:dragArea
 
@@ -1391,21 +1392,20 @@ FocusScope
                                             model.selected = false;
                                             return;
                                         }
-                                        onEntered: {
+                                        onEntered:
+                                        {
                                             console.log("onEnter",drag.source.name,containsDrag)
-                                            if(drag.source.name){
+                                            if(drag.source.name)
+                                            {
                                                 model.selected = true;
-                                                if(model.selected){
+                                                if(model.selected)
                                                     project.uncheckPatch();
-                                                }
-                                                return;
                                             }
                                         }
-                                        onExited: {
-                                            if(drag.source.name){
+                                        onExited:
+                                        {
+                                            if(drag.source.name)
                                                 model.selected = false;
-                                                return;
-                                            }
                                         }
                                     }
                                 }
@@ -2009,7 +2009,7 @@ FocusScope
                                                     {
                                                         let patch_id = project.patchPropertyForIndex(i, "ID")
 
-                                                        if( project.patchType( patch_id ) === deviceListView.groupName )
+                                                        if( project.patchTypeStr( patch_id ) === deviceListView.groupName )
                                                             deviceListModel.insert( deviceListView.count, {counter: deviceListView.count + 1, currentId: patch_id} )
                                                     }
                                                 }
@@ -2046,8 +2046,8 @@ FocusScope
 
                                                         onDropped:
                                                         {
-                                                            console.log("Dropped", drop.source.name, drop.source.type)
-                                                            if( drop.source.type.toString() === project.patchType( patchId ) )
+                                                            //console.log("onDropped", drop.source.name, drop.source.typeStr )
+                                                            if( drop.source.isActionPlate && (drop.source.type == project.patchType( patchId )) )
                                                             {
                                                                 project.setPatchProperty(patchId, "act", drop.source.name);
                                                                 project.setPatchProperty(patchId, "checked", false)
@@ -2057,7 +2057,8 @@ FocusScope
                                                         }
                                                         onEntered:
                                                         {
-                                                            if( drag.source.type.toString() === project.patchType( patchId ) )
+                                                            //console.log("onEntered", drag.source.typeStr, project.patchTypeStr( patchId ))
+                                                            if( drag.source.isActionPlate && (drag.source.type == project.patchType( patchId )) )
                                                             {
                                                                 project.setPatchProperty(patchId, "checked", true);
                                                                 isEnter=true;
@@ -2144,7 +2145,7 @@ FocusScope
                                                     }
 
                                                     states:
-                                                        [
+                                                    [
                                                         State
                                                         {
                                                             name: "intersected"
@@ -2220,6 +2221,7 @@ FocusScope
                                                             let maxDuration = deviceManager.maxActionsDuration(draggedPlate.checkedIDs);
 
                                                             draggedPlate.width = playerWidget.msecToPixels(maxDuration);
+                                                            console.log("width:", draggedPlate.width)
                                                             draggedCuePlate.width = draggedPlate.width;
                                                             draggedPlate.height = draggedCuePlate.height
                                                             draggedPlate.name = pressedItem.name
@@ -3309,6 +3311,27 @@ FocusScope
                         SplitView.fillWidth: true
                         currentIndex: 0
 
+                        function changeAction( type, name )
+                        {
+                            console.log( "changeAction", type, name );
+                            patternManager.currentPatternChangeRequest( type, name )
+                            let checkedPatches = project.checkedPatchesList()
+                            
+                            checkedPatches.forEach( function( patchId )
+                            {
+                                if( project.patchType( patchId ) == type )
+                                    project.setPatchProperty( patchId, "act", name );
+                            })
+
+                            let selectedCue = cueContentManager.onGetSelectedDeviseList();
+                            selectedCue.forEach( function( idDevice )
+                            {
+                                project.changeAction( cueName, idDevice, name )
+                            })
+
+                            cueContentManager.onSelectedChangeAction( name )
+                        }
+
                         GridView
                         {
                             id: actionView
@@ -3331,7 +3354,8 @@ FocusScope
                             delegate: Item
                             {
                                 id: actionPlate
-                            
+
+                                property bool isActionPlate: true
                                 property string name: model.name
                                 property var type: model.type
                                 property bool checked: name === patternManager.selectedPatternName
@@ -3440,8 +3464,8 @@ FocusScope
                                                     patternManager.cleanPatternSelectionRequest()
                             
                                                 console.log(actionPlate.name, type)
-                                                patternManager.currentPatternChangeRequest(actionPlate.name)
-                                                cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                                patternManager.currentPatternChangeRequest( actionPlate.type, actionPlate.name )
+                                                cueContentManager.onSelectedChangeAction( actionPlate.name )
                                                 actionView.pressedItem = actionPlate
                                                 if(actionView.pressedItem)
                                                 {
@@ -3458,7 +3482,7 @@ FocusScope
                                     {
                                         if(actionPlate.checked)
                                         {
-                                            patternManager.cleanPatternSelectionRequest()
+                                            patternManager.cleanPatternSelectionRequest( actionPlate.type )
                                         }
                                         else
                                         {
@@ -3467,21 +3491,8 @@ FocusScope
                                             //TODO if(patchPanelFocused) {
                                             currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
                                             currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
-                                            patternManager.currentPatternChangeRequest(actionPlate.name)
-                                            let checkedPatches = project.checkedPatchesList()
-                            
-                                            checkedPatches.forEach(function(patchId)
-                                            {
-                                                project.setPatchProperty(patchId, "act", actionPlate.name);
-                                            })
-                            
-                            
-                                            let selectedCue = cueContentManager.onGetSelectedDeviseList();
-                                            selectedCue.forEach(function(idDevice)
-                                            {
-                                                project.changeAction(cueName, idDevice,actionPlate.name)
-                                            })
-                                            cueContentManager.onSelectedChangeAction(actionPlate.name)
+
+                                            actionStack.changeAction( actionPlate.type, actionPlate.name )
                                             //TODO }
                                         }
                                     }
@@ -3604,6 +3615,7 @@ FocusScope
                                 {
                                     id: actionPlate
 
+                                    property bool isActionPlate: true
                                     property string name: model.name
                                     property var type: model.type
                                     property bool checked: name === patternManager.selectedShotPatternName
@@ -3707,11 +3719,11 @@ FocusScope
                                                 if(!actionShotView.held)
                                                 {
                                                     if(actionPlate.checked)
-                                                        patternManager.cleanShotPatternSelectionRequest()
+                                                        patternManager.cleanShotPatternSelectionRequest( actionPlate.type )
                             
                                                     console.log(actionPlate.name)
-                                                    patternManager.currentShotPatternChangeRequest(actionPlate.name)
-                                                    cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                                    patternManager.currentPatternChangeRequest( actionPlate.type, actionPlate.name )
+                                                    cueContentManager.onSelectedChangeAction( actionPlate.name )
                                                     actionShotView.pressedItem = actionPlate
                                                     if(actionShotView.pressedItem)
                                                     {
@@ -3728,7 +3740,7 @@ FocusScope
                                         {
                                             if(actionPlate.checked)
                                             {
-                                                patternManager.cleanShotPatternSelectionRequest()
+                                                patternManager.cleanPatternSelectionRequest( actionPlate.type )
                                             }
                                             else
                                             {
@@ -3737,20 +3749,8 @@ FocusScope
                                                 //TODO if(patchPanelFocused) {
                                                 currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
                                                 currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
-                                                patternManager.currentShotPatternChangeRequest(actionPlate.name)
-                                                let checkedPatches = project.checkedPatchesList()
-                                            
-                                                checkedPatches.forEach(function(patchId)
-                                                {
-                                                    project.setPatchProperty(patchId, "act", actionPlate.name);
-                                                })
 
-                                                let selectedCue = cueContentManager.onGetSelectedDeviseList();
-                                                selectedCue.forEach(function(idDevice)
-                                                {
-                                                    project.changeAction(cueName, idDevice,actionPlate.name)
-                                                })
-                                                cueContentManager.onSelectedChangeAction(actionPlate.name)
+                                                actionStack.changeAction( actionPlate.type, actionPlate.name )
                                                 //TODO }
                                             }
                                         }
@@ -3884,7 +3884,7 @@ FocusScope
                                     onClicked:
                                     {
                                         patternManager.deletePattern( patternManager.selectedShotPatternName );
-                                        patternManager.cleanShotPatternSelectionRequest();
+                                        patternManager.cleanPatternSelectionRequest( MFXE.PatternType.Shot );
                                     }
                                 }
                             }

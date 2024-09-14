@@ -27,11 +27,8 @@ public:
     static void qmlRegister();
     const QMap<QString, int>& getPrefire();
 
-    Q_INVOKABLE void currentPatternChangeRequest(const QString& patternName);
-    Q_INVOKABLE void cleanPatternSelectionRequest();
-
-    Q_INVOKABLE void currentShotPatternChangeRequest( const QString& patternName );
-    Q_INVOKABLE void cleanShotPatternSelectionRequest();
+    Q_INVOKABLE void currentPatternChangeRequest( PatternType::Type type, const QString& patternName);
+    Q_INVOKABLE void cleanPatternSelectionRequest( PatternType::Type type );
 
     void reloadPatterns();
 
@@ -40,9 +37,10 @@ public:
     //Pattern *patternById(const QUuid& id) const;
     //Q_INVOKABLE qulonglong maxPatternDuration(const QStringList &list) const;
     //TODO запрашивается из QML - избавиться впоследствии
-    Q_INVOKABLE const Pattern* patternByName(const QString& name) const;
+    Q_INVOKABLE Pattern* patternByName(const QString& name) const;
     Q_INVOKABLE void addPattern( PatternType::Type type );
     Q_INVOKABLE void deletePattern( const QString& name );
+    //Q_INVOKABLE QString patternTypeToString( PatternType::Type type );
 
 private:
     void initPatterns();
