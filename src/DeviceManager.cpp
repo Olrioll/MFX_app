@@ -1,5 +1,7 @@
 #include "DeviceManager.h"
-#include "PreviewDevice.h"
+#include "Devices/SequenceDevice.h"
+#include "Devices/ShotDevice.h"
+#include "Devices/PreviewDevice.h"
 #include "PatternManager.h"
 #include "ProjectManager.h"
 
@@ -27,32 +29,36 @@ Device *DeviceManager::deviceById(int id) const
     return nullptr;
 }
 
-void DeviceManager::addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio)
+void DeviceManager::addDevice( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio )
 {
-    Device* newSequenceDevice = new SequenceDevice(this);
-    newSequenceDevice->setId(deviceId);
-    newSequenceDevice->setChecked(checked);
-    newSequenceDevice->setPosXRatio(posXRatio);
-    newSequenceDevice->setPosYRatio(posYRatio);
-    newSequenceDevice->m_manager = this;
-    connect(DMXWorker::instance(), &DMXWorker::playbackTimeChanged, reinterpret_cast<SequenceDevice*>(newSequenceDevice), &SequenceDevice::onPlaybackTimeChanged);
-    m_devices->append(newSequenceDevice);
+    Device* newDevice = nullptr;
+
+    if( type == PatternType::Sequences )
+        newDevice = new SequenceDevice( this );
+    else if( type == PatternType::Shot )
+        newDevice = new ShotDevice( this );
+
+    newDevice->setId( deviceId );
+    newDevice->setChecked( checked );
+    newDevice->setPosXRatio( posXRatio );
+    newDevice->setPosYRatio( posYRatio );
+    newDevice->m_manager = this;
+
+    if( type == PatternType::Sequences )
+        connect( DMXWorker::instance(), &DMXWorker::playbackTimeChanged, reinterpret_cast<SequenceDevice*>( newDevice ), &SequenceDevice::onPlaybackTimeChanged );
+
+    m_devices->append( newDevice );
 }
 
-void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio)
+void DeviceManager::setDeviceProperty( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio )
 {
-    Device *device = deviceById(deviceId);
-    if(device == NULL) {
-        addSequenceDevice(deviceId, checked, posXRatio, posYRatio);
-        return;
-    }
-    if(device->deviceType() != DEVICE_TYPE_SEQUENCES) {
-        qDebug() << "incorrect device type!!!"; // todo: do something with it
-        return;
-    }
-    device->setChecked(checked);
-    device->setPosXRatio(posXRatio);
-    device->setPosYRatio(posYRatio);
+    Device* device = deviceById( deviceId );
+    if( !device )
+        return addDevice( type, deviceId, checked, posXRatio, posYRatio );
+
+    device->setChecked( checked );
+    device->setPosXRatio( posXRatio );
+    device->setPosYRatio( posYRatio );
 }
 
 void DeviceManager::onEditPatch(const QVariantList& properties)
@@ -118,7 +124,7 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
     }
 
     Device* device = deviceById(id);
-    if( !device || device->deviceType() != DEVICE_TYPE_SEQUENCES )
+    if( !device || device->deviceType() != PatternType::Sequences )
         return;
 
     SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);

@@ -273,7 +273,7 @@ Item
                 id: calcWidget
             }
 
-            MfxHilightedButton
+            MfxButton
             {
                 Layout.fillWidth: true
 

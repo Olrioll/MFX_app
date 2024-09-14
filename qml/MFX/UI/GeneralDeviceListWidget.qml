@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtGraphicalEffects 1.0
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0 as MFXE
 
 import "qrc:/"
 
@@ -94,19 +95,19 @@ Item
 
             function openEditWindow()
             {
+                console.log( "openEditWindow" )
                 let editedList = []
 
-                let prevType = ""
+                let prevType = MFXE.PatternType.Unknown
                 for(let i = 0; i < deviceListView.count; i++)
                 {
                     if(deviceListView.itemAtIndex(i).checked)
                     {
-                        if(prevType === "" || deviceListView.itemAtIndex(i).type === prevType)
+                        if(prevType == MFXE.PatternType.Unknown || deviceListView.itemAtIndex(i).type == prevType)
                         {
                             editedList.push(deviceListView.itemAtIndex(i).patchId)
                             prevType = deviceListView.itemAtIndex(i).type
                         }
-
                         else
                             return;
                     }
@@ -114,28 +115,26 @@ Item
 
                 if(editedList.length)
                 {
-                    if(prevType === "Sequences")
+                    console.log( editedList )
+                    if( prevType == MFXE.PatternType.Sequences )
                     {
                         var addSequWindow = Qt.createComponent("AddSequencesWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
                         addSequWindow.x = applicationWindow.width / 2 - addSequWindow.width / 2
                         addSequWindow.y = applicationWindow.height / 2 - addSequWindow.height / 2
                     }
-
-                    else if(prevType === "Shot")
+                    else if( prevType == MFXE.PatternType.Shot )
                     {
                         var addShotWindow = Qt.createComponent("AddShotWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
                         addShotWindow.x = applicationWindow.width / 2 - addShotWindow.width / 2
                         addShotWindow.y = applicationWindow.height / 2 - addShotWindow.height / 2
                     }
-
-                    else if(prevType === "Dimmer")
+                    else if( prevType == MFXE.PatternType.Dimmer )
                     {
                         var addDimmerWindow = Qt.createComponent("AddDimmerWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
                         addDimmerWindow.x = applicationWindow.width / 2 - addDimmerWindow.width / 2
                         addDimmerWindow.y = applicationWindow.height / 2 - addDimmerWindow.height / 2
                     }
-
-                    else if(prevType === "Pyro")
+                    else if( prevType == MFXE.PatternType.Pyro )
                     {
                         var addPyroWindow = Qt.createComponent("AddPyroWidget.qml").createObject(applicationWindow, {isEditMode: true, changedIdList: editedList});
                         addPyroWindow.x = applicationWindow.width / 2 - addPyroWindow.width / 2

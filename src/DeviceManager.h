@@ -3,10 +3,10 @@
 #include <QtCore/QObject>
 #include <QtCore/QUuid>
 
-#include "Device.h"
-#include "SequenceDevice.h"
+#include "Devices/Device.h"
 #include "QQmlObjectListModel.h"
 #include "ComPortModel.h"
+#include "Pattern.h"
 
 class PatternManager;
 class ProjectManager;
@@ -21,7 +21,7 @@ public:
     explicit DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent = nullptr);
     //void runPatternOnDevice(int deviceId, int patternNum);
     // todo: block device in ui, rename, change coordinates (by device id)
-    Q_INVOKABLE void setSequenceDeviceProperty(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
+    Q_INVOKABLE void setDeviceProperty( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio );
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
     Q_INVOKABLE void finishChangeAngle( int deviceId, int angle );
     Q_INVOKABLE qulonglong maxActionsDuration( const QList<int>& ids ) const;
@@ -46,7 +46,7 @@ public slots:
     void reloadPattern();
 
 private:
-    void addSequenceDevice(int deviceId, bool checked, qreal posXRatio, qreal posYRatio);
+    void addDevice( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio );
 
 private:
     PatternManager* m_patternManager;

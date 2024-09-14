@@ -26,17 +26,15 @@ Item
     function loadPatches()
     {
         for(var i = 0; i < sceneWidget.patchIcons.length; i++)
-        {
             sceneWidget.patchIcons[i].destroy()
-        }
 
         sceneWidget.patchIcons = []
 
         for(i = 0; i < project.patchCount(); i++)
         {
             var deviceType = project.patchType( project.patchPropertyForIndex( i, "ID" ) )
-            console.log("deviceType:", deviceType)
             var imageFile
+
             if (deviceType == MFXE.PatternType.Sequences)
                 imageFile = "qrc:/device_sequences"
             else if (deviceType == MFXE.PatternType.Pyro)
@@ -52,11 +50,9 @@ Item
                                                                                  checked: project.patchPropertyForIndex(i, "checked"),
                                                                                  posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
                                                                                  posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
-            if(deviceType === MFXE.PatternType.Sequences)
-            {
-                deviceManager.setSequenceDeviceProperty(project.patchPropertyForIndex(i, "ID"), project.patchPropertyForIndex(i, "checked"),
-                    project.patchPropertyForIndex(i, "posXRatio"), project.patchPropertyForIndex(i, "posYRatio"));
-            }
+
+            deviceManager.setDeviceProperty( deviceType, project.patchPropertyForIndex(i, "ID"), project.patchPropertyForIndex(i, "checked"),
+                    project.patchPropertyForIndex(i, "posXRatio"), project.patchPropertyForIndex(i, "posYRatio") );
         }
     }
 

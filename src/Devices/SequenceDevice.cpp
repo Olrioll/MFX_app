@@ -5,8 +5,8 @@ constexpr int DEFAULT_START_ANGLE = 0;
 
 SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
 {
-    setDeviceType(DEVICE_TYPE_SEQUENCES);
-    setImageFile("qrc:/device_sequences");
+    setDeviceType( PatternType::Sequences );
+    setImageFile( "qrc:/device_sequences" );
 
     m_patternTimer.setInterval( PATTERN_INTERVAL_MS );
     connect( &m_patternTimer, &QTimer::timeout, this, &SequenceDevice::onPatternTimerChanged );

@@ -2,9 +2,29 @@
 
 ShotDevice::ShotDevice( QObject* parent /*= nullptr*/ ) : Device( parent )
 {
-    setDeviceType( DEVICE_TYPE_SEQUENCES );
-    setImageFile( "qrc:/device_sequences" );
+    setDeviceType( PatternType::Shot );
+    setImageFile( "qrc:/device_shot" );
+}
 
-    m_patternTimer.setInterval( PATTERN_INTERVAL_MS );
-    connect( &m_patternTimer, &QTimer::timeout, this, &SequenceDevice::onPatternTimerChanged );
+void ShotDevice::runPatternSingly( const Pattern& p, quint64 time )
+{
+
+}
+
+qulonglong ShotDevice::calcDurationByPattern( const Pattern& pattern ) const
+{
+    qulonglong duration = 0;
+
+    for( const Operation* op : pattern.operations()->toList() )
+    {
+        if( !op )
+            continue;
+
+        duration += op->duration();
+    }
+
+    duration /= 10;
+    duration *= 10;
+
+    return duration;
 }

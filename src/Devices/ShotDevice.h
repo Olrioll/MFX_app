@@ -16,4 +16,10 @@ class ShotDevice : public Device
 
 public:
     explicit ShotDevice( QObject* parent = nullptr );
+
+    void runPatternSingly( const Pattern& p, quint64 time ) override;
+    void finishChangeAngle( int angle ) override {};
+
+private:
+    qulonglong calcDurationByPattern( const Pattern& pattern ) const override;
 };
