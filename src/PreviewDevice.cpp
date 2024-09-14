@@ -4,8 +4,8 @@ PreviewDevice::PreviewDevice( QObject* parent /*= nullptr*/ )
              : SequenceDevice( parent )
 {
     setId( PREVIEW_DEVICE_ID );
-    setMinAngle( MIN_ANGLE );
-    setMaxAngle( MAX_ANGLE );
+    setMinAngle( MIN_SEQUENCE_ANGLE );
+    setMaxAngle( MAX_SEQUENCE_ANGLE );
     setheight( 10 );
 }
 

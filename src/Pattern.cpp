@@ -4,13 +4,12 @@ Pattern::Pattern(QObject* parent)
     : QObject(parent)
 {
     m_operations = new QQmlObjectListModel<Operation>(this);
-    //setUuid(QUuid::createUuid());
-    auto s = name();
 }
 
 Pattern::Pattern( const QVariantMap& properties, QObject* parent /*= nullptr*/ )
     : QObject( parent )
 {
+    m_operations = new QQmlObjectListModel<Operation>( this );
     setProperties( properties );
 }
 

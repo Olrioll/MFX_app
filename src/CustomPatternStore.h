@@ -6,10 +6,13 @@
 
 using PatternSourceModel = QQmlObjectListModel<Pattern>;
 
-class CustomPatternStore : public JsonSerializable
+class CustomPatternStore : public QObject
+                         , public JsonSerializable
 {
+    Q_OBJECT
+
 public:
-    CustomPatternStore( SettingsManager& settngs );
+    CustomPatternStore( SettingsManager& settngs, QObject* parent );
 
     void load();
     void save();

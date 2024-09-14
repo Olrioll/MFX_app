@@ -16,7 +16,7 @@ PatternManager::PatternManager(SettingsManager& settingsManager, QObject* parent
     , m_settingsManager(settingsManager)
 {
     m_patterns = new QQmlObjectListModel<Pattern>(this);
-    m_CustomPatterns = std::make_unique<CustomPatternStore>( m_settingsManager );
+    m_CustomPatterns = new CustomPatternStore( m_settingsManager, this );
 
     m_patternsFiltered = new PatternFilteringModel(*m_patterns, PatternType::Sequences, this);
     m_patternsShotFiltered = new PatternFilteringModel( *m_CustomPatterns->getSourceModel(), PatternType::Shot, this );
@@ -190,15 +190,43 @@ Pattern* PatternManager::patternByName(const QString &name) const
     return m_CustomPatterns->getPattern( name );
 }
 
-void PatternManager::addPattern( PatternType::Type type )
+void PatternManager::addPattern( PatternType::Type type, qulonglong prefire, std::list<Operation*> operations )
 {
     Pattern* pattern = new Pattern();
     pattern->setType( type );
     pattern->setSeq( m_CustomPatterns->getMaxSeq( type ) + 1 );
-    pattern->setPrefireDuration( 0 );
+    pattern->setPrefireDuration( prefire );
     pattern->makeName();
 
+    for( Operation* op : operations )
+        pattern->operations()->append( op );
+
     m_CustomPatterns->addPattern( pattern );
+}
+
+void PatternManager::addShotPattern( qulonglong prefire, qulonglong time )
+{
+    std::list<Operation*> operations;
+
+    Operation* op = new Operation( this );
+    op->setDuration( time );
+    op->setSkipOutOfAngles( false );
+    op->setAngle( 90 );
+    op->setVelocity( 0 );
+    op->setActive( true );
+
+    operations.emplace_back( op );
+
+    op = new Operation( this );
+    op->setDuration( 40 );
+    op->setSkipOutOfAngles( false );
+    op->setAngle( 90 );
+    op->setVelocity( 0 );
+    op->setActive( false );
+
+    operations.emplace_back( op );
+
+    addPattern( PatternType::Shot, prefire, operations );
 }
 
 void PatternManager::deletePattern( const QString& name )

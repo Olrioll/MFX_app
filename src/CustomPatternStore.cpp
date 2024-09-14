@@ -5,7 +5,7 @@
 constexpr char CUSTOM_PATTERNS[] = "custom_patterns.txt";
 constexpr char CUSTOM_PATTERNS_VER[] = "1";
 
-CustomPatternStore::CustomPatternStore( SettingsManager& settngs ) : mSettings( settngs )
+CustomPatternStore::CustomPatternStore( SettingsManager& settngs, QObject* parent ) : mSettings( settngs ), QObject( parent )
 {
     m_Patterns.reset( new PatternSourceModel() );
 }
@@ -24,7 +24,7 @@ void CustomPatternStore::load()
 
     fromJsonObject( QJsonDocument::fromJson( jsonFile.readAll() ).object() );
 
-    QString ver = property( "version" ).toString();
+    QString ver = JsonSerializable::property( "version" ).toString();
 
     if( ver != CUSTOM_PATTERNS_VER )
     {
@@ -35,10 +35,20 @@ void CustomPatternStore::load()
 
     for( const auto& child : getChild( "Patterns" )->namedChildren() )
     {
-        std::unique_ptr<Pattern> pattern = std::make_unique<Pattern>( child->properties() );
+        Pattern* pattern = new Pattern( child->properties(), this );
 
-        if( pattern->type() != PatternType::Unknown )
-            m_Patterns->append( pattern.release() );
+        if( pattern->type() == PatternType::Unknown )
+            continue;
+
+        for( const auto& oper : child->getChild( "Operations" )->listedChildren() )
+        {
+            Operation* op = new Operation( this );
+            op->setProperties( oper->properties() );
+
+            pattern->operations()->append( op );
+        }
+
+        m_Patterns->append( pattern );
     }
 }
 
@@ -52,7 +62,7 @@ void CustomPatternStore::save()
         return;
     }
 
-    setProperty( "version", CUSTOM_PATTERNS_VER );
+    JsonSerializable::setProperty( "version", CUSTOM_PATTERNS_VER );
 
     QJsonDocument doc;
     doc.setObject( toJsonObject() );
@@ -82,8 +92,20 @@ void CustomPatternStore::addPattern( Pattern* pattern )
     if( getChild( "Patterns" ) == nullptr )
         addChild( "Patterns" );
 
-    getChild( "Patterns" )->addChild( pattern->name() );
-    getChild( "Patterns" )->getChild( pattern->name() )->setProperties( pattern->getProperties() );
+    auto patterns = getChild( "Patterns" );
+
+    patterns->addChild( pattern->name() );
+    patterns->getChild( pattern->name() )->setProperties( pattern->getProperties() );
+    patterns->getChild( pattern->name() )->addChild( "Operations" );
+
+    auto operations = patterns->getChild( pattern->name() )->getChild( "Operations" );
+
+    for( const Operation* op : pattern->operations()->toList() )
+    {
+        operations->addChild();
+        operations->listedChildren().last()->setProperties( op->getProperties() );
+    }
+
     save();
 }
 

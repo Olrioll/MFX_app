@@ -38,7 +38,8 @@ public:
     //Q_INVOKABLE qulonglong maxPatternDuration(const QStringList &list) const;
     //TODO запрашивается из QML - избавиться впоследствии
     Q_INVOKABLE Pattern* patternByName(const QString& name) const;
-    Q_INVOKABLE void addPattern( PatternType::Type type );
+    Q_INVOKABLE void addPattern( PatternType::Type type, qulonglong prefire, std::list<Operation*> operations );
+    Q_INVOKABLE void addShotPattern( qulonglong prefire, qulonglong time );
     Q_INVOKABLE void deletePattern( const QString& name );
     //Q_INVOKABLE QString patternTypeToString( PatternType::Type type );
 
@@ -51,5 +52,5 @@ private:
     PatternFilteringModel* m_patternsShotFiltered = nullptr;
     SettingsManager& m_settingsManager;
     QMap<QString, int> m_prefire;
-    std::unique_ptr<CustomPatternStore> m_CustomPatterns;
+    CustomPatternStore* m_CustomPatterns;
 };

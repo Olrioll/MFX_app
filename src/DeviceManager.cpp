@@ -58,8 +58,8 @@ void DeviceManager::setSequenceDeviceProperty(int deviceId, bool checked, qreal 
 void DeviceManager::onEditPatch(const QVariantList& properties)
 {
     int id = -1;
-    int minAng = MIN_ANGLE;
-    int maxAng = MAX_ANGLE;
+    int minAng = MIN_SEQUENCE_ANGLE;
+    int maxAng = MAX_SEQUENCE_ANGLE;
     int height = -1;
     QString colorType = "";
 

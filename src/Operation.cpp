@@ -15,5 +15,26 @@ Operation::Operation(const Operation& operation)
 
 int Operation::angleDegrees() const
 {
-    return static_cast<int>((MAX_ANGLE - MIN_ANGLE) / 255.0 * m_angle + MIN_ANGLE);
+    return static_cast<int>((MAX_SEQUENCE_ANGLE - MIN_SEQUENCE_ANGLE) / 255.0 * m_angle + MIN_SEQUENCE_ANGLE);
+}
+
+QVariantMap Operation::getProperties() const
+{
+    QVariantMap properties;
+    properties["duration"] = duration();
+    properties["angle"] = angle();
+    properties["velocity"] = velocity();
+    properties["active"] = active();
+    properties["skipOutOfAngles"] = skipOutOfAngles();
+
+    return properties;
+}
+
+void Operation::setProperties( const QVariantMap& properties )
+{
+    setDuration( properties.value( "duration" ).toULongLong() );
+    setAngle( properties.value( "angle" ).toInt() );
+    setVelocity( properties.value( "velocity" ).toInt() );
+    setActive( properties.value( "active" ).toBool() );
+    setSkipOutOfAngles( properties.value( "skipOutOfAngles" ).toBool() );
 }
