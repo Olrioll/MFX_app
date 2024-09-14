@@ -2,21 +2,14 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QUuid>
-//#include <QHash>
 
 #include <QSuperMacros.h>
 #include <QQmlConstRefPropertyHelpers.h>
 #include <QQmlVarPropertyHelpers.h>
+
 #include "Pattern.h"
 
 constexpr int PREVIEW_DEVICE_ID = -1;
-
-enum DeviceType {
-    DEVICE_TYPE_SEQUENCES,
-    DEVICE_TYPE_DIMMER,
-    DEVICE_TYPE_SHOT,
-    DEVICE_TYPE_PYRO
-};
 
 class DeviceManager;
 
@@ -24,7 +17,7 @@ class Device  : public QObject
 {
     Q_OBJECT
     QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор устройства
-    QSM_READONLY_CSTREF_PROPERTY(DeviceType, deviceType, DeviceType) // Тип устройства
+    QSM_READONLY_CSTREF_PROPERTY(PatternType::Type, deviceType, DeviceType) // Тип устройства
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, imageFile, ImageFile, "")  //Путь к файлу в ресурсах, соответствует типу устройства
     QSM_WRITABLE_CSTREF_PROPERTY(int, id, Id)  //Идентификатор устройства
     QSM_WRITABLE_CSTREF_PROPERTY(bool, checked, Checked)  //Флаг: выбрано устройство в интерфейсе или нет

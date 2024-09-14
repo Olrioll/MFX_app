@@ -2,7 +2,7 @@
 
 #include <QtCore/QtMath>
 
-#include "SequenceDevice.h"
+#include "Devices/SequenceDevice.h"
 #include "CueManager.h"
 #include "CueContentSortingModel.h"
 #include "PatternManager.h"

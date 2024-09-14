@@ -8,7 +8,7 @@
 #include <QQmlVarPropertyHelpers.h>
 #include <QSuperMacros.h>
 
-#include "SequenceDevice.h"
+#include "Devices/SequenceDevice.h"
 
 class Group : public QObject {
     Q_OBJECT

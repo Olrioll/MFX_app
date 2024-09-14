@@ -123,9 +123,10 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/CursorManager.cpp"
     "src/Cue.cpp"
     "src/Action.cpp"
-    "src/Device.cpp"
-    "src/SequenceDevice.cpp"
-    "src/PreviewDevice.cpp"
+    "src/Devices/Device.cpp"
+    "src/Devices/SequenceDevice.cpp"
+    "src/Devices/ShotDevice.cpp"
+    "src/Devices/PreviewDevice.cpp"
     "src/Group.cpp"
     "src/DeviceManager.cpp"
     "src/CueManager.cpp"
@@ -154,6 +155,7 @@ add_executable(${MFX_PROJECT_NAME} WIN32
 
 #target_link_directories(${MFX_PROJECT_NAME} PUBLIC "libs")
 
+include_directories("src")
 target_include_directories(${MFX_PROJECT_NAME} PUBLIC "libs")
 
 set(MSVC_RUNTIME_MODE MD)

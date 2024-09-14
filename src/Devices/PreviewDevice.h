@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SequenceDevice.h"
+#include "Devices/SequenceDevice.h"
 
 class PreviewDevice : public SequenceDevice
 {

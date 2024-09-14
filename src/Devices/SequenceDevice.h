@@ -4,9 +4,9 @@
 #include <QtCore/QUuid>
 
 #include "QQmlObjectListModel.h"
-#include <QQmlConstRefPropertyHelpers.h>
-#include <QQmlVarPropertyHelpers.h>
-#include <QSuperMacros.h>
+#include "QQmlConstRefPropertyHelpers.h"
+#include "QQmlVarPropertyHelpers.h"
+#include "QSuperMacros.h"
 
 #include "Device.h"
 #include "DmxWorker.h"

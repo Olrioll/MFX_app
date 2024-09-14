@@ -1,4 +1,5 @@
 #include "Device.h"
+#include "../Pattern.h"
 
 Device::Device(QObject *parent) : QObject(parent)
 {
