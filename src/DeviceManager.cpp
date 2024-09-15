@@ -4,6 +4,7 @@
 #include "Devices/PreviewDevice.h"
 #include "PatternManager.h"
 #include "ProjectManager.h"
+#include "DmxWorker.h"
 
 DeviceManager::DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent)
     : m_patternManager(patternManager)
@@ -64,12 +65,14 @@ void DeviceManager::setDeviceProperty( PatternType::Type type, int deviceId, boo
 void DeviceManager::onEditPatch(const QVariantList& properties)
 {
     int id = -1;
+    int angle = 0;
     int minAng = MIN_SEQUENCE_ANGLE;
     int maxAng = MAX_SEQUENCE_ANGLE;
     int height = -1;
     QString colorType = "";
 
 //    bool isId = false;
+    bool isAngle = false;
     bool isMinAng = false;
     bool isMaxAng = false;
     bool isHeight = false;
@@ -88,6 +91,14 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
         if(stringFirst == "ID")
         {
             id = last.toInt();
+        }
+        else if( stringFirst == "angle" )
+        {
+            if( !last.isNull() )
+            {
+                angle = last.toInt();
+                isAngle = true;
+            }
         }
         else if(stringFirst == "min ang")
         {
@@ -123,23 +134,39 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
         }
     }
 
-    Device* device = deviceById(id);
-    if( !device || device->deviceType() != PatternType::Sequences )
+    Device* device = deviceById( id );
+    if( !device  )
         return;
 
-    SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);
-    
-    if(isMinAng)
-        sequenceDevice->setMinAngle(minAng);
+    if( device->deviceType() == PatternType::Sequences )
+    {
+        SequenceDevice* sequenceDevice = reinterpret_cast<SequenceDevice*>( device );
 
-    if(isMaxAng)
-        sequenceDevice->setMaxAngle(maxAng);
+        if( isMinAng )
+            sequenceDevice->setMinAngle( minAng );
 
-    if(isHeight)
-        sequenceDevice->setheight(height);
+        if( isMaxAng )
+            sequenceDevice->setMaxAngle( maxAng );
 
-    if( isColorType )
-        sequenceDevice->setColorType( colorType );
+        if( isHeight )
+            sequenceDevice->setHeight( height );
+
+        if( isColorType )
+            sequenceDevice->setColorType( colorType );
+    }
+    else if( device->deviceType() == PatternType::Shot )
+    {
+        ShotDevice* shotDevice = reinterpret_cast<ShotDevice*>( device );
+
+        if( isAngle )
+            shotDevice->setAngle( angle );
+
+        if( isHeight )
+            shotDevice->setHeight( height );
+
+        if( isColorType )
+            shotDevice->setColorType( colorType );
+    }
 
     device->clearCalcDurations();
 
@@ -150,20 +177,6 @@ void DeviceManager::reloadPattern()
 {
     m_patternManager->reloadPatterns();
 }
-
-/*
-void DeviceManager::onRunPattern(int deviceId, quint64 time, const QString& patternName)
-{
-    qDebug() << deviceId << " " << patternName;
-
-    Device *device = deviceById(deviceId);
-    if(device == nullptr)
-        return;
-
-    Pattern *p = m_patternManager->patternByName(patternName);
-    qDebug()<<"RUNACTION: "<<time;
-    device->runPattern(p, time);
-}*/
 
 void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QString& patternName )
 {

@@ -1,4 +1,5 @@
 #include "PreviewDevice.h"
+#include "DeviceManager.h"
 
 PreviewDevice::PreviewDevice( QObject* parent /*= nullptr*/ )
              : SequenceDevice( parent )
@@ -6,10 +7,10 @@ PreviewDevice::PreviewDevice( QObject* parent /*= nullptr*/ )
     setId( PREVIEW_DEVICE_ID );
     setMinAngle( MIN_SEQUENCE_ANGLE );
     setMaxAngle( MAX_SEQUENCE_ANGLE );
-    setheight( 10 );
+    setHeight( 10 );
 }
 
-void PreviewDevice::setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active )
+void PreviewDevice::setDMXOper( int deviceId, int duration, int angle, int velocity, int height, const QString& colorType, bool active )
 {
     emit m_manager->drawPreviewInGui( duration, angle, velocity, active );
 }

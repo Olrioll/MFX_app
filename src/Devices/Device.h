@@ -10,6 +10,7 @@
 #include "Pattern.h"
 
 constexpr int PREVIEW_DEVICE_ID = -1;
+constexpr int PATTERN_INTERVAL_MS = 10;
 
 class DeviceManager;
 
@@ -24,6 +25,7 @@ class Device  : public QObject
     QSM_WRITABLE_CSTREF_PROPERTY(qreal, posXRatio, PosXRatio)  //Смещение по оси X на картинке сцены (в процентах от размера сцены)
     QSM_WRITABLE_CSTREF_PROPERTY(qreal, posYRatio, PosYRatio)  //Смещение по оси Y на картинке сцены (в процентах от размера сцены)
     QSM_WRITABLE_VAR_PROPERTY(bool, draggingBlocked, DraggingBlocked) //Флаг, определяющий возможность двигать устройства на сцене
+
 public:
     explicit Device(QObject* parent = nullptr);
     //virtual void runPattern(const Pattern* p, quint64 time) = 0;
@@ -33,8 +35,12 @@ public:
     qulonglong getDurationByPattern( const Pattern& pattern );
     void clearCalcDurations();
 
+protected:
+    virtual void setDMXOper( int deviceId, int duration, int angle, int velocity, int height, const QString& colorType, bool active );
+
 private:
     virtual qulonglong calcDurationByPattern( const Pattern& pattern ) const = 0;
+    virtual void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker ) = 0;
 
     QHash<QString, qulonglong> m_DurationsByPattern;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QTimer>
 #include "Device.h"
 
 class ShotDevice : public Device
@@ -10,16 +11,31 @@ class ShotDevice : public Device
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, dmx, Dmx, 0 ) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, rfChannel, RfChannel, 0 ) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, rfPosition, RfPosition, 0 ) //DMX
-    QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, maxAngle, MaxAngle, 0 ) //DMX
-    QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, minAngle, MinAngle, 0 ) //DMX
-    QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, height, height, 0 ) //DMX
+    QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, height, Height, 0 ) //DMX
+    QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, angle, Angle, 0 ) //DMX
 
 public:
     explicit ShotDevice( QObject* parent = nullptr );
 
+public slots:
+    void onPlaybackTimeChanged( quint64 time );
+    void onPatternTimerChanged();
+
+private:
+    void doPlaybackTimeChanged( quint64 time, bool sendToWorker );
+
     void runPatternSingly( const Pattern& p, quint64 time ) override;
     void finishChangeAngle( int angle ) override {};
 
-private:
     qulonglong calcDurationByPattern( const Pattern& pattern ) const override;
+
+    void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker ) override;
+
+private:
+    QList<Operation*> m_operations;
+    Operation* m_op = nullptr;
+    quint64 m_opStartTime = 0;
+    quint64 m_patternTime = 0;
+    QTimer m_patternTimer;
+    qulonglong m_prefireDuration = 0;
 };

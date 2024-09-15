@@ -1,6 +1,6 @@
 #include "SequenceDevice.h"
+#include "DmxWorker.h"
 
-constexpr int PATTERN_INTERVAL_MS = 10;
 constexpr int DEFAULT_START_ANGLE = 0;
 
 SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
@@ -110,16 +110,11 @@ void SequenceDevice::setDMXOperation(int deviceId, const Operation *op, bool sen
         m_angleChangeFinished = false;
         m_angleDestination = angle;
 
-        setDMXOperation( deviceId, duration, angle, velocity, active );
+        setDMXOper( deviceId, duration, angle, velocity, m_height, m_colorType, active );
     }
 
     if( sendToWorker && deviceId > 0 )
         DMXWorker::instance()->setOperation(deviceId, op);
-}
-
-void SequenceDevice::setDMXOperation( int deviceId, int duration, int angle, int velocity, bool active )
-{
-    emit m_manager->drawOperationInGui( deviceId, duration, angle, velocity, m_height, m_colorType, active );
 }
 
 void SequenceDevice::finishChangeAngle( int angle )

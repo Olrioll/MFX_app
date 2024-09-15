@@ -142,6 +142,19 @@ Item
                               {propName: "RF mode", propValue: modeSwitch.checked}
                              ])
 
+            deviceManager.onEditPatch(
+                [
+                    {propName: "ID", propValue: currentId},
+                    //{propName: "DMX", propValue: currentDmxValue},
+                    {propName: "RF pos", propValue: currentRfPosValue},
+                    {propName: "RF ch", propValue: currentRfChValue},
+                    {propName: "DMX ch", propValue: currentDmxChValue},
+                    {propName: "angle", propValue: Number(angField.text)},
+                    {propName: "height", propValue: Number(heightField.text)},
+                    {propName: "color type", propValue: addShotWidget.selColor},
+                    {propName: "RF mode", propValue: modeSwitch.checked}
+                ])
+
             if(groupName)
             {
                 project.addPatchToGroup(groupName, currentId)
@@ -265,6 +278,19 @@ Item
                               {propName: "color type", propValue: addShotWidget.selColor},
                               {propName: "RF mode", propValue: modeSwitch.checked}
                              ])
+
+            deviceManager.onEditPatch(
+                [
+                    {propName: "ID", propValue: changedIdList[i]},
+                    //{propName: "DMX", propValue: currentDmxValue},
+                    {propName: "angle", propValue: Number(angField.text)},
+                    {propName: "RF pos", propValue: currentRfPosValue},
+                    {propName: "RF ch", propValue: currentRfChValue},
+                    {propName: "DMX ch", propValue: currentDmxChValue},
+                    {propName: "height", propValue: Number(heightField.text)},
+                    {propName: "color type", propValue: addShotWidget.selColor},
+                    {propName: "RF mode", propValue: modeSwitch.checked}
+                ])
 
             //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
