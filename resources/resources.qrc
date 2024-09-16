@@ -100,5 +100,6 @@
         <file>icons/main_screen/main_screen_calculator_clear_icon.svg</file>
         <file>icons/main_screen/main_screen_sort_ascending_icon.svg</file>
         <file>icons/main_screen/main_screen_sort_descending_icon.svg</file>
+        <file>images/defaultBG.svg</file>
     </qresource>
 </RCC>

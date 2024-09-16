@@ -163,6 +163,8 @@ Item
 
                                         onClicked: {
 
+                                         project.saveJsonOut();
+
                                         }
                                     }
                                 }

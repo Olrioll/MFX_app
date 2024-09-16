@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.15
 
 import MFX.UI.Components.Templates 1.0 as MFXUIT
 import MFX.UI.Styles 1.0 as MFXUIS

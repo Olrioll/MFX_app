@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
@@ -13,6 +13,8 @@ Item
 
     property bool isEditMode: false
     property var changedIdList: []
+    onChangedIdListChanged: isOneDevice = (changedIdList.length < 2/* && addSequWindow.isEditMode*/)
+    property bool isOneDevice
     property string groupName: ""
     property var currentInput: quantityField
 
@@ -102,6 +104,7 @@ Item
         }
 
         let currentId = project.lastPatchId() + 1;
+        deviceManager.reloadPattern()
 
         for(let i = 0; i < Number(quantityField.text); i++)
         {
@@ -143,6 +146,7 @@ Item
         //--- Определяем инкремент канала DMX
 
         let isNegative = false
+        let isDmxUnused = dmxField.text == "~"
         let operatorIndex = dmxField.text.indexOf('+')
 
         if(operatorIndex === -1)
@@ -167,6 +171,7 @@ Item
         //--- Определяем инкремент RF pos
 
         isNegative = false
+        let isRfPoxUnused = rfPosField.text == "~"
         operatorIndex = rfPosField.text.indexOf('+')
 
         if(operatorIndex === -1)
@@ -191,6 +196,7 @@ Item
         //--- Определяем инкремент RF pos
 
         isNegative = false
+        let isRfChFieldUnused = rfChField.text == "~"
         operatorIndex = rfChField.text.indexOf('+')
 
         if(operatorIndex === -1)
@@ -212,27 +218,31 @@ Item
                 rfChIncrement = -rfChIncrement
         }
 
+        let isMinAng  =  minAngField.text == "~"
+        let isMaxAng  =  maxAngField.text == "~"
+        let isHeight  =  heightField.text == "~"
+        deviceManager.reloadPattern();
         for(let i = 0; i < changedIdList.length; i++)
         {
             project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
-                              {propName: "DMX", propValue: currentDmxValue},
-                              {propName: "min ang", propValue: Number(minAngField.text)},
-                              {propName: "max ang", propValue: Number(maxAngField.text)},
-                              {propName: "RF pos", propValue: currentRfPosValue},
-                              {propName: "RF ch", propValue: currentRfChValue},
-                              {propName: "height", propValue: Number(heightField.text)}
+                              isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
+                              isMinAng?{}:{propName: "min ang", propValue: Number(minAngField.text)},
+                              isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
+                              isRfPoxUnused?{}: {propName: "RF pos", propValue:  currentRfPosValue},
+                              isRfChFieldUnused?{}:{propName: "RF ch", propValue: currentRfChValue},
+                              isHeight?{}:{propName: "height", propValue: Number(heightField.text)}
                              ])
             deviceManager.onEditPatch(
                         [
                          {propName: "ID", propValue: changedIdList[i]},
-                         {propName: "DMX", propValue: currentDmxValue},
-                         {propName: "min ang", propValue: Number(minAngField.text)},
-                         {propName: "max ang", propValue: Number(maxAngField.text)},
-                         {propName: "RF pos", propValue: currentRfPosValue},
-                         {propName: "RF ch", propValue: currentRfChValue},
-                         {propName: "height", propValue: Number(heightField.text)}
+                         isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
+                         isMinAng?{}:{propName: "min ang", propValue: Number(minAngField.text)},
+                         isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
+                         isRfPoxUnused?{}:{propName: "RF pos", propValue: currentRfPosValue},
+                         isRfChFieldUnused?{}:{propName: "RF ch", propValue: currentRfChValue},
+                         isHeight?{}:{propName: "height", propValue: Number(heightField.text)}
                         ])
 
             currentDmxValue += dmxIncrement
@@ -394,7 +404,7 @@ Item
             y: 82
             width: 36
             height: 18
-            text: "1"
+            text: isOneDevice? "1": "~"
             color: "#ffffff"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
@@ -448,7 +458,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "1"
+            text: isOneDevice? "1":"~"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -498,7 +508,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "1"
+            text: isOneDevice? "1":"~"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -548,7 +558,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "10"
+            text: isOneDevice? 10: "~"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -672,6 +682,8 @@ Item
             text: translationsManager.translationTrigger + qsTr("Set")
             enabled:
             {
+                (addSequWindow.isEditMode && !isOneDevice)?
+                 true:
                 dmxField.checkValue() &&
                         rfPosField.checkValue() &&
                         rfChField.checkValue() &&
@@ -686,6 +698,7 @@ Item
                 if(addSequWindow.isEditMode)
                 {
                     addSequWindow.edit()
+                    project.updateCurrent();
                 }
 
                 else
@@ -754,13 +767,17 @@ Item
                     if(currentHandler === "min")
                     {
                         let currMin = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        if(currMin <= Number(maxAngField.text))
+                        if(maxAngField.text == "~"){
+                            minAngField.text = currMin
+                        }else if(currMin <= Number(maxAngField.text))
                             minAngField.text = currMin
                     }
                     else if(currentHandler === "max")
                     {
                         let currMax = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
-                        if(currMax >= Number(minAngField.text))
+                        if(minAngField.text == "~"){
+                            maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
+                        }else if(currMax >= Number(minAngField.text))
                             maxAngField.text = Math.round(Number(-115 + mouseX * 1.44) / 5) * 5
                     }
                 }
@@ -867,7 +884,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "-115"
+            text: isOneDevice? "-115":"~"//"-115"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -878,7 +895,7 @@ Item
 
             function checkValue()
             {
-                if(text === "")
+                if(text === "" || text === "~")
                     return false
 
                 return ((Number(text) >= -115 && Number(text) < 116) && Number(text) <= Number(maxAngField.text))
@@ -913,7 +930,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "115"
+            text: isOneDevice? "115":"~"//"115"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -924,7 +941,7 @@ Item
 
             function checkValue()
             {
-                if(text === "")
+                if(text === "" || text === "~")
                     return false
 
                 return ((Number(text) >= -115 && Number(text) < 116) && Number(text) >= Number(minAngField.text))
@@ -1066,7 +1083,7 @@ Item
             {
                 origin.x: 0
                 origin.y: minPointer.height
-                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : 0
+                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : -115 * 0.88
             }
         }
 
@@ -1078,13 +1095,13 @@ Item
             width: 10
             height: width
             radius: width / 2
-            color: "#2F80ED"
+            color: minAngField.text != "-"? "#2F80ED" :"#ffffff"
 
             transform: Rotation
             {
                 origin.x: minPointerHandler.width / 2
                 origin.y: minPointerHandler.height / 2 + circle.height / 2
-                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : 0
+                angle: (Number(minAngField.text) >=-115 && Number(minAngField.text) <=115) ? Number(minAngField.text) * 0.88 : -115 * 0.88
             }
         }
 
@@ -1101,7 +1118,7 @@ Item
             {
                 origin.x: 0
                 origin.y: maxPointer.height
-                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 0
+                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 115 * 0.88
             }
         }
 
@@ -1113,13 +1130,13 @@ Item
             width: 10
             height: width
             radius: width / 2
-            color: "#2F80ED"
+            color: maxAngField.text != "-"? "#2F80ED" :"#ffffff"
 
             transform: Rotation
             {
                 origin.x: maxPointerHandler.width / 2
                 origin.y: maxPointerHandler.height / 2 + circle.height / 2
-                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 0
+                angle: (Number(maxAngField.text) >=-115 && Number(maxAngField.text) <=115) ? Number(maxAngField.text) * 0.88 : 115 * 0.88
             }
         }
 
@@ -1343,6 +1360,9 @@ Item
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:3}D{i:24}D{i:25}D{i:36}D{i:42}D{i:43}D{i:44}D{i:45}D{i:46}D{i:47}
+    D{i:0;formeditorZoom:3}D{i:2}D{i:3}D{i:4}D{i:7}D{i:8}D{i:9}D{i:12}D{i:14}D{i:16}D{i:18}
+D{i:21}D{i:22}D{i:23}D{i:24}D{i:25}D{i:26}D{i:27}D{i:28}D{i:29}D{i:30}D{i:36}D{i:37}
+D{i:38}D{i:40}D{i:42}D{i:43}D{i:44}D{i:45}D{i:46}D{i:47}D{i:48}D{i:50}D{i:52}D{i:54}
+D{i:56}D{i:57}D{i:58}D{i:59}D{i:62}D{i:65}D{i:68}D{i:71}D{i:1}D{i:79}
 }
 ##^##*/

@@ -99,6 +99,26 @@ void CueManager::onAddCue(QVariantMap properties)
     m_cues->append(newCue);
 }
 
+void CueManager::onDeleteAllCue()
+{
+    m_cues->clear();
+}
+
+void CueManager::onRecalculateCue()
+{
+    for( auto * cue : m_cues->toList()){
+        recalculateCueStartAndDuration(cue->name());
+    }
+}
+
+void CueManager::onDeleteCue(const QString &cueName)
+{
+    auto * cue = cueByName(cueName);
+    if(cue == nullptr) {
+        qWarning() << "Cue with name" << cueName << "was not found";
+    }else  m_cues->remove(cue);
+}
+
 void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern, int deviceId, quint64 newPosition)
 {
     Cue* cue = cueByName(cueName);
@@ -133,9 +153,44 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
         if(cueStart > action->startTime()) {
             cueStart = action->startTime();
         }
+
+        auto device = m_deviceManager->deviceById(action->deviceId());
+        SequenceDevice *sequenceDevice = reinterpret_cast<SequenceDevice*>(device);
+        auto maxAngle =  sequenceDevice->maxAngle();
+        auto minAngle =  sequenceDevice->minAngle();
+        auto pOp = pattern->operations();
+        int minusDuration = 0;
+        auto first = true;
+        auto counter = 0;
+        std::for_each(pOp->begin(), pOp->end(),[&](const Operation* op){
+            auto r = ((op->angleDegrees() < minAngle) || (op->angleDegrees() > maxAngle));
+            if(r && first  && counter == 0){
+                first = false;
+                return;
+            }
+            ++counter;
+            if(r){
+                minusDuration += op->duration();
+            }
+
+        });
+
+        qDebug()<<"\n minAngle, maxAngle,id, minusDuration "<<minAngle<<maxAngle<<action->deviceId()<<minusDuration;
+
+        if((maxAngle == 0) &&  (minAngle == 0))
+            minusDuration = 0;
+
         if(cueStop < action->startTime() + pattern->duration()) {
-            cueStop = action->startTime() + pattern->duration();
+            cueStop = action->startTime() + pattern->duration() - minusDuration;
         }
+
+        qDebug()<<pattern->duration()<<minusDuration;
+        if(pattern->duration() > minusDuration ){
+            pattern->setDuration(pattern->duration() - minusDuration);
+            qDebug()<<"NEWPATTERNDURATION: "<<pattern->duration()<<minusDuration;
+
+        }
+
         cue->setStartTime(cueStart);
         cue->setDurationTime(cueStop-cueStart);
     }
@@ -218,12 +273,14 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
                 continue;
             }
             quint64 duration = pattern->duration();
-            if (a->startTime() == t * 10) {
+            const auto pref = pattern->prefireDuration();
+            if (a->startTime() - pref == t * 10) {
                 emit runPattern(a->deviceId(), playerPosition(), a->patternName());
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
             }
-            if(c->active() && a->startTime() + duration == t * 10) {
+            if(c->active() && a->startTime() - pref + duration <= t * 10) {
+                qDebug()<<"ACTIVE :  "<<c->name()<<a->deviceId();
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }

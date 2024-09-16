@@ -40,6 +40,7 @@ int main(int argc, char** argv)
     ProjectManager project(settings);
     PatternManager patternManager(settings);
     patternManager.initPatterns();
+    project.setPrefire(patternManager.getPrefire());
     DeviceManager deviceManager;
     deviceManager.m_patternManager = &patternManager;
     CursorManager cursorManager;
@@ -49,8 +50,12 @@ int main(int argc, char** argv)
     cueContentManager.m_cueManager = &cueManager;
 
     QObject::connect(&project, &ProjectManager::addCue, &cueManager, &CueManager::onAddCue);
+    QObject::connect(&project, &ProjectManager::deleteAllCue, &cueManager,&CueManager::onDeleteAllCue);
     QObject::connect(&project, &ProjectManager::setActionProperty, &cueManager, &CueManager::onSetActionProperty);
     QObject::connect(&project, &ProjectManager::editPatch, &deviceManager, &DeviceManager::onEditPatch);
+    QObject::connect(&project, &ProjectManager::reloadPattern, &deviceManager, &DeviceManager::reloadPattern);
+    QObject::connect(&deviceManager, &DeviceManager::editChanged, &project, &ProjectManager::reloadCues);
+//  QObject::connect(&deviceManager, &DeviceManager::editChanged, &cueManager, &CueManager::onRecalculateCue);
     QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
     QString comPort = settings.value("comPort").toString();
     if(!comPort.isEmpty()) {
