@@ -14,6 +14,7 @@
 #include "Pattern.h"
 
 class DeviceManager;
+class PatternManager;
 
 QSM_ENUM_CLASS( AudioTrackStatus, Invalid = 0, Importing, Imported, Loading, Loaded );
 Q_DECLARE_METATYPE( AudioTrackStatus::Type )
@@ -23,7 +24,7 @@ class ProjectManager : public QObject, public JsonSerializable
     Q_OBJECT
 public:
 
-    explicit ProjectManager(SettingsManager &settngs, QObject *parent = nullptr);
+    explicit ProjectManager(SettingsManager &settngs, PatternManager* patternManager, QObject *parent = nullptr);
     ~ProjectManager() override;
 
     static void qmlRegister();
@@ -47,6 +48,7 @@ public slots:
     void newProject();
     void saveProject();
 
+    bool loadProjectFromFile( const QString& fileName );
     void saveProjectToFile( const QString& saveFile );
 
     void importAudioTrack();
@@ -65,7 +67,6 @@ public slots:
     void setAudioTrack(const QString& fileName);
     void importAudioTrack( const QString& fileName );
     void importAudioTrackFinished();
-    void setPrefire( const QMap<QString, int>& pref );
 
     bool hasUnsavedChanges() const; //Отвечает за индикацию, был ли проект изменен (значит, нужно попросить сохранить данные при закрытии программы)
     void removePatches(const QList<int> patchIds);
@@ -215,10 +216,10 @@ private:
 
     SettingsManager& _settings;
     DeviceManager* m_DeviceManager;
+    PatternManager* m_PatternManager;
     bool _hasUnsavedChanges = false;
     QString _currentGroup;
     QStringList _pastedCues;
-    QMap<QString,int> m_prefire;
     //FireBaseClouds clouds;
     double msperpx = 1;
     mutable QRecursiveMutex m_ProjectLocker;

@@ -799,331 +799,6 @@ Item
             }
         }
 
-        //Text
-        //{
-        //    id: quantityText
-        //    y: 40
-        //    height: 17
-        //    color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-        //    text: translationsManager.translationTrigger + qsTr("Quantity")
-        //    horizontalAlignment: Text.AlignHCenter
-        //    verticalAlignment: Text.AlignVCenter
-        //    anchors.rightMargin: 199
-        //    anchors.leftMargin: 30
-        //    elide: Text.ElideMiddle
-        //    anchors.left: parent.left
-        //    anchors.right: parent.right
-        //    font.family: MFXUIS.Fonts.robotoRegular.name
-        //
-        //    visible: !(changedIdList.length > 1)
-        //}
-        //
-        //TextField
-        //{
-        //    id: quantityField
-        //    x: 99
-        //    y: 40
-        //    width: 36
-        //    height: 18
-        //    text: "1"
-        //    color: "#ffffff"
-        //    horizontalAlignment: Text.AlignHCenter
-        //    padding: 0
-        //    leftPadding: -2
-        //    font.pointSize: 8
-        //    visible: !(changedIdList.length > 1)
-        //
-        //    property bool isActiveInput: true
-        //    property string lastSelectedText
-        //
-        //    validator: RegExpValidator { regExp: /[0-9]+/ }
-        //    maximumLength: 2
-        //
-        //    background: Rectangle
-        //    {
-        //        color: "#000000"
-        //        radius: 2
-        //    }
-        //
-        //    onFocusChanged:
-        //    {
-        //        if(focus)
-        //        {
-        //            markAllInputsInactive();
-        //            isActiveInput = true;
-        //            addShotWidget.currentInput = this;
-        //            selectAll();
-        //            lastSelectedText = selectedText
-        //        }
-        //    }
-        //}
-        //
-        //TextField
-        //{
-        //    id: dmxField
-        //    x: 8
-        //    y: 82
-        //    width: 36
-        //    height: 18
-        //    text: "1"
-        //    color: "#ffffff"
-        //    horizontalAlignment: Text.AlignHCenter
-        //    padding: 0
-        //    leftPadding: -2
-        //    font.pointSize: 8
-        //
-        //    property bool isActiveInput: false
-        //    property string lastSelectedText
-        //
-        //    function checkValue()
-        //    {
-        //        if(text === "")
-        //            return false
-        //
-        //        let operatorIndex = text.indexOf('+')
-        //
-        //        if(operatorIndex === -1)
-        //            operatorIndex = text.indexOf('-')
-        //
-        //        let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-        //        return (Number(checkedText) >= 1 && Number(checkedText) < 509)
-        //    }
-        //
-//      //      validator: RegExpValidator { regExp: /[0-9]+/ }
-//      //      maximumLength: 3
-        //
-        //    background: Rectangle
-        //    {
-        //        color: "#000000"
-        //        radius: 2
-        //    }
-        //
-        //    onFocusChanged:
-        //    {
-        //        if(focus)
-        //        {
-        //            markAllInputsInactive();
-        //            isActiveInput = true
-        //            addShotWidget.currentInput = this
-        //            selectAll();
-        //            lastSelectedText = selectedText
-        //        }
-        //    }
-        //}
-        //
-        //TextField
-        //{
-        //    id: rfPosField
-        //    x: 48
-        //    y: 82
-        //    width: 36
-        //    height: 18
-        //    color: "#ffffff"
-        //    text: "1"
-        //    horizontalAlignment: Text.AlignHCenter
-        //    padding: 0
-        //    leftPadding: -2
-        //    font.pointSize: 8
-        //
-        //    property bool isActiveInput: false
-        //    property string lastSelectedText
-        //
-        //    function checkValue()
-        //    {
-        //        if(text === "")
-        //            return false
-        //
-        //        let operatorIndex = text.indexOf('+')
-        //
-        //        if(operatorIndex === -1)
-        //            operatorIndex = text.indexOf('-')
-        //
-        //        let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-        //        return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
-        //    }
-        //
-        //    background: Rectangle
-        //    {
-        //        color: "#000000"
-        //        radius: 2
-        //    }
-        //
-        //    onFocusChanged:
-        //    {
-        //        if(focus)
-        //        {
-        //            markAllInputsInactive();
-        //            isActiveInput = true
-        //            addShotWidget.currentInput = this
-        //            selectAll();
-        //            lastSelectedText = selectedText
-        //        }
-        //    }
-        //}
-        //
-        //TextField
-        //{
-        //    id: rfChField
-        //    x: 88
-        //    y: 82
-        //    width: 36
-        //    height: 18
-        //    color: "#ffffff"
-        //    text: "1"
-        //    horizontalAlignment: Text.AlignHCenter
-        //    padding: 0
-        //    leftPadding: -2
-        //    font.pointSize: 8
-        //
-        //    property bool isActiveInput: false
-        //    property string lastSelectedText
-        //
-        //    function checkValue()
-        //    {
-        //        if(text === "")
-        //            return false
-        //
-        //        let operatorIndex = text.indexOf('+')
-        //
-        //        if(operatorIndex === -1)
-        //            operatorIndex = text.indexOf('-')
-        //
-        //        let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-        //        return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
-        //    }
-        //
-        //    background: Rectangle
-        //    {
-        //        color: "#000000"
-        //        radius: 2
-        //    }
-        //
-        //    onFocusChanged:
-        //    {
-        //        if(focus)
-        //        {
-        //            markAllInputsInactive();
-        //            isActiveInput = true
-        //            addShotWidget.currentInput = this
-        //            selectAll();
-        //            lastSelectedText = selectedText
-        //        }
-        //    }
-        //}
-        //
-        //TextField
-        //{
-        //    id: heightField
-        //    x: 128
-        //    y: 82
-        //    width: 36
-        //    height: 18
-        //    color: "#ffffff"
-        //    text: "10"
-        //    horizontalAlignment: Text.AlignHCenter
-        //    padding: 0
-        //    leftPadding: -2
-        //    font.pointSize: 8
-        //
-        //    property bool isActiveInput: false
-        //    property string lastSelectedText
-        //
-        //    function checkValue()
-        //    {
-        //        if(text === "")
-        //            return false
-        //
-        //        return (Number(text) >= 0 && Number(text) < 200)
-        //    }
-        //
-        //    validator: RegExpValidator { regExp: /[0-9]+/ }
-        //    maximumLength: 3
-        //
-        //    background: Rectangle
-        //    {
-        //        color: "#000000"
-        //        radius: 2
-        //    }
-        //
-        //    onFocusChanged:
-        //    {
-        //        if(focus)
-        //        {
-        //            markAllInputsInactive();
-        //            isActiveInput = true
-        //            addShotWidget.currentInput = this
-        //            selectAll();
-        //            lastSelectedText = selectedText
-        //        }
-        //    }
-        //}
-        //
-        //
-        //
-        //Text {
-        //    y: 64
-        //    height: 17
-        //    color: dmxField.isActiveInput ? "#27AE60" : "#ffffff"
-        //    text: translationsManager.translationTrigger + qsTr("DMX")
-        //    elide: Text.ElideMiddle
-        //    anchors.left: parent.left
-        //    anchors.right: parent.right
-        //    horizontalAlignment: Text.AlignHCenter
-        //    verticalAlignment: Text.AlignVCenter
-        //    minimumPixelSize: 10
-        //    anchors.leftMargin: 3
-        //    anchors.rightMargin: 261
-        //    font.family: MFXUIS.Fonts.robotoRegular.name
-        //}
-        //
-        //Text {
-        //    y: 64
-        //    height: 17
-        //    color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-        //    text: translationsManager.translationTrigger + qsTr("RF pos")
-        //    elide: Text.ElideMiddle
-        //    anchors.left: parent.left
-        //    anchors.right: parent.right
-        //    horizontalAlignment: Text.AlignHCenter
-        //    verticalAlignment: Text.AlignVCenter
-        //    anchors.leftMargin: 43
-        //    anchors.rightMargin: 221
-        //    minimumPixelSize: 10
-        //    font.family: MFXUIS.Fonts.robotoRegular.name
-        //}
-        //
-        //Text {
-        //    y: 64
-        //    height: 17
-        //    color: rfChField.isActiveInput ? "#27AE60" : "#ffffff"
-        //    text: translationsManager.translationTrigger + qsTr("RF ch")
-        //    elide: Text.ElideMiddle
-        //    anchors.left: parent.left
-        //    anchors.right: parent.right
-        //    horizontalAlignment: Text.AlignHCenter
-        //    verticalAlignment: Text.AlignVCenter
-        //    anchors.leftMargin: 83
-        //    anchors.rightMargin: 181
-        //    minimumPixelSize: 10
-        //    font.family: MFXUIS.Fonts.robotoRegular.name
-        //}
-        //
-        //Text {
-        //    y: 64
-        //    height: 17
-        //    color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
-        //    text: translationsManager.translationTrigger + qsTr("height")
-        //    elide: Text.ElideMiddle
-        //    anchors.left: parent.left
-        //    anchors.right: parent.right
-        //    horizontalAlignment: Text.AlignHCenter
-        //    verticalAlignment: Text.AlignVCenter
-        //    anchors.leftMargin: 124
-        //    anchors.rightMargin: 140
-        //    minimumPixelSize: 10
-        //    font.family: MFXUIS.Fonts.robotoRegular.name
-        //}
-
         CalcWidget
         {
             id: calcWidget
@@ -1192,6 +867,7 @@ Item
             y: circle.y - 10
 
             property bool handled: false
+            property int startX: 0
 
             onPressed:
             {
@@ -1203,6 +879,7 @@ Item
                 {
                     cursorShape = Qt.BlankCursor
                     handled = true
+                    startX = handlerX
                 }
             }
 
@@ -1216,7 +893,18 @@ Item
             {
                 if(containsPress && handled)
                 {
-                        angField.text = Math.round(Number(-179 + mouseX * 3) / 5) * 5
+                    var ang = Math.round(((mouseX - startX) * 3) / 5) * 5
+                    if( ang != 0 )
+                        startX = mouseX
+
+                    ang += Number(angField.text)
+
+                    if( ang < -180 )
+                       ang = -180
+                    else if( ang > 180 )
+                       ang = 180
+
+                    angField.text = ang
                 }
             }
         }
@@ -1291,7 +979,7 @@ Item
             width: 36
             height: 18
             color: "#ffffff"
-            text: "-105"
+            text: "0"
             horizontalAlignment: Text.AlignHCenter
             padding: 0
             leftPadding: -2
@@ -1305,7 +993,7 @@ Item
                 if(text === "")
                     return false
 
-                return (Number(text) >= -179 && Number(text) < 181)
+                return (Number(text) >= -180 && Number(text) <= 180)
             }
 
             maximumLength: 4
@@ -1478,7 +1166,7 @@ Item
             {
                 origin.x: 0
                 origin.y: pointer.height
-                angle: (Number(angField.text) >=-179 && Number(angField.text) <=180) ? Number(angField.text) : 0
+                angle: (Number(angField.text) >= -180 && Number(angField.text) <= 180) ? Number(angField.text) : 0
             }
         }
 
@@ -1496,7 +1184,7 @@ Item
             {
                 origin.x: pointerHandler.width / 2
                 origin.y: pointerHandler.height / 2 + circle.height / 2
-                angle: (Number(angField.text) >=-179 && Number(angField.text) <=180) ? Number(angField.text) : 0
+                angle: (Number(angField.text) >=-180 && Number(angField.text) <= 180) ? Number(angField.text) : 0
             }
         }
 

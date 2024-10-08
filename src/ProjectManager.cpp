@@ -1,5 +1,6 @@
 #include "ProjectManager.h"
 #include "DeviceManager.h"
+#include "PatternManager.h"
 
 #include <QFile>
 #include <QJsonDocument>
@@ -24,7 +25,8 @@ constexpr int defaultSceneFrameWidth = 20;
 constexpr int defaultSceneFrameHeight = 10;
 constexpr char MUS_SUFFIX[] = "mus";
 
-ProjectManager::ProjectManager(SettingsManager &settngs, QObject *parent) : QObject(parent), _settings(settngs)
+ProjectManager::ProjectManager(SettingsManager &settngs, PatternManager* patternManager, QObject *parent)
+    : QObject( parent ), _settings( settngs ), m_PatternManager( patternManager )
 {
     connect( &m_ImportAudioTrackWatcher, &QFutureWatcher<QString>::finished, this, &ProjectManager::importAudioTrackFinished );
 
@@ -50,11 +52,6 @@ void ProjectManager::SetDeviceManager( DeviceManager* deviceManager )
     m_DeviceManager = deviceManager;
 }
 
-void ProjectManager::setPrefire( const QMap<QString, int>& pref)
-{
-    m_prefire = pref;
-}
-
 void ProjectManager::cleanWorkDirectory()
 {
     auto fileNamesList = workDir().entryList(QDir::Files);
@@ -74,7 +71,18 @@ void ProjectManager::cleanWorkDirectory()
     }
 }
 
-bool ProjectManager::loadProject(const QString& fileName)
+bool ProjectManager::loadProject( const QString& fileName )
+{
+    if( loadProjectFromFile( fileName ) )
+    {
+        setCurrentProjectFile( fileName );
+        return true;
+    }
+
+    return false;
+}
+
+bool ProjectManager::loadProjectFromFile( const QString& fileName )
 {
     qDebug() << fileName;
     QMutexLocker locker( &m_ProjectLocker );
@@ -104,8 +112,7 @@ bool ProjectManager::loadProject(const QString& fileName)
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         _hasUnsavedChanges = true; // Пока ставим этот флаг сразу, даже без фактических изменений
-        //_settings.setValue("lastProject", fileName);
-        setCurrentProjectFile(fileName);
+
         fromJsonObject(QJsonDocument::fromJson(file.readAll()).object());
 
         onBackgroundImageChanged();
@@ -295,11 +302,6 @@ void ProjectManager::saveProject()
     qDebug() << m_currentProjectFile;
 
     saveProjectToFile( m_currentProjectFile );
-
-    //QFile::remove(_settings.workDirectory() + "/" + property("backgroundImageFile").toString());
-    //QFile::remove(_settings.workDirectory() + "/" + property("audioTrackFile").toString());
-
-    //_settings.setValue("lastProject", m_currentProjectFile);
 }
 
 void ProjectManager::saveProjectToFile( const QString& saveFile )
@@ -1192,10 +1194,11 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
     auto ar = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
 
     auto pch = getChild("Patches")->toJsonObject().value("children").toArray();
-    QMap <int,QJsonObject>patch;
-    for(auto z: pch){
+    QMap <int,QJsonObject>patches;
+    for(auto z: pch)
+    {
         auto p = z.toObject().value("properties").toObject();
-        patch.insert(p.value("ID").toInt(),p);
+        patches.insert(p.value("ID").toInt(),p);
     }
 
     QJsonObject out;
@@ -1205,41 +1208,57 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
     QVector<QJsonObject> list;
     auto data = QJsonObject({
 
-                                qMakePair(QString("action"), 1),
-                                qMakePair(QString("between"), QJsonValue(static_cast<qint64>(0))),
-                                qMakePair(QString("ch"), 1),
-                                qMakePair(QString("delay"), QJsonValue(static_cast<qint64>(0))),
-                                qMakePair(QString("freeze"), bool(false)),
+                                qMakePair(QString("action"), 0),
+                                qMakePair(QString("between"), 0),
+                                qMakePair(QString("ch"), 0),
+                                qMakePair(QString("delay"), 0),
+                                qMakePair(QString("freeze"), false),
                                 qMakePair(QString("id"), 0),
                                 qMakePair(QString("position"), 0),
-                                qMakePair(QString("time"), QJsonValue(static_cast<qint64>(100))),
-                                qMakePair(QString("type"),1)
+                                qMakePair(QString("time"), 0),
+                                qMakePair(QString("type"), 0)
                             });
     for( auto y:ar )
     {
-
-        for(const auto x: y.toObject().value("children").toArray())
+        for(const auto x : y.toObject().value("children").toArray())
         {
-            QJsonObject d;
-            auto actionName = x.toObject().value("properties").toObject().value("actionName").toString();
-            auto patchid = x.toObject().value("properties").toObject().value("patchId").toInt();
-            auto position = getRoundPos(x.toObject().value("properties").toObject().value("position").toDouble()) - m_prefire.value(actionName);
-            if(position<0)continue;
+            const auto prop = x.toObject().value( "properties" ).toObject();
+            const auto actionName = prop.value( "actionName" ).toString();
+            const auto patchid = prop.value( "patchId" ).toInt();
 
-            data["action"] = actionName.remove("A").toInt();
-            data["ch"] = patch.find(patchid).value().value("DMX").toInt();
-            data["delay"] = position;
+            const Pattern* pattern = m_PatternManager->patternByName( actionName );
+            if( !pattern )
+                continue;
+
+            const auto position = getRoundPos( prop.value( "position" ).toDouble() );
+
+            if( position < 0 )
+                continue;
+
+            const auto path = patches.find( patchid ).value();
+            const bool isRfMode = path.value( "RF mode" ).toBool();
+
+            data["action"] = actionName.mid( 1 ).toInt(); //TODO!!!
+            data["ch"] = isRfMode ? path.value( "RF ch" ).toInt() : path.value( "DMX ch" ).toInt();
+            data["delay"] = static_cast<int>( position );
+            data["position"] = isRfMode ? path.value( "RF pos" ).toInt() : 0;
+            data["time"] = pattern->type() == PatternType::Sequences ? 100 : prop.value( "duration" );
+            data["type"] = static_cast<int>( pattern->type() );
+
             list.append(data);
         }
 
     }
 
-    std::sort(list.begin(),list.end(),[](const QJsonObject &a,const QJsonObject &b){
-        return a.value("delay").toInt() < b.value("delay").toInt();});
+    std::sort( list.begin(), list.end(), [](const QJsonObject &a,const QJsonObject &b)
+    {
+        return a.value( "delay" ).toInt() < b.value( "delay" ).toInt();
+    });
 
     int id = 1;
     auto lastMs = 0;
-    for(auto &x: list){
+    for(auto &x: list)
+    {
         x["id"] = id++;
         auto pl = x.value("delay").toInt();
         x["between"] = pl - lastMs;

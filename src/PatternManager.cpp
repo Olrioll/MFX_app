@@ -21,7 +21,6 @@ PatternManager::PatternManager(SettingsManager& settingsManager, QObject* parent
     m_patternsFiltered = new PatternFilteringModel(*m_patterns, PatternType::Sequences, this);
     m_patternsShotFiltered = new PatternFilteringModel( *m_CustomPatterns->getSourceModel(), PatternType::Shot, this );
 
-    initConnections();
     reloadPatterns();
 }
 
@@ -32,19 +31,11 @@ PatternManager::~PatternManager()
     m_patternsFiltered->deleteLater();
 }
 
-void PatternManager::initConnections()
-{
-}
-
 void PatternManager::qmlRegister()
 {
     PatternType::registerToQml( "MFX.Enums", 1, 0 );
     qRegisterMetaType<Pattern*>( "Pattern*" );
-}
-
-const QMap<QString, int>& PatternManager::getPrefire()
-{
-    return m_prefire;
+    qRegisterMetaType<const Pattern*>( "const Pattern*" );
 }
 
 void PatternManager::currentPatternChangeRequest( PatternType::Type type, const QString& patternName )
@@ -65,6 +56,9 @@ void PatternManager::cleanPatternSelectionRequest( PatternType::Type type )
 void PatternManager::reloadPatterns()
 {
     qDebug();
+
+    m_patterns->clear();
+    m_prefire.clear();
 
     initPatterns();
     initCustomPatterns();
@@ -126,9 +120,6 @@ void PatternManager::initPatterns()
             operation->setActive( activeCode == 255 ? true : false );
         };
 
-        m_patterns->clear();
-        m_prefire.clear();
-
         for (const auto& rawAction : rawActions)
         {
             QString name = rawAction.at( 0 );
@@ -179,7 +170,7 @@ PatternFilteringModel* PatternManager::patternsShotFiltered() const
     return m_patternsShotFiltered;
 }
 
-Pattern* PatternManager::patternByName(const QString &name) const
+const Pattern* PatternManager::patternByName(const QString &name) const
 {
     //qDebug() << name;
 

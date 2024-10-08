@@ -37,7 +37,7 @@ void Backuper::makeBackup()
 bool Backuper::restoreBackup()
 {
     qDebug();
-    return mProjectManager.loadProject( QDir( mSettings.workDirectory() ).filePath( BACKUP_FILE ) );
+    return mProjectManager.loadProjectFromFile( QDir( mSettings.workDirectory() ).filePath( BACKUP_FILE ) );
 }
 
 void Backuper::runProject()

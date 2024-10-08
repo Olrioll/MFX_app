@@ -803,60 +803,6 @@ Item
             }
         }
 
-        /*TextField
-        {
-            id: dmxField
-            x: 8
-            y: 82
-            width: 36
-            height: 18
-            text: isOneDevice? "1": "~"
-            color: "#ffffff"
-            horizontalAlignment: Text.AlignHCenter
-            padding: 0
-            leftPadding: -2
-            font.pointSize: 8
-            visible: false
-
-            property bool isActiveInput: false
-            property string lastSelectedText
-
-            function checkValue()
-            {
-                if(text === "")
-                    return false
-
-                let operatorIndex = text.indexOf('+')
-
-                if(operatorIndex === -1)
-                    operatorIndex = text.indexOf('-')
-
-                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                return (Number(checkedText) >= 1 && Number(checkedText) < 509)
-            }
-
-//            validator: RegExpValidator { regExp: /[0-9]+/ }
-//            maximumLength: 3
-
-            background: Rectangle
-            {
-                color: "#000000"
-                radius: 2
-            }
-
-            onFocusChanged:
-            {
-                if(focus)
-                {
-                    markAllInputsInactive();
-                    isActiveInput = true
-                    addSequWindow.currentInput = this
-                    selectAll();
-                    lastSelectedText = selectedText
-                }
-            }
-        }*/
-
         CalcWidget
         {
             id: calcWidget

@@ -23,9 +23,7 @@ public:
     explicit PatternManager(SettingsManager& settingsManager, QObject* parent = nullptr);
     ~PatternManager();
 
-    void initConnections();
     static void qmlRegister();
-    const QMap<QString, int>& getPrefire();
 
     Q_INVOKABLE void currentPatternChangeRequest( PatternType::Type type, const QString& patternName);
     Q_INVOKABLE void cleanPatternSelectionRequest( PatternType::Type type );
@@ -34,10 +32,8 @@ public:
 
     PatternFilteringModel* patternsFiltered() const;
     PatternFilteringModel* patternsShotFiltered() const;
-    //Pattern *patternById(const QUuid& id) const;
-    //Q_INVOKABLE qulonglong maxPatternDuration(const QStringList &list) const;
-    //TODO запрашивается из QML - избавиться впоследствии
-    Q_INVOKABLE Pattern* patternByName(const QString& name) const;
+
+    Q_INVOKABLE const Pattern* patternByName(const QString& name) const;
     Q_INVOKABLE void addPattern( PatternType::Type type, qulonglong prefire, std::list<Operation*> operations );
     Q_INVOKABLE void addShotPattern( qulonglong prefire, qulonglong time );
     Q_INVOKABLE void deletePattern( const QString& name );
