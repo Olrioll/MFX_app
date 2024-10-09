@@ -62,11 +62,7 @@ Item
         cellListModel.clear()
         var patchProperties = project.patchProperties(project.patchIndexForId(patchId))
 
-
         cellListModel.append({propName: "ID", propValue: patchId})
-
-        //if("DMX" in patchProperties)
-        //    cellListModel.append({propName: "DMX", propValue: patchProperties["DMX"]})
 
         var isRfMode = ("RF mode" in patchProperties && patchProperties["RF mode"] === true)
 

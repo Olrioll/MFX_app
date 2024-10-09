@@ -131,7 +131,6 @@ Item
             project.addPatch( MFXE.PatternType.Sequences,
                              [
                               {propName: "ID", propValue: currentId},
-                              //{propName: "DMX", propValue: currentDmxValue},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "DMX ch", propValue: currentDmxChValue},
@@ -144,7 +143,6 @@ Item
             deviceManager.onEditPatch(
                                     [
                                      {propName: "ID", propValue: currentId},
-                                     //{propName: "DMX", propValue: currentDmxValue},
                                      {propName: "RF pos", propValue: currentRfPosValue},
                                      {propName: "RF ch", propValue: currentRfChValue},
                                      {propName: "DMX ch", propValue: currentDmxChValue},
@@ -272,7 +270,6 @@ Item
             project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
-                              //isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
                               isMinAng?{}:{propName: "min ang", propValue: Number(minAngField.text)},
                               isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
                               isRfPosUnused?{}: {propName: "RF pos", propValue:  currentRfPosValue},
@@ -285,7 +282,6 @@ Item
             deviceManager.onEditPatch(
                         [
                          {propName: "ID", propValue: changedIdList[i]},
-                         //isDmxUnused?{}:{propName: "DMX", propValue: currentDmxValue},
                          isMinAng?{}:{propName: "min ang", propValue: Number(minAngField.text)},
                          isMaxAng?{}:{propName: "max ang", propValue: Number(maxAngField.text)},
                          isRfPosUnused?{}:{propName: "RF pos", propValue: currentRfPosValue},
@@ -296,7 +292,6 @@ Item
                          {propName: "RF mode", propValue: modeSwitch.checked}
                         ])
 
-            //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
             currentDmxChValue += dmxChIncrement
@@ -1501,8 +1496,6 @@ Item
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
-            //quantityField.text = propValuesList[propNamesList.indexOf("ID")];
-            //dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
             heightField.text = propValuesList[propNamesList.indexOf("height")];
@@ -1523,12 +1516,3 @@ Item
         }
     }
 }
-
-/*##^##
-Designer {
-    D{i:0;formeditorZoom:3}D{i:2}D{i:3}D{i:4}D{i:7}D{i:8}D{i:9}D{i:12}D{i:14}D{i:16}D{i:18}
-D{i:21}D{i:22}D{i:23}D{i:24}D{i:25}D{i:26}D{i:27}D{i:28}D{i:29}D{i:30}D{i:36}D{i:37}
-D{i:38}D{i:40}D{i:42}D{i:43}D{i:44}D{i:45}D{i:46}D{i:47}D{i:48}D{i:50}D{i:52}D{i:54}
-D{i:56}D{i:57}D{i:58}D{i:59}D{i:62}D{i:65}D{i:68}D{i:71}D{i:1}D{i:79}
-}
-##^##*/

@@ -132,7 +132,6 @@ Item
             project.addPatch( MFXE.PatternType.Shot,
                              [
                               {propName: "ID", propValue: currentId},
-                              //{propName: "DMX", propValue: currentDmxValue},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
                               {propName: "DMX ch", propValue: currentDmxChValue},
@@ -145,7 +144,6 @@ Item
             deviceManager.onEditPatch(
                 [
                     {propName: "ID", propValue: currentId},
-                    //{propName: "DMX", propValue: currentDmxValue},
                     {propName: "RF pos", propValue: currentRfPosValue},
                     {propName: "RF ch", propValue: currentRfChValue},
                     {propName: "DMX ch", propValue: currentDmxChValue},
@@ -269,7 +267,6 @@ Item
             project.onEditPatch(
                              [
                               {propName: "ID", propValue: changedIdList[i]},
-                              //{propName: "DMX", propValue: currentDmxValue},
                               {propName: "angle", propValue: Number(angField.text)},
                               {propName: "RF pos", propValue: currentRfPosValue},
                               {propName: "RF ch", propValue: currentRfChValue},
@@ -282,7 +279,6 @@ Item
             deviceManager.onEditPatch(
                 [
                     {propName: "ID", propValue: changedIdList[i]},
-                    //{propName: "DMX", propValue: currentDmxValue},
                     {propName: "angle", propValue: Number(angField.text)},
                     {propName: "RF pos", propValue: currentRfPosValue},
                     {propName: "RF ch", propValue: currentRfChValue},
@@ -292,7 +288,6 @@ Item
                     {propName: "RF mode", propValue: modeSwitch.checked}
                 ])
 
-            //currentDmxValue += dmxIncrement
             currentRfPosValue += rfPosIncrement
             currentRfChValue += rfChIncrement
             currentDmxChValue += dmxChIncrement
@@ -1404,8 +1399,6 @@ Item
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
-            //quantityField.text = propValuesList[propNamesList.indexOf("ID")];
-            //dmxField.text = propValuesList[propNamesList.indexOf("DMX")];
             rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
             rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
             heightField.text = propValuesList[propNamesList.indexOf("height")];

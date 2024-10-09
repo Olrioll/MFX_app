@@ -21,9 +21,13 @@
 #include "CloudSync/CloudFactory.hpp"
 #include "CloudSync/exceptions/cloud/CloudException.hpp"
 
-constexpr int defaultSceneFrameWidth = 20;
-constexpr int defaultSceneFrameHeight = 10;
+constexpr int DEFAULT_SCENE_FRAME_WIDTH = 20;
+constexpr int DEFAULT_SCENE_FRAME_HEIGHT = 10;
+constexpr int SHOT_ACTION_ID = 255;
+constexpr int SEQUENCE_TIME = 100;
 constexpr char MUS_SUFFIX[] = "mus";
+constexpr char DEFAULT_MUS[] = "default.mus";
+constexpr char DEFAULT_SVG[] = "default.svg";
 
 ProjectManager::ProjectManager(SettingsManager &settngs, PatternManager* patternManager, QObject *parent)
     : QObject( parent ), _settings( settngs ), m_PatternManager( patternManager )
@@ -131,9 +135,6 @@ bool ProjectManager::loadProjectFromFile( const QString& fileName )
             propertiesMap["propName"] = "ID";
             propertiesMap["propValue"] = patch->properties().value( "ID" ).toUInt();
             properties.append( propertiesMap );
-            //propertiesMap["propName"] = "DMX";
-            //propertiesMap["propValue"] = patch->properties().value( "DMX" ).toInt();
-            //properties.append( propertiesMap );
             propertiesMap["propName"] = "min ang";
             propertiesMap["propValue"] = patch->properties().value( "min ang" ).toInt();
             properties.append( propertiesMap );
@@ -187,13 +188,13 @@ void ProjectManager::defaultProject()
 
     newProject();
 
-    setAudioTrack( QDir( _settings.appDirectory() ).filePath( "default.mus" ) );
-    setBackgroundImage( QDir( _settings.appDirectory() ).filePath( "default.svg" ) );
+    setAudioTrack( QDir( _settings.appDirectory() ).filePath( DEFAULT_MUS ) );
+    setBackgroundImage( QDir( _settings.appDirectory() ).filePath( DEFAULT_SVG ) );
 
     setProperty( "sceneFrameX", 0.37 );
     setProperty( "sceneFrameY", 0.38 );
-    setProperty( "sceneFrameWidth", defaultSceneFrameWidth );
-    setProperty( "sceneFrameHeight", defaultSceneFrameHeight );
+    setProperty( "sceneFrameWidth", DEFAULT_SCENE_FRAME_WIDTH );
+    setProperty( "sceneFrameHeight", DEFAULT_SCENE_FRAME_HEIGHT );
     setProperty( "sceneImageWidth", 0.15 );
 }
 
@@ -224,9 +225,6 @@ void ProjectManager::reloadCurrentProject()
         propertiesMap["propName"] = "ID";
         propertiesMap["propValue"] = patch->properties().value("ID").toUInt();
         properties.append(propertiesMap);
-        //propertiesMap["propName"] = "DMX";
-        //propertiesMap["propValue"] = patch->properties().value("DMX").toInt();
-        //properties.append(propertiesMap);
         propertiesMap["propName"] = "min ang";
         propertiesMap["propValue"] = patch->properties().value("min ang").toInt();
         properties.append(propertiesMap);
@@ -641,9 +639,6 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
             patch->setProperty("checked", p->property("checked"));
             patch->setProperty("posXRatio", p->property("posXRatio"));
             patch->setProperty("posYRatio", p->property("posYRatio"));
-
-            //if(patch->property("DMX").isNull())
-            //    patch->setProperty("DMX", p->property("DMX"));
 
             if(patch->property("min ang").isNull() && !p->property( "min ang" ).isNull() )
                 patch->setProperty("min ang", p->property("min ang"));
@@ -1191,7 +1186,7 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
 
     QMutexLocker locker( &m_ProjectLocker );
 
-    auto ar = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
+    auto cues = getChild("Cues")->toJsonObject().value("namedChildren").toObject();
 
     auto pch = getChild("Patches")->toJsonObject().value("children").toArray();
     QMap <int,QJsonObject>patches;
@@ -1201,10 +1196,11 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
         patches.insert(p.value("ID").toInt(),p);
     }
 
-    QJsonObject out;
-    auto getRoundPos = [](const double p){
+    auto getRoundPos = [](const double p)
+    {
         return qint64(p/10.0)*10;
     };
+
     QVector<QJsonObject> list;
     auto data = QJsonObject({
 
@@ -1218,19 +1214,21 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
                                 qMakePair(QString("time"), 0),
                                 qMakePair(QString("type"), 0)
                             });
-    for( auto y:ar )
+
+    for( const auto& cue : cues )
     {
-        for(const auto x : y.toObject().value("children").toArray())
+        for( const auto& child : cue.toObject().value( "children" ).toArray() )
         {
-            const auto prop = x.toObject().value( "properties" ).toObject();
-            const auto actionName = prop.value( "actionName" ).toString();
-            const auto patchid = prop.value( "patchId" ).toInt();
+            const auto cue_prop = cue.toObject().value( "properties" ).toObject();
+            const auto child_prop = child.toObject().value( "properties" ).toObject();
+            const auto actionName = child_prop.value( "actionName" ).toString();
+            const auto patchid = child_prop.value( "patchId" ).toInt();
 
             const Pattern* pattern = m_PatternManager->patternByName( actionName );
             if( !pattern )
                 continue;
 
-            const auto position = getRoundPos( prop.value( "position" ).toDouble() );
+            const auto position = getRoundPos( child_prop.value( "position" ).toDouble() );
 
             if( position < 0 )
                 continue;
@@ -1238,16 +1236,15 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
             const auto path = patches.find( patchid ).value();
             const bool isRfMode = path.value( "RF mode" ).toBool();
 
-            data["action"] = actionName.mid( 1 ).toInt(); //TODO!!!
+            data["action"] = pattern->type() == PatternType::Shot ? SHOT_ACTION_ID : actionName.mid( 1 ).toInt();
             data["ch"] = isRfMode ? path.value( "RF ch" ).toInt() : path.value( "DMX ch" ).toInt();
             data["delay"] = static_cast<int>( position );
             data["position"] = isRfMode ? path.value( "RF pos" ).toInt() : 0;
-            data["time"] = pattern->type() == PatternType::Sequences ? 100 : prop.value( "duration" );
+            data["time"] = pattern->type() == PatternType::Sequences ? SEQUENCE_TIME : cue_prop.value( "duration" );
             data["type"] = static_cast<int>( pattern->type() );
 
             list.append(data);
         }
-
     }
 
     std::sort( list.begin(), list.end(), [](const QJsonObject &a,const QJsonObject &b)

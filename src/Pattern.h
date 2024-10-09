@@ -12,7 +12,7 @@
 #include "Operation.h"
 
 //QSM_ENUM_CLASS(PatternType, Unknown = -1, Sequential = 0, Dynamic, Static)
-QSM_ENUM_CLASS( PatternType, Unknown = -1, Sequences = 0, Dimmer, Shot, Pyro )
+QSM_ENUM_CLASS( PatternType, Unknown = 0, Sequences, Dimmer, Shot, Pyro )
 
 class Pattern : public QObject
 {
