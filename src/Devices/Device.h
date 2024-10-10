@@ -28,11 +28,10 @@ class Device  : public QObject
 
 public:
     explicit Device(QObject* parent = nullptr);
-    //virtual void runPattern(const Pattern* p, quint64 time) = 0;
     virtual void runPatternSingly( const Pattern& p, quint64 time ) = 0;
     virtual void finishChangeAngle( int angle ) = 0;
 
-    qulonglong getDurationByPattern( const Pattern& pattern );
+    qulonglong getDurationByPattern( const Pattern& pattern ) const;
     void clearCalcDurations();
 
 protected:
@@ -42,7 +41,7 @@ private:
     virtual qulonglong calcDurationByPattern( const Pattern& pattern ) const = 0;
     virtual void setDMXOperation( int deviceId, const Operation* op, bool sendToWorker ) = 0;
 
-    QHash<QString, qulonglong> m_DurationsByPattern;
+    mutable QHash<QString, qulonglong> m_DurationsByPattern;
 
 public:
     DeviceManager* m_manager;

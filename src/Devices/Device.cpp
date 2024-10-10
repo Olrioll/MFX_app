@@ -7,7 +7,7 @@ Device::Device(QObject *parent) : QObject(parent)
     setUuid(QUuid::createUuid());
 }
 
-qulonglong Device::getDurationByPattern( const Pattern& pattern )
+qulonglong Device::getDurationByPattern( const Pattern& pattern ) const
 {
     const auto it = m_DurationsByPattern.constFind( pattern.name() );
     if( it == m_DurationsByPattern.constEnd() )

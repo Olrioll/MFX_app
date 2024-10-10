@@ -346,30 +346,33 @@ void CueContentManager::refrestCueContentModel()
 
     quint64 prevStop = m_currentCue->startTime();
     auto listActions = m_currentCue->actions()->toList();
-    std::sort(listActions.begin(), listActions.end(), [](Action* a1, Action *a2) {
+    std::sort(listActions.begin(), listActions.end(), [](const Action* a1, const Action *a2)
+    {
         return a1->startTime() < a2->startTime();
     });
 
     for (const auto* action : listActions)
     {
-        auto* device = reinterpret_cast<SequenceDevice*>(m_deviceManager.deviceById( action->deviceId() ));
+        const Device* device = m_deviceManager.deviceById( action->deviceId() );
         auto* cueContent = new CueContent(this);
         cueContent->setDelay(action->startTime() - m_currentCue->startTime());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
         cueContent->setBetween(action->startTime() - prevStop);
-        auto pattern = m_deviceManager.GetPatternManager()->patternByName(action->patternName());
-        prevStop = action->startTime() + device ? device->getDurationByPattern( *pattern ) : 0;
+        const Pattern* pattern = m_deviceManager.GetPatternManager()->patternByName(action->patternName());
+        prevStop = action->startTime() + (device ? device->getDurationByPattern( *pattern ) : 0);
         //qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
         cueContent->setTime(action->startTime() + pattern->prefireDuration());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, time = %1").arg(cueContent->time());
         cueContent->setPrefire(pattern->prefireDuration());
         //qDebug() << tr("CueContentManager::refreshCueContentModel, prefire = %1").arg(cueContent->prefire());
 
-        if( device )
+        if( device->deviceType() == PatternType::Sequences )
         {
-            cueContent->setDevice(device->id());
-            cueContent->setDmxSlot(device->dmx());
-            cueContent->setRfChannel(device->rfChannel());
+            const SequenceDevice* seq_device = reinterpret_cast<const SequenceDevice*>( device );
+
+            cueContent->setDevice( seq_device->id() );
+            cueContent->setDmxSlot( seq_device->dmx() );
+            cueContent->setRfChannel( seq_device->rfChannel() );
         }
 
         cueContent->setAction(action->patternName());
@@ -451,12 +454,20 @@ void CueContentManager::updateCueContentBetween(CalculatorOperator::Type calcula
 void CueContentManager::updateCueContentAction(CalculatorOperator::Type calculatorOperator, int value)
 {
     qDebug() << "CueContentManager::updateCueContentAction:" << calculatorOperator << value;
-    for (auto cueContentItem : m_cueContentItems->toList()) {
-        if(cueContentItem->selected()) {
+
+    if( !m_currentCue )
+        return;
+
+    for (auto cueContentItem : m_cueContentItems->toList())
+    {
+        if(cueContentItem->selected())
+        {
             QString actionStr = cueContentItem->action();
-            actionStr.remove(0, 1); // delete "A" from the beginning of the string
-            int action = actionStr.toInt();
-            switch (calculatorOperator) {
+            const QString actionLetter = actionStr.left( 1 );
+            int action = actionStr.mid( 1 ).toInt();
+
+            switch (calculatorOperator)
+            {
             case CalculatorOperator::Add:
                 action += value;
                 break;
@@ -473,15 +484,14 @@ void CueContentManager::updateCueContentAction(CalculatorOperator::Type calculat
                 action = value / action * 100;
                 break;
             }
-            actionStr = QString("A%1").arg(action);
-            if(m_currentCue == NULL) {
+
+            actionStr = QString( "%1%2" ).arg( actionLetter, action );
+
+            auto a = m_cueManager->getAction( m_currentCue->name(), cueContentItem->device() );
+            if( !a )
                 continue;
-            }
-            auto a = m_cueManager->getAction(m_currentCue->name(), cueContentItem->device());
-            if(a == NULL) {
-                continue;
-            }
-            a->setPatternName(actionStr);
+
+            a->setPatternName( actionStr );
         }
     }
 }

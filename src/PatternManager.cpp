@@ -35,7 +35,6 @@ void PatternManager::qmlRegister()
 {
     PatternType::registerToQml( "MFX.Enums", 1, 0 );
     qRegisterMetaType<Pattern*>( "Pattern*" );
-    qRegisterMetaType<const Pattern*>( "const Pattern*" );
 }
 
 void PatternManager::currentPatternChangeRequest( PatternType::Type type, const QString& patternName )
@@ -170,7 +169,7 @@ PatternFilteringModel* PatternManager::patternsShotFiltered() const
     return m_patternsShotFiltered;
 }
 
-const Pattern* PatternManager::patternByName(const QString &name) const
+Pattern* PatternManager::patternByName(const QString &name) const
 {
     //qDebug() << name;
 

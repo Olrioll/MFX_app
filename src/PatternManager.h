@@ -33,7 +33,7 @@ public:
     PatternFilteringModel* patternsFiltered() const;
     PatternFilteringModel* patternsShotFiltered() const;
 
-    Q_INVOKABLE const Pattern* patternByName(const QString& name) const;
+    Q_INVOKABLE /*гадский qml не понимает const*/ Pattern* patternByName(const QString& name) const;
     Q_INVOKABLE void addPattern( PatternType::Type type, qulonglong prefire, std::list<Operation*> operations );
     Q_INVOKABLE void addShotPattern( qulonglong prefire, qulonglong time );
     Q_INVOKABLE void deletePattern( const QString& name );
