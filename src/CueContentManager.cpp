@@ -354,30 +354,26 @@ void CueContentManager::refrestCueContentModel()
     for (const auto* action : listActions)
     {
         const Device* device = m_deviceManager.deviceById( action->deviceId() );
+        const Pattern* pattern = m_deviceManager.GetPatternManager()->patternByName( action->patternName() );
+
+        if( !device || !pattern )
+            continue;
+
+        qulonglong duration = device->getDurationByPattern( *pattern );
+
         auto* cueContent = new CueContent(this);
-        cueContent->setDelay(action->startTime() - m_currentCue->startTime());
-        //qDebug() << tr("CueContentManager::refreshCueContentModel, delay = %1").arg(cueContent->delay());
-        cueContent->setBetween(action->startTime() - prevStop);
-        const Pattern* pattern = m_deviceManager.GetPatternManager()->patternByName(action->patternName());
-        prevStop = action->startTime() + (device ? device->getDurationByPattern( *pattern ) : 0);
-        //qDebug() << tr("CueContentManager::refreshCueContentModel, between = %1").arg(cueContent->between());
-        cueContent->setTime(action->startTime() + pattern->prefireDuration());
-        //qDebug() << tr("CueContentManager::refreshCueContentModel, time = %1").arg(cueContent->time());
-        cueContent->setPrefire(pattern->prefireDuration());
-        //qDebug() << tr("CueContentManager::refreshCueContentModel, prefire = %1").arg(cueContent->prefire());
+        cueContent->setDelay( action->startTime() - m_currentCue->startTime() );
+        cueContent->setBetween( action->startTime() - prevStop );
+        cueContent->setTime( duration + pattern->prefireDuration() );
+        cueContent->setPrefire( pattern->prefireDuration() );
 
-        if( device->deviceType() == PatternType::Sequences )
-        {
-            const SequenceDevice* seq_device = reinterpret_cast<const SequenceDevice*>( device );
+        prevStop = action->startTime() + duration + pattern->prefireDuration();
 
-            cueContent->setDevice( seq_device->id() );
-            cueContent->setDmxSlot( seq_device->dmx() );
-            cueContent->setRfChannel( seq_device->rfChannel() );
-        }
+        device->copyToCueContent( *cueContent );
 
-        cueContent->setAction(action->patternName());
+        cueContent->setAction( action->patternName() );
 
-        m_cueContentItems->append(cueContent);
+        m_cueContentItems->append( cueContent );
     }
 }
 

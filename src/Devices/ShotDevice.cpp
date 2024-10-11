@@ -1,5 +1,6 @@
 #include "ShotDevice.h"
 #include "DmxWorker.h"
+#include "CueContent.h"
 
 ShotDevice::ShotDevice( QObject* parent /*= nullptr*/ ) : Device( parent )
 {
@@ -101,4 +102,12 @@ qulonglong ShotDevice::calcDurationByPattern( const Pattern& pattern ) const
     duration *= 10;
 
     return duration;
+}
+
+void ShotDevice::copyToCueContent( CueContent& cueContent ) const
+{
+    Device::copyToCueContent( cueContent );
+
+    cueContent.setDmxSlot( dmx() );
+    cueContent.setRfChannel( rfChannel() );
 }

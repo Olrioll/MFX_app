@@ -22,8 +22,11 @@ class SequenceDevice : public Device
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, maxAngle, MaxAngle, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, minAngle, MinAngle, 0) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT(int, height, Height, 0) //DMX
+
 public:
     explicit SequenceDevice(QObject* parent = nullptr);
+
+    void copyToCueContent( CueContent& cueContent ) const override;
 
 public slots:
     void onPlaybackTimeChanged(quint64 time);

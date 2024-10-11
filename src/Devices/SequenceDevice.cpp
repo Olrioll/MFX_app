@@ -1,5 +1,6 @@
 #include "SequenceDevice.h"
 #include "DmxWorker.h"
+#include "CueContent.h"
 
 constexpr int DEFAULT_START_ANGLE = 0;
 
@@ -169,4 +170,12 @@ qulonglong SequenceDevice::calcDurationByPattern( const Pattern& pattern ) const
     duration *= 10;
 
     return duration;
+}
+
+void SequenceDevice::copyToCueContent( CueContent& cueContent ) const
+{
+    Device::copyToCueContent( cueContent );
+
+    cueContent.setDmxSlot( dmx() );
+    cueContent.setRfChannel( rfChannel() );
 }

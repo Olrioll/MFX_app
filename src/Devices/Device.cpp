@@ -1,6 +1,7 @@
 #include "Device.h"
 #include "DeviceManager.h"
 #include "../Pattern.h"
+#include "CueContent.h"
 
 Device::Device(QObject *parent) : QObject(parent)
 {
@@ -29,4 +30,9 @@ void Device::clearCalcDurations()
 void Device::setDMXOper( int deviceId, int duration, int angle, int velocity, int height, const QString& colorType, bool active )
 {
     emit m_manager->drawOperationInGui( deviceId, duration, angle, velocity, height, colorType, active );
+}
+
+void Device::copyToCueContent( CueContent& cueContent ) const
+{
+    cueContent.setDevice( id() );
 }

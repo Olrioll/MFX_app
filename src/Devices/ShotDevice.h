@@ -17,6 +17,8 @@ class ShotDevice : public Device
 public:
     explicit ShotDevice( QObject* parent = nullptr );
 
+    void copyToCueContent( CueContent& cueContent ) const override;
+
 public slots:
     void onPlaybackTimeChanged( quint64 time );
     void onPatternTimerChanged();

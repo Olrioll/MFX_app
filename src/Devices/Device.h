@@ -13,6 +13,7 @@ constexpr int PREVIEW_DEVICE_ID = -1;
 constexpr int PATTERN_INTERVAL_MS = 10;
 
 class DeviceManager;
+class CueContent;
 
 class Device  : public QObject
 {
@@ -33,6 +34,8 @@ public:
 
     qulonglong getDurationByPattern( const Pattern& pattern ) const;
     void clearCalcDurations();
+
+    virtual void copyToCueContent( CueContent& cueContent ) const;
 
 protected:
     virtual void setDMXOper( int deviceId, int duration, int angle, int velocity, int height, const QString& colorType, bool active );
