@@ -15,7 +15,7 @@ class ShotDevice : public Device
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, angle, Angle, 0 ) //DMX
 
 public:
-    explicit ShotDevice( QObject* parent = nullptr );
+    explicit ShotDevice( DeviceManager* mng, QObject* parent = nullptr );
 
     void copyToCueContent( CueContent& cueContent ) const override;
 

@@ -19,18 +19,22 @@ class DeviceManager : public QObject
 public:
     ComPortModel m_comPortModel;
     explicit DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent = nullptr);
-    //void runPatternOnDevice(int deviceId, int patternNum);
+
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setDeviceProperty( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio );
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
     Q_INVOKABLE void finishChangeAngle( int deviceId, int angle );
     Q_INVOKABLE qulonglong maxActionsDuration( const QList<int>& ids ) const;
     Q_INVOKABLE qulonglong actionDuration( const QString& actName, int deviceId ) const;
+    Q_INVOKABLE QString getDurationStrByPattern( PatternType::Type type, const QString& patternName ) const;
 
     PatternManager* GetPatternManager() { return m_patternManager; }
-    Device* m_previewDevice;
+    Device* m_previewSeqDevice;
+    Device* m_previewShotDevice;
 
-    Device* deviceById(int id) const;
+    Device* getDeviceById(int id) const;
+    Device* getPreviewDevice( PatternType::Type type ) const;
+    qulonglong getDurationByPattern( PatternType::Type type, const QString& patternName ) const;
 
 signals:
     void drawOperationInGui(qulonglong deviceId, int duration, int angle, int velocity, int fireHeight, const QString& colorType, bool active);

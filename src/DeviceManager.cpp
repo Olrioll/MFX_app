@@ -1,3 +1,5 @@
+#include <QtCore/QTime>
+
 #include "DeviceManager.h"
 #include "Devices/SequenceDevice.h"
 #include "Devices/ShotDevice.h"
@@ -14,15 +16,12 @@ DeviceManager::DeviceManager(PatternManager* patternManager, ProjectManager* pro
     m_devices = new QQmlObjectListModel<Device>(this);
     // connect(this, &DeviceManager::comPortChanged, DMXWorker::instance(), &DMXWorker::onComPortChanged); // disable comport until we come with working DMX512 library
 
-    m_previewDevice = new PreviewDevice( this );
-    m_previewDevice->m_manager = this;
+    m_previewSeqDevice = new PreviewDevice( this, this );
+    m_previewShotDevice = new ShotDevice( this, this );
 }
 
-Device *DeviceManager::deviceById(int id) const
+Device* DeviceManager::getDeviceById(int id) const
 {
-    if( id == PREVIEW_DEVICE_ID )
-        return m_previewDevice;
-
     for(const auto device : m_devices->toList())
         if( device->id() == id )
             return device;
@@ -30,20 +29,48 @@ Device *DeviceManager::deviceById(int id) const
     return nullptr;
 }
 
+Device* DeviceManager::getPreviewDevice( PatternType::Type type ) const
+{
+    if( type == PatternType::Sequences )
+        return m_previewSeqDevice;
+
+    if( type == PatternType::Shot )
+        return m_previewShotDevice;
+
+    return nullptr;
+}
+
+qulonglong DeviceManager::getDurationByPattern( PatternType::Type type, const QString& patternName ) const
+{
+    Device* device = getPreviewDevice( type );
+    if( !device )
+        return 0;
+
+    const Pattern* p = m_patternManager->patternByName( patternName );
+    if( !p )
+        return 0;
+
+    return device->getDurationByPattern( *p );
+}
+
+QString DeviceManager::getDurationStrByPattern( PatternType::Type type, const QString& patternName ) const
+{
+    return QTime::fromMSecsSinceStartOfDay( getDurationByPattern( type, patternName ) ).toString( "hh:mm:ss.zzz" );
+}
+
 void DeviceManager::addDevice( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio )
 {
     Device* newDevice = nullptr;
 
     if( type == PatternType::Sequences )
-        newDevice = new SequenceDevice( this );
+        newDevice = new SequenceDevice( this, this );
     else if( type == PatternType::Shot )
-        newDevice = new ShotDevice( this );
+        newDevice = new ShotDevice( this, this );
 
     newDevice->setId( deviceId );
     newDevice->setChecked( checked );
     newDevice->setPosXRatio( posXRatio );
     newDevice->setPosYRatio( posYRatio );
-    newDevice->m_manager = this;
 
     if( type == PatternType::Sequences )
         connect( DMXWorker::instance(), &DMXWorker::playbackTimeChanged, reinterpret_cast<SequenceDevice*>( newDevice ), &SequenceDevice::onPlaybackTimeChanged );
@@ -53,7 +80,7 @@ void DeviceManager::addDevice( PatternType::Type type, int deviceId, bool checke
 
 void DeviceManager::setDeviceProperty( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio )
 {
-    Device* device = deviceById( deviceId );
+    Device* device = getDeviceById( deviceId );
     if( !device )
         return addDevice( type, deviceId, checked, posXRatio, posYRatio );
 
@@ -134,7 +161,7 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
         }
     }
 
-    Device* device = deviceById( id );
+    Device* device = getDeviceById( id );
     if( !device  )
         return;
 
@@ -182,7 +209,7 @@ void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QStrin
 {
     //qDebug() << deviceId << " " << patternName;
 
-    Device* device = deviceById( deviceId );
+    Device* device = getDeviceById( deviceId );
     if( !device )
         return;
 
@@ -201,12 +228,12 @@ void DeviceManager::runPreviewPattern( const QString& patternName )
     if( !p )
         return;
 
-    m_previewDevice->runPatternSingly( *p, 0 );
+    m_previewSeqDevice->runPatternSingly( *p, 0 );
 }
 
 void DeviceManager::finishChangeAngle( int deviceId, int angle )
 {
-    Device* device = deviceById( deviceId );
+    Device* device = getDeviceById( deviceId );
     if( !device )
         return;
 
@@ -229,7 +256,7 @@ qulonglong DeviceManager::maxActionsDuration( const QList<int>& ids ) const
 qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId ) const
 {
     const Pattern* pattern = m_patternManager->patternByName( actName );
-    Device* device = deviceById( deviceId );
+    Device* device = getDeviceById( deviceId );
 
     if( pattern && device )
         return device->getDurationByPattern( *pattern );

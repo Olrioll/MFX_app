@@ -76,19 +76,22 @@ FocusScope
         anchors.right: rightPanel.left
         anchors.bottom: playerWidget.top
 
-        Item {
+        Item
+        {
             id: sceneWidgetContainer
 
             anchors.fill: parent
         }
 
-        ColumnLayout {
+        ColumnLayout
+        {
             anchors.fill: parent
             anchors.margins: 5
 
             spacing: 4
 
-            RowLayout {
+            RowLayout
+            {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
                 Layout.maximumHeight: 24
@@ -96,7 +99,8 @@ FocusScope
 
                 spacing: 2
 
-                Item {
+                Item
+                {
                     Layout.fillHeight: true
                     Layout.preferredWidth: 100
                     Layout.maximumWidth: 100
@@ -3276,6 +3280,10 @@ FocusScope
 
                 SplitView
                 {
+                    property string selPatternPrefire
+                    property string selPatternTime
+
+                    id: actionSplit
                     anchors.fill: parent
                     anchors.margins: 2
                     orientation: Qt.Vertical
@@ -3618,6 +3626,7 @@ FocusScope
                                     property bool isActionPlate: true
                                     property string name: model.name
                                     property var type: model.type
+                                    property var prefireDuration: model.prefireDuration
                                     property bool checked: name === patternManager.selectedShotPatternName
                             
                                     width: actionShotView.cellWidth
@@ -3741,6 +3750,9 @@ FocusScope
                                             if(actionPlate.checked)
                                             {
                                                 patternManager.cleanPatternSelectionRequest( actionPlate.type )
+
+                                                actionSplit.selPatternPrefire = ""
+                                                actionSplit.selPatternTime = ""
                                             }
                                             else
                                             {
@@ -3752,6 +3764,8 @@ FocusScope
 
                                                 actionStack.changeAction( actionPlate.type, actionPlate.name )
                                                 //TODO }
+                                                actionSplit.selPatternPrefire = actionPlate.prefireDuration
+                                                actionSplit.selPatternTime = deviceManager.getDurationStrByPattern( MFXE.PatternType.Shot, actionPlate.name )
                                             }
                                         }
                             
@@ -3916,6 +3930,72 @@ FocusScope
                             id: previewShotWidget
                             color: "black"
                             clip: true
+
+                            ColumnLayout
+                            {
+                                anchors.fill: parent
+                                anchors.leftMargin: 4
+
+                                Item
+                                {
+                                    Layout.fillHeight: true
+                                }
+
+                                RowLayout
+                                {
+                                    Text
+                                    {
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 12
+
+                                        color: "white"
+                                        text: "Prefire: "
+                                    }
+
+                                    Text
+                                    {
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 12
+
+                                        color: "white"
+                                        text: actionSplit.selPatternPrefire
+                                    }
+                                }
+
+                                RowLayout
+                                {
+                                    Text
+                                    {
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 12
+
+                                        color: "white"
+                                        text: "Time: "
+                                    }
+
+                                    Text
+                                    {
+                                        verticalAlignment: Text.AlignVCenter
+
+                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                        font.pixelSize: 12
+
+                                        color: "white"
+                                        text: actionSplit.selPatternTime
+                                    }
+                                }
+
+                                Item
+                                {
+                                    Layout.fillHeight: true
+                                }
+                            }
                         }
                     }
                 }

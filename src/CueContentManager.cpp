@@ -353,7 +353,7 @@ void CueContentManager::refrestCueContentModel()
 
     for (const auto* action : listActions)
     {
-        const Device* device = m_deviceManager.deviceById( action->deviceId() );
+        const Device* device = m_deviceManager.getDeviceById( action->deviceId() );
         const Pattern* pattern = m_deviceManager.GetPatternManager()->patternByName( action->patternName() );
 
         if( !device || !pattern )

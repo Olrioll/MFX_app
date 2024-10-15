@@ -3,7 +3,7 @@
 #include "../Pattern.h"
 #include "CueContent.h"
 
-Device::Device(QObject *parent) : QObject(parent)
+Device::Device( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : QObject( parent ), m_manager( mng )
 {
     setUuid(QUuid::createUuid());
 }

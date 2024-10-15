@@ -2,7 +2,7 @@
 #include "DmxWorker.h"
 #include "CueContent.h"
 
-ShotDevice::ShotDevice( QObject* parent /*= nullptr*/ ) : Device( parent )
+ShotDevice::ShotDevice( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : Device( mng, parent )
 {
     setDeviceType( PatternType::Shot );
     setImageFile( "qrc:/device_shot" );

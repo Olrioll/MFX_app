@@ -156,7 +156,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
         if( cueStart > action->startTime() )
             cueStart = action->startTime();
 
-        Device* device = m_deviceManager->deviceById( action->deviceId() );
+        const Device* device = m_deviceManager->getDeviceById( action->deviceId() );
         qulonglong duration = device ? device->getDurationByPattern( *pattern ) : 0;
 
         if( cueStop < action->startTime() + duration )
@@ -250,7 +250,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
                 c->setActive(true);
             }
 
-            Device* device = m_deviceManager->deviceById( a->deviceId() );
+            const Device* device = m_deviceManager->getDeviceById( a->deviceId() );
             if( !device )
                 continue;
 

@@ -4,7 +4,7 @@
 
 constexpr int DEFAULT_START_ANGLE = 0;
 
-SequenceDevice::SequenceDevice(QObject *parent): Device(parent)
+SequenceDevice::SequenceDevice( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : Device( mng, parent )
 {
     setDeviceType( PatternType::Sequences );
     setImageFile( "qrc:/device_sequences" );

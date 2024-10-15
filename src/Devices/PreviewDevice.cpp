@@ -1,8 +1,8 @@
 #include "PreviewDevice.h"
 #include "DeviceManager.h"
 
-PreviewDevice::PreviewDevice( QObject* parent /*= nullptr*/ )
-             : SequenceDevice( parent )
+PreviewDevice::PreviewDevice( DeviceManager* mng, QObject* parent /*= nullptr*/ )
+             : SequenceDevice( mng, parent )
 {
     setId( PREVIEW_DEVICE_ID );
     setMinAngle( MIN_SEQUENCE_ANGLE );
