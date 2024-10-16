@@ -7,9 +7,10 @@
 #include <QQmlConstRefPropertyHelpers.h>
 #include "QQmlObjectListModel.h"
 
-#include "Pattern.h"
+#include "Patterns/Pattern.h"
 
-class PatternFilteringModel : public QSortFilterProxyModel {
+class PatternFilteringModel : public QSortFilterProxyModel
+{
     Q_OBJECT
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(PatternType::Type, filteringType, FilteringType, PatternType::Sequences)
 public:

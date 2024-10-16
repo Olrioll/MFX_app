@@ -180,9 +180,8 @@ Pattern* PatternManager::patternByName(const QString &name) const
     return m_CustomPatterns->getPattern( name );
 }
 
-void PatternManager::addPattern( PatternType::Type type, qulonglong prefire, std::list<Operation*> operations )
+void PatternManager::addPattern( Pattern* pattern, PatternType::Type type, qulonglong prefire, std::list<Operation*> operations )
 {
-    Pattern* pattern = new Pattern();
     pattern->setType( type );
     pattern->setSeq( m_CustomPatterns->getMaxSeq( type ) + 1 );
     pattern->setPrefireDuration( prefire );
@@ -196,27 +195,24 @@ void PatternManager::addPattern( PatternType::Type type, qulonglong prefire, std
 
 void PatternManager::addShotPattern( qulonglong prefire, qulonglong time )
 {
-    std::list<Operation*> operations;
+    ShotPattern* pattern = new ShotPattern();
+    pattern->setShotTime( time );
 
-    Operation* op = new Operation( this );
-    op->setDuration( time );
-    op->setSkipOutOfAngles( false );
-    op->setAngle( 90 );
-    op->setVelocity( 0 );
-    op->setActive( true );
+    addPattern( pattern, PatternType::Shot, prefire, {} );
+}
 
-    operations.emplace_back( op );
+void PatternManager::editShotPattern( const QString& name, qulonglong prefire, qulonglong time )
+{
+    Pattern* pattern = patternByName( name );
+    if( !pattern )
+        return;
 
-    op = new Operation( this );
-    op->setDuration( 40 );
-    op->setSkipOutOfAngles( false );
-    op->setAngle( 90 );
-    op->setVelocity( 0 );
-    op->setActive( false );
+    QVariantMap properties = pattern->getProperties();
+    properties["prefireDuration"] = prefire;
+    properties["shotTime"] = time;
 
-    operations.emplace_back( op );
-
-    addPattern( PatternType::Shot, prefire, operations );
+    pattern->setProperties( properties );
+    m_CustomPatterns->editPattern( pattern );
 }
 
 void PatternManager::deletePattern( const QString& name )
@@ -232,8 +228,3 @@ void PatternManager::deletePattern( const QString& name )
 
     m_CustomPatterns->deletePattern( name );
 }
-
-//QString PatternManager::patternTypeToString( PatternType::Type type )
-//{
-//    return PatternType::toString( type );
-//}

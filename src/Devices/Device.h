@@ -7,7 +7,7 @@
 #include <QQmlConstRefPropertyHelpers.h>
 #include <QQmlVarPropertyHelpers.h>
 
-#include "Pattern.h"
+#include "Patterns/Pattern.h"
 
 constexpr int PREVIEW_DEVICE_ID = -1;
 constexpr int PATTERN_INTERVAL_MS = 10;

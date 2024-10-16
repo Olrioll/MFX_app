@@ -12,6 +12,8 @@ Item
     height: 284
 
     property var currentInput
+    property bool isEditMode: false
+    property string patternName
 
     function markAllInputsInactive()
     {
@@ -284,7 +286,10 @@ Item
 
                 onClicked:
                 {
-                    patternManager.addShotPattern( Number(prefireField.text), Number(timeField.text) );
+                    if( isEditMode )
+                        patternManager.editShotPattern( patternName, Number(prefireField.text), Number(timeField.text) );
+                    else
+                        patternManager.addShotPattern( Number(prefireField.text), Number(timeField.text) );
 
                     applicationWindow.contentItem.focus = true
                     addShotPatternWidget.destroy()
@@ -305,6 +310,18 @@ Item
             }
 
             currentInput.text = currentInput.text + digit
+        }
+    }
+
+    Component.onCompleted:
+    {
+        if( isEditMode )
+        {
+            var pattern = patternManager.patternByName( patternManager.selectedShotPatternName )
+
+            patternName = pattern.name
+            prefireField.text = pattern.prefireDuration
+            timeField.text = pattern.getProperties()["shotTime"]
         }
     }
 }

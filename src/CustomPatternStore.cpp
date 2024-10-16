@@ -1,13 +1,14 @@
 #include <QJsonDocument>
 
 #include "CustomPatternStore.h"
+#include "Patterns/ShotPattern.h"
 
 constexpr char CUSTOM_PATTERNS[] = "custom_patterns.txt";
 constexpr char CUSTOM_PATTERNS_VER[] = "1";
 
 CustomPatternStore::CustomPatternStore( SettingsManager& settngs, QObject* parent ) : mSettings( settngs ), QObject( parent )
 {
-    m_Patterns.reset( new PatternSourceModel() );
+    m_Patterns= new PatternSourceModel( this );
 }
 
 void CustomPatternStore::load()
@@ -35,9 +36,13 @@ void CustomPatternStore::load()
 
     for( const auto& child : getChild( "Patterns" )->namedChildren() )
     {
-        Pattern* pattern = new Pattern( child->properties(), this );
+        Pattern* pattern = nullptr;
+        PatternType::Type type = Pattern::typeFromString( child->properties().value( "type" ).toString() );
 
-        if( pattern->type() == PatternType::Unknown )
+        if( type == PatternType::Shot )
+            pattern = new ShotPattern( child->properties(), this );
+
+        if( !pattern )
             continue;
 
         for( const auto& oper : child->getChild( "Operations" )->listedChildren() )
@@ -107,6 +112,17 @@ void CustomPatternStore::addPattern( Pattern* pattern )
     }
 
     save();
+}
+
+void CustomPatternStore::editPattern( Pattern* pattern )
+{
+    auto patterns = getChild( "Patterns" );
+    patterns->getChild( pattern->name() )->setProperties( pattern->getProperties() );
+
+    save();
+
+    QModelIndex row = m_Patterns->index( m_Patterns->indexOf( pattern ) );
+    emit m_Patterns->dataChanged( row, row );
 }
 
 void CustomPatternStore::deletePattern( const QString& name )

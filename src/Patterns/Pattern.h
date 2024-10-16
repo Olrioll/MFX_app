@@ -23,13 +23,15 @@ class Pattern : public QObject
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, prefireDuration, PrefireDuration, 0)
     QML_OBJMODEL_PROPERTY(Operation, operations)
 
+    Q_PROPERTY( QVariantMap getProperties READ getProperties CONSTANT )
+
 public:
     explicit Pattern( QObject* parent = nullptr );
-    explicit Pattern( const QVariantMap& properies, QObject* parent = nullptr );
+    explicit Pattern( const QVariantMap& properties, QObject* parent = nullptr );
 
-    void makeName();
-    QVariantMap getProperties() const;
-    void setProperties( const QVariantMap& properties );
+    virtual void makeName();
+    virtual QVariantMap getProperties() const;
+    virtual void setProperties( const QVariantMap& properties );
 
     static PatternType::Type typeFromString( const QString& str );
 };

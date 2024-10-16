@@ -11,7 +11,7 @@
 
 #include "SettingsManager.h"
 #include "JsonSerializable.h"
-#include "Pattern.h"
+#include "Patterns/Pattern.h"
 
 class DeviceManager;
 class PatternManager;

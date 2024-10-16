@@ -3280,8 +3280,7 @@ FocusScope
 
                 SplitView
                 {
-                    property string selPatternPrefire
-                    property string selPatternTime
+                    property var selPattern: null
 
                     id: actionSplit
                     anchors.fill: parent
@@ -3627,6 +3626,7 @@ FocusScope
                                     property string name: model.name
                                     property var type: model.type
                                     property var prefireDuration: model.prefireDuration
+                                    property var shotTime: model.getProperties["shotTime"]
                                     property bool checked: name === patternManager.selectedShotPatternName
                             
                                     width: actionShotView.cellWidth
@@ -3750,9 +3750,7 @@ FocusScope
                                             if(actionPlate.checked)
                                             {
                                                 patternManager.cleanPatternSelectionRequest( actionPlate.type )
-
-                                                actionSplit.selPatternPrefire = ""
-                                                actionSplit.selPatternTime = ""
+                                                actionSplit.selPattern = null
                                             }
                                             else
                                             {
@@ -3764,8 +3762,7 @@ FocusScope
 
                                                 actionStack.changeAction( actionPlate.type, actionPlate.name )
                                                 //TODO }
-                                                actionSplit.selPatternPrefire = actionPlate.prefireDuration
-                                                actionSplit.selPatternTime = deviceManager.getDurationStrByPattern( MFXE.PatternType.Shot, actionPlate.name )
+                                                actionSplit.selPattern = actionPlate
                                             }
                                         }
                             
@@ -3871,7 +3868,7 @@ FocusScope
                                     Layout.fillWidth: true
 
                                     id: addShotPattern
-                                    text: translationsManager.translationTrigger + qsTr("Add pattern")
+                                    text: translationsManager.translationTrigger + qsTr( "Add pattern" )
                                     color: "#2F80ED"
 
                                     onClicked:
@@ -3886,12 +3883,34 @@ FocusScope
                                 {
                                     Layout.fillWidth: true
 
+                                    id: editShotPattern
+                                    text: translationsManager.translationTrigger + qsTr( "Edit pattern" )
+                                    color: "#2F80ED"
+
+                                    onClicked:
+                                    {
+                                        if( patternManager.selectedShotPatternName === "" )
+                                            return
+
+                                        var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow, {isEditMode: true} );
+                                        addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
+                                        addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
+                                    }
+                                }
+
+                                MfxHilightedButton
+                                {
+                                    Layout.fillWidth: true
+
                                     id: delShotPattern
-                                    text: translationsManager.translationTrigger + qsTr("Delele pattern")
+                                    text: translationsManager.translationTrigger + qsTr( "Delele pattern" )
                                     color: "#EB5757"
 
                                     onClicked:
                                     {
+                                        if( patternManager.selectedShotPatternName === "" )
+                                            return
+
                                         patternManager.deletePattern( patternManager.selectedShotPatternName );
                                         patternManager.cleanPatternSelectionRequest( MFXE.PatternType.Shot );
                                     }
@@ -3962,7 +3981,7 @@ FocusScope
                                         font.pixelSize: 12
 
                                         color: "white"
-                                        text: actionSplit.selPatternPrefire
+                                        text: actionSplit.selPattern ? actionSplit.selPattern.prefireDuration : "" 
                                     }
                                 }
 
@@ -3987,7 +4006,7 @@ FocusScope
                                         font.pixelSize: 12
 
                                         color: "white"
-                                        text: actionSplit.selPatternTime
+                                        text: actionSplit.selPattern ? actionSplit.selPattern.shotTime : ""
                                     }
                                 }
 

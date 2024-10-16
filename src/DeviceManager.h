@@ -6,7 +6,7 @@
 #include "Devices/Device.h"
 #include "QQmlObjectListModel.h"
 #include "ComPortModel.h"
-#include "Pattern.h"
+#include "Patterns/Pattern.h"
 
 class PatternManager;
 class ProjectManager;

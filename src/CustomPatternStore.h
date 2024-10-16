@@ -2,7 +2,7 @@
 
 #include "JsonSerializable.h"
 #include "SettingsManager.h"
-#include "Pattern.h"
+#include "Patterns/Pattern.h"
 
 using PatternSourceModel = QQmlObjectListModel<Pattern>;
 
@@ -20,12 +20,13 @@ public:
 
     Pattern* getPattern( const QString& name ) const;
     void addPattern( Pattern* pattern );
+    void editPattern( Pattern* pattern );
     void deletePattern( const QString& name );
     ulong getMaxSeq( PatternType::Type type ) const;
 
-    const std::shared_ptr<PatternSourceModel>& getSourceModel() { return m_Patterns; }
+    PatternSourceModel* getSourceModel() { return m_Patterns; }
 
 private:
     SettingsManager& mSettings;
-    std::shared_ptr<PatternSourceModel> m_Patterns;
+    PatternSourceModel* m_Patterns;
 };

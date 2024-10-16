@@ -4,11 +4,13 @@
 
 #include "QQmlObjectListModel.h"
 
-#include "Pattern.h"
+#include "Patterns/Pattern.h"
+#include "Patterns/ShotPattern.h"
 #include "SettingsManager.h"
 
 
 class PatternFilteringModel;
+class ShotPatternFilteringModel;
 class CustomPatternStore;
 
 class PatternManager : public QObject
@@ -34,14 +36,14 @@ public:
     PatternFilteringModel* patternsShotFiltered() const;
 
     Q_INVOKABLE /*гадский qml не понимает const*/ Pattern* patternByName(const QString& name) const;
-    Q_INVOKABLE void addPattern( PatternType::Type type, qulonglong prefire, std::list<Operation*> operations );
     Q_INVOKABLE void addShotPattern( qulonglong prefire, qulonglong time );
+    Q_INVOKABLE void editShotPattern( const QString& name, qulonglong prefire, qulonglong time );
     Q_INVOKABLE void deletePattern( const QString& name );
-    //Q_INVOKABLE QString patternTypeToString( PatternType::Type type );
 
 private:
     void initPatterns();
     void initCustomPatterns();
+    void addPattern( Pattern* pattern, PatternType::Type type, qulonglong prefire, std::list<Operation*> operations );
 
 private:
     PatternFilteringModel* m_patternsFiltered = nullptr;

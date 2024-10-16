@@ -1,6 +1,6 @@
 #include "Device.h"
 #include "DeviceManager.h"
-#include "../Pattern.h"
+#include "Patterns/Pattern.h"
 #include "CueContent.h"
 
 Device::Device( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : QObject( parent ), m_manager( mng )
