@@ -235,6 +235,20 @@ Item
                     }
                 }
 
+                onDoubleClicked:
+                {
+                    pressedItem = deviceListView.itemAt( mouseX, mouseY + deviceListView.contentY )
+                    if( pressedItem )
+                    {
+                        if( !wasDragging )
+                        {
+                            project.setPatchProperty( pressedItem.patchId, "checked", true )
+                            deviceListView.openEditWindow()
+                        }
+
+                        wasDragging = false
+                    }
+                }
 
                 onPressed:
                 {

@@ -43,6 +43,8 @@ ListView
 
     function openEditWindow()
     {
+        console.log( "openEditWindow" )
+
         let editedList = []
 
         let prevType = ""
