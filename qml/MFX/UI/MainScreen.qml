@@ -1476,12 +1476,14 @@ FocusScope
                                     color: "#444444"
                                 }
 
-                                RowLayout {
+                                RowLayout
+                                {
                                     anchors.fill: parent
 
                                     spacing: 0
 
-                                    MFXUICB.SelectableTableHeaderItem {
+                                    MFXUICB.SelectableTableHeaderItem
+                                    {
                                         id: cueContentNumber
 
                                         Layout.fillHeight: true
@@ -1491,16 +1493,19 @@ FocusScope
 
                                         currentIndex: 0
 
-                                        model: ListModel {
+                                        model: ListModel
+                                        {
                                             ListElement { value: 0; text: qsTr("№") }
                                         }
 
                                         switchable: false
                                         allowSorting: false
 
-                                        MouseArea {
+                                        MouseArea
+                                        {
                                             anchors.fill: parent
-                                            onDoubleClicked: {
+                                            onDoubleClicked:
+                                            {
                                                 cueContentManager.onSortFromHeaderRequest(MFXE.CueContentSelectedTableRole.Delay, MFXE.CueContentSortingType.Ascending)
                                                 cueContentManager.cleanSelectionRequest()
 
@@ -1512,7 +1517,8 @@ FocusScope
                                         }
                                     }
 
-                                    Rectangle {
+                                    Rectangle
+                                    {
                                         Layout.fillHeight: true
                                         Layout.preferredWidth: 1
                                         Layout.maximumWidth: 1
@@ -3530,13 +3536,11 @@ FocusScope
                                         if(actionPlate.checked)
                                         {
                                             actionView.pressedItem = actionPlate
-                                            if(actionView.pressedItem)
-                                            {
-                                                actionView.draggedItemIndex = index;
-                                                currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
-                                                currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
-                                                actionView.held = true
-                                            }
+                                            actionView.draggedItemIndex = index;
+                                            actionView.held = true
+
+                                            currentMouseX = mainScreen.mapFromItem(coords, 0, 0).x;
+                                            currentMouseY = mainScreen.mapFromItem(coords, 0, 0).y
                                         }
                                     }
                                 }
@@ -3730,17 +3734,15 @@ FocusScope
                                                     if(actionPlate.checked)
                                                         patternManager.cleanShotPatternSelectionRequest( actionPlate.type )
                             
-                                                    console.log(actionPlate.name)
                                                     patternManager.currentPatternChangeRequest( actionPlate.type, actionPlate.name )
                                                     cueContentManager.onSelectedChangeAction( actionPlate.name )
+
                                                     actionShotView.pressedItem = actionPlate
-                                                    if(actionShotView.pressedItem)
-                                                    {
-                                                        actionShotView.draggedItemIndex = index;
-                                                        currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
-                                                        currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
-                                                        actionShotView.held = true
-                                                    }
+                                                    actionShotView.draggedItemIndex = index;
+                                                    actionShotView.held = true
+
+                                                    currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
+                                                    currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
                                                 }
                                             }
                                         }
@@ -3764,6 +3766,19 @@ FocusScope
                                                 //TODO }
                                                 actionSplit.selPattern = actionPlate
                                             }
+                                        }
+
+                                        onDoubleClicked:
+                                        {
+                                            currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
+                                            currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
+
+                                            actionStack.changeAction( actionPlate.type, actionPlate.name )
+                                            actionSplit.selPattern = actionPlate
+
+                                            var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow, {isEditMode: true} );
+                                            addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
+                                            addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
                                         }
                             
                                         drag.target: actionShotView.held ? actionShotView.pressedItem : undefined
@@ -3792,13 +3807,11 @@ FocusScope
                                             if(actionPlate.checked)
                                             {
                                                 actionShotView.pressedItem = actionPlate
-                                                if(actionShotView.pressedItem)
-                                                {
-                                                    actionShotView.draggedItemIndex = index;
-                                                    currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
-                                                    currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
-                                                    actionShotView.held = true
-                                                }
+                                                actionShotView.draggedItemIndex = index;
+                                                actionShotView.held = true
+
+                                                currentMouseX = mainScreen.mapFromItem(coordsShot, 0, 0).x;
+                                                currentMouseY = mainScreen.mapFromItem(coordsShot, 0, 0).y
                                             }
                                         }
                                     }
