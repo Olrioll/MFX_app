@@ -81,24 +81,28 @@ Component
 
             actions.forEach(function(currAction)
             {
-                let prefireDuration = patternManager.patternByName(currAction.actionName).prefireDuration
+                let pattern = patternManager.patternByName(currAction.actionName)
+                if( pattern )
+                {
+                    let prefireDuration = pattern.prefireDuration
 
-                let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
+                    let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
                                                                                 displayedName: currAction.actionName + " - P" + currAction.patchId,
                                                                                 patchId: currAction.patchId,
                                                                                 position: currAction.position,
                                                                                 prefire: prefireDuration,
                                                                                 positionCoeff: currAction.positionCoeff
                                                                             })
-                actionList.push(newActionMarker)
+                    actionList.push(newActionMarker)
 
-                let newPrefireSpaceComponent = prefireSpaceComponent.createObject(cuePlate,
-                {
-                    position: currAction.position,
-                    prefire: prefireDuration
-                })
+                    let newPrefireSpaceComponent = prefireSpaceComponent.createObject(cuePlate,
+                    {
+                        position: currAction.position,
+                        prefire: prefireDuration
+                    })
 
-                prefiresList.push(newPrefireSpaceComponent)
+                    prefiresList.push(newPrefireSpaceComponent)
+                }
             })
 
             updatePosition()

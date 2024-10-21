@@ -2,6 +2,8 @@
 #include "DmxWorker.h"
 #include "CueContent.h"
 
+constexpr qulonglong FIRE_OFF_TIME_MS = 40;
+
 ShotDevice::ShotDevice( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : Device( mng, parent )
 {
     setDeviceType( PatternType::Shot );
@@ -17,12 +19,37 @@ void ShotDevice::runPatternSingly( const Pattern& p, quint64 time )
         return;
 
     m_opStartTime = time;
-    m_operations = p.operations()->toList();
 
-    if( m_operations.count() == 0 )
-        return;
+    for( Operation* oper : m_operations )
+        oper->deleteLater();
 
-    m_op = m_operations.first(); // first operation of pattern
+    m_operations.clear();
+
+    {
+        Operation* oper = new Operation( this );
+        oper->setDuration( p.prefireDuration() );
+        oper->setActive( false );
+
+        m_operations.append( oper );
+    }
+
+    {
+        Operation* oper = new Operation( this );
+        oper->setDuration( p.getProperties()["shotTime"].toULongLong() );
+        oper->setActive( true );
+
+        m_operations.append( oper );
+    }
+
+    {
+        Operation* oper = new Operation( this );
+        oper->setDuration( FIRE_OFF_TIME_MS );
+        oper->setActive( false );
+
+        m_operations.append( oper );
+    }
+
+    m_op = m_operations.first();
     m_prefireDuration = m_op->duration();
 
     m_patternTime = time;
@@ -88,16 +115,7 @@ void ShotDevice::setDMXOperation( int deviceId, const Operation* op, bool sendTo
 
 qulonglong ShotDevice::calcDurationByPattern( const Pattern& pattern ) const
 {
-    qulonglong duration = 0;
-
-    for( const Operation* op : pattern.operations()->toList() )
-    {
-        if( !op )
-            continue;
-
-        duration += op->duration();
-    }
-
+    qulonglong duration = pattern.getProperties()["shotTime"].toULongLong();
     duration /= 10;
     duration *= 10;
 
