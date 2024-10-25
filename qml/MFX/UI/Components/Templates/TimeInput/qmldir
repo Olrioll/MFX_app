@@ -1,0 +1,4 @@
+module MFX.UI.Components.Templates.TimeInput
+
+#Шаблоны TimeInput
+TimeInput 1.0 TimeInput.qml

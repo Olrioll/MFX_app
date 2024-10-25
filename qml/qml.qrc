@@ -67,5 +67,10 @@
         <file>MFX/UI/Components/CuePlate/ActionMarkerComponent.qml</file>
         <file>MFX/UI/Components/CuePlate/PrefireSpaceComponent.qml</file>
         <file>MFX/UI/AddShotPattern.qml</file>
+        <file>MFX/UI/Components/Templates/TimeInput/qmldir</file>
+        <file>MFX/UI/Components/Templates/TimeInput/TimeInput.qml</file>
+        <file>MFX/UI/Components/Templates/TimeInput/TimeInputField.qml</file>
+        <file>MFX/UI/Components/Templates/TimeInput/TimeInputDelimeter.qml</file>
+        <file>MFX/UI/Components/Templates/TimeInput/TimeInputFieldMSec.qml</file>
     </qresource>
 </RCC>
