@@ -4,11 +4,13 @@ import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Components.Templates 1.0 as MFXUICT
+import MFX.UI.Components.Templates.TimeInput 1.0
 
 Item
 {
     id: addShotPatternWidget
-    width: 164
+    width: 184
     height: 284
 
     property var currentInput
@@ -113,7 +115,7 @@ Item
             Rectangle
             {
                 Layout.fillWidth: true
-                Layout.preferredHeight: 48
+                Layout.preferredHeight: 42
 
                 radius: 2
                 color: "#222222"
@@ -121,144 +123,79 @@ Item
                 GridLayout
                 {
                     anchors.fill: parent
-                    anchors.margins:4
-                    rows: 2
+                    anchors.margins: 4
                     columns: 2
-                
-                    Text
-                    {
-                        Layout.row: 0
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-                
-                        color: prefireField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Prefire")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                    }
-                
-                    Text
-                    {
-                        Layout.row: 0
-                        Layout.column: 1
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-                
-                        color: timeField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Time")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                    }
-                
-                    TextField
-                    {
-                        Layout.row: 1
-                        Layout.column: 0
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                
-                        id: prefireField
-                        text: "1"
-                        color: "#ffffff"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-                        anchors.leftMargin: 2
-                        anchors.bottomMargin: 2
 
-                        property bool isActiveInput: false
-                        property string lastSelectedText
+                    Item
+                    {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
 
-                        function checkValue()
+                        Text
                         {
-                            if(text === "")
-                                return false
-
-                            return (Number(text) >= 0 && Number(text) < 1000)
+                            color: prefireField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + qsTr("Prefire")
+                            elide: Text.ElideMiddle
+                            anchors.fill: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
                         }
+                    }
 
-                        validator: RegExpValidator { regExp: /[0-9]+/ }
-                        maximumLength: 3
+                    Item
+                    {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
 
-                        background: Rectangle
+                        Text
                         {
-                            color: "#000000"
-                            radius: 2
+                            color: timeField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + qsTr("Time")
+                            elide: Text.ElideMiddle
+                            anchors.fill: parent
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
                         }
+                    }
 
-                        onFocusChanged:
+                    Item
+                    {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        TimeInput
                         {
-                            if(focus)
+                            id: prefireField
+
+                            onChangeActiveField:
                             {
                                 markAllInputsInactive();
                                 isActiveInput = true;
-                                addShotPatternWidget.currentInput = this;
-                                selectAll();
-                                lastSelectedText = selectedText
+                                addShotPatternWidget.currentInput = field;
                             }
                         }
                     }
-                
-                    TextField
+
+                    Item
                     {
-                        Layout.row: 1
-                        Layout.column: 1
                         Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                
-                        id: timeField
-                        text: "1"
-                        color: "#ffffff"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-                        anchors.rightMargin: 2
-                        anchors.bottomMargin: 2
+                        Layout.fillHeight: true
 
-                        property bool isActiveInput: false
-                        property string lastSelectedText
-
-                        function checkValue()
+                        TimeInput
                         {
-                            if(text === "")
-                                return false
+                            id: timeField
 
-                            return (Number(text) >= 0 && Number(text) < 1000)
-                        }
-
-                        validator: RegExpValidator { regExp: /[0-9]+/ }
-                        maximumLength: 3
-
-                        background: Rectangle
-                        {
-                            color: "#000000"
-                            radius: 2
-                        }
-
-                        onFocusChanged:
-                        {
-                            if(focus)
+                            onChangeActiveField:
                             {
                                 markAllInputsInactive();
                                 isActiveInput = true;
-                                addShotPatternWidget.currentInput = this;
-                                selectAll();
-                                lastSelectedText = selectedText
+                                addShotPatternWidget.currentInput = field;
                             }
-                        }
+                         }
                     }
                 }
             }
@@ -287,9 +224,9 @@ Item
                 onClicked:
                 {
                     if( isEditMode )
-                        patternManager.editShotPattern( patternName, Number(prefireField.text), Number(timeField.text) );
+                        patternManager.editShotPattern( patternName, prefireField.getTimeMs(), timeField.getTimeMs() );
                     else
-                        patternManager.addShotPattern( Number(prefireField.text), Number(timeField.text) );
+                        patternManager.addShotPattern( prefireField.getTimeMs(), timeField.getTimeMs() );
 
                     applicationWindow.contentItem.focus = true
                     addShotPatternWidget.destroy()
@@ -301,14 +238,15 @@ Item
     Connections
     {
         target: calcWidget
-        function onDigitClicked(digit)
+
+        function onDigitClicked( digit )
         {
-            if(currentInput.lastSelectedText === currentInput.text)
+            if( currentInput.lastSelectedText === currentInput.text )
             {
                 currentInput.lastSelectedText = ""
                 currentInput.text = ""
             }
-
+        
             currentInput.text = currentInput.text + digit
         }
     }
@@ -320,8 +258,8 @@ Item
             var pattern = patternManager.patternByName( patternManager.selectedShotPatternName )
 
             patternName = pattern.name
-            prefireField.text = pattern.prefireDuration
-            timeField.text = pattern.getProperties()["shotTime"]
+            prefireField.setTimeMs( pattern.prefireDuration )
+            timeField.setTimeMs( Number( pattern.getProperties()["shotTime"] ) )
         }
     }
 }

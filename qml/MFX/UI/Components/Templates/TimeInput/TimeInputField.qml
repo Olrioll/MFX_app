@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.15
 TextField
 {
     property string lastSelectedText
+    property int maximumValue: 59
 
     text: "00"
     color: "#ffffff"
@@ -33,5 +34,13 @@ TextField
 
             activateField( this )
         }
+    }
+
+    function checkValue()
+    {
+        if( text === "" )
+            return false
+
+        return Number( text ) >= 0 && Number( text ) <= maximumValue
     }
 }

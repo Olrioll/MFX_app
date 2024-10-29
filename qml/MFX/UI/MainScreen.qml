@@ -3963,6 +3963,15 @@ FocusScope
                             color: "black"
                             clip: true
 
+                            function formatTimeMs( time_ms )
+                            {
+                                const min = Math.floor( time_ms / 60000 )
+                                const sec = Math.floor( (time_ms % 60000) / 1000 )
+                                const msec = time_ms % 1000
+
+                                return "%1:%2.%3".arg( String( min ).padStart( 2, '0' ) ).arg( String( sec ).padStart( 2, '0' ) ).arg( String( msec ).padStart( 3, '0' ) )
+                            }
+
                             ColumnLayout
                             {
                                 anchors.fill: parent
@@ -3994,7 +4003,7 @@ FocusScope
                                         font.pixelSize: 12
 
                                         color: "white"
-                                        text: actionSplit.selPattern ? actionSplit.selPattern.prefireDuration : "" 
+                                        text: actionSplit.selPattern ? previewShotWidget.formatTimeMs( actionSplit.selPattern.prefireDuration ) : ""
                                     }
                                 }
 
@@ -4019,7 +4028,7 @@ FocusScope
                                         font.pixelSize: 12
 
                                         color: "white"
-                                        text: actionSplit.selPattern ? actionSplit.selPattern.shotTime : ""
+                                        text: actionSplit.selPattern ? previewShotWidget.formatTimeMs( actionSplit.selPattern.shotTime ) : ""
                                     }
                                 }
 

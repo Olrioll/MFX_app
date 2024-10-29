@@ -6,4 +6,5 @@ TimeInputField
 {
     text: "000"
     maximumLength: 3
+    maximumValue: 999
 }
