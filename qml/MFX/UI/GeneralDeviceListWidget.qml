@@ -565,44 +565,57 @@ Item
         }
     }
 
-    MfxHilightedButton
+    RowLayout
     {
-        id: editButton
-        text: translationsManager.translationTrigger + qsTr("Edit")
-        width: (parent.width - 10) / 2
-        color: "#2F80ED"
-
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.bottom: parent.bottom
+        height: 24
 
-        onClicked:
+        Item
         {
-            deviceListView.openEditWindow()
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            MfxHilightedButton
+            {
+                id: editButton
+                text: translationsManager.translationTrigger + qsTr("Edit")
+                color: "#2F80ED"
+                width: parent.width
+
+                onClicked:
+                {
+                    deviceListView.openEditWindow()
+                }
+            }
         }
-    }
 
-    MfxHilightedButton
-    {
-        id: deleteButton
-        text: translationsManager.translationTrigger + qsTr("Delete selected")
-        width: editButton.width
-        color: "#EB5757"
-
-        anchors.leftMargin: 2
-        anchors.left: editButton.right
-        anchors.bottom: parent.bottom
-
-        onClicked:
+        Item
         {
-            var confirmDeleteDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
-            confirmDeleteDialog.x = applicationWindow.width / 2 - confirmDeleteDialog.width / 2
-            confirmDeleteDialog.y = applicationWindow.height / 2 - confirmDeleteDialog.height / 2
-            confirmDeleteDialog.accepted.connect(generalListWidget.deleteSelected)
-            confirmDeleteDialog.caption = qsTr("Action confirmation")
-            confirmDeleteDialog.dialogText = qsTr("Are you shure you want\nto delete selected patches?")
-            confirmDeleteDialog.acceptButtonText = qsTr("Delete")
-            confirmDeleteDialog.cancelButtonText = qsTr("Cancel")
-            confirmDeleteDialog.acceptButtonColor = "#EB5757"
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            MfxHilightedButton
+            {
+                id: deleteButton
+                text: translationsManager.translationTrigger + qsTr("Delete selected")
+                color: "#EB5757"
+                width: parent.width
+
+                onClicked:
+                {
+                    var confirmDeleteDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                    confirmDeleteDialog.x = applicationWindow.width / 2 - confirmDeleteDialog.width / 2
+                    confirmDeleteDialog.y = applicationWindow.height / 2 - confirmDeleteDialog.height / 2
+                    confirmDeleteDialog.accepted.connect(generalListWidget.deleteSelected)
+                    confirmDeleteDialog.caption = qsTr("Action confirmation")
+                    confirmDeleteDialog.dialogText = qsTr("Are you shure you want\nto delete selected patches?")
+                    confirmDeleteDialog.acceptButtonText = qsTr("Delete")
+                    confirmDeleteDialog.cancelButtonText = qsTr("Cancel")
+                    confirmDeleteDialog.acceptButtonColor = "#EB5757"
+                }
+            }
         }
     }
 }

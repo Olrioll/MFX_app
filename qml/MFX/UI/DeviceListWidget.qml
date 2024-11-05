@@ -21,6 +21,8 @@ ListView
 
     function loadDeviceList()
     {
+        console.log("loadDeviceList")
+
         deviceListModel.clear()
         var patchesList = project.patchesIdList(groupName)
 

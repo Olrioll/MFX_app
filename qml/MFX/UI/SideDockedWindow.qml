@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Components.Basic 1.0 as MFXUICB
 
 import "qrc:/"
 
@@ -15,7 +16,8 @@ Item
     property bool isExpanded: false
     property int collapsedWidth: 28
     property int expandedWidth: contentItem.width
-    property int minWidth: expandedWidth
+    property int minWidth: 80
+    property int maxWidth: 130
     property string caption: "Caption"
     property var contentItem: null
 
@@ -27,7 +29,6 @@ Item
         {
             sideDockedWindow.enabled = true
         }
-
         else
         {
             sideDockedWindow.width = sideDockedWindow.collapsedWidth
@@ -173,6 +174,40 @@ Item
                 clip: true
                 color: "#000000"
             }
+
+            MFXUICB.MfxMouseArea
+            {
+                id: expandedRectResizeArea
+                width: 4
+
+                property int previousX
+
+                anchors
+                {
+                    top: parent.top
+                    left: parent.left
+                    bottom: parent.bottom
+                }
+
+                cursor: Qt.SizeHorCursor
+
+                onPressed:
+                {
+                    previousX = mouseX
+                }
+
+                onMouseXChanged:
+                {
+                    var dx = mouseX - previousX
+
+                    if( (contentItem.width - dx) < sideDockedWindow.minWidth )
+                        contentItem.width = sideDockedWindow.minWidth
+                    else if( (contentItem.width - dx) > sideDockedWindow.maxWidth )
+                        contentItem.width = sideDockedWindow.maxWidth
+                    else
+                        contentItem.width = sideDockedWindow.width - dx
+                }
+            }
         }
     }
 
@@ -185,6 +220,8 @@ Item
             contentItem.anchors.left = workArea.left
             contentItem.anchors.top = workArea.top
             contentItem.anchors.bottom = workArea.bottom
+
+            maxWidth = contentItem.width
         }
     }
 

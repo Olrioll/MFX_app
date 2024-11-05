@@ -88,6 +88,7 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: translationsManager.translationTrigger + qsTr("Devices list")
+        minWidth: 190
 
         contentItem: GeneralDeviceListWidget
         {
@@ -165,6 +166,7 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: translationsManager.translationTrigger + qsTr("Device groups")
+        minWidth: 160
 
         contentItem: DeviceGroupWidget
         {
