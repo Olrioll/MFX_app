@@ -15,15 +15,12 @@
         <file>MFX/UI/GeneralDeviceListWidget.qml</file>
         <file>MFX/UI/ApplicationWindow.qml</file>
         <file>MFX/UI/MainScreen.qml</file>
-        <file>MFX/UI/MfxButton.qml</file>
         <file>MFX/UI/MfxHilightedButton.qml</file>
         <file>MFX/UI/MfxMenu.qml</file>
         <file>MFX/UI/MfxTable.qml</file>
         <file>MFX/UI/MouseAreaWithHidingCursor.qml</file>
         <file>MFX/UI/OutputScreen.qml</file>
         <file>MFX/UI/PatchIcon.qml</file>
-        <file>MFX/UI/PatchPlate.qml</file>
-        <file>MFX/UI/PatchPlateCell.qml</file>
         <file>MFX/UI/PatchScreen.qml</file>
         <file>MFX/UI/Player.qml</file>
         <file>MFX/UI/ProjectSettingsWidget.qml</file>
@@ -56,7 +53,6 @@
         <file>MFX/UI/Components/Templates/TextInputField.qml</file>
         <file>MFX/UI/Components/Basic/TransparentTextField.qml</file>
         <file>MFX/UI/Components/Basic/SelectableTableHeaderItem.qml</file>
-        <file>MFX/UI/Components/Templates/TextFieldWithBackground.qml</file>
         <file>MFX/UI/Components/Basic/TextFieldWithBackground.qml</file>
         <file>MFX/UI/Components/Templates/RoundedTriangleShape.qml</file>
         <file>MFX/UI/PreviewIcon.qml</file>
@@ -72,5 +68,14 @@
         <file>MFX/UI/Components/Templates/TimeInput/TimeInputField.qml</file>
         <file>MFX/UI/Components/Templates/TimeInput/TimeInputDelimeter.qml</file>
         <file>MFX/UI/Components/Templates/TimeInput/TimeInputFieldMSec.qml</file>
+        <file>MFX/UI/Components/MainScreen/DevicesListComponent.qml</file>
+        <file>MFX/UI/Components/MainScreen/qmldir</file>
+        <file>MFX/UI/Components/Basic/MfxButton.qml</file>
+        <file>MFX/UI/Components/PatchPlate/PatchPlate.qml</file>
+        <file>MFX/UI/Components/PatchPlate/PatchPlateCell.qml</file>
+        <file>MFX/UI/Components/PatchPlate/qmldir</file>
+        <file>MFX/UI/Components/MainScreen/CueListComponent.qml</file>
+        <file>MFX/UI/Components/MainScreen/CueContentComponent.qml</file>
+        <file>MFX/UI/Components/MainScreen/CalculatorComponent.qml</file>
     </qresource>
 </RCC>

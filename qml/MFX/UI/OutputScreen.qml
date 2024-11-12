@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Components.Templates 1.0 as MFXUICT
+import MFX.UI.Components.Basic 1.0
 import MFX.UI.Styles 1.0 as MFXUIS
 
 //NOTE I do not use components or any modular structures here since we need the MVP as fast as possible

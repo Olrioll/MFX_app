@@ -1,0 +1,4 @@
+module MFX.UI.Components.PatchPlate
+
+PatchPlate 1.0 PatchPlate.qml
+PatchPlateCell 1.0 PatchPlateCell.qml

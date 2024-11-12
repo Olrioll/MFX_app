@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.Enums 1.0 as MFXE
+import MFX.UI.Components.PatchPlate 1.0
 
 import "qrc:/"
 

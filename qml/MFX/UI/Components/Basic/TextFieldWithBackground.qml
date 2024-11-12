@@ -1,12 +1,13 @@
 import QtQuick 2.15
+import QtQuick.Templates 2.15
 
-import MFX.UI.Components.Templates 1.0 as MFXUIT
-import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Styles 1.0
 
-MFXUIT.TextFieldWithBackground {
+TextField
+{
     id: _textField
 
-    font.family: MFXUIS.Fonts.robotoRegular.name
+    font.family: Fonts.robotoRegular.name
     font.pixelSize: 14
 
     color: "#FFFFFF"
@@ -23,10 +24,13 @@ MFXUIT.TextFieldWithBackground {
     property bool activeState: false
     property color activeStateColor: "#2F80ED"
 
+    //signal activeStateChanged()
+
     verticalAlignment: Text.AlignVCenter
     horizontalAlignment: Text.AlignHCenter
 
-    background: Rectangle {
+    background: Rectangle
+    {
         id: _background
 
         radius: 2
@@ -39,9 +43,12 @@ MFXUIT.TextFieldWithBackground {
                                                                                                         : _textField.borderColor
     }
 
-    onFocusChanged: {
-        if(_textField.activeStateOnFocus) {
+    onFocusChanged:
+    {
+        if(_textField.activeStateOnFocus)
+        {
             _textField.activeState = activeFocus
+            //activeStateChanged()
         }
     }
 }

@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
 import MFX.Enums 1.0 as MFXE
+import MFX.UI.Components.Basic 1.0
 
 import "qrc:/"
 
@@ -44,12 +45,13 @@ Item
             else if (deviceType == MFXE.PatternType.Dimmer)
                 imageFile = "qrc:/device_dimmer"
 
-            patchIcons.push(Qt.createComponent("PatchIcon.qml").createObject(backgroundImage,
-                                                                             {  imageFile: imageFile,
-                                                                                 patchId: project.patchPropertyForIndex(i, "ID"),
-                                                                                 checked: project.patchPropertyForIndex(i, "checked"),
-                                                                                 posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
-                                                                                 posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
+            patchIcons.push(Qt.createComponent("PatchIcon.qml")
+                              .createObject(backgroundImage,
+                                            {  imageFile: imageFile,
+                                                patchId: project.patchPropertyForIndex(i, "ID"),
+                                                checked: project.patchPropertyForIndex(i, "checked"),
+                                                posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
+                                                posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
 
             deviceManager.setDeviceProperty( deviceType, project.patchPropertyForIndex(i, "ID"), project.patchPropertyForIndex(i, "checked"),
                     project.patchPropertyForIndex(i, "posXRatio"), project.patchPropertyForIndex(i, "posYRatio") );
@@ -76,11 +78,13 @@ Item
     {
         if(backgroundImage.width <= sceneWidget.width)
         {
+            console.log( "adjustBackgroundImageOnX", backgroundImage.width, sceneWidget.width )
             backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
         }
 
         else
         {
+            console.log( "adjustBackgroundImageOnX", backgroundImage.x, dWidth )
             backgroundImage.x += dWidth / 2
         }
     }
@@ -1495,6 +1499,7 @@ Item
 
     onWidthChanged:
     {
+        //console.log( "onWidthChanged", dWidth, width, prevWidth )
         dWidth = width - prevWidth
         prevWidth = width
     }

@@ -88,7 +88,7 @@ Item
         anchors.bottom: patchScreen.bottom
 
         caption: translationsManager.translationTrigger + qsTr("Devices list")
-        minWidth: 190
+        minWidth: 200
 
         contentItem: GeneralDeviceListWidget
         {

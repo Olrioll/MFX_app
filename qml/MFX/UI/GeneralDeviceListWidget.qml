@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.0
 
 import MFX.UI.Styles 1.0 as MFXUIS
 import MFX.Enums 1.0 as MFXE
+import MFX.UI.Components.PatchPlate 1.0
 
 import "qrc:/"
 
@@ -31,10 +32,10 @@ Item
         id: layout
 
         width: widthNeeded()
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.bottomMargin: 10
-        anchors.bottom: deleteButton.top
+        //anchors.top: parent.top
+        //anchors.left: parent.left
+        //anchors.bottomMargin: 10
+        //anchors.bottom: deleteButton.top
 
         function widthNeeded()
         {

@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
-import MFX.UI.Components.Basic 1.0 as MFXUICB
+import MFX.UI.Components.Basic 1.0
 import MFX.UI.Components.CuePlate 1.0
 
 import MFX.Enums 1.0 as MFXE
@@ -366,40 +366,6 @@ Item
         color: "#000000"
     }
 
-    MFXUICB.MfxMouseArea
-    {
-        id: playerResizeArea
-        height: 4
-
-        property int previousY
-
-        anchors.topMargin: -2
-        anchors
-        {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-
-        cursor: Qt.SizeVerCursor
-
-        onPressed:
-        {
-            previousY = mouseY
-        }
-
-        onMouseYChanged:
-        {
-            var dy = mouseY - previousY
-
-            if((playerWidget.height - dy) < playerWidget.minHeight)
-                playerWidget.height = playerWidget.minHeight
-
-            else if ((playerWidget.height - dy) <= mainScreen.height - 100)
-                playerWidget.height = playerWidget.height - dy
-        }
-    }
-
     Item
     {
         id: timeScale
@@ -618,8 +584,6 @@ Item
                 cursorManager.saveLastPos()
                 pressedX = mouseX
                 pressedY = mouseY
-                playerResizeArea.enabled = false
-                playerResizeArea.cursorShape = Qt.BlankCursor
                 mainScreen.sceneWidget.enabled = false
                 cursorImageForTimeScale.visible = false
                 resizingCenterMarker.x = mouseX
@@ -649,8 +613,6 @@ Item
 
             onReleased:
             {
-                playerResizeArea.enabled = true
-                playerResizeArea.cursorShape = Qt.SizeVerCursor
                 mainScreen.sceneWidget.enabled = true
                 resizingCenterMarker.visible = false
                 cursorImageForTimeScale.visible = true
@@ -973,7 +935,7 @@ Item
             }
         }
 
-        MFXUICB.MfxMouseArea
+        MfxMouseArea
         {
             id: cueViewFlickableMouseArea
             anchors.fill: parent
@@ -1695,7 +1657,7 @@ Item
                 ctx.fill()
             }
 
-            MFXUICB.MfxMouseArea
+            MfxMouseArea
             {
                 id: startPositionMarkerMovingArea
                 anchors.topMargin: -4
@@ -1781,7 +1743,7 @@ Item
                 ctx.fill()
             }
 
-            MFXUICB.MfxMouseArea
+            MfxMouseArea
             {
                 id: stopPositionMarkerMovingArea
                 anchors.topMargin: -4
@@ -1877,7 +1839,7 @@ Item
                 }
             }
 
-            MFXUICB.MfxMouseArea
+            MfxMouseArea
             {
                 id: startLoopMarkerMovingArea
                 anchors.topMargin: -4
@@ -1980,7 +1942,7 @@ Item
                 }
             }
 
-            MFXUICB.MfxMouseArea
+            MfxMouseArea
             {
                 id: stopLoopMarkerMovingArea
                 anchors.topMargin: -4
@@ -2073,7 +2035,7 @@ Item
                 ctx.fill()
             }
 
-            MFXUICB.MfxMouseArea
+            MfxMouseArea
             {
                 id: cursorMovingArea
                 anchors.topMargin: -4

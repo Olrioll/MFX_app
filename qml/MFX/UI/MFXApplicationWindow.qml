@@ -7,17 +7,20 @@ import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Pages 1.0 as MFXUIP
 import MFX.UI.Styles 1.0 as MFXUIS
 
-MFXUICB.FramelessApplicationWindow {
+MFXUICB.FramelessApplicationWindow
+{
     id: _applicationWindow
 
-    content: ColumnLayout {
+    content: ColumnLayout
+    {
         id: _applicationWindowLayout
 
         anchors.fill: parent
 
         spacing: 0
 
-        Item {
+        Item
+        {
             id: _menuItem
 
             Layout.fillWidth: true
@@ -25,34 +28,29 @@ MFXUICB.FramelessApplicationWindow {
             Layout.maximumHeight: 28
             Layout.minimumHeight: 28
 
-            MFXUI.MFXApplicationWindowMenuBar {
+            MFXUI.MFXApplicationWindowMenuBar
+            {
                 id: _menuBar
 
                 anchors.fill: parent
 
                 borderRadius: _applicationWindow.borderRadius
 
-                onMinimizeClicked: {
-
-                }
-
-                onMaximizeClicked: {
-
-                }
-
-                onCloseClicked: {
-
-                }
+                onMinimizeClicked: {}
+                onMaximizeClicked: {}
+                onCloseClicked: {}
             }
         }
 
-        Item {
+        Item
+        {
             id: _contentItem
 
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            StackView {
+            StackView
+            {
                 id: _contentStackView
 
                 anchors.fill: parent
@@ -60,10 +58,12 @@ MFXUICB.FramelessApplicationWindow {
 
                 initialItem: _startScreenComponent
 
-                Component {
+                Component
+                {
                     id: _startScreenComponent
 
-                    MFXUIP.StartScreen {
+                    MFXUIP.StartScreen
+                    {
                         id: _startScreenComponentItem
                     }
                 }

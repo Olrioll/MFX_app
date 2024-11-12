@@ -2,10 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-import MFX.UI.Styles 1.0 as MFXUIS
-import MFX.UI.Components.Basic 1.0 as MFXUICB
-
-import "qrc:/"
+import MFX.UI.Styles 1.0
+import MFX.UI.Components.Basic 1.0
 
 Item
 {
@@ -13,6 +11,7 @@ Item
     width: isExpanded ? expandedWidth : collapsedWidth
 
     property alias expandButton: expandButton
+    property alias curInd: layout.currentIndex
     property bool isExpanded: false
     property int collapsedWidth: 28
     property int expandedWidth: contentItem.width
@@ -37,7 +36,6 @@ Item
             sideDockedWindow.enabled = false
         }
     }
-
 
     StackLayout
     {
@@ -64,11 +62,12 @@ Item
                 rightPadding: 0
                 leftPadding: 0
 
-                background: Rectangle {
-                        color: "#444444"
-                        opacity: 0
-                        radius: 2
-                    }
+                background: Rectangle
+                {
+                    color: "#444444"
+                    opacity: 0
+                    radius: 2
+                }
 
                 Image
                 {
@@ -100,7 +99,7 @@ Item
                 text: sideDockedWindow.caption
                 elide: Text.ElideMiddle
                 anchors.centerIn: rotatedTextRect
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pixelSize: 12
                 rotation: 90
             }
@@ -129,11 +128,12 @@ Item
                 rightPadding: 0
                 leftPadding: 0
 
-                background: Rectangle {
-                        color: "#444444"
-                        opacity: 0
-                        radius: 2
-                    }
+                background: Rectangle
+                {
+                    color: "#444444"
+                    opacity: 0
+                    radius: 2
+                }
 
                 Image
                 {
@@ -157,7 +157,7 @@ Item
                 elide: Text.ElideMiddle
                 anchors.left: parent.left
                 anchors.leftMargin: 10
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 topPadding: 6
                 leftPadding: 10
             }
@@ -175,7 +175,7 @@ Item
                 color: "#000000"
             }
 
-            MFXUICB.MfxMouseArea
+            MfxMouseArea
             {
                 id: expandedRectResizeArea
                 width: 4

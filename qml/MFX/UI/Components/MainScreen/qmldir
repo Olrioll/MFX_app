@@ -1,0 +1,6 @@
+module MFX.UI.Components.MainScreen
+
+DevicesListComponent 1.0 DevicesListComponent.qml
+CueListComponent 1.0 CueListComponent.qml
+CueContentComponent 1.0 CueContentComponent.qml
+CalculatorComponent 1.0 CalculatorComponent.qml

@@ -7,3 +7,4 @@ TransparentTextField 1.0 TransparentTextField.qml
 SelectableTableHeaderItem 1.0 SelectableTableHeaderItem.qml
 TextFieldWithBackground 1.0 TextFieldWithBackground.qml
 MfxMouseArea 1.0 MfxMouseArea.qml
+MfxButton 1.0 MfxButton.qml

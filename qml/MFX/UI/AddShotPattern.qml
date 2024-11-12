@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Components.Basic 1.0
 import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Components.Templates.TimeInput 1.0
 
