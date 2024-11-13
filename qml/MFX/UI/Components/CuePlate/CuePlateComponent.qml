@@ -522,9 +522,9 @@ Component
 
             cursor: Qt.SizeHorCursor
 
-            onPressed: {
+            onPressed:
+            {
                 cueViewFlickable.interactive = false
-
             }
 
             onMouseXChanged:
@@ -532,6 +532,15 @@ Component
                 let delta = pixelsToMsec(dx)
                 if(cuePlate.duration + delta > 0)
                 {
+                    if( cuePlate.actionList.length === 1 )
+                    {
+                        let device = deviceManager.getDeviceById( cuePlate.actionList[0] )
+                        if( !device || device.deviceType != MFXE.PatternType.Shot )
+                            return
+
+                        return
+                    }
+
 //                            let prevDuration = cuePlate.firstAction.position;
                     cuePlate.actionList.forEach(function(currAction, i)
                     {
@@ -551,7 +560,6 @@ Component
                         project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
                         cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                         cuePlate.loadActions();
-
                     })
                 }
             }

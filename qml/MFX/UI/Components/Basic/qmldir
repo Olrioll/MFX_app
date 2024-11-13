@@ -8,3 +8,8 @@ SelectableTableHeaderItem 1.0 SelectableTableHeaderItem.qml
 TextFieldWithBackground 1.0 TextFieldWithBackground.qml
 MfxMouseArea 1.0 MfxMouseArea.qml
 MfxButton 1.0 MfxButton.qml
+SideDockedWindow 1.0 SideDockedWindow.qml
+MfxHilightedButton 1.0 MfxHilightedButton.qml
+MfxMenu 1.0 MfxMenu.qml
+MfxTable 1.0 MfxTable.qml
+ZoomingMouseArea 1.0 ZoomingMouseArea.qml

@@ -14,25 +14,17 @@
         <file>MFX/UI/DevicePlate.qml</file>
         <file>MFX/UI/GeneralDeviceListWidget.qml</file>
         <file>MFX/UI/ApplicationWindow.qml</file>
-        <file>MFX/UI/MainScreen.qml</file>
-        <file>MFX/UI/MfxHilightedButton.qml</file>
-        <file>MFX/UI/MfxMenu.qml</file>
-        <file>MFX/UI/MfxTable.qml</file>
         <file>MFX/UI/MouseAreaWithHidingCursor.qml</file>
         <file>MFX/UI/OutputScreen.qml</file>
-        <file>MFX/UI/PatchIcon.qml</file>
         <file>MFX/UI/PatchScreen.qml</file>
-        <file>MFX/UI/Player.qml</file>
         <file>MFX/UI/ProjectSettingsWidget.qml</file>
         <file>MFX/UI/RenameGroupWindow.qml</file>
         <file>MFX/UI/SceneSettingsWidget.qml</file>
         <file>MFX/UI/SceneWidget.qml</file>
-        <file>MFX/UI/SideDockedWindow.qml</file>
         <file>MFX/UI/SortedDeviceListWidget.qml</file>
         <file>MFX/UI/StartScreen.qml</file>
         <file>MFX/UI/TypeGroup.qml</file>
         <file>MFX/UI/UtilityWindow.qml</file>
-        <file>MFX/UI/ZoomingMouseArea.qml</file>
         <file>MFX/UI/Pages/qmldir</file>
         <file>MFX/UI/Styles/Fonts.qml</file>
         <file>MFX/UI/Styles/qmldir</file>
@@ -41,9 +33,7 @@
         <file>MFX/UI/Components/Templates/qmldir</file>
         <file>MFX/UI/Components/Templates/FramelessApplicationWindow.qml</file>
         <file>MFX/UI/Components/Basic/FramelessApplicationWindow.qml</file>
-        <file>MFX/UI/MFXApplicationWindow.qml</file>
         <file>MFX/UI/Components/Templates/RoundedRectangleShape.qml</file>
-        <file>MFX/UI/MFXApplicationWindowMenuBar.qml</file>
         <file>MFX/UI/qmldir</file>
         <file>MFX/UI/Components/Templates/LayoutSpacer.qml</file>
         <file>MFX/UI/Pages/StartScreen.qml</file>
@@ -55,8 +45,6 @@
         <file>MFX/UI/Components/Basic/SelectableTableHeaderItem.qml</file>
         <file>MFX/UI/Components/Basic/TextFieldWithBackground.qml</file>
         <file>MFX/UI/Components/Templates/RoundedTriangleShape.qml</file>
-        <file>MFX/UI/PreviewIcon.qml</file>
-        <file>MFX/UI/ParticleEmiter.qml</file>
         <file>MFX/UI/Components/CuePlate/CuePlateComponent.qml</file>
         <file>MFX/UI/Components/CuePlate/qmldir</file>
         <file>MFX/UI/Components/Basic/MfxMouseArea.qml</file>
@@ -77,5 +65,17 @@
         <file>MFX/UI/Components/MainScreen/CueListComponent.qml</file>
         <file>MFX/UI/Components/MainScreen/CueContentComponent.qml</file>
         <file>MFX/UI/Components/MainScreen/CalculatorComponent.qml</file>
+        <file>MFX/UI/MainScreen/MainScreen.qml</file>
+        <file>MFX/UI/MainScreen/qmldir</file>
+        <file>MFX/UI/Components/Basic/SideDockedWindow.qml</file>
+        <file>MFX/UI/MainScreen/Player.qml</file>
+        <file>MFX/UI/MainScreen/PreviewIcon.qml</file>
+        <file>MFX/UI/Components/Basic/MfxHilightedButton.qml</file>
+        <file>MFX/UI/MainScreen/ParticleEmiter.qml</file>
+        <file>MFX/UI/MainScreen/PatchIcon.qml</file>
+        <file>MFX/UI/Components/Basic/MfxMenu.qml</file>
+        <file>MFX/UI/Components/Basic/MfxTable.qml</file>
+        <file>MFX/UI/Components/Basic/ZoomingMouseArea.qml</file>
+        <file>MFX/UI/MainScreen/RightPanel.qml</file>
     </qresource>
 </RCC>

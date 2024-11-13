@@ -2,8 +2,9 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-import MFX.UI.Styles 1.0 as MFXUIS
-import MFX.UI.Components.Basic 1.0 as MFXUICB
+import MFX.UI.Styles 1.0
+import MFX.UI.MainScreen 1.0
+import MFX.UI.Components.Basic 1.0
 
 import "qrc:/"
 
@@ -106,7 +107,7 @@ ApplicationWindow
         }*/
     }
 
-    MFXUICB.MfxMouseArea
+    MfxMouseArea
     {
         id: overallArea
         anchors.fill: parent
@@ -354,7 +355,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 onCheckedChanged:
@@ -533,7 +534,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 onCheckedChanged:
@@ -595,7 +596,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 ButtonGroup.group: mainMenuButtons
@@ -636,7 +637,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 onCheckedChanged:
@@ -677,7 +678,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 onCheckedChanged:
@@ -718,7 +719,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 onCheckedChanged:
@@ -756,7 +757,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
 
                 onCheckedChanged:
@@ -794,7 +795,7 @@ ApplicationWindow
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideRight
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                 }
             }
 
