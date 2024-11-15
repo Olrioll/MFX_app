@@ -77,5 +77,6 @@
         <file>MFX/UI/Components/Basic/MfxTable.qml</file>
         <file>MFX/UI/Components/Basic/ZoomingMouseArea.qml</file>
         <file>MFX/UI/MainScreen/RightPanel.qml</file>
+        <file>MFX/UI/SceneFrameItem.qml</file>
     </qresource>
 </RCC>

@@ -2,8 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
-import MFX.UI.Styles 1.0 as MFXUIS
-import MFX.Enums 1.0 as MFXE
+import MFX.UI.Styles 1.0
+import MFX.Enums 1.0
 import MFX.UI.Components.Basic 1.0
 
 import "qrc:/"
@@ -16,16 +16,17 @@ Item
     property alias backgroundImage: backgroundImage
     property alias sceneFrameItem: sceneFrameItem
     property var patchIcons: []
-    property real scaleFactor: project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
+    property real scaleFactor: project.property( "sceneScaleFactor" ) === undefined ? 1.0 : project.property( "sceneScaleFactor" )
+    property real proportion: 1.0
     property real maxScaleFactor: 3.0
     property real minScaleFactor: 0.2
-    property int prevWidth
-    property int dWidth
     property bool blockEditions: false //Блокирует изменение позиций устройств
     //signal hideSceneFrame
 
     function loadPatches()
     {
+        console.log( "loadPatches" )
+
         for(var i = 0; i < sceneWidget.patchIcons.length; i++)
             sceneWidget.patchIcons[i].destroy()
 
@@ -36,13 +37,13 @@ Item
             var deviceType = project.patchType( project.patchPropertyForIndex( i, "ID" ) )
             var imageFile
 
-            if (deviceType == MFXE.PatternType.Sequences)
+            if (deviceType == PatternType.Sequences)
                 imageFile = "qrc:/device_sequences"
-            else if (deviceType == MFXE.PatternType.Pyro)
+            else if (deviceType == PatternType.Pyro)
                 imageFile = "qrc:/device_pyro"
-            else if (deviceType == MFXE.PatternType.Shot)
+            else if (deviceType == PatternType.Shot)
                 imageFile = "qrc:/device_shot"
-            else if (deviceType == MFXE.PatternType.Dimmer)
+            else if (deviceType == PatternType.Dimmer)
                 imageFile = "qrc:/device_dimmer"
 
             patchIcons.push(Qt.createComponent("PatchIcon.qml")
@@ -65,27 +66,6 @@ Item
         {
             sceneWidget.scaleFactor = newScaleFactror
             project.setSceneScaleFactor(sceneWidget.scaleFactor)
-        }
-    }
-
-    function centerBackgroundImage()
-    {
-        backgroundImage.x = (applicationWindow.width - backgroundImage.width) / 2
-        backgroundImage.y = (applicationWindow.height - backgroundImage.height) / 2
-    }
-
-    function adjustBackgroundImageOnX()
-    {
-        if(backgroundImage.width <= sceneWidget.width)
-        {
-            console.log( "adjustBackgroundImageOnX", backgroundImage.width, sceneWidget.width )
-            backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
-        }
-
-        else
-        {
-            console.log( "adjustBackgroundImageOnX", backgroundImage.x, dWidth )
-            backgroundImage.x += dWidth / 2
         }
     }
 
@@ -129,6 +109,33 @@ Item
         sceneFrameItem.visible = true
     }
 
+    function calcProportion()
+    {
+        var calcProportion = 1.0
+
+        if( width > 0 && height > 0 )
+        {
+            if( backgroundImage.sourceSize.width > backgroundImage.sourceSize.height )
+                calcProportion = backgroundImage.sourceSize.width / width
+            else
+                calcProportion = backgroundImage.sourceSize.height / height
+        }
+
+        return calcProportion
+    }
+
+    function setProportion()
+    {
+        sceneWidget.proportion = calcProportion()
+
+        console.log( "setProportion", sceneWidget.proportion, backgroundImage.sourceSize.width, backgroundImage.sourceSize.height, width, height )
+    }
+
+    function getFillFactor()
+    {
+        return sceneWidget.scaleFactor * sceneWidget.proportion / calcProportion()
+    }
+
     Rectangle
     {
         id: defaultBackgroundRect
@@ -145,8 +152,9 @@ Item
     Image
     {
         id: backgroundImage
-        width: sourceSize.width * sceneWidget.scaleFactor
-        height: sourceSize.height * sceneWidget.scaleFactor
+        anchors.centerIn: parent
+        width: sourceSize.width * getFillFactor()
+        height: sourceSize.height * getFillFactor()
         source: project.property("backgroundImageFile") === "" || project.property("backgroundImageFile") === undefined ?
                     "" :
                     "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
@@ -531,397 +539,10 @@ Item
         }
     }
 
-    Item
+    SceneFrameItem
     {
         id: sceneFrameItem
         visible: false
-
-        property int minWidth: 10
-        property int minHeight: 10
-
-        onVisibleChanged:
-        {
-            if(visible)
-                restorePreviousGeometry();
-            //else
-            //    sceneWidget.hideSceneFrame()
-        }
-
-        function restorePreviousGeometry()
-        {
-            x = project.property("sceneFrameX") * backgroundImage.width + backgroundImage.x
-            y = project.property("sceneFrameY") * backgroundImage.height + backgroundImage.y
-            width = project.property("sceneImageWidth") * backgroundImage.width
-            height = project.property("sceneFrameHeight") / project.property("sceneFrameWidth") * width
-            frameHeightText.text = project.property("sceneFrameHeight") + " m"
-            frameWidthText.text = project.property("sceneFrameWidth") + " m"
-            //console.log( sceneWidget.scaleFactor , sceneWidget.width,sceneWidget.height,backgroundImage.x,backgroundImage.height)
-            /*if(sceneWidget.width > 0)
-            {
-                sceneWidget.scaleFactor = project.property("sceneScaleFactor") === undefined ? 1.0 : project.property("sceneScaleFactor")
-                if(sceneWidget.width <= backgroundImage.width )
-                {
-                    sceneWidget.scaleFactor = sceneWidget.width / backgroundImage.sourceSize.width;
-                }
-
-                if(sceneWidget.height <= backgroundImage.height )
-                {
-                    sceneWidget.scaleFactor = sceneWidget.height / backgroundImage.sourceSize.height;
-                }
-
-                var currentSceneFrameX = (x - backgroundImage.x) / backgroundImage.width
-                var currentSceneFrameY = (y - backgroundImage.y) / backgroundImage.height
-
-                var prevWidth = backgroundImage.width;
-                var prevHeight = backgroundImage.height;
-                var newWidth = backgroundImage.sourceSize.width * sceneWidget.scaleFactor;
-                var newHeight = backgroundImage.sourceSize.height * sceneWidget.scaleFactor;
-                var currWidthChange = newWidth - prevWidth;
-                var currHeightChange = newHeight - prevHeight;
-
-                let newScaleFactror = sceneWidget.scaleFactor
-                let scaleRatio = newScaleFactror / 1.0
-
-                if(backgroundImage.width <= sceneWidget.width)
-                {
-                    backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
-                }
-
-                else
-                {
-                    let dx = ((sceneWidget.width/2) - backgroundImage.x) / prevWidth * currWidthChange
-                    backgroundImage.x -= dx
-                }
-
-                if(backgroundImage.height <= sceneWidget.height)
-                {
-                    backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
-                }
-
-                else
-                {
-                    let dy = ((sceneWidget.height/2) - backgroundImage.y) / prevHeight * currHeightChange
-                    backgroundImage.y -= dy
-                }
-
-                x = currentSceneFrameX * newWidth + backgroundImage.x
-                y = currentSceneFrameY * newHeight + backgroundImage.y
-                width = width * scaleRatio
-                height = height * scaleRatio
-            }*/
-        }
-
-        Rectangle
-        {
-            id: sceneFrame
-            anchors.fill: parent
-            color: "#20507FE6"
-            border.width: 2
-            border.color: "#507FE6"
-            radius: 2
-
-            property int minWidth: 100
-
-            MouseArea
-            {
-                id: bottomResizeArea
-                height: 4
-                anchors
-                {
-                    bottom: parent.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                cursorShape: Qt.SizeVerCursor
-
-                property int prevY
-
-                onPressed:
-                {
-                    prevY = mouseY
-                }
-
-                onMouseYChanged:
-                {
-                    var dy = mouseY - prevY
-
-                    var newHeight = sceneFrameItem.height + dy
-                    var newWidth = sceneFrameItem.width * newHeight / sceneFrameItem.height
-
-                    if(!(sceneFrameItem.y + newHeight > backgroundImage.y + backgroundImage.height) &&
-                            !(sceneFrameItem.x + newWidth > backgroundImage.x + backgroundImage.width) &&
-                            newHeight >= sceneFrameItem.minHeight &&
-                            newWidth >= sceneFrameItem.minWidth)
-                    {
-                        sceneFrameItem.width = newWidth
-                        sceneFrameItem.height = newHeight
-                    }
-                }
-            }
-
-            MouseArea
-            {
-                id: topResizeArea
-                height: 4
-                anchors
-                {
-                    top: parent.top
-                    left: parent.left
-                    right: parent.right
-                }
-                cursorShape: Qt.SizeVerCursor
-
-                property int prevY
-
-                onPressed:
-                {
-                    prevY = mouseY
-                }
-
-                onMouseYChanged:
-                {
-                    var dy = mouseY - prevY
-
-                    var newHeight = sceneFrameItem.height - dy
-                    var newWidth = sceneFrameItem.width * newHeight / sceneFrameItem.height
-                    var dx = sceneFrameItem.width - newWidth
-
-                    if((sceneFrameItem.y + dy > backgroundImage.y) &&
-                            (sceneFrameItem.x + dx > backgroundImage.x) &&
-                            newHeight >= sceneFrameItem.minHeight &&
-                            newWidth >= sceneFrameItem.minWidth)
-                    {
-                        sceneFrameItem.width = newWidth
-                        sceneFrameItem.height = newHeight
-                        sceneFrameItem.x += dx
-                        sceneFrameItem.y += dy
-                    }
-                }
-            }
-
-            MouseArea
-            {
-                id: rightResizeArea
-                width: 4
-                anchors
-                {
-                    bottom: parent.bottom
-                    right: parent.right
-                    top: parent.top
-                }
-                cursorShape: Qt.SizeHorCursor
-
-                property int prevX
-
-                onPressed:
-                {
-                    prevX = mouseX
-                }
-
-                onMouseXChanged:
-                {
-                    var dx = mouseX - prevX
-
-                    var newWidth = sceneFrameItem.width + dx
-                    var newHeight = sceneFrameItem.height * newWidth / sceneFrameItem.width
-
-                    if(!(sceneFrameItem.y + newHeight > backgroundImage.y + backgroundImage.height) &&
-                            !(sceneFrameItem.x + newWidth > backgroundImage.x + backgroundImage.width) &&
-                            newHeight >= sceneFrameItem.minHeight &&
-                            newWidth >= sceneFrameItem.minWidth)
-                    {
-                        sceneFrameItem.width = newWidth
-                        sceneFrameItem.height = newHeight
-                    }
-                }
-            }
-
-            MouseArea
-            {
-                id: leftResizeArea
-                width: 4
-                anchors
-                {
-                    bottom: parent.bottom
-                    right: parent.left
-                    top: parent.top
-                }
-                cursorShape: Qt.SizeHorCursor
-
-                property int prevX
-
-                onPressed:
-                {
-                    prevX = mouseX
-                }
-
-                onMouseXChanged:
-                {
-                    var dx = mouseX - prevX
-
-                    var newWidth = sceneFrameItem.width - dx
-                    var newHeight = sceneFrameItem.height * newWidth / sceneFrameItem.width
-                    var dy = sceneFrameItem.height - newHeight
-
-                    if((sceneFrameItem.y + dy > backgroundImage.y) &&
-                            (sceneFrameItem.x + dx > backgroundImage.x) &&
-                            newHeight >= sceneFrameItem.minHeight &&
-                            newWidth >= sceneFrameItem.minWidth)
-                    {
-                        sceneFrameItem.width = newWidth
-                        sceneFrameItem.height = newHeight
-                        sceneFrameItem.x += dx
-                        sceneFrameItem.y += dy
-                    }
-                }
-            }
-
-            MouseArea
-            {
-                id: movingArea
-                anchors.top: topResizeArea.bottom
-                anchors.bottom: bottomResizeArea.top
-                anchors.left: leftResizeArea.right
-                anchors.right: rightResizeArea.left
-                preventStealing: true
-
-                drag.target: sceneFrameItem
-                drag.axis: Drag.XandYAxis
-
-                drag.minimumX: backgroundImage.x
-                drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
-                drag.minimumY: backgroundImage.y
-                drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
-            }
-        }
-
-        Rectangle
-        {
-            id: sceneTitle
-            anchors.rightMargin: 8
-            anchors.right: applyButton.left
-            anchors.bottom: cancelButton.bottom
-            width: 62
-            height: 20
-            color: "#507FE6"
-            radius: 26
-
-            Text
-            {
-                anchors.centerIn: parent
-                text: translationsManager.translationTrigger + qsTr("SCENE")
-                color: "#ffffff"
-                font.family: MFXUIS.Fonts.robotoRegular.name
-                font.pixelSize: 12
-            }
-
-            MouseArea
-            {
-                id: movingArea2
-                anchors.fill: parent
-                preventStealing: true
-
-                drag.target: sceneFrameItem
-                drag.axis: Drag.XandYAxis
-
-                drag.minimumX: backgroundImage.x
-                drag.maximumX: backgroundImage.width - sceneFrame.width + backgroundImage.x
-                drag.minimumY: backgroundImage.y
-                drag.maximumY: backgroundImage.height - sceneFrame.height + backgroundImage.y
-            }
-        }
-
-        Button
-        {
-            id: applyButton
-            anchors.rightMargin: 4
-            anchors.right: cancelButton.left
-            anchors.bottom: cancelButton.bottom
-            width: 18
-            height: 18
-
-            background: Rectangle
-            {
-                color: "#27AE60"
-                radius: 9
-            }
-
-            Image
-            {
-                anchors.centerIn: parent
-                source: "qrc:/apply"
-            }
-
-            onClicked:
-            {
-                project.setProperty("sceneFrameX", (sceneFrameItem.x - backgroundImage.x) / backgroundImage.width)
-                project.setProperty("sceneFrameY", (sceneFrameItem.y - backgroundImage.y) / backgroundImage.height)
-                project.setProperty("sceneImageWidth", sceneFrameItem.width / backgroundImage.width)
-                sceneFrameItem.visible = false
-                patchScreen.deviceLibWidget.setActive(true)
-                patchScreen.deviceListWidget.setActive(true)
-                patchScreen.groupListWidget.setActive(true)
-            }
-        }
-
-        Button
-        {
-            id: cancelButton
-            anchors.bottomMargin: 4
-            anchors.right: sceneFrame.right
-            anchors.bottom: sceneFrame.top
-            width: 18
-            height: 18
-
-            background: Rectangle
-            {
-                color: "#EB5757"
-                radius: 9
-            }
-
-            Image
-            {
-                anchors.centerIn: parent
-                source: "qrc:/cancel"
-            }
-
-            onClicked:
-            {
-                sceneFrameItem.visible = false
-                patchScreen.deviceLibWidget.setActive(true)
-                patchScreen.deviceListWidget.setActive(true)
-                patchScreen.groupListWidget.setActive(true)
-            }
-        }
-
-        Text
-        {
-            id: frameHeightText
-            anchors.rightMargin: 4
-            anchors.right: sceneFrame.left
-            anchors.verticalCenter: sceneFrame.verticalCenter
-            text: project.property("sceneFrameHeight") + " m"
-            color: "#507FE6"
-            font.family: MFXUIS.Fonts.robotoRegular.name
-            font.pixelSize: 12
-        }
-
-        Text
-        {
-            id: frameWidthText
-            anchors.topMargin: 4
-            anchors.top: sceneFrame.bottom
-            anchors.horizontalCenter: sceneFrame.horizontalCenter
-            text: project.property("sceneFrameWidth") + " m"
-            color: "#507FE6"
-            font.family: MFXUIS.Fonts.robotoRegular.name
-            font.pixelSize: 12
-        }
-
-        Component.onCompleted:
-        {
-            restorePreviousGeometry()
-        }
     }
 
     Button
@@ -957,7 +578,7 @@ Item
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             leftPadding: 16
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             font.pixelSize: 12
         }
 
@@ -1019,7 +640,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pixelSize: 16
             }
 
@@ -1060,7 +681,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pixelSize: 20
             }
 
@@ -1488,36 +1109,17 @@ Item
         target: project
         function onBackgroundImageChanged()
         {
-            if( project.property("backgroundImageFile") !== "" )
-                backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
+            console.log( "onBackgroundImageChanged", project.property("backgroundImageFile") )
+
+            if( project.property( "backgroundImageFile" ) !== "" )
+                backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property( "backgroundImageFile" )
             else
                 backgroundImage.source = ""
-
-            centerBackgroundImage()
         }
-    }
-
-    onWidthChanged:
-    {
-        //console.log( "onWidthChanged", dWidth, width, prevWidth )
-        dWidth = width - prevWidth
-        prevWidth = width
     }
 
     Component.onCompleted:
     {
         loadPatches()
-
-        if(backgroundImage.width <= sceneWidget.width)
-        {
-            backgroundImage.x = (sceneWidget.width - backgroundImage.width) / 2
-        }
-
-        if(backgroundImage.height <= sceneWidget.height)
-        {
-            backgroundImage.y = (sceneWidget.height - backgroundImage.height) / 2
-        }
-
-        prevWidth = width
     }
 }

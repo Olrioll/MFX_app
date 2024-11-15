@@ -536,8 +536,6 @@ Item
                 else
                     project.setBackgroundImage("default.svg")
 
-                sceneWidget.centerBackgroundImage()
-
                 applicationWindow.isPatchEditorOpened = false
                 projectSettingsWidget.visible = false
 

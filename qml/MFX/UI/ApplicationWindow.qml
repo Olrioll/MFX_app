@@ -62,12 +62,6 @@ ApplicationWindow
 
         backuper.runProject()
 
-        if(project.property("backgroundImageFile") !=="" )
-        {
-            sceneWidget.backgroundImage.source = "file:///" + settingsManager.workDirectory() + "/" + project.property("backgroundImageFile")
-            sceneWidget.centerBackgroundImage()
-        }
-
         screensLayout.currentIndex = 1
         startTimer.running = true
     }

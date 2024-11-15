@@ -33,30 +33,11 @@ FocusScope
 
         sceneWidget.parent = sceneWidgetContainer
         sceneWidget.anchors.fill = sceneWidgetContainer
-        sceneWidget.anchors.topMargin = 5
-        sceneWidget.anchors.rightMargin = 5
-        sceneWidget.anchors.leftMargin = 5
-        sceneWidget.anchors.bottomMargin = 5
+        sceneWidget.anchors.topMargin = 2
+        sceneWidget.anchors.rightMargin = 2
+        sceneWidget.anchors.leftMargin = 4
+        sceneWidget.anchors.bottomMargin = 2
         sceneWidget.visible = true// Временно закомментировали - сцена всегда должна быть видима = visualizationButton.checked
-    }
-
-    function adjustBackgroundImageOnX()
-    {
-        console.log( "MainScreen.adjustBackgroundImageOnX" )
-        sceneWidget.adjustBackgroundImageOnX()
-
-        if((cueListButton.checked || leftDeviceListButton.checked) && (actionstButton.checked || rightDeviceListButton.checked))
-        {
-
-        }
-        else if((cueListButton.checked || leftDeviceListButton.checked) && !(actionstButton.checked || rightDeviceListButton.checked))
-        {
-            sceneWidget.backgroundImage.x += leftPanelLoader.width / 2
-        }
-        else if(!(cueListButton.checked || leftDeviceListButton.checked) && (actionstButton.checked || rightDeviceListButton.checked))
-        {
-            sceneWidget.backgroundImage.x -= rightPanelLoader.width / 2
-        }
     }
 
     SplitView
@@ -156,8 +137,6 @@ FocusScope
                                     {
                                         leftDeviceListButton.checked = false
                                     }
-
-                                    mainScreen.adjustBackgroundImageOnX()
                                 }
                             }
                         }
@@ -186,8 +165,6 @@ FocusScope
                                         rightDeviceListButton.checked = false
                                         cueListButton.checked = false
                                     }
-
-                                    mainScreen.adjustBackgroundImageOnX()
                                 }
                             }
                         }
@@ -215,8 +192,6 @@ FocusScope
                                 {
                                     if(checked)
                                         rightDeviceListButton.checked = false
-
-                                    mainScreen.adjustBackgroundImageOnX()
                                 }
                             }
 
@@ -247,8 +222,6 @@ FocusScope
                                         actionstButton.checked = false
                                         leftDeviceListButton.checked = false
                                     }
-
-                                    mainScreen.adjustBackgroundImageOnX()
                                 }
                             }
                         }
@@ -574,7 +547,6 @@ FocusScope
 
                             onPressed:
                             {
-                            console.log("!!!!")
                                 previousX = mouseX
                             }
 

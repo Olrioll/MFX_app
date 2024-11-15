@@ -16,6 +16,8 @@ Item
 
     function setupSceneWidget(widget)
     {
+        console.log( "PatchScreen.setupSceneWidget" )
+
         sceneWidget = widget
 
         if(!sceneWidget)
@@ -25,7 +27,7 @@ Item
         sceneWidget.anchors.fill = sceneWidgetItem
         sceneWidget.visible = true
 
-//        console.log(sceneWidget.height)
+        sceneWidget.setProportion()
     }
 
     Item
@@ -52,30 +54,6 @@ Item
         contentItem: DeviceLibWidget
         {
 
-        }
-
-        Connections
-        {
-            target: deviceLib
-            function onWidthChanged()
-            {
-
-//                let dx = deviceLib.expandedWidth - deviceLib.collapsedWidth
-
-//                if(deviceLib.width === deviceLib.collapsedWidth)
-//                {
-//                    sceneWidget.adjustBackgroundImageOnX(-dx)
-//                }
-
-//                else
-//                {
-//                    sceneWidget.adjustBackgroundImageOnX(dx)
-//                }
-                if(sceneWidget === null) {
-                    return
-                }
-                sceneWidget.adjustBackgroundImageOnX()
-            }
         }
     }
 
@@ -131,30 +109,6 @@ Item
                 devListWidget.changeView()
             }
         }
-
-        Connections
-        {
-            target: deviceList
-            function onWidthChanged()
-            {
-                if(sceneWidget == null) {
-                    return
-                }
-                sceneWidget.adjustBackgroundImageOnX()
-
-//                let dx = deviceList.expandedWidth - deviceList.collapsedWidth
-
-//                if(deviceList.width === deviceList.collapsedWidth)
-//                {
-//                    sceneWidget.adjustBackgroundImageOnX(-dx)
-//                }
-
-//                else
-//                {
-//                    sceneWidget.adjustBackgroundImageOnX(dx)
-//                }
-            }
-        }
     }
 
     SideDockedWindow
@@ -171,30 +125,6 @@ Item
         contentItem: DeviceGroupWidget
         {
             width: collapsed ? 184 : 348
-        }
-
-        Connections
-        {
-            target: groupList
-            function onWidthChanged()
-            {
-                if(sceneWidget == null) {
-                    return
-                }
-                sceneWidget.adjustBackgroundImageOnX()
-
-//                let dx = groupList.expandedWidth - groupList.collapsedWidth
-
-//                if(groupList.width === groupList.collapsedWidth)
-//                {
-//                    sceneWidget.adjustBackgroundImageOnX(-dx)
-//                }
-
-//                else
-//                {
-//                    sceneWidget.adjustBackgroundImageOnX(dx)
-//                }
-            }
         }
     }
 }
