@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import MFX.UI.Components.Basic 1.0
-import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Styles 1.0
 
 Item
 {
@@ -54,7 +54,7 @@ Item
             elide: Text.ElideMiddle
             anchors.left: parent.left
             anchors.right: parent.right
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             topPadding: 8
         }
 
@@ -130,7 +130,7 @@ Item
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideNone
                 wrapMode: Text.WordWrap
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pixelSize: 12
                 topPadding: 20
             }

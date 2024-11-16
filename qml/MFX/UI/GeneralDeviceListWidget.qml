@@ -33,10 +33,10 @@ Item
         id: layout
 
         width: widthNeeded()
-        //anchors.top: parent.top
-        //anchors.left: parent.left
-        //anchors.bottomMargin: 10
-        //anchors.bottom: deleteButton.top
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottomMargin: 10
+        anchors.bottom: buttonsRow.top
 
         function widthNeeded()
         {
@@ -452,9 +452,9 @@ Item
             function loadGroups()
             {
                 groupListModel.append({groupName: "Sequences"})
-                groupListModel.append({groupName: "Dimmer"})
+                //groupListModel.append({groupName: "Dimmer"})
                 groupListModel.append({groupName: "Shot"})
-                groupListModel.append({groupName: "Pyro"})
+                //groupListModel.append({groupName: "Pyro"})
             }
 
             delegate: TypeGroup
@@ -569,6 +569,7 @@ Item
 
     RowLayout
     {
+        id: buttonsRow
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

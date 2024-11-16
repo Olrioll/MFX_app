@@ -1,11 +1,10 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.UI.Styles 1.0
 import MFX.UI.Components.Basic 1.0
 import MFX.UI.Components.CuePlate 1.0
-
-import MFX.Enums 1.0 as MFXE
+import MFX.Enums 1.0
 
 import WaveformWidget 1.0
 import "qrc:/"
@@ -385,7 +384,7 @@ Item
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pixelSize: 8
             }
         }
@@ -672,20 +671,20 @@ Item
             {
                 switch(status)
                 {
-                    case MFXE.AudioTrackStatus.Importing:
+                    case AudioTrackStatus.Importing:
                         mainScreen.playerWidget.hidePlayerElements()
                         mainScreen.playerWidget.waitingText.text = qsTr("Importing...")
                         break
-                    case MFXE.AudioTrackStatus.Imported:
+                    case AudioTrackStatus.Imported:
                         mainScreen.playerWidget.hidePlayerElements()
                         mainScreen.playerWidget.waitingText.text = qsTr("Importing...")
                         waveformWidget.setAudioTrackFile(settingsManager.workDirectory() + "/" + project.property("audioTrackFile"))
                         break
-                    case MFXE.AudioTrackStatus.Loading:
+                    case AudioTrackStatus.Loading:
                         mainScreen.playerWidget.hidePlayerElements()
                         mainScreen.playerWidget.waitingText.text = qsTr("Loading...")
                         break
-                    case MFXE.AudioTrackStatus.Loaded:
+                    case AudioTrackStatus.Loaded:
                         mainScreen.playerWidget.showPlayerElements()
                         break
                     default:
@@ -1052,12 +1051,12 @@ Item
                 text: translationsManager.translationTrigger + qsTr("Delete")
                 onTriggered:
                 {
-                    console.log("triggered")
+                    console.log("Player.DeleteAction")
                     let checkedPlates = cueView.checkedPlates()
 
                     if(checkedPlates.length)
                     {
-                        var confirmDelDialog = Qt.createComponent("ConfirmationDialog.qml").createObject(applicationWindow);
+                        var confirmDelDialog = Qt.createComponent("../ConfirmationDialog.qml").createObject(applicationWindow);
                         confirmDelDialog.x = applicationWindow.width / 2 - confirmDelDialog.width / 2
                         confirmDelDialog.y = applicationWindow.height / 2 - confirmDelDialog.height / 2
                         confirmDelDialog.caption = qsTr("Delete Cues")
@@ -1081,7 +1080,7 @@ Item
 
             onDropped:
             {
-                console.log("Player.onDropped", drag.source);
+                //console.log("Player.onDropped", drag.source);
                 if(!drag.source.intersectionState)
                 {
                     let newX = mapToItem(cueView, drag.x, drag.y).x
@@ -1585,7 +1584,7 @@ Item
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             anchors.centerIn: parent
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             font.pixelSize: 8
         }
     }
@@ -1609,7 +1608,7 @@ Item
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             anchors.centerIn: parent
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             font.pixelSize: 8
         }
     }
@@ -2204,7 +2203,7 @@ Item
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
             anchors.centerIn: parent
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             font.pixelSize: 12
         }
 
@@ -2325,7 +2324,7 @@ Item
             padding: 0
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             font.pixelSize: 12
         }
 
@@ -2491,7 +2490,7 @@ Item
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
-            font.family: MFXUIS.Fonts.robotoRegular.name
+            font.family: Fonts.robotoRegular.name
             font.pixelSize: 10
 
             Connections
@@ -2640,7 +2639,7 @@ Item
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         elide: Text.ElideRight
-        font.family: MFXUIS.Fonts.robotoRegular.name
+        font.family: Fonts.robotoRegular.name
         font.pixelSize: 14
         text: translationsManager.translationTrigger + qsTr("Not available")
 
@@ -2698,7 +2697,7 @@ Item
                 elide: Text.ElideMiddle
                 anchors.left: parent.left
                 anchors.right: parent.right
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 topPadding: 8
             }
 
@@ -2751,7 +2750,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pointSize: 7
 
                 anchors.left: preIntervalBackground.left
@@ -2809,7 +2808,7 @@ Item
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
 
                     anchors.left: preMins.right
                     anchors.leftMargin: 2
@@ -2857,7 +2856,7 @@ Item
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
 
                     anchors.left: preSecs.right
                     anchors.leftMargin: 2
@@ -2904,7 +2903,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pointSize: 7
 
                 anchors.left: trackDurationBackground.left
@@ -2932,7 +2931,7 @@ Item
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                     font.pointSize: 9
 
                     padding: 0
@@ -2947,7 +2946,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pointSize: 7
 
                 anchors.left: postIntervalBackground.left
@@ -3007,7 +3006,7 @@ Item
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
 
                     anchors.left: postMins.right
                     anchors.leftMargin: 2
@@ -3055,7 +3054,7 @@ Item
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
 
                     anchors.left: postSecs.right
                     anchors.leftMargin: 2
@@ -3102,7 +3101,7 @@ Item
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideMiddle
-                font.family: MFXUIS.Fonts.robotoRegular.name
+                font.family: Fonts.robotoRegular.name
                 font.pointSize: 7
 
                 anchors.left: projectDurationBackground.left
@@ -3130,7 +3129,7 @@ Item
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     elide: Text.ElideMiddle
-                    font.family: MFXUIS.Fonts.robotoRegular.name
+                    font.family: Fonts.robotoRegular.name
                     font.pointSize: 9
 
                     padding: 0
@@ -3176,7 +3175,7 @@ Item
         {
             console.log("onTrackDownloading")
 
-            project.trackStatus = MFXE.AudioTrackStatus.Loading
+            project.trackStatus = AudioTrackStatus.Loading
         }
 
         function onTrackDownloaded()
@@ -3212,14 +3211,14 @@ Item
             timelineSettingsWidget.updateFields()
             waveformWidget.showAll();
 
-            project.trackStatus = MFXE.AudioTrackStatus.Loaded
+            project.trackStatus = AudioTrackStatus.Loaded
         }
 
         function onTrackFail()
         {
             console.log("onTrackFail")
 
-            project.trackStatus = MFXE.AudioTrackStatus.Invalid
+            project.trackStatus = AudioTrackStatus.Invalid
         }
     }
 

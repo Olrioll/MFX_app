@@ -25,7 +25,7 @@ Item
 
     function loadPatches()
     {
-        console.log( "loadPatches" )
+        console.log( "loadPatches", sceneWidget.patchIcons.length )
 
         for(var i = 0; i < sceneWidget.patchIcons.length; i++)
             sceneWidget.patchIcons[i].destroy()
@@ -46,7 +46,7 @@ Item
             else if (deviceType == PatternType.Dimmer)
                 imageFile = "qrc:/device_dimmer"
 
-            patchIcons.push(Qt.createComponent("PatchIcon.qml")
+            patchIcons.push(Qt.createComponent("MainScreen/PatchIcon.qml")
                               .createObject(backgroundImage,
                                             {  imageFile: imageFile,
                                                 patchId: project.patchPropertyForIndex(i, "ID"),
