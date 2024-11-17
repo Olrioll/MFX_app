@@ -253,6 +253,19 @@ qulonglong DeviceManager::maxActionsDuration( const QList<int>& ids ) const
     return duration;
 }
 
+qulonglong DeviceManager::maxActionsPrefire( const QList<int>& ids ) const
+{
+    qulonglong prefire = 0;
+
+    for( auto id : ids )
+    {
+        QString act = m_ProjectManager->patchProperty( id, "act" ).toString();
+        prefire = std::max( prefire, actionPrefire( act ) );
+    }
+
+    return prefire;
+}
+
 qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId ) const
 {
     const Pattern* pattern = m_patternManager->patternByName( actName );
@@ -262,4 +275,11 @@ qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId )
         return device->getDurationByPattern( *pattern );
 
     return 0;
+}
+
+qulonglong DeviceManager::actionPrefire( const QString& actName ) const
+{
+    const Pattern* pattern = m_patternManager->patternByName( actName );
+
+    return pattern ? pattern->prefireDuration() : 0;
 }

@@ -21,6 +21,7 @@ Item
     property int type: MFXE.PatternType.Unknown
     property bool checked: isNeedToShowChecked();
     property var checkedIDs: [] // Заполняется при перетаскивании некольких выделенных плашек
+    property real duration: 0 // Заполняется при перетаскивании
     property string imageFile: ""
     property bool isInGroupList: false
     property bool showAction: applicationWindow.screensLayout.currentIndex === 2

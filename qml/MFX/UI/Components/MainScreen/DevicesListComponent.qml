@@ -444,7 +444,6 @@ Component
                                         }
                                     }
 
-
                                     onPressed:
                                     {
                                         pressedItem = deviceListView.itemAt(mouseX, mouseY)
@@ -465,10 +464,10 @@ Component
 
                                             draggedPlate.no = pressedItem.no
 
-                                            let maxDuration = deviceManager.maxActionsDuration(draggedPlate.checkedIDs);
+                                            draggedPlate.duration = deviceManager.maxActionsDuration( draggedPlate.checkedIDs );
+                                            draggedPlate.duration += deviceManager.maxActionsPrefire( draggedPlate.checkedIDs );
 
-                                            draggedPlate.width = playerWidget.msecToPixels(maxDuration);
-                                            console.log("width:", draggedPlate.width)
+                                            draggedPlate.width = playerWidget.msecToPixels( draggedPlate.duration );
                                             draggedCuePlate.width = draggedPlate.width;
                                             draggedPlate.height = draggedCuePlate.height
                                             draggedPlate.name = pressedItem.name

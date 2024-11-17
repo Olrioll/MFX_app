@@ -13,6 +13,8 @@ ApplicationWindow
     id: applicationWindow
     width: 1280
     height: 660
+    minimumWidth: 1200
+    minimumHeight: 600
     x: 300
     y: 70
     visible: true
@@ -22,11 +24,6 @@ ApplicationWindow
 
     property int previousX
     property int previousY
-
-    property int previousGeometryX: x
-    property int previousGeometryY: y
-    property int previousGeometryWidth: 1280
-    property int previousGeometryHeight: 960
 
     property bool isPatchEditorOpened: false
     property bool isMouseCursorVisible: true

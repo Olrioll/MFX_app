@@ -25,14 +25,16 @@ public:
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
     Q_INVOKABLE void finishChangeAngle( int deviceId, int angle );
     Q_INVOKABLE qulonglong maxActionsDuration( const QList<int>& ids ) const;
+    Q_INVOKABLE qulonglong maxActionsPrefire( const QList<int>& ids ) const;
     Q_INVOKABLE qulonglong actionDuration( const QString& actName, int deviceId ) const;
+    Q_INVOKABLE qulonglong actionPrefire( const QString& actName ) const;
     Q_INVOKABLE QString getDurationStrByPattern( PatternType::Type type, const QString& patternName ) const;
+    Q_INVOKABLE Device* getDeviceById( int id ) const;
 
     PatternManager* GetPatternManager() { return m_patternManager; }
     Device* m_previewSeqDevice;
     Device* m_previewShotDevice;
 
-    Device* getDeviceById(int id) const;
     Device* getPreviewDevice( PatternType::Type type ) const;
     qulonglong getDurationByPattern( PatternType::Type type, const QString& patternName ) const;
 

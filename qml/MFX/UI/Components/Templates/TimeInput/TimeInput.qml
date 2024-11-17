@@ -25,16 +25,16 @@ RowLayout
     {
         const min = Math.floor( time_ms / 60000 )
         const sec = Math.floor( (time_ms % 60000) / 1000 )
-        const msec = time_ms % 1000
+        const msec = time_ms % 1000 / 10
 
         timeMin.text = String( min ).padStart( 2, '0' )
         timeSec.text = String( sec ).padStart( 2, '0' )
-        timeMSec.text = String( msec ).padStart( 3, '0' )
+        timeMSec.text = String( msec ).padStart( 2, '0' )
     }
 
     function getTimeMs()
     {
-        return Number( timeMin.text ) * 60000 + Number( timeSec.text ) * 1000 + Number( timeMSec.text )
+        return Number( timeMin.text ) * 60000 + Number( timeSec.text ) * 1000 + Number( timeMSec.text ) * 10
     }
 
     anchors.fill: parent

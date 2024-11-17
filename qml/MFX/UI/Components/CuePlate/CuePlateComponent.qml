@@ -34,15 +34,13 @@ Component
 
         function updatePosition()
         {
-            //let actions = project.cueActions(cuePlate.name)
             let endPosition = 0
             if(actionList.length)
             {
                 firstAction = actionList[0]
                 position = actionList[0].prefirePosition()
 
-                //endPosition = actionList[0].position + project.cueActionDuration(cuePlate.name, actions[0].actionName)
-                endPosition = position + project.cueActionDuration(cuePlate.name, actionList[0].actionName)
+                endPosition = position + actionList[0].prefire + project.cueActionDuration(cuePlate.name, actionList[0].actionName)
             }
             else
                 return
@@ -51,6 +49,7 @@ Component
             {
                 let currPosition = currActionMarker.prefirePosition()
                 let currDuration = project.cueActionDuration(cuePlate.name, currActionMarker.name)
+                let currPrefire = currActionMarker.prefire
 
                 if(currPosition < position)
                 {
@@ -58,8 +57,8 @@ Component
                     position = currPosition
                 }
 
-                if(currPosition + currDuration > endPosition)
-                    endPosition = currPosition + currDuration
+                if(currPosition + currPrefire + currDuration > endPosition)
+                    endPosition = currPosition + currPrefire + currDuration
             })
 
             duration = endPosition - position

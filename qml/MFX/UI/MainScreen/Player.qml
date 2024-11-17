@@ -714,8 +714,6 @@ Item
         }
     }
 
-
-
     Rectangle
     {
         id: prePlayTimeMarker
@@ -1080,7 +1078,7 @@ Item
 
             onDropped:
             {
-                //console.log("Player.onDropped", drag.source);
+                console.log("Player.onDropped", drag.source);
                 if(!drag.source.intersectionState)
                 {
                     let newX = mapToItem(cueView, drag.x, drag.y).x
@@ -1124,13 +1122,6 @@ Item
 
                             if(hasAction)
                             {
-//                                project.addCue(
-//                                            [
-//                                                {propName: "name", propValue: newCueName},
-//                                                {propName: "yPosition", propValue: newYposition},
-//                                                {propName: "duration", propValue: 15000}
-//                                            ])
-
                                 project.onAddCue({name: newCueName, yPosition: newYposition})
                                 cueManager.onAddCue({name: newCueName, newYposition: newYposition})
 
@@ -1145,13 +1136,12 @@ Item
                                     }
                                 })
 
-
                                 let newCuePlate = cuePlateComponent.createObject(cueView,
                                                                                  {
                                                                                      name: newCueName,
                                                                                      yPosition: newYposition,
                                                                                      position: newPosition,
-                                                                                     duration: 15000
+                                                                                     duration: drag.source.duration
                                                                                  })
 
                                 newCuePlate.loadActions()
@@ -1164,11 +1154,8 @@ Item
                                 cueView.cuePlates.push(newCuePlate)
 
                                 project.setCueProperty(newCuePlate.name, "duration", newCuePlate.duration)
-
-                                //console.log(newCuePlate.name, newCuePlate.duration)
                                 break
                             }
-
                         }
                     }
                 }
@@ -1210,9 +1197,7 @@ Item
             function loadCues()
             {
                 for(var i = 0; i < cuePlates.length; i++)
-                {
                     cuePlates[i].destroy()
-                }
 
                 cuePlates = []
 

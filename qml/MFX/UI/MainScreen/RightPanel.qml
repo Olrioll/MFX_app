@@ -733,7 +733,7 @@ SideDockedWindow
                                             actionStack.changeAction( actionShotPlate.type, actionShotPlate.name )
                                             actionSplit.selPattern = actionShotPlate
 
-                                            var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow, {isEditMode: true} );
+                                            var addWindow = Qt.createComponent( "../AddShotPattern.qml" ).createObject( applicationWindow, {isEditMode: true} );
                                             addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
                                             addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
                                         }
@@ -843,7 +843,7 @@ SideDockedWindow
     
                                     onClicked:
                                     {
-                                        var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow );
+                                        var addWindow = Qt.createComponent( "../AddShotPattern.qml" ).createObject( applicationWindow );
                                         addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
                                         addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
                                     }
@@ -862,7 +862,7 @@ SideDockedWindow
                                         if( patternManager.selectedShotPatternName === "" )
                                             return
     
-                                        var addWindow = Qt.createComponent( "AddShotPattern.qml" ).createObject( applicationWindow, {isEditMode: true} );
+                                        var addWindow = Qt.createComponent( "../AddShotPattern.qml" ).createObject( applicationWindow, {isEditMode: true} );
                                         addWindow.x = applicationWindow.width / 2 - addWindow.width / 2
                                         addWindow.y = applicationWindow.height / 2 - addWindow.height / 2
                                     }

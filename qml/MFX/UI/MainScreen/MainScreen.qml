@@ -464,8 +464,8 @@ FocusScope
                         anchors.topMargin: 2
                         anchors.rightMargin: 6
 
-                        property int minWidth: 130
-                        property int maxWidth: minWidth * 3
+                        property int minWidth: 400
+                        property int maxWidth: 560
 
                         states:
                         [
@@ -501,9 +501,7 @@ FocusScope
                                 PropertyChanges
                                 {
                                     target: rightPanelLoader
-                                    width: 330
-                                    minWidth: 300
-                                    maxWidth:  minWidth * 2
+                                    width: minWidth
                                     sourceComponent: cueContentComponent
                                 }
 
@@ -522,7 +520,7 @@ FocusScope
                                 PropertyChanges
                                 {
                                     target: rightPanelLoader
-                                    width: 200
+                                    width: minWidth
                                     sourceComponent: devicesListComponent
                                 }
 
