@@ -12,14 +12,16 @@ Cue::Cue(QObject *parent) : QObject(parent)
 
 void Cue::initConnections()
 {
-    connect(this, &Cue::startTimeChanged, [=](const qulonglong newStartTimeValue) {
+    connect(this, &Cue::startTimeChanged, [=](const qulonglong newStartTimeValue)
+    {
         QTime newStartTime(QTime::fromMSecsSinceStartOfDay(newStartTimeValue));
 
         const auto newStartTimeDecoratedValue = newStartTime.toString("hh:mm:ss.zzz");
         setStartTimeDecorator(newStartTimeDecoratedValue);
     });
 
-    connect(this, &Cue::durationTimeChanged, [=](const qulonglong newDurationTimeValue) {
+    connect(this, &Cue::durationTimeChanged, [=](const qulonglong newDurationTimeValue)
+    {
         QTime newDurationTime(QTime::fromMSecsSinceStartOfDay(newDurationTimeValue));
 
         const auto newDurationTimeDecoratedValue = newDurationTime.toString("hh:mm:ss.zzz");
@@ -35,10 +37,10 @@ void Cue::initConnections()
     connect(this, &Cue::selectedChanged, this, &Cue::setExpanded);
     connect(m_actions, &QQmlObjectListModelBase::countChanged, this, &Cue::calculateStartTime);
 
-    connect(m_actions, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles) {
-        if(roles.contains(m_actions->roleForName("startTime"))) {
+    connect(m_actions, &QQmlObjectListModelBase::dataChanged, [=](const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
+    {
+        if(roles.contains(m_actions->roleForName("startTime")))
             calculateStartTime();
-        }
     });
 
     connect(this, &Cue::activeChanged, this, &Cue::onActiveChanged);
@@ -46,16 +48,18 @@ void Cue::initConnections()
 
 void Cue::calculateStartTime()
 {
-    if(m_actions->count() > 0) {
+    if(m_actions->count() > 0)
+    {
         qulonglong minimalTime = m_actions->at(0)->startTime();
-        for(auto * action : m_actions->toList()) {
-            if(action->startTime() < startTime()) {
+
+        for(auto * action : m_actions->toList())
+            if(action->startTime() < startTime())
                 minimalTime = action->startTime();
-            }
-        }
 
         setStartTime(minimalTime);
-    } else {
+    }
+    else
+    {
         setStartTime(0);
     }
 }

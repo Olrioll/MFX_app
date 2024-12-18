@@ -280,35 +280,30 @@ void CueContentManager::replaceActionForSelectedItemsRequest(const QString &patt
 
 CueContent *CueContentManager::cueContentById(const QUuid& id) const
 {
-    for(auto * cueContentItem : m_cueContentItems->toList()) {
-        if(cueContentItem->uuid() == id) {
+    for(auto * cueContentItem : m_cueContentItems->toList())
+        if(cueContentItem->uuid() == id)
             return cueContentItem;
-        }
-    }
 
     return nullptr;
 }
 
 void CueContentManager::setActive(const QString& cueName, int deviceId, bool active)
 {
-    if(currentCue() == NULL) {
+    if(currentCue() == NULL)
         return;
-    }
-    if(currentCue()->name() != cueName) {
+
+    if(currentCue()->name() != cueName)
         return;
-    }
-    for (auto cueContentItem : m_cueContentItems->toList()) {
-        if(deviceId == cueContentItem->device()) {
+
+    for (auto cueContentItem : m_cueContentItems->toList())
+        if(deviceId == cueContentItem->device())
             cueContentItem->setActive(active);
-        }
-    }
 }
 
 void CueContentManager::setAllUnActive()
 {
-    for (auto cueContentItem : m_cueContentItems->toList()) {
-            cueContentItem->setActive(false);
-    }
+    for (auto cueContentItem : m_cueContentItems->toList())
+        cueContentItem->setActive(false);
 }
 
 CueContentSortingModel *CueContentManager::cueContentSorted() const

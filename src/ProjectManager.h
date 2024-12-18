@@ -171,9 +171,9 @@ public slots:
     QVariantList getCues() const;
     void addActionToCue(const QString& cueName, const QString& actionName, int patchId, int position);
     void setCueProperty(const QString& cueName, const QString& propertyName, QVariant value);
-    void deleteCues(QStringList deletedCueNames);
-    void copyCues(QStringList copyCueNames);
-    void changeAction(QString cueName, int deviceId, QString pattern);
+    void deleteCues(const QStringList& deletedCueNames);
+    void copyCues(const QStringList& copyCueNames);
+    void changeAction(const QString& cueName, int deviceId, const QString& pattern);
     void onMirror(const QString &cueName, QList<int> deviceId);
     void onInsideOutside(const QString &cueName, QList<int> deviceId, bool inside);
     void onRandom(const QString &cueName, QList<int> deviceId);

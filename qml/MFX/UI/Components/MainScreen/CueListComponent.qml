@@ -337,24 +337,28 @@ Component
 
                         text: cueListViewDelegate.name
 
-                        onTextEdited: {
-                            if(text.length > 0) {
+                        onTextEdited:
+                        {
+                            if(text.length > 0)
+                            {
                                 cueManager.cueNameChangeRequest(cueListViewDelegate.id, text)
                             }
                         }
 
                         Keys.priority: Keys.BeforeItem
-                        Keys.onPressed: (keyEvent) => {
-                                            if((keyEvent === Qt.Key_Escape) || (keyEvent === Qt.Key_Enter)) {
-                                                cueListViewDelegateNameTextField.focus = false;
-                                                cueListViewDelegateNameTextField._textItem.focus = false;
-                                                keyEvent.accepted = true;
-                                                return;
-                                            }
-                                            keyEvent.accepted = false;
-                                        }
+                        Keys.onPressed: (keyEvent) =>
+                        {
+                            if((keyEvent === Qt.Key_Escape) || (keyEvent === Qt.Key_Enter)) {
+                                cueListViewDelegateNameTextField.focus = false;
+                                cueListViewDelegateNameTextField._textItem.focus = false;
+                                keyEvent.accepted = true;
+                                return;
+                            }
+                            keyEvent.accepted = false;
+                        }
 
-                        MouseArea {
+                        MouseArea
+                        {
                             id: cueListViewDelegateNameTextFieldMouseArea
 
                             anchors.fill: parent

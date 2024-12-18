@@ -166,6 +166,7 @@ bool ProjectManager::loadProjectFromFile( const QString& fileName )
         {
             QString cueName = cue->properties().value("name").toString();
             emit addCue(cue->properties());
+
             for(const auto action : cue->listedChildren())
             {
                 QString pattern = action->properties().value("actionName").toString();
@@ -913,26 +914,31 @@ void ProjectManager::removeSelectedPatches()
     QMutexLocker locker( &m_ProjectLocker );
 
     QList<int> ids;
-    for(auto i =0; i< patchCount();++i){
-          if(patchPropertyForIndex(i,"checked").toBool())
-               ids.append(patchPropertyForIndex(i,"ID").toInt());
-
+    for(auto i =0; i< patchCount();++i)
+    {
+        if(patchPropertyForIndex(i,"checked").toBool())
+            ids.append(patchPropertyForIndex(i,"ID").toInt());
     }
 
 
-      for(auto &gr: getChild("Groups")->namedChildren().keys()){
-           removePatchesFromGroup(gr,ids);
-      }
+    for(auto &gr: getChild("Groups")->namedChildren().keys())
+        removePatchesFromGroup(gr,ids);
 
-       getChild("Patches")->removefromChildrenWithProperty("checked",QVariant(true));
-       emit patchListChanged();
+    getChild("Patches")->removefromChildrenWithProperty("checked",QVariant(true));
+    emit patchListChanged();
 
-    for(auto patchId: ids){
-        for( auto &cue: getChild("Cues")->namedChildren()){
+    for(auto patchId: ids)
+    {
+        for( auto &cue: getChild("Cues")->namedChildren())
+        {
             cue->removefromChildrenWithProperty("patchId", patchId);
-            if(!cue->listedChildren().isEmpty())
-              updateCues(cue->property("name").toString());
-            else{
+
+            if( !cue->listedChildren().isEmpty() )
+            {
+                updateCues( cue->property( "name" ).toString() );
+            }
+            else
+            {
                 const auto cueName = cue->property("name").toString();
                 getChild("Cues")->removeChild(cueName);
             }
@@ -1068,7 +1074,7 @@ void ProjectManager::onSetActionProperty(QString cueName, QString actionName, in
             action->setProperty(propertyName, value);
 }
 
-void ProjectManager::deleteCues(QStringList deletedCueNames)
+void ProjectManager::deleteCues(const QStringList& deletedCueNames)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
@@ -1077,7 +1083,7 @@ void ProjectManager::deleteCues(QStringList deletedCueNames)
     }
 }
 
-void ProjectManager::copyCues(QStringList copyCueNames)
+void ProjectManager::copyCues(const QStringList& copyCueNames)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
@@ -1109,7 +1115,7 @@ void ProjectManager::copyCues(QStringList copyCueNames)
     }
 }
 
-void ProjectManager::changeAction(QString cueName, int deviceId, QString pattern)
+void ProjectManager::changeAction(const QString& cueName, int deviceId, const QString& pattern)
 {
     QMutexLocker locker( &m_ProjectLocker );
 
