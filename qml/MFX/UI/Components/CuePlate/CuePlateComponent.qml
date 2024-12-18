@@ -18,7 +18,8 @@ Component
         property string name: ""
         property bool isExpanded: false
         property bool checked: false //Влияет только на цвет рамки выделения
-        onCheckedChanged: if(cueCopy.isCopy)checked =true
+        property bool locked: false //Запрет на перемещение
+        onCheckedChanged: if(cueCopy.isCopy) checked =true
         property bool isAfterExpanded: false
         property int yPosition
         property double position // в мсек
@@ -159,8 +160,7 @@ Component
             radius: 4
             color: "#7F27AE60"
             border.width: frameBorderWidth
-            border.color: parent.checked ? "#2F80ED" : "#27AE60"
-
+            border.color: parent.checked ? "#2F80ED" : parent.locked ? "grey" : "#27AE60"
         }
 
         Text
@@ -265,7 +265,8 @@ Component
             onClicked:
             {
 
-                if(cueCopy.isCopy){
+                if(cueCopy.isCopy)
+                {
                     cueView.deleteSelected();
                     cueCopy.isCopy = false;
                 }
@@ -306,57 +307,62 @@ Component
                     cueCopy.isCopy=false;
                     isMovedStop = true
                     let isFitsLimits = true
-                    if((position + delta) <=1){
-                        position = 1;
-                        //                                if(!isMovedStop){
-                        ////                                    cursorManager.saveLastPos();
-                        //                                    lastMousePos = cursorManager.cursorPos()
-                        //                                    console.log(lastMousePos)
-                        //                                    isMovedStop =true;
-                        ////                                    cursorManager.saveLastPos()
-                        //                                }
-                        return;
 
-                    }
-                    else if((position + delta + cuePlate.duration) >= playerWidget.projectDuration())
+                    if( !locked )
                     {
-                        position = Math.round(Math.round((playerWidget.projectDuration()-cuePlate.duration)*10) / 10);
-                        //                                if(!isMovedStop){
-                        ////                                    cursorManager.saveLastPos();
-                        //                                    lastMousePos = cursorManager.cursorPos().x
-                        //                                    console.log(lastMousePos)
-                        //                                    isMovedStop =true;
-                        ////                                    cursorManager.saveLastPos()
-                        //                                }
-                        return;
+                        if((position + delta) <=1)
+                        {
+                            position = 1;
+                            //                                if(!isMovedStop){
+                            ////                                    cursorManager.saveLastPos();
+                            //                                    lastMousePos = cursorManager.cursorPos()
+                            //                                    console.log(lastMousePos)
+                            //                                    isMovedStop =true;
+                            ////                                    cursorManager.saveLastPos()
+                            //                                }
+                            return;
 
-                    };
+                        }
+                        else if((position + delta + cuePlate.duration) >= playerWidget.projectDuration())
+                        {
+                            position = Math.round(Math.round((playerWidget.projectDuration()-cuePlate.duration)*10) / 10);
+                            //                                if(!isMovedStop){
+                            ////                                    cursorManager.saveLastPos();
+                            //                                    lastMousePos = cursorManager.cursorPos().x
+                            //                                    console.log(lastMousePos)
+                            //                                    isMovedStop =true;
+                            ////                                    cursorManager.saveLastPos()
+                            //                                }
+                            return;
 
-                    //                            if(isMovedStop)
-                    //                            {
-                    //                                isMovedStop = false;
-                    //                                     cursorManager.setCursorPosX(lastMousePos);
-                    //                                cursorManager.saveLastPos();
-                    //                                return;
-                    ////                                cursorManager.moveToLastPos();
-                    //                            }
+                        };
 
-
+                        //                            if(isMovedStop)
+                        //                            {
+                        //                                isMovedStop = false;
+                        //                                     cursorManager.setCursorPosX(lastMousePos);
+                        //                                cursorManager.saveLastPos();
+                        //                                return;
+                        ////                                cursorManager.moveToLastPos();
+                        //                            }
+                    }
 
                     cueView.movedPlates.forEach(function(currCuePlate)
                     {
-                        if( ! ((currCuePlate.startMovingPosition + delta >= 0) && (currCuePlate.startMovingPosition + delta < playerWidget.projectDuration())))
+                        if( !currCuePlate.locked )
                         {
-                            isFitsLimits = false
+                            if( ! ((currCuePlate.startMovingPosition + delta >= 0) && (currCuePlate.startMovingPosition + delta < playerWidget.projectDuration())))
+                            {
+                                isFitsLimits = false
+                                return
+                            }
 
-                            return
-                        }
-
-                        if(((currCuePlate.position + delta) <= 1) || ((currCuePlate.position + delta + currCuePlate.duration) >= playerWidget.projectDuration()))
-                        {
-                            isFitsLimits = false
-                            //console.log(currCuePlate.name)
-                            return;
+                            if(((currCuePlate.position + delta) <= 1) || ((currCuePlate.position + delta + currCuePlate.duration) >= playerWidget.projectDuration()))
+                            {
+                                isFitsLimits = false
+                                //console.log(currCuePlate.name)
+                                return
+                            }
                         }
                     })
 
@@ -364,14 +370,17 @@ Component
                     {
                         cueView.movedPlates.forEach(function(currCuePlate)
                         {
-                            currCuePlate.position += delta
-
-                            currCuePlate.prefiresList.forEach(function(currPrefire)
+                            if( !currCuePlate.locked )
                             {
-                                currPrefire.position += delta
-                            })
+                                currCuePlate.position += delta
 
-                            cueView.checkPlatesIntersection()
+                                currCuePlate.prefiresList.forEach(function(currPrefire)
+                                {
+                                    currPrefire.position += delta
+                                })
+
+                                cueView.checkPlatesIntersection()
+                            }
                         })
                     }
                 }

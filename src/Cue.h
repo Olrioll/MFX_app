@@ -20,6 +20,7 @@ class Cue : public QObject
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, startTime, StartTime, 0) //Время начала Cue в миллисекундах(время самого раннего Action)
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(qulonglong, durationTime, DurationTime, 0) //Длительность Cue в миллисекундах
     QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, active, Active, false) //Определяет активен ли Cue (идет проигрывание)
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT(bool, locked, Locked, false) //Заблокирован ли Cue на плеере (нельзя перемещать)
 
     //Декораторы
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT(QString, startTimeDecorator, StartTimeDecorator, "") //Декоратор для времени начала Cue

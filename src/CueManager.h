@@ -29,7 +29,9 @@ public:
     Q_INVOKABLE void expandCueOnPlayerRequest(const QString& name); //Обработчик запроса от плеера, что нужно развернуть конкретный элемент Cue
     Q_INVOKABLE void cueSelectedOnCueListRequest(const QString& name); //Обработчик запроса от панели списка Cue о том, что была выделена конкретная Cue
     Q_INVOKABLE void cueDeselectedOnCueListRequest(const QString& name); //Обработчик запроса от панели списка Cue, что у Cue, на которой ранее было выделение, оно снято
-    Q_INVOKABLE void deleteCues(QStringList deletedCueNames);
+    Q_INVOKABLE void lockCueOnPlayerRequest( const QString& name ); //Обработчик запроса от плеера, что нужно заблокировать конкретный элемент Cue
+    Q_INVOKABLE void unlockCueOnPlayerRequest( const QString& name ); //Обработчик запроса от плеера, что нужно заблокировать конкретный элемент Cue
+    Q_INVOKABLE void deleteCues(const QStringList& deletedCueNames);
 
     Cue* cueById(const QUuid& id) const;
     Cue* cueByName(const QString& name) const;
@@ -43,7 +45,7 @@ public:
     DeviceManager *m_deviceManager;
 
 public slots:
-    void onAddCue(QVariantMap properties);
+    void onAddCue(const QVariantMap& properties);
     void onDeleteAllCue();
     void onRecalculateCue();
     void onDeleteCue(const QString& cueName);

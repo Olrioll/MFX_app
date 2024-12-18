@@ -52,7 +52,7 @@ void CueManager::initConnections()
     });
 }
 
-void CueManager::deleteCues(QStringList deletedCueNames)
+void CueManager::deleteCues(const QStringList& deletedCueNames)
 {
     for(const auto &name: deletedCueNames) {
         auto * cue = cueByName(name);
@@ -91,7 +91,7 @@ Action *CueManager::getAction(const QString& cueName, int deviceId)
     return act;
 }
 
-void CueManager::onAddCue(QVariantMap properties)
+void CueManager::onAddCue(const QVariantMap& properties)
 {
     QString name = properties.value("name").toString();
     //double newYposition = properties.value("newYposition").toDouble();
@@ -120,7 +120,7 @@ void CueManager::onDeleteCue(const QString &cueName)
     }else  m_cues->remove(cue);
 }
 
-void CueManager::addActionToCue(const QString&  cueName, const QString&  pattern, int deviceId, quint64 newPosition)
+void CueManager::addActionToCue(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
     Cue* cue = cueByName(cueName);
     if(cue == nullptr) {
@@ -170,10 +170,13 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
 void CueManager::onSetActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
     auto* action = getAction(cueName, deviceId);
-    if(action == nullptr) {
+
+    if(action == nullptr)
+    {
         addActionToCue(cueName, pattern, deviceId, newPosition);
         return;
     }
+
     action->setPatternName(pattern);
     action->setDeviceId(deviceId);
     quint64 position = newPosition / 10;
@@ -198,6 +201,18 @@ void CueManager::expandCueOnPlayerRequest(const QString &name)
 {
     if(auto* cue = cueByName(name))
         cue->setExpanded(true);
+}
+
+void CueManager::lockCueOnPlayerRequest( const QString& name )
+{
+    if( auto* cue = cueByName( name ) )
+        cue->setLocked( true );
+}
+
+void CueManager::unlockCueOnPlayerRequest( const QString& name )
+{
+    if( auto* cue = cueByName( name ) )
+        cue->setLocked( false );
 }
 
 void CueManager::cueSelectedOnCueListRequest(const QString &name)

@@ -869,18 +869,22 @@ Item
                     playerWidget.max -= step
 
                     var moveCue = true
-                    cueView.movedPlates.forEach(function(currCuePLate){
-                        if((currCuePLate.position - step) <=1){
+                    cueView.movedPlates.forEach(function(currCuePLate)
+                    {
+                        if((currCuePLate.position - step) <=1)
+                        {
                             moveCue = false;
                             return;
-                        }else if(currCuePLate.position - step +currCuePLate.duration >= playerWidget.projectDuration())
+                        }
+                        else if(currCuePLate.position - step +currCuePLate.duration >= playerWidget.projectDuration())
                         {
                             moveCue = false;
                             return;
                         }
                     })
 
-                    if(moveCue){
+                    if(moveCue)
+                    {
 
                         cueView.movedPlates.forEach(function(currCuePLate)
                         {
@@ -1069,6 +1073,36 @@ Item
                     }
                 }
             }
+            Action
+            {
+                text: translationsManager.translationTrigger + qsTr("Lock")
+                onTriggered:
+                {
+                    let checkedPlates = cueView.checkedPlates()
+
+                    checkedPlates.forEach(function(plate)
+                    {
+                        plate.locked = true
+                        project.setCueProperty(plate.name, "locked", plate.locked)
+                        cueManager.lockCueOnPlayerRequest(plate.name)
+                    })
+                }
+            }
+            Action
+            {
+                text: translationsManager.translationTrigger + qsTr("Unlock")
+                onTriggered:
+                {
+                    let checkedPlates = cueView.checkedPlates()
+
+                    checkedPlates.forEach(function(plate)
+                    {
+                        plate.locked = false
+                        project.setCueProperty(plate.name, "locked", plate.locked)
+                        cueManager.unlockCueOnPlayerRequest(plate.name)
+                    })
+                }
+            }
         }
 
         DropArea
@@ -1206,13 +1240,14 @@ Item
                 cuesList.forEach(function(currCue)
                 {
                     let newPlate = cuePlateComponent.createObject(cueView,
-                                                                  {
-                                                                      name: currCue["name"],
-                                                                      yPosition: currCue["yPosition"],
-//                                                                      position: currCue["position"],
-                                                                      duration: currCue["duration"]
-                                                                  }
-                                                                  )
+                    {
+                        name: currCue["name"],
+                        yPosition: currCue["yPosition"],
+                        //position: currCue["position"],
+                        duration: currCue["duration"],
+                        locked: currCue["locked"]
+                    })
+
                     newPlate.loadActions()
                     cuePlates.push(newPlate)
 
@@ -1284,7 +1319,9 @@ Item
 
                 return checkedPlatesList
             }
-            function intersectedPlates(){
+
+            function intersectedPlates()
+            {
                 let intersectedPlatesList = []
                 cuePlates.forEach(function(currCuePlate)
                 {
@@ -1294,7 +1331,8 @@ Item
                 return intersectedPlatesList;
             }
 
-            function deleteIntersected(){
+            function deleteIntersected()
+            {
                 let deletedCuesNames = []
                 if(!intersectedPlates().length){
                     return;
@@ -1310,9 +1348,11 @@ Item
                 loadCues();
             }
 
-            function deleteSelected(){
+            function deleteSelected()
+            {
                 let deletedCuesNames = []
-                if(!checkedPlates().length){
+                if(!checkedPlates().length)
+                {
                     return;
                 }
 
@@ -1469,16 +1509,22 @@ Item
                 })
             }
 
-            Connections {
+            Connections
+            {
                 target: cueManager
 
-                function onCueExpandedChanged(name, expanded) {
-                    if(expanded) {
+                function onCueExpandedChanged(name, expanded)
+                {
+                    if(expanded)
+                    {
                         cueView.expandCuePlate(name)
-                    } else {
+                    }
+                    else
+                    {
                         cueView.cuePlates.forEach(function(currCuePlate)
                         {
-                            if(currCuePlate.name === name) {
+                            if(currCuePlate.name === name)
+                            {
                                 currCuePlate.isExpanded = false
                             }
                         })
@@ -3218,17 +3264,21 @@ Item
         }
     }
 
-    Connections{
+    Connections
+    {
         target: project
-        function onPasteCues(pastedCues){
+        function onPasteCues(pastedCues)
+        {
             cueView.loadCues()
             let curCue;
 
-            pastedCues.forEach(function(_name){
+            pastedCues.forEach(function(_name)
+            {
 
                 cueView.cuePlates.forEach(function(currCuePlate)
                 {
-                    if(currCuePlate.name === _name ){
+                    if(currCuePlate.name === _name )
+                    {
 
                         currCuePlate.checked = true;
                         currCuePlate.state = "intersected"
@@ -3238,15 +3288,18 @@ Item
         }
     }
 
-    Connections{
+    Connections
+    {
         target: project
-        function onUpdateCues(updateCueName){
+        function onUpdateCues(updateCueName)
+        {
             cueView.loadCues();
             cueView.collapseAll();
             cueView.expandCuePlate(updateCueName);
 
         }
-        function onReloadCues(){
+        function onReloadCues()
+        {
             //console.log("reloadCues")
             cueView.loadCues();
         }
