@@ -5,7 +5,7 @@
 
 Device::Device( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : QObject( parent ), m_manager( mng )
 {
-    setUuid(QUuid::createUuid());
+    //setUuid(QUuid::createUuid());
 }
 
 qulonglong Device::getDurationByPattern( const Pattern& pattern ) const

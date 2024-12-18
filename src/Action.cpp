@@ -2,5 +2,5 @@
 
 Action::Action(QObject *parent) : QObject(parent)
 {
-    setUuid(QUuid::createUuid());
+    //setUuid(QUuid::createUuid());
 }

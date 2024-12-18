@@ -18,7 +18,7 @@ class CueContent;
 class Device  : public QObject
 {
     Q_OBJECT
-    QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор устройства
+    //QSM_READONLY_CSTREF_PROPERTY(QUuid, uuid, Uuid) //Уникальный идентификатор устройства
     QSM_READONLY_CSTREF_PROPERTY(PatternType::Type, deviceType, DeviceType) // Тип устройства
     QSM_WRITABLE_CSTREF_PROPERTY_WDEFAULT(QString, imageFile, ImageFile, "")  //Путь к файлу в ресурсах, соответствует типу устройства
     QSM_WRITABLE_CSTREF_PROPERTY(int, id, Id)  //Идентификатор устройства
