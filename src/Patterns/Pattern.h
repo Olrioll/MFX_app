@@ -5,8 +5,6 @@
 
 #include <QQmlConstRefPropertyHelpers.h>
 #include <QQmlEnumClassHelper.h>
-#include <QQmlVarPropertyHelpers.h>
-#include <QSuperMacros.h>
 #include "QQmlObjectListModel.h"
 
 #include "Operation.h"

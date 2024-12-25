@@ -10,7 +10,9 @@
 #include <QQmlEnumClassHelper.h>
 
 #include "SettingsManager.h"
+#include "Cloud/CloudManager.h"
 #include "JsonSerializable.h"
+
 #include "Patterns/Pattern.h"
 
 class DeviceManager;
@@ -24,7 +26,7 @@ class ProjectManager : public QObject, public JsonSerializable
     Q_OBJECT
 public:
 
-    explicit ProjectManager(SettingsManager &settngs, PatternManager* patternManager, QObject *parent = nullptr);
+    explicit ProjectManager(SettingsManager &settngs, PatternManager* patternManager, CloudManager* cloudManager, QObject *parent = nullptr);
     ~ProjectManager() override;
 
     static void qmlRegister();
@@ -217,6 +219,7 @@ private:
     SettingsManager& _settings;
     DeviceManager* m_DeviceManager;
     PatternManager* m_PatternManager;
+    CloudManager* m_CloudManager;
     bool _hasUnsavedChanges = false;
     QString _currentGroup;
     QStringList _pastedCues;

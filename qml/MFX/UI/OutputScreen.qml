@@ -5,37 +5,36 @@ import QtQuick.Layouts 1.15
 import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Components.Basic 1.0
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0
 
 //NOTE I do not use components or any modular structures here since we need the MVP as fast as possible
 Item
 {
     id: outputScreen
 
-    //TODO тип элемента облачной файловой системы для правой панели. Перенести в C++ часть
-    enum CloudFSItemType {
-        Folder,
-        File
-    }
-
     // TODO тип экшена для создаваемого лейера. Перенести в C++ часть
-    enum LayerActionType {
+    enum LayerActionType
+    {
         Shot,
         Hold
     }
 
-    RowLayout {
+    RowLayout
+    {
         anchors.fill: parent
         anchors.margins: 2
 
         spacing: 2
 
-        ColumnLayout {
+        ColumnLayout
+        {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
             spacing: 2
 
-            Rectangle {
+            Rectangle
+            {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 108
                 Layout.maximumHeight: 108
@@ -45,7 +44,8 @@ Item
 
                 color: "#444444"
 
-                RowLayout {
+                RowLayout
+                {
                     anchors.fill: parent
 
                     Item {
@@ -135,7 +135,8 @@ Item
 
                             MFXUICT.LayoutSpacer { }
 
-                            RowLayout {
+                            RowLayout
+                            {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 24
                                 Layout.maximumHeight: 24
@@ -143,13 +144,15 @@ Item
 
                                 spacing: 8
 
-                                Item {
+                                Item
+                                {
                                     Layout.fillHeight: true
                                     Layout.preferredWidth: 120
                                     Layout.maximumWidth: 120
                                     Layout.minimumWidth: 120
 
-                                    MfxButton {
+                                    MfxButton
+                                    {
                                         anchors.fill: parent
 
                                         checkable: false
@@ -169,13 +172,15 @@ Item
                                     }
                                 }
 
-                                Item {
+                                Item
+                                {
                                     Layout.fillHeight: true
                                     Layout.preferredWidth: 120
                                     Layout.maximumWidth: 120
                                     Layout.minimumWidth: 120
 
-                                    MfxButton {
+                                    MfxButton
+                                    {
                                         anchors.fill: parent
 
                                         checkable: false
@@ -188,9 +193,7 @@ Item
 
                                         text: translationsManager.translationTrigger + qsTr("Mount device list")
 
-                                        onClicked: {
-
-                                        }
+                                        onClicked: {}
                                     }
                                 }
 
@@ -199,13 +202,15 @@ Item
                         }
                     }
 
-                    Item {
+                    Item
+                    {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 108
                         Layout.maximumWidth: 108
                         Layout.minimumWidth: 108
 
-                        Rectangle {
+                        Rectangle
+                        {
                             anchors.fill: parent
                             anchors.margins: 4
 
@@ -213,7 +218,8 @@ Item
 
                             color: "#222222"
 
-                            Item {
+                            Item
+                            {
                                 anchors.centerIn: parent
 
                                 width: 64
@@ -222,7 +228,8 @@ Item
                                 //TODO восстановить, когда будет готова модель
                                 //visible: project.currentProjectFile.lenth > 0
 
-                                MFXUICT.ColoredIcon {
+                                MFXUICT.ColoredIcon
+                                {
                                     anchors.top: parent.top
                                     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -232,7 +239,8 @@ Item
                                     source: "qrc:/icons/output_screen/output_screen_file_icon.svg"
                                 }
 
-                                Text {
+                                Text
+                                {
                                     anchors.bottom: parent.bottom
                                     anchors.left: parent.left
                                     anchors.right: parent.right
@@ -636,17 +644,20 @@ Item
             }
         }
 
-        Rectangle {
+        Rectangle
+        {
             Layout.preferredWidth: 442
             Layout.maximumWidth: 442
             Layout.minimumWidth: 442
             Layout.fillHeight: true
+            visible: false
 
             radius: 2
 
             color: "#444444"
 
-            ColumnLayout {
+            ColumnLayout
+            {
                 anchors.fill: parent
 
                 spacing: 0
@@ -1651,7 +1662,8 @@ Item
             }
         }
 
-        Rectangle {
+        Rectangle
+        {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
@@ -1659,18 +1671,21 @@ Item
 
             color: "#444444"
 
-            ColumnLayout {
+            ColumnLayout
+            {
                 anchors.fill: parent
 
                 spacing: 0
 
-                Item {
+                Item
+                {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 24
                     Layout.maximumHeight: 24
                     Layout.minimumHeight: 24
 
-                    Item {
+                    Item
+                    {
                         id: cloudIconItem
 
                         anchors.top: parent.top
@@ -1681,7 +1696,8 @@ Item
                         width: 16
                         height: 16
 
-                        MFXUICT.ColoredIcon {
+                        MFXUICT.ColoredIcon
+                        {
                             anchors.centerIn: parent
                             width: 16
                             height: 16
@@ -1690,7 +1706,8 @@ Item
                         }
                     }
 
-                    Text {
+                    Text
+                    {
                         anchors.left: cloudIconItem.right
                         anchors.verticalCenter: cloudIconItem.verticalCenter
                         anchors.leftMargin: 5
@@ -1710,7 +1727,8 @@ Item
                     }
                 }
 
-                Rectangle {
+                Rectangle
+                {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
 
@@ -1718,7 +1736,8 @@ Item
 
                     radius: 2
 
-                    ColumnLayout {
+                    ColumnLayout
+                    {
                         anchors.fill: parent
 
                         spacing: 0
@@ -1727,7 +1746,8 @@ Item
                         //     правильно сделать - это разбить Path до текущей директории на подпапки, сделать из этого модель
                         //     и отображать в горизонтальном Flickable или даже имитировать ElideMiddle, отмечая для длинного пути
                         //     часть элементов тремя точками ...
-                        Text {
+                        Text
+                        {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 20
                             Layout.maximumHeight: 20
@@ -1751,7 +1771,8 @@ Item
                             text: translationsManager.translationTrigger + qsTr("/ Cloud")
                         }
 
-                        MFXUICT.RoundedRectangleShape {
+                        MFXUICT.RoundedRectangleShape
+                        {
                             Layout.fillHeight: true
                             Layout.fillWidth: true
 
@@ -1761,24 +1782,24 @@ Item
                             fillColor: "#000000"
                             borderColor: "#000000"
 
-                            GridView {
+                            GridView
+                            {
                                 anchors.fill: parent
                                 anchors.margins: 8
 
-                                //TODOMODEL добавить cloud file system model
-                                model: ListModel {
-                                    Component.onCompleted: {
-                                        append({"name":"Folder Name", type: OutputScreen.CloudFSItemType.Folder})
-                                        append({"name":"VivaBraslav_scene1", type: OutputScreen.CloudFSItemType.Folder})
-                                        for(var i = 0; i < 23; i++) {
-                                            append({"name":"Name", type: OutputScreen.CloudFSItemType.File})
-                                        }
+                                model: ListModel
+                                {
+                                    Component.onCompleted:
+                                    {
+                                        for( let res of cloudManager.ListResources() )
+                                            append({"name": res.name, type: res.type})
                                     }
                                 }
 
-                                ScrollBar.vertical: ScrollBar {
-                                    background: Rectangle {
-
+                                ScrollBar.vertical: ScrollBar
+                                {
+                                    background: Rectangle
+                                    {
                                         width: 6
                                         implicitWidth: 6
 
@@ -1787,8 +1808,8 @@ Item
                                         color: "#1AFFFFFF"
                                     }
 
-                                    contentItem: Rectangle {
-
+                                    contentItem: Rectangle
+                                    {
                                         width: 6
                                         implicitWidth: 6
 
@@ -1803,28 +1824,32 @@ Item
                                 cellWidth: 68
                                 cellHeight: 68
 
-                                delegate: Item {
+                                delegate: Item
+                                {
                                     width: 64
                                     height: 64
 
-                                    Loader {
-
+                                    Loader
+                                    {
                                         anchors.fill: parent
 
-                                        sourceComponent: model.type === OutputScreen.CloudFSItemType.Folder ? folderFSComponent
-                                                                                                            : fileFSComponent
+                                        sourceComponent: model.type === CloudFSItemType.Folder ? folderFSComponent : fileFSComponent
 
-                                        onLoaded: {
+                                        onLoaded:
+                                        {
                                             item.modelData = model
                                         }
 
-                                        Component {
+                                        Component
+                                        {
                                             id: folderFSComponent
 
-                                            Item {
+                                            Item
+                                            {
                                                 property var modelData
 
-                                                MFXUICT.ColoredIcon {
+                                                MFXUICT.ColoredIcon
+                                                {
                                                     anchors.top: parent.top
                                                     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -1834,7 +1859,8 @@ Item
                                                     source: "qrc:/icons/output_screen/output_screen_folder_icon.svg"
                                                 }
 
-                                                Text {
+                                                Text
+                                                {
                                                     anchors.bottom: parent.bottom
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
@@ -1857,14 +1883,16 @@ Item
                                             }
                                         }
 
-                                        Component {
+                                        Component
+                                        {
                                             id: fileFSComponent
 
-                                            Item {
-
+                                            Item
+                                            {
                                                 property var modelData
 
-                                                MFXUICT.ColoredIcon {
+                                                MFXUICT.ColoredIcon
+                                                {
                                                     anchors.top: parent.top
                                                     anchors.horizontalCenter: parent.horizontalCenter
 
@@ -1874,7 +1902,8 @@ Item
                                                     source: "qrc:/icons/output_screen/output_screen_file_icon.svg"
                                                 }
 
-                                                Text {
+                                                Text
+                                                {
                                                     anchors.bottom: parent.bottom
                                                     anchors.left: parent.left
                                                     anchors.right: parent.right
@@ -1897,14 +1926,17 @@ Item
                                             }
                                         }
 
-                                        MouseArea {
+                                        MouseArea
+                                        {
                                             anchors.fill: parent
 
-                                            onClicked: {
+                                            onClicked:
+                                            {
                                                 //TODO выделение
                                             }
 
-                                            onDoubleClicked: {
+                                            onDoubleClicked:
+                                            {
                                                 //TODO открытие папки либо выбор файла
                                             }
                                         }

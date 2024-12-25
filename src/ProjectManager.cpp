@@ -10,16 +10,10 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QtConcurrent>
+#include <QDebug>
 
 #include <algorithm>
 #include <random>
-
-
-#include <QDebug>
-
-#include "CloudSync/BasicCredentials.hpp"
-#include "CloudSync/CloudFactory.hpp"
-#include "CloudSync/exceptions/cloud/CloudException.hpp"
 
 constexpr int DEFAULT_SCENE_FRAME_WIDTH = 20;
 constexpr int DEFAULT_SCENE_FRAME_HEIGHT = 10;
@@ -29,8 +23,11 @@ constexpr char MUS_SUFFIX[] = "mus";
 constexpr char DEFAULT_MUS[] = "default.mus";
 constexpr char DEFAULT_SVG[] = "default.svg";
 
-ProjectManager::ProjectManager(SettingsManager &settngs, PatternManager* patternManager, QObject *parent)
-    : QObject( parent ), _settings( settngs ), m_PatternManager( patternManager )
+ProjectManager::ProjectManager(SettingsManager &settngs, PatternManager* patternManager, CloudManager* cloudManager, QObject *parent)
+    : QObject( parent )
+    , _settings( settngs )
+    , m_PatternManager( patternManager )
+    , m_CloudManager( cloudManager )
 {
     connect( &m_ImportAudioTrackWatcher, &QFutureWatcher<QString>::finished, this, &ProjectManager::importAudioTrackFinished );
 
@@ -1279,36 +1276,19 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
 
     if( sendToCloud )
     {
-        const auto l = _settings.value( "cloudLogin" ).toString().toStdString();
-        const auto p = _settings.value( "cloudPassword" ).toString().toStdString();
-
-        if( !l.empty() && !p.empty() )
+        QFileInfo info( fileName );
+        auto fname = info.fileName();
+        if( fname > 0 )
         {
-            QFileInfo info( fileName );
-            auto fname = info.fileName();
-            if( fname > 0 )
+            if( fname.size() + 1 > 12 )
             {
-                if( fname.size() + 1 > 12 )
-                {
-                    const auto s = fname.size() - 12;
-                    fname = fname.remove( 12, s - 1 );
-                }
-
-                std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
-
-                try
-                {
-                    auto credentials = CloudSync::BasicCredentials::from_username_password( l, p );
-                    auto cloud = CloudSync::CloudFactory().create_nextcloud( "https://cloud.mainfx.ru/", credentials );
-
-                    auto file = cloud->root()->create_file( fname.toStdString() );
-                    file->write_binary( content );
-                }
-                catch( const CloudSync::exceptions::cloud::CloudException& e )
-                {
-                    qCritical() << "Sth went wrong: " << e.what();
-                }
+                const auto s = fname.size() - 12;
+                fname = fname.remove( 12, s - 1 );
             }
+
+            std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
+
+            m_CloudManager->UploadFile( fname.toStdString(), content );
         }
     }
 

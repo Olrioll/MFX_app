@@ -23,6 +23,7 @@
 #include "CueContentManager.h"
 #include "CueContentSortingModel.h"
 #include "Backuper.h"
+#include "Cloud/CloudManager.h"
 
 #include "Trace/AppStackWalker.h"
 #include "Trace/AppMessageHandler.h"
@@ -77,13 +78,14 @@ int main(int argc, char** argv)
 
     const QDir robotoFontDir(":/fonts/Roboto/");
     const auto robotoFontFiles = robotoFontDir.entryList(QStringList{"*.ttf"}, QDir::NoDotAndDotDot | QDir::Files);
-    for(const auto & robotoFontFile : robotoFontFiles) {
+
+    for(const auto & robotoFontFile : robotoFontFiles)
         QFontDatabase::addApplicationFont(robotoFontDir.path() + QDir::separator() + robotoFontFile);
-    }
 
     TranslationManager translationManager(settings);
     PatternManager patternManager( settings );
-    ProjectManager project( settings, &patternManager );
+    CloudManager cloudManager( settings );
+    ProjectManager project( settings, &patternManager, &cloudManager );
     DeviceManager deviceManager(&patternManager, &project);
     project.SetDeviceManager( &deviceManager );
     CursorManager cursorManager;
@@ -122,6 +124,7 @@ QSurfaceFormat::setDefaultFormat(format);
     CueContentManager::qmlRegister();
     CueContentSortingModel::qmlRegister();
     ProjectManager::qmlRegister();
+    CloudManager::qmlRegister();
 
     QQmlApplicationEngine engine;
 
@@ -139,6 +142,7 @@ QSurfaceFormat::setDefaultFormat(format);
     engine.rootContext()->setContextProperty("dmxWorker", DMXWorker::instance());
     engine.rootContext()->setContextProperty("cueContentManager", &cueContentManager);
     engine.rootContext()->setContextProperty( "backuper", &backuper );
+    engine.rootContext()->setContextProperty( "cloudManager", &cloudManager );
 
     engine.load(QUrl(QStringLiteral("qrc:/MFX/UI/ApplicationWindow.qml")));
 
