@@ -2,16 +2,13 @@
 
 #include "CloudSync/Resource.hpp"
 
-CloudResource::CloudResource( QObject* parent /*= nullptr*/ )
-    : QObject( parent )
-{}
-
 CloudResource::CloudResource( std::shared_ptr<CloudSync::Resource> res, QObject* parent /*= nullptr*/ )
     : QObject( parent )
+    , mCloudRes( res )
 {
-    if( res )
+    if( mCloudRes )
     {
-        setType( res->is_file() ? CloudFSItemType::File : CloudFSItemType::Folder );
-        setName( QString::fromStdString( res->name() ) );
+        setType( mCloudRes->is_file() ? CloudFSItemType::File : CloudFSItemType::Folder );
+        setName( QString::fromStdString( mCloudRes->name() ) );
     }
 }

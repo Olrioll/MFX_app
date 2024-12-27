@@ -154,7 +154,9 @@ add_executable(${MFX_PROJECT_NAME} WIN32
     "src/DMXWriter.cpp"
     "src/CustomPatternStore.cpp"
     "src/Cloud/CloudManager.cpp"
-    "src/Cloud/CloudResource.cpp")
+    "src/Cloud/CloudResource.cpp"
+    "src/Cloud/CloudParentDir.cpp"
+    )
 
 #target_link_directories(${MFX_PROJECT_NAME} PUBLIC "libs")
 

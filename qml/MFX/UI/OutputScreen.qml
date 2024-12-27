@@ -264,7 +264,8 @@ Item
                 }
             }
 
-            Rectangle {
+            Rectangle
+            {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
@@ -272,33 +273,39 @@ Item
 
                 color: "#333333"
 
-                ColumnLayout {
+                ColumnLayout
+                {
                     anchors.fill: parent
 
                     spacing: 0
 
-                    Item {
+                    Item
+                    {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 24
                         Layout.maximumHeight: 24
                         Layout.minimumHeight: 24
 
-                        ButtonGroup {
+                        ButtonGroup
+                        {
                             id: deviceTypeSelectionTabBarButtonGroup
 
                             exclusive: true
                         }
 
-                        RowLayout {
+                        RowLayout
+                        {
                             anchors.fill: parent
 
                             spacing: 0
 
-                            Item {
+                            Item
+                            {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
 
-                                Button {
+                                Button
+                                {
                                     id: deviceTypeSequencesButton
 
                                     anchors.fill: parent
@@ -307,7 +314,8 @@ Item
 
                                     checked: true
 
-                                    background: MFXUICT.RoundedRectangleShape {
+                                    background: MFXUICT.RoundedRectangleShape
+                                    {
                                         anchors.rightMargin: visible ? -1 : 0
 
                                         topLeftRadius: 2
@@ -319,7 +327,8 @@ Item
                                         visible: deviceTypeSequencesButton.checked
                                     }
 
-                                    contentItem: Text {
+                                    contentItem: Text
+                                    {
                                         anchors.fill: parent
 
                                         lineHeightMode: Text.FixedHeight
@@ -344,13 +353,15 @@ Item
                                 }
                             }
 
-                            Item {
+                            Item
+                            {
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 1
                                 Layout.maximumWidth: 1
                                 Layout.minimumWidth: 1
 
-                                Rectangle {
+                                Rectangle
+                                {
                                     anchors.fill: parent
                                     anchors.topMargin: 2
                                     anchors.bottomMargin: 2
@@ -363,18 +374,21 @@ Item
                                 }
                             }
 
-                            Item {
+                            Item
+                            {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
 
-                                Button {
+                                Button
+                                {
                                     id: deviceTypeDimmerButton
 
                                     anchors.fill: parent
 
                                     checkable: true
 
-                                    background: MFXUICT.RoundedRectangleShape {
+                                    background: MFXUICT.RoundedRectangleShape
+                                    {
                                         anchors.leftMargin: visible ? -1 : 0
                                         anchors.rightMargin: visible ? -1 : 0
 
@@ -418,7 +432,8 @@ Item
                                 Layout.maximumWidth: 1
                                 Layout.minimumWidth: 1
 
-                                Rectangle {
+                                Rectangle
+                                {
                                     anchors.fill: parent
                                     anchors.topMargin: 2
                                     anchors.bottomMargin: 2
@@ -442,7 +457,8 @@ Item
 
                                     checkable: true
 
-                                    background: MFXUICT.RoundedRectangleShape {
+                                    background: MFXUICT.RoundedRectangleShape
+                                    {
                                         anchors.leftMargin: visible ? -1 : 0
                                         anchors.rightMargin: visible ? -1 : 0
 
@@ -481,13 +497,15 @@ Item
 
                             }
 
-                            Item {
+                            Item
+                            {
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: 1
                                 Layout.maximumWidth: 1
                                 Layout.minimumWidth: 1
 
-                                Rectangle {
+                                Rectangle
+                                {
                                     anchors.fill: parent
                                     anchors.topMargin: 2
                                     anchors.bottomMargin: 2
@@ -500,18 +518,21 @@ Item
                                 }
                             }
 
-                            Item {
+                            Item
+                            {
                                 Layout.fillHeight: true
                                 Layout.fillWidth: true
 
-                                Button {
+                                Button
+                                {
                                     id: deviceTypePyroButton
 
                                     anchors.fill: parent
 
                                     checkable: true
 
-                                    background: MFXUICT.RoundedRectangleShape {
+                                    background: MFXUICT.RoundedRectangleShape
+                                    {
                                         anchors.leftMargin: visible ? -1 : 0
 
                                         topLeftRadius: 2
@@ -523,7 +544,8 @@ Item
                                         visible: deviceTypePyroButton.checked
                                     }
 
-                                    contentItem: Text {
+                                    contentItem: Text
+                                    {
                                         anchors.fill: parent
 
                                         lineHeightMode: Text.FixedHeight
@@ -554,7 +576,8 @@ Item
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        Rectangle {
+                        Rectangle
+                        {
                             anchors.fill: parent
                             anchors.margins: 2
 
@@ -562,14 +585,18 @@ Item
 
                             color: "#000000"
 
-                            GridView {
+                            GridView
+                            {
                                 anchors.fill: parent
                                 anchors.margins: 8
 
                                 //TODOMODEL добавить sequences model, тип получаемых данных брать относительно нажатой
-                                model: ListModel {
-                                    Component.onCompleted: {
-                                        for(var i = 0; i < 10; i++) {
+                                model: ListModel
+                                {
+                                    Component.onCompleted:
+                                    {
+                                        for(var i = 0; i < 10; i++)
+                                        {
                                             append({"name":"Name"})
                                         }
                                     }
@@ -1767,8 +1794,7 @@ Item
 
                             color: "#FFFFFF"
 
-                            //TODO заменить до пути до облака
-                            text: translationsManager.translationTrigger + qsTr("/ Cloud")
+                            text: cloudManager.currentPath
                         }
 
                         MFXUICT.RoundedRectangleShape
@@ -1782,165 +1808,215 @@ Item
                             fillColor: "#000000"
                             borderColor: "#000000"
 
-                            GridView
+                            states:
+                            [
+                                State
+                                {
+                                    name: "disconnected"; when: cloudManager.cloudState == CloudStateEnum.Disconnected
+                                    PropertyChanges { target: resourcesGridStack; currentIndex: 0 }
+                                },
+                                State
+                                {
+                                    name: "connected"; when: cloudManager.cloudState == CloudStateEnum.Connected
+                                    PropertyChanges { target: resourcesGridStack; currentIndex: 1 }
+                                    StateChangeScript { script: cloudManager.changeCurrentDir( null ) }
+                                }
+                                ,
+                                State
+                                {
+                                    name: "connecting"; when: cloudManager.cloudState == CloudStateEnum.Connecting
+                                    PropertyChanges { target: resourcesGridStack; currentIndex: 2 }
+                                }
+                            ]
+
+                            StackLayout
                             {
+                                id: resourcesGridStack
                                 anchors.fill: parent
                                 anchors.margins: 8
 
-                                model: ListModel
+                                Text
                                 {
-                                    Component.onCompleted:
-                                    {
-                                        for( let res of cloudManager.ListResources() )
-                                            append({"name": res.name, type: res.type})
-                                    }
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideMiddle
+                                    color: "white"
+                                    font.family: MFXUIS.Fonts.robotoRegular.name
+                                    font.pixelSize: 30
+                                    text: "Disconnected"
                                 }
 
-                                ScrollBar.vertical: ScrollBar
+                                GridView
                                 {
-                                    background: Rectangle
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    model: cloudManager.cloudViewModel
+
+                                    ScrollBar.vertical: ScrollBar
                                     {
-                                        width: 6
-                                        implicitWidth: 6
+                                        background: Rectangle
+                                        {
+                                            width: 6
+                                            implicitWidth: 6
 
-                                        radius: 3
+                                            radius: 3
 
-                                        color: "#1AFFFFFF"
+                                            color: "#1AFFFFFF"
+                                        }
+
+                                        contentItem: Rectangle
+                                        {
+                                            width: 6
+                                            implicitWidth: 6
+
+                                            radius: 3
+
+                                            color: "#80C4C4C4"
+                                        }
                                     }
 
-                                    contentItem: Rectangle
+                                    clip: true
+
+                                    cellWidth: 68
+                                    cellHeight: 68
+
+                                    delegate: Item
                                     {
-                                        width: 6
-                                        implicitWidth: 6
+                                        width: 64
+                                        height: 64
 
-                                        radius: 3
-
-                                        color: "#80C4C4C4"
-                                    }
-                                }
-
-                                clip: true
-
-                                cellWidth: 68
-                                cellHeight: 68
-
-                                delegate: Item
-                                {
-                                    width: 64
-                                    height: 64
-
-                                    Loader
-                                    {
-                                        anchors.fill: parent
-
-                                        sourceComponent: model.type === CloudFSItemType.Folder ? folderFSComponent : fileFSComponent
-
-                                        onLoaded:
-                                        {
-                                            item.modelData = model
-                                        }
-
-                                        Component
-                                        {
-                                            id: folderFSComponent
-
-                                            Item
-                                            {
-                                                property var modelData
-
-                                                MFXUICT.ColoredIcon
-                                                {
-                                                    anchors.top: parent.top
-                                                    anchors.horizontalCenter: parent.horizontalCenter
-
-                                                    width: 58
-                                                    height: 48
-
-                                                    source: "qrc:/icons/output_screen/output_screen_folder_icon.svg"
-                                                }
-
-                                                Text
-                                                {
-                                                    anchors.bottom: parent.bottom
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-
-                                                    horizontalAlignment: Text.AlignHCenter
-                                                    verticalAlignment: Text.AlignBottom
-
-                                                    lineHeightMode: Text.FixedHeight
-                                                    lineHeight: 12
-
-                                                    elide: Text.ElideMiddle
-
-                                                    font.family: MFXUIS.Fonts.robotoRegular.name
-                                                    font.pixelSize: 10
-
-                                                    color: "#FFFFFF"
-
-                                                    text: modelData.name
-                                                }
-                                            }
-                                        }
-
-                                        Component
-                                        {
-                                            id: fileFSComponent
-
-                                            Item
-                                            {
-                                                property var modelData
-
-                                                MFXUICT.ColoredIcon
-                                                {
-                                                    anchors.top: parent.top
-                                                    anchors.horizontalCenter: parent.horizontalCenter
-
-                                                    width: 38
-                                                    height: 48
-
-                                                    source: "qrc:/icons/output_screen/output_screen_file_icon.svg"
-                                                }
-
-                                                Text
-                                                {
-                                                    anchors.bottom: parent.bottom
-                                                    anchors.left: parent.left
-                                                    anchors.right: parent.right
-
-                                                    horizontalAlignment: Text.AlignHCenter
-                                                    verticalAlignment: Text.AlignBottom
-
-                                                    lineHeightMode: Text.FixedHeight
-                                                    lineHeight: 12
-
-                                                    elide: Text.ElideMiddle
-
-                                                    font.family: MFXUIS.Fonts.robotoRegular.name
-                                                    font.pixelSize: 10
-
-                                                    color: "#FFFFFF"
-
-                                                    text: modelData.name
-                                                }
-                                            }
-                                        }
-
-                                        MouseArea
+                                        Loader
                                         {
                                             anchors.fill: parent
 
-                                            onClicked:
+                                            sourceComponent: model.type === CloudFSItemType.Folder ? folderFSComponent : fileFSComponent
+
+                                            onLoaded:
                                             {
-                                                //TODO выделение
+                                                item.modelData = model
                                             }
 
-                                            onDoubleClicked:
+                                            Component
                                             {
-                                                //TODO открытие папки либо выбор файла
+                                                id: folderFSComponent
+
+                                                Item
+                                                {
+                                                    property var modelData
+
+                                                    MFXUICT.ColoredIcon
+                                                    {
+                                                        anchors.top: parent.top
+                                                        anchors.horizontalCenter: parent.horizontalCenter
+
+                                                        width: 58
+                                                        height: 48
+
+                                                        source: "qrc:/icons/output_screen/output_screen_folder_icon.svg"
+                                                    }
+
+                                                    Text
+                                                    {
+                                                        anchors.bottom: parent.bottom
+                                                        anchors.left: parent.left
+                                                        anchors.right: parent.right
+
+                                                        horizontalAlignment: Text.AlignHCenter
+                                                        verticalAlignment: Text.AlignBottom
+
+                                                        lineHeightMode: Text.FixedHeight
+                                                        lineHeight: 12
+
+                                                        elide: Text.ElideMiddle
+
+                                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                                        font.pixelSize: 10
+
+                                                        color: "#FFFFFF"
+
+                                                        text: modelData.name
+                                                    }
+                                                }
+                                            }
+
+                                            Component
+                                            {
+                                                id: fileFSComponent
+
+                                                Item
+                                                {
+                                                    property var modelData
+
+                                                    MFXUICT.ColoredIcon
+                                                    {
+                                                        anchors.top: parent.top
+                                                        anchors.horizontalCenter: parent.horizontalCenter
+
+                                                        width: 38
+                                                        height: 48
+
+                                                        source: "qrc:/icons/output_screen/output_screen_file_icon.svg"
+                                                    }
+
+                                                    Text
+                                                    {
+                                                        anchors.bottom: parent.bottom
+                                                        anchors.left: parent.left
+                                                        anchors.right: parent.right
+
+                                                        horizontalAlignment: Text.AlignHCenter
+                                                        verticalAlignment: Text.AlignBottom
+
+                                                        lineHeightMode: Text.FixedHeight
+                                                        lineHeight: 12
+
+                                                        elide: Text.ElideMiddle
+
+                                                        font.family: MFXUIS.Fonts.robotoRegular.name
+                                                        font.pixelSize: 10
+
+                                                        color: "#FFFFFF"
+
+                                                        text: modelData.name
+                                                    }
+                                                }
+                                            }
+
+                                            MouseArea
+                                            {
+                                                anchors.fill: parent
+                                                z: 1
+
+                                                onClicked:
+                                                {
+                                                    //TODO выделение
+                                                }
+
+                                                onDoubleClicked:
+                                                {
+                                                    cloudManager.changeCurrentDir( modelData )
+                                                }
                                             }
                                         }
                                     }
+                                }
+
+                                Text
+                                {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    elide: Text.ElideMiddle
+                                    color: "white"
+                                    font.family: MFXUIS.Fonts.robotoRegular.name
+                                    font.pixelSize: 30
+                                    text: "Connecting..."
                                 }
                             }
                         }

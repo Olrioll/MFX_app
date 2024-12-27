@@ -8,7 +8,7 @@ constexpr char CUSTOM_PATTERNS_VER[] = "1";
 
 CustomPatternStore::CustomPatternStore( SettingsManager& settngs, QObject* parent ) : mSettings( settngs ), QObject( parent )
 {
-    m_Patterns= new PatternSourceModel( this );
+    m_Patterns = new PatternSourceModel( this );
 }
 
 void CustomPatternStore::load()

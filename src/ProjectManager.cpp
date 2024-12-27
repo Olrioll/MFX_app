@@ -11,6 +11,7 @@
 #include <QJsonArray>
 #include <QtConcurrent>
 #include <QDebug>
+#include <QApplication>
 
 #include <algorithm>
 #include <random>
@@ -36,6 +37,11 @@ ProjectManager::ProjectManager(SettingsManager &settngs, PatternManager* pattern
     addChild("Patches");
     addChild("Cues");
     addChild("Groups");
+
+    QTimer::singleShot( 2000, this, [=]()
+    {
+        m_CloudManager->Connect();
+    } );
 }
 
 ProjectManager::~ProjectManager()
@@ -1280,6 +1286,14 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
         auto fname = info.fileName();
         if( fname > 0 )
         {
+            QCursor waitCursor( Qt::WaitCursor );
+            QGuiApplication* app = static_cast<QGuiApplication*>(QCoreApplication::instance());
+            if( app )
+            {
+                QCursor waitCursor( Qt::WaitCursor );
+                app->changeOverrideCursor( waitCursor );
+            }
+
             if( fname.size() + 1 > 12 )
             {
                 const auto s = fname.size() - 12;
@@ -1289,6 +1303,10 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
             std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
 
             m_CloudManager->UploadFile( fname.toStdString(), content );
+            m_CloudManager->RefreshCurrentDir();
+
+            if( app )
+                app->restoreOverrideCursor();
         }
     }
 

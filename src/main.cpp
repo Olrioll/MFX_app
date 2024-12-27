@@ -130,17 +130,17 @@ QSurfaceFormat::setDefaultFormat(format);
 
     engine.addImportPath("qrc:/");
 
-    engine.rootContext()->setContextProperty("settingsManager", &settings);
-    engine.rootContext()->setContextProperty("translationsManager", &translationManager);
-    engine.rootContext()->setContextProperty("project", &project);
-    engine.rootContext()->setContextProperty("patternManager", &patternManager);
-    engine.rootContext()->setContextProperty("cursorManager", &cursorManager);
-    engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
-    engine.rootContext()->setContextProperty("cueManager", &cueManager);
-    engine.rootContext()->setContextProperty("deviceManager", &deviceManager);
-    engine.rootContext()->setContextProperty("comPortModel", &deviceManager.m_comPortModel);
-    engine.rootContext()->setContextProperty("dmxWorker", DMXWorker::instance());
-    engine.rootContext()->setContextProperty("cueContentManager", &cueContentManager);
+    engine.rootContext()->setContextProperty( "settingsManager", &settings);
+    engine.rootContext()->setContextProperty( "translationsManager", &translationManager);
+    engine.rootContext()->setContextProperty( "project", &project);
+    engine.rootContext()->setContextProperty( "patternManager", &patternManager);
+    engine.rootContext()->setContextProperty( "cursorManager", &cursorManager);
+    engine.rootContext()->setContextProperty( "applicationDirPath", QGuiApplication::applicationDirPath());
+    engine.rootContext()->setContextProperty( "cueManager", &cueManager);
+    engine.rootContext()->setContextProperty( "deviceManager", &deviceManager);
+    engine.rootContext()->setContextProperty( "comPortModel", &deviceManager.m_comPortModel);
+    engine.rootContext()->setContextProperty( "dmxWorker", DMXWorker::instance());
+    engine.rootContext()->setContextProperty( "cueContentManager", &cueContentManager);
     engine.rootContext()->setContextProperty( "backuper", &backuper );
     engine.rootContext()->setContextProperty( "cloudManager", &cloudManager );
 

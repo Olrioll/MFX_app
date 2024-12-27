@@ -19,8 +19,10 @@ class CloudResource : public QObject
     QSM_READONLY_CSTREF_PROPERTY_WDEFAULT( QString, name, Name, "" )
 
 public:
-    explicit CloudResource( QObject* parent = nullptr );
     explicit CloudResource( std::shared_ptr<CloudSync::Resource> res, QObject* parent = nullptr );
+
+public:
+    std::shared_ptr<CloudSync::Resource> mCloudRes;
 };
 
 Q_DECLARE_METATYPE( CloudResource* )

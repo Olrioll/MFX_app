@@ -23,7 +23,6 @@ class PatternManager : public QObject
     Q_PROPERTY(PatternFilteringModel* patternsShotFiltered READ patternsShotFiltered CONSTANT)
 public:
     explicit PatternManager(SettingsManager& settingsManager, QObject* parent = nullptr);
-    ~PatternManager();
 
     static void qmlRegister();
 
@@ -50,5 +49,5 @@ private:
     PatternFilteringModel* m_patternsShotFiltered = nullptr;
     SettingsManager& m_settingsManager;
     QMap<QString, int> m_prefire;
-    CustomPatternStore* m_CustomPatterns;
+    CustomPatternStore* m_CustomPatterns = nullptr;
 };

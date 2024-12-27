@@ -24,13 +24,6 @@ PatternManager::PatternManager(SettingsManager& settingsManager, QObject* parent
     reloadPatterns();
 }
 
-PatternManager::~PatternManager()
-{
-    m_patterns->clear();
-    m_patterns->deleteLater();
-    m_patternsFiltered->deleteLater();
-}
-
 void PatternManager::qmlRegister()
 {
     PatternType::registerToQml( "MFX.Enums", 1, 0 );
