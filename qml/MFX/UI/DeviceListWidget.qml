@@ -22,7 +22,7 @@ ListView
 
     function loadDeviceList()
     {
-        console.log("loadDeviceList")
+        //console.log("loadDeviceList")
 
         deviceListModel.clear()
         var patchesList = project.patchesIdList(groupName)
@@ -155,7 +155,6 @@ ListView
             property bool isEnter: false
             onDropped:
             {
-                console.log("!!!")
                 console.log("Dropped")
                 if(drop.source.name.startsWith("A")){
                     project.setPatchProperty(currentId, "act", drop.source.name);
@@ -166,7 +165,6 @@ ListView
             }
             onEntered:
             {
-                console.log("!!!")
                 if(drag.source.name.startsWith("A"))
                 {
                     project.setPatchProperty(patchId, "checked", true);

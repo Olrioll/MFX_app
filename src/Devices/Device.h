@@ -14,6 +14,7 @@ constexpr int PATTERN_INTERVAL_MS = 10;
 
 class DeviceManager;
 class CueContent;
+class Action;
 
 class Device  : public QObject
 {
@@ -30,6 +31,7 @@ class Device  : public QObject
 public:
     explicit Device( DeviceManager* mng, QObject* parent = nullptr );
     virtual void runPatternSingly( const Pattern& p, quint64 time ) = 0;
+    virtual void runActionSingly( const QString& cueName, const Action& action, quint64 time );
     virtual void finishChangeAngle( int angle ) = 0;
 
     qulonglong getDurationByPattern( const Pattern& pattern ) const;

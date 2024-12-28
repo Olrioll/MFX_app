@@ -32,6 +32,12 @@ QQmlObjectListModelBase* CloudManager::cloudViewModel() const
     return mCloudViewModel;
 }
 
+void CloudManager::reconnect()
+{
+    Disconnect();
+    Connect();
+}
+
 bool CloudManager::Connect()
 {
     if( mCloud )
@@ -49,10 +55,11 @@ bool CloudManager::Connect()
 
         auto credentials = CloudSync::BasicCredentials::from_username_password( login, password );
         mCloud = CloudSync::CloudFactory().create_nextcloud( NEXTCLOUD_URL, credentials );
+        mCloud->test_connection();
     }
     catch( const CloudSync::exceptions::cloud::CloudException& e )
     {
-        qCritical() << "Sth went wrong: " << e.what();
+        qWarning() << "Sth went wrong: " << e.what();
 
         setCloudState( CloudStateEnum::Disconnected );
         mCloud.reset();
@@ -68,7 +75,15 @@ void CloudManager::Disconnect()
 {
     if( mCloud )
     {
-        mCloud->logout();
+        try
+        {
+            mCloud->logout();
+        }
+        catch( const CloudSync::exceptions::cloud::CloudException& e )
+        {
+            qWarning() << "Sth went wrong: " << e.what();
+        }
+
         mCloud.reset();
     }
 

@@ -6,6 +6,7 @@
 #include "CueManager.h"
 #include "CueContentSortingModel.h"
 #include "PatternManager.h"
+#include "ProjectManager.h"
 
 namespace  {
 static constexpr char actionStartTimeChangeRole[] = "startTime";
@@ -349,20 +350,19 @@ void CueContentManager::refrestCueContentModel()
     for (const auto* action : listActions)
     {
         const Device* device = m_deviceManager.getDeviceById( action->deviceId() );
-        const Pattern* pattern = m_deviceManager.GetPatternManager()->patternByName( action->patternName() );
-
-        if( !device || !pattern )
+        if( !device )
             continue;
 
-        qulonglong duration = device->getDurationByPattern( *pattern );
+        auto prefire = m_deviceManager.GetProjectManager()->cueActionPrefire( m_currentCue->name(), action->patternName() );
+        qulonglong duration = m_deviceManager.GetProjectManager()->cueActionDuration( m_currentCue->name(), action->patternName() );
 
         auto* cueContent = new CueContent(this);
         cueContent->setDelay( action->startTime() - m_currentCue->startTime() );
         cueContent->setBetween( action->startTime() - prevStop );
-        cueContent->setTime( duration + pattern->prefireDuration() );
-        cueContent->setPrefire( pattern->prefireDuration() );
+        cueContent->setTime( duration + prefire );
+        cueContent->setPrefire( prefire );
 
-        prevStop = action->startTime() + duration + pattern->prefireDuration();
+        prevStop = action->startTime() + duration + prefire;
 
         device->copyToCueContent( *cueContent );
 

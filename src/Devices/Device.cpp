@@ -1,7 +1,9 @@
 #include "Device.h"
 #include "DeviceManager.h"
+#include "PatternManager.h"
 #include "Patterns/Pattern.h"
 #include "CueContent.h"
+#include "Action.h"
 
 Device::Device( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : QObject( parent ), m_manager( mng )
 {
@@ -35,4 +37,13 @@ void Device::setDMXOper( int deviceId, int duration, int angle, int velocity, in
 void Device::copyToCueContent( CueContent& cueContent ) const
 {
     cueContent.setDevice( id() );
+}
+
+void Device::runActionSingly( const QString& cueName, const Action& action, quint64 time )
+{
+    const Pattern* p = m_manager->GetPatternManager()->patternByName( action.patternName() );
+    if( !p )
+        return;
+
+    runPatternSingly( *p, time );
 }

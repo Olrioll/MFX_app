@@ -2,6 +2,7 @@ import QtQuick 2.15
 
 import MFX.UI.Components.Basic 1.0 as MFXUICB
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0
 
 Component
 {
@@ -81,16 +82,19 @@ Component
 
             actions.forEach(function(currAction)
             {
+                //console.log("load action: ", currAction.actionName, currAction.actionPrefire, currAction.actionDuration)
                 let pattern = patternManager.patternByName(currAction.actionName)
-                if( pattern )
+
+                if( pattern || currAction.actionPrefire !== undefined )
                 {
-                    let prefireDuration = pattern.prefireDuration
+                    let prefireDuration = currAction.actionPrefire !== undefined ? currAction.actionPrefire : pattern.prefireDuration
 
                     let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
                                                                                 displayedName: currAction.actionName + " - P" + currAction.patchId,
                                                                                 patchId: currAction.patchId,
                                                                                 position: currAction.position,
                                                                                 prefire: prefireDuration,
+                                                                                duration: currAction.actionDuration,
                                                                                 positionCoeff: currAction.positionCoeff
                                                                             })
                     actionList.push(newActionMarker)
@@ -542,33 +546,45 @@ Component
                 {
                     if( cuePlate.actionList.length === 1 )
                     {
-                        let device = deviceManager.getDeviceById( cuePlate.actionList[0] )
-                        if( !device || device.deviceType != MFXE.PatternType.Shot )
+                        let currAction = cuePlate.actionList[0]
+
+                        let device = deviceManager.getDeviceById( currAction.patchId )
+                        if( !device || device.deviceType != PatternType.Shot )
                             return
 
+                        let newDuration = currAction.duration + delta
+
+                        if( newDuration > 0)
+                        {
+                            currAction.duration = newDuration
+                            project.onSetActionProperty( cuePlate.name, currAction.name, currAction.patchId, "actionDuration", currAction.duration )
+                            cueManager.onSetActionProperty( cuePlate.name, currAction.name, currAction.patchId, currAction.position )
+                        }
+
+                        cuePlate.updatePosition()
                         return
                     }
 
-//                            let prevDuration = cuePlate.firstAction.position;
                     cuePlate.actionList.forEach(function(currAction, i)
                     {
                         if(currAction.name === cuePlate.firstAction.name && currAction.patchId === cuePlate.firstAction.patchId)
-                        {
                             return // this is first action in cue
-                        }
+
                         let newPosition = currAction.position + delta * currAction.positionCoeff
 
-                        if(newPosition <= cuePlate.firstAction.position) {
+                        if(newPosition <= cuePlate.firstAction.position)
+                        {
                             newPosition = cuePlate.firstAction.position
 
-                            var positionCoeff = cuePlate.actionList.length<1?0:(1/(cuePlate.actionList.length)) * i;
+                            var positionCoeff = cuePlate.actionList.length < 1 ? 0: (1/(cuePlate.actionList.length)) * i;
                             project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "positionCoeff", positionCoeff)
                         }
 
                         project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
                         cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
-                        cuePlate.loadActions();
                     })
+
+                    cuePlate.loadActions();
                 }
             }
 

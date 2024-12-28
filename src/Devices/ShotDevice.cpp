@@ -1,6 +1,9 @@
 #include "ShotDevice.h"
 #include "DmxWorker.h"
 #include "CueContent.h"
+#include "DeviceManager.h"
+#include "ProjectManager.h"
+#include "Action.h"
 
 constexpr qulonglong FIRE_OFF_TIME_MS = 40;
 
@@ -13,11 +16,8 @@ ShotDevice::ShotDevice( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : De
     connect( &m_patternTimer, &QTimer::timeout, this, &ShotDevice::onPatternTimerChanged );
 }
 
-void ShotDevice::runPatternSingly( const Pattern& p, quint64 time )
+void ShotDevice::runActionSingly( const QString& cueName, const Action& action, quint64 time )
 {
-    if( p.type() != PatternType::Shot )
-        return;
-
     m_opStartTime = time;
 
     for( Operation* oper : m_operations )
@@ -27,7 +27,7 @@ void ShotDevice::runPatternSingly( const Pattern& p, quint64 time )
 
     {
         Operation* oper = new Operation( this );
-        oper->setDuration( p.prefireDuration() );
+        oper->setDuration( m_manager->GetProjectManager()->cueActionPrefire( cueName, action.patternName() ) );
         oper->setActive( false );
 
         m_operations.append( oper );
@@ -35,7 +35,7 @@ void ShotDevice::runPatternSingly( const Pattern& p, quint64 time )
 
     {
         Operation* oper = new Operation( this );
-        oper->setDuration( p.getProperties()["shotTime"].toULongLong() );
+        oper->setDuration( m_manager->GetProjectManager()->cueActionDuration( cueName, action.patternName() ) );
         oper->setActive( true );
 
         m_operations.append( oper );

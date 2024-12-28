@@ -35,6 +35,7 @@ public:
     void UploadFile( const std::string& fileName, const std::vector<uint8_t>& content );
     void RefreshCurrentDir();
 
+    Q_INVOKABLE void reconnect();
     Q_INVOKABLE void changeCurrentDir( CloudResource* res );
 
 private:

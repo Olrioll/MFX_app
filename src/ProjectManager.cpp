@@ -1008,7 +1008,7 @@ QVariantList ProjectManager::getCues() const
     return cueList;
 }
 
-void ProjectManager::setCueProperty(const QString& cueName, const QString& propertyName, QVariant value)
+void ProjectManager::setCueProperty(const QString& cueName, const QString& propertyName, const QVariant& value)
 {
     QMutexLocker locker( &m_ProjectLocker );
     auto cue = getChild( "Cues" )->getChild( cueName );
@@ -1046,6 +1046,30 @@ QVariantList ProjectManager::cueActions(const QString& cueName) const
     return actionList;
 }
 
+qulonglong ProjectManager::cueActionPrefire( const QString& cueName, const QString& actName ) const
+{
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( !cue )
+        return 0;
+
+    for( const auto action : cue->listedChildren() )
+    {
+        if( action->property( "actionName" ).toString() == actName )
+        {
+            if( action->containsProperty( "actionPrefire" ) )
+                return action->property( "actionPrefire" ).toULongLong();
+
+            const auto pattern = m_PatternManager->patternByName( actName );
+            if( pattern )
+                return pattern->prefireDuration();
+
+            break;
+        }
+    }
+
+    return 0;
+}
+
 qulonglong ProjectManager::cueActionDuration( const QString& cueName, const QString& actName ) const
 {
     auto cue = getChild( "Cues" )->getChild( cueName );
@@ -1056,6 +1080,9 @@ qulonglong ProjectManager::cueActionDuration( const QString& cueName, const QStr
     {
         if( action->property( "actionName" ).toString() == actName )
         {
+            if( action->containsProperty( "actionDuration" ) )
+                return action->property( "actionDuration" ).toULongLong();
+
             int deviceId = action->property( "patchId" ).toInt();
             return m_DeviceManager->actionDuration( actName, deviceId );
         }
@@ -1064,7 +1091,7 @@ qulonglong ProjectManager::cueActionDuration( const QString& cueName, const QStr
     return 0;
 }
 
-void ProjectManager::onSetActionProperty(QString cueName, QString actionName, int patchId, QString propertyName, QVariant value)
+void ProjectManager::onSetActionProperty( const QString& cueName, const QString& actionName, int patchId, const QString& propertyName, const QVariant& value )
 {
     QMutexLocker locker( &m_ProjectLocker );
 
@@ -1072,9 +1099,14 @@ void ProjectManager::onSetActionProperty(QString cueName, QString actionName, in
     if( !cue )
         return;
 
-    for(auto & action : cue->listedChildren())
-        if(action->property("actionName").toString() == actionName && action->property("patchId").toInt() == patchId)
-            action->setProperty(propertyName, value);
+    for( auto& action : cue->listedChildren() )
+    {
+        if( action->property( "actionName" ).toString() == actionName && action->property( "patchId" ).toInt() == patchId )
+        {
+            action->setProperty( propertyName, value );
+            break;
+        }
+    }
 }
 
 void ProjectManager::deleteCues(const QStringList& deletedCueNames)

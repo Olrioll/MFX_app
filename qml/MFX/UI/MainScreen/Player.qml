@@ -1113,6 +1113,10 @@ Item
             onDropped:
             {
                 console.log("Player.onDropped", drag.source);
+
+                if( drag.source.checkedIDs === undefined )
+                    return
+
                 if(!drag.source.intersectionState)
                 {
                     let newX = mapToItem(cueView, drag.x, drag.y).x
@@ -1139,34 +1143,42 @@ Item
 
                         if(isNameFree)
                         {
-                            if( drag.source.checkedIDs === undefined )
-                                return
-
                             let checkedIDs = drag.source.checkedIDs
-
                             let hasAction = false
+
                             checkedIDs.forEach(function(currId)
                             {
-                                if(project.patchProperty(currId, "act"))
+                                let actName = project.patchProperty(currId, "act")
+
+                                if( actName )
                                 {
                                     hasAction = true
                                     return
                                 }
                             })
 
-                            if(hasAction)
+                            if( hasAction )
                             {
                                 project.onAddCue({name: newCueName, yPosition: newYposition})
                                 cueManager.onAddCue({name: newCueName, newYposition: newYposition})
 
                                 checkedIDs.forEach(function(currId)
                                 {
-                                    if(project.patchProperty(currId, "act"))
+                                    let actName = project.patchProperty( currId, "act" )
+
+                                    if( actName )
                                     {
                                         var actionNumber = project.cueActions(newCueName).length
-                                        var actionCount = checkedIDs.length - 1
-                                        project.addActionToCue(newCueName, project.patchProperty(currId, "act"), currId, newPosition)
-                                        project.onSetActionProperty(newCueName, project.patchProperty(currId, "act"), currId, "positionCoeff", actionNumber / actionCount)
+                                        var actionCount = checkedIDs.length
+                                        project.addActionToCue(newCueName, actName, currId, newPosition)
+                                        project.onSetActionProperty(newCueName, actName, currId, "positionCoeff", actionNumber / actionCount)
+
+                                        let pattern = patternManager.patternByName( actName )
+                                        if( pattern )
+                                        {
+                                            project.onSetActionProperty( newCueName, actName, currId, "actionPrefire", pattern.prefireDuration )
+                                            project.onSetActionProperty( newCueName, actName, currId, "actionDuration", deviceManager.actionDuration( actName, currId ) )
+                                        }
                                     }
                                 })
 
@@ -1250,7 +1262,6 @@ Item
 
                     newPlate.loadActions()
                     cuePlates.push(newPlate)
-
                 })
 
                 updateHeight()

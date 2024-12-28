@@ -20,6 +20,8 @@ public:
     ComPortModel m_comPortModel;
     explicit DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent = nullptr);
 
+    static void qmlRegister();
+
     // todo: block device in ui, rename, change coordinates (by device id)
     Q_INVOKABLE void setDeviceProperty( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio );
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
@@ -32,6 +34,7 @@ public:
     Q_INVOKABLE Device* getDeviceById( int id ) const;
 
     PatternManager* GetPatternManager() { return m_patternManager; }
+    ProjectManager* GetProjectManager() { return m_ProjectManager; }
     Device* m_previewSeqDevice;
     Device* m_previewShotDevice;
 
@@ -46,8 +49,8 @@ signals:
     void editChanged();
 
 public slots:
-    //void onRunPattern(int deviceId, quint64 time, const QString& patternName);
     void onRunPatternSingly( int deviceId, quint64 time, const QString& patternName );
+    void onRunActionSingly( const QString& cueName, const Action& action, quint64 time );
     void onEditPatch(const QVariantList& properties);
     void reloadPattern();
 

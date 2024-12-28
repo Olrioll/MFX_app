@@ -7,6 +7,7 @@
 #include "PatternManager.h"
 #include "ProjectManager.h"
 #include "DmxWorker.h"
+#include "Action.h"
 
 DeviceManager::DeviceManager(PatternManager* patternManager, ProjectManager* projectManager, QObject *parent)
     : m_patternManager(patternManager)
@@ -18,6 +19,11 @@ DeviceManager::DeviceManager(PatternManager* patternManager, ProjectManager* pro
 
     m_previewSeqDevice = new PreviewDevice( this, this );
     m_previewShotDevice = new ShotDevice( this, this );
+}
+
+void DeviceManager::qmlRegister()
+{
+    qRegisterMetaType<Device*>( "Device*" );
 }
 
 Device* DeviceManager::getDeviceById(int id) const
@@ -218,6 +224,15 @@ void DeviceManager::onRunPatternSingly( int deviceId, quint64 time, const QStrin
         return;
 
     device->runPatternSingly( *p, time );
+}
+
+void DeviceManager::onRunActionSingly( const QString& cueName, const Action& action, quint64 time )
+{
+    Device* device = getDeviceById( action.deviceId() );
+    if( !device )
+        return;
+
+    device->runActionSingly( cueName, action, time );
 }
 
 void DeviceManager::runPreviewPattern( const QString& patternName )

@@ -498,7 +498,8 @@ Item {
                     }
                 }
 
-                Item {
+                Item
+                {
                     id: cloudLoginPage
 
                     anchors.fill: parent
@@ -509,7 +510,8 @@ Item {
                     property bool recoverState: false
 
 
-                    ColumnLayout {
+                    ColumnLayout
+                    {
                         anchors.fill: parent
                         anchors.leftMargin: 5
                         anchors.rightMargin: 5
@@ -520,11 +522,13 @@ Item {
 
                         visible: !cloudLoginPage.recoverState
 
-                        MFXUICT.LayoutSpacer {
+                        MFXUICT.LayoutSpacer
+                        {
                             fixedHeight: 6
                         }
 
-                        MFXUICT.ColoredIcon {
+                        MFXUICT.ColoredIcon
+                        {
                             Layout.preferredWidth: 38
                             Layout.maximumWidth: 38
                             Layout.minimumWidth: 38
@@ -536,11 +540,13 @@ Item {
                             source: "qrc:/icons/preferences/preferences_cloud_login_icon.svg"
                         }
 
-                        MFXUICT.LayoutSpacer {
+                        MFXUICT.LayoutSpacer
+                        {
                             fixedHeight: 6
                         }
 
-                        Text {
+                        Text
+                        {
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
                             Layout.maximumHeight: implicitHeight
@@ -557,11 +563,13 @@ Item {
                             text: translationsManager.translationTrigger + qsTr("Enter your account")
                         }
 
-                        MFXUICT.LayoutSpacer {
+                        MFXUICT.LayoutSpacer
+                        {
                             fixedHeight: 8
                         }
 
-                        MFXUICT.TextInputField {
+                        MFXUICT.TextInputField
+                        {
                             id:emailL
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
@@ -574,11 +582,13 @@ Item {
                             errorState: cloudLoginPage.errorState
                         }
 
-                        MFXUICT.LayoutSpacer {
+                        MFXUICT.LayoutSpacer
+                        {
                             fixedHeight: 4
                         }
 
-                        MFXUICT.TextInputField {
+                        MFXUICT.TextInputField
+                        {
                             id: passwL
                             Layout.fillWidth: true
                             Layout.preferredHeight: implicitHeight
@@ -591,7 +601,8 @@ Item {
                             errorState: cloudLoginPage.errorState
                         }
 
-                        MFXUICT.LayoutSpacer {
+                        MFXUICT.LayoutSpacer
+                        {
                             fixedHeight: 8
                         }
 
@@ -678,7 +689,8 @@ Item {
 
                         MFXUICT.LayoutSpacer { }
 
-                        MfxButton {
+                        MfxButton
+                        {
 
                             Layout.fillWidth: true
                             Layout.preferredHeight: 20
@@ -686,8 +698,11 @@ Item {
                             Layout.minimumHeight: 20
 
                             checkable: false
-                            onClicked:     {                settingsManager.setValue("cloudLogin", emailL.text)
-                            settingsManager.setValue("cloudPassword", passwL.text)
+                            onClicked:
+                            {
+                                settingsManager.setValue("cloudLogin", emailL.text)
+                                settingsManager.setValue("cloudPassword", passwL.text)
+                                cloudManager.reconnect()
                             }
 
                             fontFamilyName: MFXUIS.Fonts.robotoMedium.name
@@ -698,11 +713,13 @@ Item {
                             text: translationsManager.translationTrigger + qsTr("Login")
                         }
 
-                        MFXUICT.LayoutSpacer {
+                        MFXUICT.LayoutSpacer
+                        {
                             fixedHeight: 4
                         }
 
-                        Text {
+                        Text
+                        {
                             Layout.fillWidth: true
                             Layout.preferredHeight: 16
                             Layout.maximumHeight: 16
@@ -718,10 +735,12 @@ Item {
 
                             text: translationsManager.translationTrigger + qsTr("Forgot password")
 
-                            MouseArea {
+                            MouseArea
+                            {
                                 anchors.fill: parent
 
-                                onClicked: {
+                                onClicked:
+                                {
                                     cloudLoginPage.recoverState = true
                                 }
                             }

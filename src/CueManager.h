@@ -49,12 +49,13 @@ public slots:
     void onDeleteAllCue();
     void onRecalculateCue();
     void onDeleteCue(const QString& cueName);
-    void onSetActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition);
+    void onSetActionProperty( const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition );
     void onPlaybackTimeChanged(quint64 time);
 
 signals:
     void runPattern(int deviceId, quint64 time, const QString& patternName);
     void runPatternSingly( int deviceId, quint64 time, const QString& patternName );
+    void runActionSingly( const QString& cueName, const Action& action, quint64 time );
 
     void cueExpandedChanged(const QString& name, bool selected); //Сигнал о том, что у Cue с именем name требуется изменить статус схлопывания на плеере
 

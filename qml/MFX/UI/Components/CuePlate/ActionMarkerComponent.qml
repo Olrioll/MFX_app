@@ -90,10 +90,7 @@ Component
                         cuePlate.updatePosition()
                         return
                     }
-
-
                 }
-
             }
 
             onReleased:

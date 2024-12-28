@@ -101,6 +101,7 @@ int main(int argc, char** argv)
     QObject::connect(&project, &ProjectManager::editPatch, &deviceManager, &DeviceManager::onEditPatch);
     //QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
     QObject::connect( &cueManager, &CueManager::runPatternSingly, &deviceManager, &DeviceManager::onRunPatternSingly );
+    QObject::connect( &cueManager, &CueManager::runActionSingly, &deviceManager, &DeviceManager::onRunActionSingly );
     QObject::connect(&project, &ProjectManager::reloadPattern, &deviceManager, &DeviceManager::reloadPattern);
     QObject::connect(&deviceManager, &DeviceManager::editChanged, &project, &ProjectManager::reloadCues);
 //  QObject::connect(&deviceManager, &DeviceManager::editChanged, &cueManager, &CueManager::onRecalculateCue);
@@ -124,6 +125,7 @@ QSurfaceFormat::setDefaultFormat(format);
     CueContentManager::qmlRegister();
     CueContentSortingModel::qmlRegister();
     ProjectManager::qmlRegister();
+    DeviceManager::qmlRegister();
     CloudManager::qmlRegister();
 
     QQmlApplicationEngine engine;

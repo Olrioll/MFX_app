@@ -126,7 +126,7 @@ Item
                 font.pixelSize: 12
             }
 
-            onClicked: digitClicked("8")
+            onClicked: digitClicked("9")
         }
 
         Button

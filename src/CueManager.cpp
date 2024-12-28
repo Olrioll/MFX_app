@@ -4,6 +4,7 @@
 
 #include "CueSortingModel.h"
 #include "PatternManager.h"
+#include "ProjectManager.h"
 
 namespace  {
 static constexpr char playerExpandedRoleName[] = "expanded";
@@ -107,17 +108,17 @@ void CueManager::onDeleteAllCue()
 
 void CueManager::onRecalculateCue()
 {
-    for( auto * cue : m_cues->toList()){
+    for( auto * cue : m_cues->toList())
         recalculateCueStartAndDuration(cue->name());
-    }
 }
 
 void CueManager::onDeleteCue(const QString &cueName)
 {
     auto * cue = cueByName(cueName);
-    if(cue == nullptr) {
+    if(cue == nullptr)
         qWarning() << "Cue with name" << cueName << "was not found";
-    }else  m_cues->remove(cue);
+    else
+        m_cues->remove(cue);
 }
 
 void CueManager::addActionToCue(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
@@ -156,8 +157,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
         if( cueStart > action->startTime() )
             cueStart = action->startTime();
 
-        const Device* device = m_deviceManager->getDeviceById( action->deviceId() );
-        qulonglong duration = device ? device->getDurationByPattern( *pattern ) : 0;
+        qulonglong duration = m_deviceManager->GetProjectManager()->cueActionDuration( cueName, action->patternName() );
 
         if( cueStop < action->startTime() + duration )
             cueStop = action->startTime() + duration;
@@ -246,34 +246,26 @@ CueSortingModel* CueManager::cuesSorted() const
 
 void CueManager::onPlaybackTimeChanged(quint64 time)
 {
-    auto patternManager = m_deviceManager->GetPatternManager();
     quint64 t = time / 10 * 10;
 
     for (const auto c : m_cues->toList())
     {
         for (const Action* a : c->actions()->toList())
         {
-            const auto pattern = patternManager->patternByName(a->patternName());
-            if(pattern == nullptr)
-                continue;
+            auto prefire = m_deviceManager->GetProjectManager()->cueActionPrefire( c->name(), a->patternName() );
+            quint64 duration = m_deviceManager->GetProjectManager()->cueActionDuration( c->name(), a->patternName() );
 
-            if (a->startTime() - pattern->prefireDuration() == t)
+            if (a->startTime() - prefire == t)
             {
-                //qDebug() << "start" << time << pattern->prefireDuration();
-                emit runPatternSingly( a->deviceId(), playerPosition(), a->patternName() );
+                qDebug() << "start action " << a->patternName() << ", device " << a->deviceId() << ", prefire " << prefire << ", duration " << duration;
+                emit runActionSingly( c->name(), *a, playerPosition() );
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
             }
 
-            const Device* device = m_deviceManager->getDeviceById( a->deviceId() );
-            if( !device )
-                continue;
-
-            quint64 duration = device->getDurationByPattern( *pattern );
-
-            if(c->active() && a->startTime() - pattern->prefireDuration() + duration == t)
+            if(c->active() && a->startTime() - prefire + duration == t)
             {
-                //qDebug() << "stop" << time << duration;
+                qDebug() << "stop action " << a->patternName() << ", device " << a->deviceId();
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }
