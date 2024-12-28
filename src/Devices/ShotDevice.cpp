@@ -19,6 +19,7 @@ ShotDevice::ShotDevice( DeviceManager* mng, QObject* parent /*= nullptr*/ ) : De
 void ShotDevice::runActionSingly( const QString& cueName, const Action& action, quint64 time )
 {
     m_opStartTime = time;
+    m_patternTime = time;
 
     for( Operation* oper : m_operations )
         oper->deleteLater();
@@ -50,19 +51,18 @@ void ShotDevice::runActionSingly( const QString& cueName, const Action& action, 
     }
 
     m_op = m_operations.first();
-    m_prefireDuration = m_op->duration();
 
-    m_patternTime = time;
+    m_elapsedTimer.restart();
     m_patternTimer.start();
 
     setDMXOper( id(), 0, m_angle, 0, m_height, m_colorType, false ); // set angle
-    setDMXOperation( id(), m_op, false );
+    setDMXOperation( id(), m_op, false ); // prefire
 }
 
-void ShotDevice::onPlaybackTimeChanged( quint64 time )
-{
-    doPlaybackTimeChanged( time, true );
-}
+//void ShotDevice::onPlaybackTimeChanged( quint64 time )
+//{
+//    doPlaybackTimeChanged( time, true );
+//}
 
 void ShotDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
 {
@@ -74,9 +74,10 @@ void ShotDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
         return;
     }
 
-    if( time >= m_opStartTime + (m_prefireDuration ? m_prefireDuration : m_op->duration()) - 10 )
+    //qDebug() << time << " " << m_opStartTime << " " << m_op->duration();
+
+    if( time >= m_opStartTime + m_op->duration() - 10 )
     {
-        m_prefireDuration = 0;
         m_opStartTime = time + 10;
         m_operations.removeFirst();
         m_op = m_operations.count() ? m_operations.first() : nullptr;
@@ -88,9 +89,7 @@ void ShotDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
 
 void ShotDevice::onPatternTimerChanged()
 {
-    m_patternTime += PATTERN_INTERVAL_MS;
-
-    doPlaybackTimeChanged( m_patternTime, false );
+    doPlaybackTimeChanged( m_patternTime + m_elapsedTimer.elapsed(), false );
 }
 
 void ShotDevice::setDMXOperation( int deviceId, const Operation* op, bool sendToWorker )

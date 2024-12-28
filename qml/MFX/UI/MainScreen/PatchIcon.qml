@@ -44,7 +44,7 @@ Item
                 angleChangeFinished = true
         }
 
-        //console.log(duration, calcDuration, angle, particleEmiter.angle, velocity, active)
+        //console.log("onDrawOperation", patchId, duration, calcDuration, angle, particleEmiter.angle, velocity, active)
 
         particleEmiter.duration = velocity == 0 ? duration : calcDuration
         particleEmiter.angle = angle

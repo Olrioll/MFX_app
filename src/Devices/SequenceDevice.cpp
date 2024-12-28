@@ -19,6 +19,8 @@ void SequenceDevice::runPatternSingly( const Pattern& p, quint64 time )
         return;
 
     m_opStartTime = time;
+    m_patternTime = time;
+
     m_operations = p.operations()->toList();
 
     if( m_operations.count() == 0 )
@@ -27,7 +29,7 @@ void SequenceDevice::runPatternSingly( const Pattern& p, quint64 time )
     m_op = m_operations.first(); // first operation of pattern
     m_prefireDuration = m_op->duration();
 
-    m_patternTime = time;
+    m_elapsedTimer.restart();
     m_patternTimer.start();
 
     setDMXOperation( id(), m_op, false );
@@ -68,9 +70,7 @@ void SequenceDevice::doPlaybackTimeChanged( quint64 time, bool sendToWorker )
 
 void SequenceDevice::onPatternTimerChanged()
 {
-    m_patternTime += PATTERN_INTERVAL_MS;
-
-    doPlaybackTimeChanged( m_patternTime, false );
+    doPlaybackTimeChanged( m_patternTime + m_elapsedTimer.elapsed(), false );
 }
 
 void SequenceDevice::setDMXOperation(int deviceId, const Operation *op, bool sendToWorker)

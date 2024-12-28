@@ -556,7 +556,8 @@ Component
 
                         if( newDuration > 0)
                         {
-                            currAction.duration = newDuration
+                            currAction.duration = Math.round( newDuration / 10 ) * 10
+
                             project.onSetActionProperty( cuePlate.name, currAction.name, currAction.patchId, "actionDuration", currAction.duration )
                             cueManager.onSetActionProperty( cuePlate.name, currAction.name, currAction.patchId, currAction.position )
                         }

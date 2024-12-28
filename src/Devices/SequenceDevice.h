@@ -3,6 +3,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QUuid>
 #include <QTimer>
+#include <QElapsedTimer>
 
 #include "QQmlObjectListModel.h"
 #include "QQmlConstRefPropertyHelpers.h"
@@ -48,6 +49,7 @@ private:
     quint64 m_opStartTime = 0;
     quint64 m_patternTime = 0;
     QTimer m_patternTimer;
+    QElapsedTimer m_elapsedTimer;
     bool m_angleChangeFinished = false;
     int m_angleDestination = 0;
     qulonglong m_prefireDuration = 0;

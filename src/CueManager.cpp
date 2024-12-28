@@ -257,7 +257,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
 
             if (a->startTime() - prefire == t)
             {
-                qDebug() << "start action " << a->patternName() << ", device " << a->deviceId() << ", prefire " << prefire << ", duration " << duration;
+                //qDebug() << "start cue " << c->name() << " action " << a->patternName() << ", device " << a->deviceId() << ", prefire " << prefire << ", duration " << duration;
                 emit runActionSingly( c->name(), *a, playerPosition() );
                 m_cueContentManager.setActive(c->name(), a->deviceId(), true);
                 c->setActive(true);
@@ -265,7 +265,7 @@ void CueManager::onPlaybackTimeChanged(quint64 time)
 
             if(c->active() && a->startTime() - prefire + duration == t)
             {
-                qDebug() << "stop action " << a->patternName() << ", device " << a->deviceId();
+                //qDebug() << "stop cue " << c->name() << " action " << a->patternName() << ", device " << a->deviceId();
                 c->setActive(false);
                 m_cueContentManager.setActive(c->name(), a->deviceId(), false);
             }

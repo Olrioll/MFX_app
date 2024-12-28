@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QTimer>
+#include <QElapsedTimer>
+
 #include "Device.h"
 
 class ShotDevice : public Device
@@ -20,7 +22,7 @@ public:
     void copyToCueContent( CueContent& cueContent ) const override;
 
 public slots:
-    void onPlaybackTimeChanged( quint64 time );
+    //void onPlaybackTimeChanged( quint64 time );
     void onPatternTimerChanged();
 
 private:
@@ -40,5 +42,5 @@ private:
     quint64 m_opStartTime = 0;
     quint64 m_patternTime = 0;
     QTimer m_patternTimer;
-    qulonglong m_prefireDuration = 0;
+    QElapsedTimer m_elapsedTimer;
 };
