@@ -1274,12 +1274,24 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
             if( position < 0 )
                 continue;
 
+            long long prefire = 0;
+            
+            if( child_prop.contains( "actionPrefire" ) )
+            {
+                prefire = getRoundPos( child_prop.value( "actionPrefire" ).toDouble() );
+            }
+            else
+            {
+                const auto pattern = m_PatternManager->patternByName( actionName );
+                prefire = pattern ? pattern->prefireDuration() : 0;
+            }
+
             const auto path = patches.find( patchid ).value();
             const bool isRfMode = path.value( "RF mode" ).toBool();
 
             data["action"] = pattern->type() == PatternType::Shot ? SHOT_ACTION_ID : actionName.mid( 1 ).toInt();
             data["ch"] = isRfMode ? path.value( "RF ch" ).toInt() : path.value( "DMX ch" ).toInt();
-            data["delay"] = static_cast<int>( position );
+            data["delay"] = static_cast<int>( position - prefire );
             data["position"] = isRfMode ? path.value( "RF pos" ).toInt() : 0;
             data["time"] = pattern->type() == PatternType::Sequences ? SEQUENCE_TIME : cue_prop.value( "duration" );
             data["type"] = static_cast<int>( pattern->type() );
@@ -1334,7 +1346,7 @@ void ProjectManager::exportOutputJson( bool sendToCloud )
 
             std::vector<uint8_t> content( jsonout.constData(), jsonout.constData() + jsonout.size() );
 
-            m_CloudManager->UploadFile( fname.toStdString(), content );
+            m_CloudManager->UploadFile( fname, content );
             m_CloudManager->RefreshCurrentDir();
 
             if( app )

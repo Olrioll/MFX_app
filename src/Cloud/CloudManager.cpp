@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QFuture>
 
 #include "CloudManager.h"
 #include "CloudResource.h"
@@ -17,6 +18,9 @@ CloudManager::CloudManager( SettingsManager& settngs, QObject* parent /*= nullpt
     , QObject( parent )
 {
     mCloudViewModel = new CloudViewModel( this );
+    mConnectWatcher = new QFutureWatcher<bool>( this );
+
+    QObject::connect( mConnectWatcher, &QFutureWatcher<bool>::finished, this, &CloudManager::connectWatcherFinished );
 }
 
 void CloudManager::qmlRegister()
@@ -38,11 +42,19 @@ void CloudManager::reconnect()
     Connect();
 }
 
-bool CloudManager::Connect()
+void CloudManager::Connect()
 {
-    if( mCloud )
-        return true;
+    if( cloudState() != CloudStateEnum::Disconnected )
+        return;
 
+    setCloudState( CloudStateEnum::Connecting );
+
+    QFuture<bool> future = QtConcurrent::run( this, &CloudManager::doConnect );
+    mConnectWatcher->setFuture( future );
+}
+
+bool CloudManager::doConnect()
+{
     const auto login = mSettings.value( "cloudLogin" ).toString().toStdString();
     const auto password = mSettings.value( "cloudPassword" ).toString().toStdString();
 
@@ -51,49 +63,52 @@ bool CloudManager::Connect()
 
     try
     {
-        setCloudState( CloudStateEnum::Connecting );
-
         auto credentials = CloudSync::BasicCredentials::from_username_password( login, password );
         mCloud = CloudSync::CloudFactory().create_nextcloud( NEXTCLOUD_URL, credentials );
         mCloud->test_connection();
     }
-    catch( const CloudSync::exceptions::cloud::CloudException& e )
+    catch( const CloudSync::exceptions::Exception& e )
     {
         qWarning() << "Sth went wrong: " << e.what();
 
-        setCloudState( CloudStateEnum::Disconnected );
         mCloud.reset();
-
         return false;
     }
 
-    setCloudState( CloudStateEnum::Connected );
     return true;
+}
+
+void CloudManager::connectWatcherFinished()
+{
+    setCloudState( mConnectWatcher->result() ? CloudStateEnum::Connected : CloudStateEnum::Disconnected );
 }
 
 void CloudManager::Disconnect()
 {
-    if( mCloud )
-    {
-        try
-        {
-            mCloud->logout();
-        }
-        catch( const CloudSync::exceptions::cloud::CloudException& e )
-        {
-            qWarning() << "Sth went wrong: " << e.what();
-        }
+    if( cloudState() == CloudStateEnum::Disconnected )
+        return;
 
-        mCloud.reset();
+    setCloudState( CloudStateEnum::Disconnecting );
+
+    try
+    {
+        if( mCloud )
+            mCloud->logout();
     }
+    catch( const CloudSync::exceptions::Exception& e )
+    {
+        qWarning() << "Sth went wrong: " << e.what();
+    }
+
+    mCloud.reset();
 
     setCurrentPath( "" );
     setCloudState( CloudStateEnum::Disconnected );
 }
 
-void CloudManager::UploadFile( const std::string& fileName, const std::vector<uint8_t>& content )
+void CloudManager::UploadFile( QString fileName, const std::vector<uint8_t>& content )
 {
-    if( !Connect() )
+    if( cloudState() != CloudStateEnum::Connected || !mCloud )
         return;
 
     try
@@ -101,27 +116,30 @@ void CloudManager::UploadFile( const std::string& fileName, const std::vector<ui
         if( !mCurrentDir )
             mCurrentDir = mCloud->root();
 
+        fileName = QUrl::toPercentEncoding( fileName );
+
         try
         {
-            auto file = mCurrentDir->get_file( fileName );
+            auto file = mCurrentDir->get_file( fileName.toStdString() );
             file->remove();
         }
         catch( CloudSync::exceptions::resource::NoSuchResource& )
         {
         }
 
-        auto file = mCurrentDir->create_file( fileName );
+        auto file = mCurrentDir->create_file( fileName.toStdString() );
         file->write_binary( content );
     }
-    catch( const CloudSync::exceptions::cloud::CloudException& e )
+    catch( const CloudSync::exceptions::Exception& e )
     {
         qCritical() << "Sth went wrong: " << e.what();
+        Disconnect();
     }
 }
 
 void CloudManager::changeCurrentDir( CloudResource* res )
 {
-    if( !Connect() )
+    if( cloudState() != CloudStateEnum::Connected || !mCloud )
         return;
 
     std::shared_ptr<CloudSync::Resource> cloudRes = res ? res->mCloudRes : mCloud->root();
@@ -138,7 +156,7 @@ void CloudManager::changeCurrentDir( CloudResource* res )
 
 void CloudManager::RefreshCurrentDir()
 {
-    if( !Connect() || !mCurrentDir )
+    if( cloudState() != CloudStateEnum::Connected || !mCloud )
         return;
 
     try

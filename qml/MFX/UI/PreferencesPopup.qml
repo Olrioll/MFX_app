@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.15
 import MFX.UI.Components.Basic 1.0
 import MFX.UI.Components.Templates 1.0 as MFXUICT
 import MFX.UI.Styles 1.0 as MFXUIS
+import MFX.Enums 1.0
 
 Item {
     id: preferences
@@ -698,6 +699,8 @@ Item {
                             Layout.minimumHeight: 20
 
                             checkable: false
+                            enabled: cloudManager.cloudState == CloudStateEnum.Disconnected || cloudManager.cloudState == CloudStateEnum.Connected
+
                             onClicked:
                             {
                                 settingsManager.setValue("cloudLogin", emailL.text)

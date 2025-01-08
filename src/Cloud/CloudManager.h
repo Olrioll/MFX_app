@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QQmlObjectListModel.h>
+#include <QtConcurrent>
 
 #include "SettingsManager.h"
 #include "CloudResource.h"
@@ -13,7 +14,7 @@ namespace CloudSync
 
 using CloudViewModel = QQmlObjectListModel<CloudResource>;
 
-QSM_ENUM_CLASS( CloudStateEnum, Disconnected = 0, Connected, Connecting )
+QSM_ENUM_CLASS( CloudStateEnum, Disconnected = 0, Disconnecting, Connected, Connecting )
 
 class CloudManager : public QObject
 {
@@ -30,17 +31,22 @@ public:
     QQmlObjectListModelBase* cloudViewModel() const;
 
 public:
-    bool Connect();
+    void Connect();
     void Disconnect();
-    void UploadFile( const std::string& fileName, const std::vector<uint8_t>& content );
+    void UploadFile( QString fileName, const std::vector<uint8_t>& content );
     void RefreshCurrentDir();
 
     Q_INVOKABLE void reconnect();
     Q_INVOKABLE void changeCurrentDir( CloudResource* res );
 
 private:
+    bool doConnect();
+    void connectWatcherFinished();
+
+private:
     SettingsManager& mSettings;
     std::shared_ptr<CloudSync::Cloud> mCloud;
     std::shared_ptr<CloudSync::Directory> mCurrentDir;
     CloudViewModel* mCloudViewModel = nullptr;
+    QFutureWatcher<bool>* mConnectWatcher;
 };

@@ -9,6 +9,9 @@ CloudResource::CloudResource( std::shared_ptr<CloudSync::Resource> res, QObject*
     if( mCloudRes )
     {
         setType( mCloudRes->is_file() ? CloudFSItemType::File : CloudFSItemType::Folder );
-        setName( QString::fromStdString( mCloudRes->name() ) );
+
+        QByteArray ba( mCloudRes->name().c_str() );
+        QString name = QUrl::fromPercentEncoding( ba );
+        setName( name );
     }
 }
