@@ -5,6 +5,7 @@
 class ShotPattern : public Pattern
 {
     Q_OBJECT
+    QSM_READONLY_CSTREF_PROPERTY_WDEFAULT( QString, displayName, DisplayName, "" )
     QSM_READONLY_VAR_PROPERTY_WDEFAULT( qulonglong, shotTime, ShotTime, 0 )
 
 public:

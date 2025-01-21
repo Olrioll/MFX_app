@@ -22,6 +22,7 @@ void ShotPattern::makeName()
 QVariantMap ShotPattern::getProperties() const
 {
     QVariantMap properties = Pattern::getProperties();
+    properties["displayName"] = displayName();
     properties["shotTime"] = shotTime();
 
     return properties;
@@ -32,4 +33,5 @@ void ShotPattern::setProperties( const QVariantMap& properties )
     Pattern::setProperties( properties );
 
     setShotTime( properties.value( "shotTime" ).toULongLong() );
+    setDisplayName( properties.value( "displayName" ).toString() );
 }

@@ -584,6 +584,7 @@ SideDockedWindow
                                     id: actionShotPlate
 
                                     property bool isActionPlate: true
+                                    property string displayName: model.getProperties["displayName"]
                                     property string name: model.name
                                     property var type: model.type
                                     property var prefireDuration: model.prefireDuration
@@ -643,17 +644,18 @@ SideDockedWindow
                                 
                                             Text
                                             {
-                                                text: actionShotPlate.name
+                                                text: actionShotPlate.displayName ? actionShotPlate.displayName : actionShotPlate.name
                                 
                                                 horizontalAlignment: Text.AlignHCenter
                                                 verticalAlignment: Text.AlignVCenter
-                                                elide: Text.ElideMiddle
+                                                elide: Text.ElideRight
                                                 color: "#ffffff"
                                                 font.family: Fonts.robotoRegular.name
                                                 font.pixelSize: 10
                                 
                                                 anchors.bottom: parent.bottom
-                                                anchors.horizontalCenter: parent.horizontalCenter
+                                                anchors.left: parent.left
+                                                anchors.right: parent.right
                                             }
                                         }
                                 
@@ -949,7 +951,7 @@ SideDockedWindow
                                         font.pixelSize: 12
     
                                         color: "white"
-                                        text: "Prefire: "
+                                        text: "Name: "
                                     }
     
                                     Text
@@ -960,7 +962,7 @@ SideDockedWindow
                                         font.pixelSize: 12
     
                                         color: "white"
-                                        text: actionSplit.selPattern ? previewShotWidget.formatTimeMs( actionSplit.selPattern.prefireDuration ) : ""
+                                        text: actionSplit.selPattern ? ( actionSplit.selPattern.displayName ? actionSplit.selPattern.displayName : actionSplit.selPattern.name ) : ""
                                     }
                                 }
     

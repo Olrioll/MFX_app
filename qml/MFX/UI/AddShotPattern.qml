@@ -12,7 +12,7 @@ Item
 {
     id: addShotPatternWidget
     width: 184
-    height: 284
+    height: 314
 
     property var currentInput
     property bool isEditMode: false
@@ -109,6 +109,41 @@ Item
                     {
                         applicationWindow.contentItem.focus = true
                         addShotPatternWidget.destroy()
+                    }
+                }
+            }
+
+            RowLayout
+            {
+                Layout.fillWidth: true
+
+                Text
+                {
+                    text: translationsManager.translationTrigger + qsTr("Name")
+                    color: "#FFFFFF"
+                    elide: Text.ElideMiddle
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    minimumPixelSize: 10
+                    font.family: MFXUIS.Fonts.robotoRegular.name
+                }
+
+                TextField
+                {
+                    id: displayNameField
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 22
+
+                    color: "#ffffff"
+                    horizontalAlignment: Text.AlignHCenter
+                    font.pointSize: 8
+                    maximumLength: 10
+
+                    background: Rectangle
+                    {
+                        color: "#000000"
+                        radius: 2
                     }
                 }
             }
@@ -225,9 +260,9 @@ Item
                 onClicked:
                 {
                     if( isEditMode )
-                        patternManager.editShotPattern( patternName, prefireField.getTimeMs(), timeField.getTimeMs() );
+                        patternManager.editShotPattern( patternName, displayNameField.text, prefireField.getTimeMs(), timeField.getTimeMs() );
                     else
-                        patternManager.addShotPattern( prefireField.getTimeMs(), timeField.getTimeMs() );
+                        patternManager.addShotPattern( displayNameField.text, prefireField.getTimeMs(), timeField.getTimeMs() );
 
                     applicationWindow.contentItem.focus = true
                     addShotPatternWidget.destroy()
@@ -259,6 +294,7 @@ Item
             var pattern = patternManager.patternByName( patternManager.selectedShotPatternName )
 
             patternName = pattern.name
+            displayNameField.text = pattern.getProperties()["displayName"]
             prefireField.setTimeMs( pattern.prefireDuration )
             timeField.setTimeMs( Number( pattern.getProperties()["shotTime"] ) )
         }
