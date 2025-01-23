@@ -12,7 +12,7 @@ Item
 {
     id: addShotPatternWidget
     width: 184
-    height: 314
+    height: 304
 
     property var currentInput
     property bool isEditMode: false
@@ -162,76 +162,62 @@ Item
                     anchors.margins: 4
                     columns: 2
 
-                    Item
+                    Text
                     {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        Text
+                        color: prefireField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("Prefire")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    Text
+                    {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        color: timeField.isActiveInput ? "#27AE60" : "#ffffff"
+                        text: translationsManager.translationTrigger + qsTr("Time")
+                        elide: Text.ElideMiddle
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 10
+                        font.family: MFXUIS.Fonts.robotoRegular.name
+                    }
+
+                    TimeInput
+                    {
+                        id: prefireField
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        onChangeActiveField:
                         {
-                            color: prefireField.isActiveInput ? "#27AE60" : "#ffffff"
-                            text: translationsManager.translationTrigger + qsTr("Prefire")
-                            elide: Text.ElideMiddle
-                            anchors.fill: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            minimumPixelSize: 10
-                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            markAllInputsInactive();
+                            isActiveInput = true;
+                            addShotPatternWidget.currentInput = field;
                         }
                     }
 
-                    Item
+                    TimeInput
                     {
+                        id: timeField
+
                         Layout.fillWidth: true
                         Layout.fillHeight: true
 
-                        Text
+                        onChangeActiveField:
                         {
-                            color: timeField.isActiveInput ? "#27AE60" : "#ffffff"
-                            text: translationsManager.translationTrigger + qsTr("Time")
-                            elide: Text.ElideMiddle
-                            anchors.fill: parent
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            minimumPixelSize: 10
-                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            markAllInputsInactive();
+                            isActiveInput = true;
+                            addShotPatternWidget.currentInput = field;
                         }
-                    }
-
-                    Item
-                    {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        TimeInput
-                        {
-                            id: prefireField
-
-                            onChangeActiveField:
-                            {
-                                markAllInputsInactive();
-                                isActiveInput = true;
-                                addShotPatternWidget.currentInput = field;
-                            }
-                        }
-                    }
-
-                    Item
-                    {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        TimeInput
-                        {
-                            id: timeField
-
-                            onChangeActiveField:
-                            {
-                                markAllInputsInactive();
-                                isActiveInput = true;
-                                addShotPatternWidget.currentInput = field;
-                            }
-                         }
                     }
                 }
             }

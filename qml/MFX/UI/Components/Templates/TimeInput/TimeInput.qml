@@ -37,8 +37,6 @@ RowLayout
         return Number( timeMin.text ) * 60000 + Number( timeSec.text ) * 1000 + Number( timeMSec.text ) * 10
     }
 
-    anchors.fill: parent
-
     Item
     {
         Layout.fillWidth: true
