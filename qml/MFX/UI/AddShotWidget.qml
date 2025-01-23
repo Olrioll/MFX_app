@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Shapes 1.15
 
 import MFX.UI.Components.Basic 1.0
+import MFX.UI.Components.Templates.TimeInput 1.0
 import MFX.UI.Styles 1.0 as MFXUIS
 import MFX.Enums 1.0 as MFXE
 
@@ -11,7 +12,7 @@ Item
 {
     id: addShotWidget
     width: 324
-    height: 304
+    height: 334
 
     property bool isEditMode: false
     property var changedIdList: []
@@ -22,7 +23,7 @@ Item
     function markAllInputsInactive()
     {
         quantityField.isActiveInput = false
-        //dmxField.isActiveInput = false
+        prefireField.isActiveInput = false
         rfPosField.isActiveInput = false
         rfChField.isActiveInput = false
         dmxChField.isActiveInput = false
@@ -139,7 +140,8 @@ Item
                               {propName: "angle", propValue: Number(angField.text)},
                               {propName: "height", propValue: Number(heightField.text)},
                               {propName: "color type", propValue: addShotWidget.selColor},
-                              {propName: "RF mode", propValue: modeSwitch.checked}
+                              {propName: "RF mode", propValue: modeSwitch.checked},
+                              {propName: "prefireTime", propValue: prefireField.getTimeMs()}
                              ])
 
             deviceManager.onEditPatch(
@@ -151,7 +153,8 @@ Item
                     {propName: "angle", propValue: Number(angField.text)},
                     {propName: "height", propValue: Number(heightField.text)},
                     {propName: "color type", propValue: addShotWidget.selColor},
-                    {propName: "RF mode", propValue: modeSwitch.checked}
+                    {propName: "RF mode", propValue: modeSwitch.checked},
+                    {propName: "prefireTime", propValue: prefireField.getTimeMs()}
                 ])
 
             if(groupName)
@@ -274,7 +277,8 @@ Item
                               {propName: "DMX ch", propValue: currentDmxChValue},
                               {propName: "height", propValue: Number(heightField.text)},
                               {propName: "color type", propValue: addShotWidget.selColor},
-                              {propName: "RF mode", propValue: modeSwitch.checked}
+                              {propName: "RF mode", propValue: modeSwitch.checked},
+                              {propName: "prefireTime", propValue: prefireField.getTimeMs()}
                              ])
 
             deviceManager.onEditPatch(
@@ -286,7 +290,8 @@ Item
                     {propName: "DMX ch", propValue: currentDmxChValue},
                     {propName: "height", propValue: Number(heightField.text)},
                     {propName: "color type", propValue: addShotWidget.selColor},
-                    {propName: "RF mode", propValue: modeSwitch.checked}
+                    {propName: "RF mode", propValue: modeSwitch.checked},
+                    {propName: "prefireTime", propValue: prefireField.getTimeMs()}
                 ])
 
             currentRfPosValue += rfPosIncrement
@@ -299,10 +304,6 @@ Item
     {
         id: rectangle
         anchors.fill: parent
-        anchors.rightMargin: 0
-        anchors.bottomMargin: 0
-        anchors.leftMargin: 0
-        anchors.topMargin: 0
         radius: 2
         color: "#444444"
         clip: true
@@ -353,7 +354,8 @@ Item
             rightPadding: 0
             leftPadding: 0
 
-            background: Rectangle {
+            background: Rectangle
+            {
                 color: "#444444"
                 opacity: 0
             }
@@ -374,420 +376,460 @@ Item
 
         Rectangle
         {
-            x: 4
-            y: 34
-            width: 188
             height: 70
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.leftMargin: 4
+            anchors.topMargin: 34
+            anchors.rightMargin: 4
             color: "#222222"
             radius: 2
 
-            GridLayout
+            RowLayout
             {
                 anchors.fill: parent
                 anchors.margins: 4
-                rows: 2
-
-                Switch
-                {
-                    Layout.row: 0
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 24
-
-                    id: modeSwitch
-
-                    indicator: Rectangle
-                    {
-                        width: modeSwitch.width
-                        height: modeSwitch.height
-                        x: 0
-                        y: 0
-
-                        radius: 2
-                        color: "#000000"
-
-                        Rectangle
-                        {
-                            anchors.top: parent.top
-                            anchors.bottom: parent.bottom
-
-                            width: modeSwitch.width / 2
-                            x: modeSwitch.checked ? modeSwitch.width - width : 0
-
-                            radius: 2
-
-                            color: modeSwitch.down ? "#649ce8" : "#2F80ED"
-
-                            Behavior on x { SmoothedAnimation { duration: 175 } }
-                        }
-
-                        Text
-                        {
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            anchors.bottom: parent.bottom
-                            width: parent.width / 2
-
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-
-                            lineHeightMode: Text.FixedHeight
-                            lineHeight: 26
-
-                            font.family: MFXUIS.Fonts.robotoRegular.name
-                            font.pixelSize: 12
-
-                            color: !modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
-
-                            Behavior on color { ColorAnimation { duration : 175 } }
-
-                            text: translationsManager.translationTrigger + qsTr("DMX")
-                        }
-
-                        Text
-                        {
-                            anchors.right: parent.right
-                            anchors.top: parent.top
-                            anchors.bottom: parent.bottom
-                            width: parent.width / 2
-
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-
-                            lineHeightMode: Text.FixedHeight
-                            lineHeight: 26
-
-                            font.family: MFXUIS.Fonts.robotoRegular.name
-                            font.pixelSize: 12
-
-                            color: modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
-
-                            Behavior on color { ColorAnimation { duration : 175 } }
-
-                            text: translationsManager.translationTrigger + qsTr("RF")
-                        }
-                    }
-
-                    contentItem: Item {}
-                }
 
                 GridLayout
                 {
-                    Layout.row: 1
                     rows: 2
-                    columns: 4
 
-                    Text
+                    Switch
                     {
                         Layout.row: 0
-                        Layout.column: 0
                         Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
+                        Layout.preferredHeight: 24
 
-                        color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Quantity")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                        visible: !addShotWidget.isEditMode
-                    }
+                        id: modeSwitch
 
-                    Text
-                    {
-                        Layout.row: 0
-                        Layout.column: 1
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-
-                        color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("RF pos")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                        visible: modeSwitch.checked
-                    }
-
-                    Text
-                    {
-                        Layout.row: 0
-                        Layout.column: 2
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-
-                        color: modeSwitch.checked && rfChField.isActiveInput ? "#27AE60" : !modeSwitch.checked && dmxChField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF ch") : qsTr("DMX ch"))
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                    }
-
-                    Text
-                    {
-                        Layout.row: 0
-                        Layout.column: 3
-                        Layout.fillWidth: true
-                        Layout.alignment: Qt.AlignHCenter
-
-                        color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Height")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                    }
-
-                    TextField
-                    {
-                        Layout.row: 1
-                        Layout.column: 0
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                        Layout.alignment: Qt.AlignHCenter
-
-                        id: quantityField
-                        text: "1"
-                        color: "#ffffff"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-                        visible: !addShotWidget.isEditMode
-
-                        property bool isActiveInput: true
-                        property string lastSelectedText
-
-                        validator: RegExpValidator { regExp: /[0-9]+/ }
-                        maximumLength: 2
-
-                        background: Rectangle
+                        indicator: Rectangle
                         {
-                            color: "#000000"
+                            width: modeSwitch.width
+                            height: modeSwitch.height
+                            x: 0
+                            y: 0
+
                             radius: 2
+                            color: "#000000"
+
+                            Rectangle
+                            {
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+
+                                width: modeSwitch.width / 2
+                                x: modeSwitch.checked ? modeSwitch.width - width : 0
+
+                                radius: 2
+
+                                color: modeSwitch.down ? "#649ce8" : "#2F80ED"
+
+                                Behavior on x { SmoothedAnimation { duration: 175 } }
+                            }
+
+                            Text
+                            {
+                                anchors.left: parent.left
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+                                width: parent.width / 2
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                lineHeightMode: Text.FixedHeight
+                                lineHeight: 26
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 12
+
+                                color: !modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
+
+                                Behavior on color { ColorAnimation { duration : 175 } }
+
+                                text: translationsManager.translationTrigger + qsTr("DMX")
+                            }
+
+                            Text
+                            {
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+                                width: parent.width / 2
+
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+
+                                lineHeightMode: Text.FixedHeight
+                                lineHeight: 26
+
+                                font.family: MFXUIS.Fonts.robotoRegular.name
+                                font.pixelSize: 12
+
+                                color: modeSwitch.checked ? "#FFFFFF" : "#80FFFFFF"
+
+                                Behavior on color { ColorAnimation { duration : 175 } }
+
+                                text: translationsManager.translationTrigger + qsTr("RF")
+                            }
                         }
 
-                        onFocusChanged:
+                        contentItem: Item {}
+                    }
+
+                    GridLayout
+                    {
+                        Layout.row: 1
+                        rows: 2
+                        columns: 5
+
+                        Text
                         {
-                            if(focus)
+                            Layout.row: 0
+                            Layout.column: 0
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+
+                            color: quantityField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + qsTr("Quantity")
+                            elide: Text.ElideMiddle
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            visible: !addShotWidget.isEditMode
+                        }
+
+                        Text
+                        {
+                            Layout.row: 0
+                            Layout.column: 1
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+
+                            color: rfPosField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + qsTr("RF pos")
+                            elide: Text.ElideMiddle
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                            visible: modeSwitch.checked
+                        }
+
+                        Text
+                        {
+                            Layout.row: 0
+                            Layout.column: 2
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+
+                            color: modeSwitch.checked && rfChField.isActiveInput ? "#27AE60" : !modeSwitch.checked && dmxChField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + (modeSwitch.checked ? qsTr("RF ch") : qsTr("DMX ch"))
+                            elide: Text.ElideMiddle
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                        }
+
+                        Text
+                        {
+                            Layout.row: 0
+                            Layout.column: 3
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+
+                            color: heightField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + qsTr("Height")
+                            elide: Text.ElideMiddle
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                        }
+
+                        Text
+                        {
+                            Layout.row: 0
+                            Layout.column: 4
+                            Layout.fillWidth: true
+                            Layout.alignment: Qt.AlignHCenter
+
+                            color: prefireField.isActiveInput ? "#27AE60" : "#ffffff"
+                            text: translationsManager.translationTrigger + qsTr("Prefire")
+                            elide: Text.ElideMiddle
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            minimumPixelSize: 10
+                            font.family: MFXUIS.Fonts.robotoRegular.name
+                        }
+
+                        TextField
+                        {
+                            Layout.row: 1
+                            Layout.column: 0
+                            Layout.preferredWidth: 34
+                            Layout.preferredHeight: 18
+                            Layout.alignment: Qt.AlignHCenter
+
+                            id: quantityField
+                            text: "1"
+                            color: "#ffffff"
+                            horizontalAlignment: Text.AlignHCenter
+                            padding: 0
+                            leftPadding: -2
+                            font.pointSize: 8
+                            visible: !addShotWidget.isEditMode
+
+                            property bool isActiveInput: true
+                            property string lastSelectedText
+
+                            validator: RegExpValidator { regExp: /[0-9]+/ }
+                            maximumLength: 2
+
+                            background: Rectangle
+                            {
+                                color: "#000000"
+                                radius: 2
+                            }
+
+                            onFocusChanged:
+                            {
+                                if(focus)
+                                {
+                                    markAllInputsInactive();
+                                    isActiveInput = true;
+                                    addShotWidget.currentInput = this;
+                                    selectAll();
+                                    lastSelectedText = selectedText
+                                }
+                            }
+                        }
+
+                        TextField
+                        {
+                            Layout.row: 1
+                            Layout.column: 1
+                            Layout.preferredWidth: 34
+                            Layout.preferredHeight: 18
+                            Layout.alignment: Qt.AlignHCenter
+
+                            id: rfPosField
+                            color: "#ffffff"
+                            text: "1"
+                            horizontalAlignment: Text.AlignHCenter
+                            padding: 0
+                            leftPadding: -2
+                            font.pointSize: 8
+                            visible: modeSwitch.checked
+
+                            property bool isActiveInput: false
+                            property string lastSelectedText
+
+                            function checkValue()
+                            {
+                                if(text === "")
+                                    return false
+
+                                let operatorIndex = text.indexOf('+')
+
+                                if(operatorIndex === -1)
+                                    operatorIndex = text.indexOf('-')
+
+                                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                                return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
+                            }
+
+                            background: Rectangle
+                            {
+                                color: "#000000"
+                                radius: 2
+                            }
+
+                            onFocusChanged:
+                            {
+                                if(focus)
+                                {
+                                    markAllInputsInactive();
+                                    isActiveInput = true
+                                    addShotWidget.currentInput = this
+                                    selectAll();
+                                    lastSelectedText = selectedText
+                                }
+                            }
+                        }
+
+                        TextField
+                        {
+                            Layout.row: 1
+                            Layout.column: 2
+                            Layout.preferredWidth: 34
+                            Layout.preferredHeight: 18
+                            Layout.alignment: Qt.AlignHCenter
+
+                            id: rfChField
+                            color: "#ffffff"
+                            text: "1"
+                            horizontalAlignment: Text.AlignHCenter
+                            padding: 0
+                            leftPadding: -2
+                            font.pointSize: 8
+                            visible: modeSwitch.checked
+
+                            property bool isActiveInput: false
+                            property string lastSelectedText
+
+                            function checkValue()
+                            {
+                                if(text === "")
+                                    return false
+
+                                let operatorIndex = text.indexOf('+')
+
+                                if(operatorIndex === -1)
+                                    operatorIndex = text.indexOf('-')
+
+                                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                                return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+                            }
+
+                            background: Rectangle
+                            {
+                                color: "#000000"
+                                radius: 2
+                            }
+
+                            onFocusChanged:
+                            {
+                                if(focus)
+                                {
+                                    markAllInputsInactive();
+                                    isActiveInput = true
+                                    addShotWidget.currentInput = this
+                                    selectAll();
+                                    lastSelectedText = selectedText
+                                }
+                            }
+                        }
+
+                        TextField
+                        {
+                            Layout.row: 1
+                            Layout.column: 2
+                            Layout.preferredWidth: 34
+                            Layout.preferredHeight: 18
+                            Layout.alignment: Qt.AlignHCenter
+
+                            id: dmxChField
+                            color: "#ffffff"
+                            text: "1"
+                            horizontalAlignment: Text.AlignHCenter
+                            padding: 0
+                            leftPadding: -2
+                            font.pointSize: 8
+                            visible: !modeSwitch.checked
+
+                            property bool isActiveInput: false
+                            property string lastSelectedText
+
+                            function checkValue()
+                            {
+                                if(text === "")
+                                    return false
+
+                                let operatorIndex = text.indexOf('+')
+
+                                if(operatorIndex === -1)
+                                    operatorIndex = text.indexOf('-')
+
+                                let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
+                                return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
+                            }
+
+                            background: Rectangle
+                            {
+                                color: "#000000"
+                                radius: 2
+                            }
+
+                            onFocusChanged:
+                            {
+                                if(focus)
+                                {
+                                    markAllInputsInactive();
+                                    isActiveInput = true
+                                    addShotWidget.currentInput = this
+                                    selectAll();
+                                    lastSelectedText = selectedText
+                                }
+                            }
+                        }
+
+                        TextField
+                        {
+                            Layout.row: 1
+                            Layout.column: 3
+                            Layout.preferredWidth: 34
+                            Layout.preferredHeight: 18
+                            Layout.alignment: Qt.AlignHCenter
+
+                            id: heightField
+                            color: "#ffffff"
+                            text: "10"
+                            horizontalAlignment: Text.AlignHCenter
+                            padding: 0
+                            leftPadding: -2
+                            font.pointSize: 8
+
+                            property bool isActiveInput: false
+                            property string lastSelectedText
+
+                            function checkValue()
+                            {
+                                if(text === "")
+                                    return false
+
+                                return (Number(text) >= 0 && Number(text) < 200)
+                            }
+
+                            validator: RegExpValidator { regExp: /[0-9]+/ }
+                            maximumLength: 3
+
+                            background: Rectangle
+                            {
+                                color: "#000000"
+                                radius: 2
+                            }
+
+                            onFocusChanged:
+                            {
+                                if(focus)
+                                {
+                                    markAllInputsInactive();
+                                    isActiveInput = true
+                                    addShotWidget.currentInput = this
+                                    selectAll();
+                                    lastSelectedText = selectedText
+                                }
+                            }
+                        }
+
+                        TimeInput
+                        {
+                            Layout.row: 1
+                            Layout.column: 4
+                            Layout.preferredHeight: 18
+                            Layout.alignment: Qt.AlignHCenter
+
+                            id: prefireField
+
+                            onChangeActiveField:
                             {
                                 markAllInputsInactive();
                                 isActiveInput = true;
-                                addShotWidget.currentInput = this;
-                                selectAll();
-                                lastSelectedText = selectedText
-                            }
-                        }
-                    }
-
-                    TextField
-                    {
-                        Layout.row: 1
-                        Layout.column: 1
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                        Layout.alignment: Qt.AlignHCenter
-
-                        id: rfPosField
-                        color: "#ffffff"
-                        text: "1"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-                        visible: modeSwitch.checked
-
-                        property bool isActiveInput: false
-                        property string lastSelectedText
-
-                        function checkValue()
-                        {
-                            if(text === "")
-                                return false
-
-                            let operatorIndex = text.indexOf('+')
-
-                            if(operatorIndex === -1)
-                                operatorIndex = text.indexOf('-')
-
-                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                            return (Number(checkedText) >= 1 && Number(checkedText) < 1000)
-                        }
-
-                        background: Rectangle
-                        {
-                            color: "#000000"
-                            radius: 2
-                        }
-
-                        onFocusChanged:
-                        {
-                            if(focus)
-                            {
-                                markAllInputsInactive();
-                                isActiveInput = true
-                                addShotWidget.currentInput = this
-                                selectAll();
-                                lastSelectedText = selectedText
-                            }
-                        }
-                    }
-
-                    TextField
-                    {
-                        Layout.row: 1
-                        Layout.column: 2
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                        Layout.alignment: Qt.AlignHCenter
-
-                        id: rfChField
-                        color: "#ffffff"
-                        text: "1"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-                        visible: modeSwitch.checked
-
-                        property bool isActiveInput: false
-                        property string lastSelectedText
-
-                        function checkValue()
-                        {
-                            if(text === "")
-                                return false
-
-                            let operatorIndex = text.indexOf('+')
-
-                            if(operatorIndex === -1)
-                                operatorIndex = text.indexOf('-')
-
-                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                            return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
-                        }
-
-                        background: Rectangle
-                        {
-                            color: "#000000"
-                            radius: 2
-                        }
-
-                        onFocusChanged:
-                        {
-                            if(focus)
-                            {
-                                markAllInputsInactive();
-                                isActiveInput = true
-                                addShotWidget.currentInput = this
-                                selectAll();
-                                lastSelectedText = selectedText
-                            }
-                        }
-                    }
-
-                    TextField
-                    {
-                        Layout.row: 1
-                        Layout.column: 2
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                        Layout.alignment: Qt.AlignHCenter
-
-                        id: dmxChField
-                        color: "#ffffff"
-                        text: "1"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-                        visible: !modeSwitch.checked
-
-                        property bool isActiveInput: false
-                        property string lastSelectedText
-
-                        function checkValue()
-                        {
-                            if(text === "")
-                                return false
-
-                            let operatorIndex = text.indexOf('+')
-
-                            if(operatorIndex === -1)
-                                operatorIndex = text.indexOf('-')
-
-                            let checkedText = (operatorIndex === -1) ? text : text.slice(0, operatorIndex)
-                            return (Number(checkedText) >= 1 && Number(checkedText) < 10000)
-                        }
-
-                        background: Rectangle
-                        {
-                            color: "#000000"
-                            radius: 2
-                        }
-
-                        onFocusChanged:
-                        {
-                            if(focus)
-                            {
-                                markAllInputsInactive();
-                                isActiveInput = true
-                                addShotWidget.currentInput = this
-                                selectAll();
-                                lastSelectedText = selectedText
-                            }
-                        }
-                    }
-
-                    TextField
-                    {
-                        Layout.row: 1
-                        Layout.column: 3
-                        Layout.preferredWidth: 34
-                        Layout.preferredHeight: 18
-                        Layout.alignment: Qt.AlignHCenter
-
-                        id: heightField
-                        color: "#ffffff"
-                        text: "10"
-                        horizontalAlignment: Text.AlignHCenter
-                        padding: 0
-                        leftPadding: -2
-                        font.pointSize: 8
-
-                        property bool isActiveInput: false
-                        property string lastSelectedText
-
-                        function checkValue()
-                        {
-                            if(text === "")
-                                return false
-
-                            return (Number(text) >= 0 && Number(text) < 200)
-                        }
-
-                        validator: RegExpValidator { regExp: /[0-9]+/ }
-                        maximumLength: 3
-
-                        background: Rectangle
-                        {
-                            color: "#000000"
-                            radius: 2
-                        }
-
-                        onFocusChanged:
-                        {
-                            if(focus)
-                            {
-                                markAllInputsInactive();
-                                isActiveInput = true
-                                addShotWidget.currentInput = this
-                                selectAll();
-                                lastSelectedText = selectedText
+                                addShotWidget.currentInput = field;
                             }
                         }
                     }
@@ -799,7 +841,7 @@ Item
         {
             id: calcWidget
             x: 196
-            y: 34
+            y: 108
 
             minusButtonText: heightField.isActiveInput ? "." : "-"
         }
@@ -808,7 +850,7 @@ Item
         {
             id: setButton
             x: 196
-            y: 236
+            y: 298
             width: 124
             color: "#2F80ED"
             text: translationsManager.translationTrigger + qsTr("Set")
@@ -819,7 +861,8 @@ Item
                         rfChField.checkValue() &&
                         dmxChField.checkValue() &&
                         heightField.checkValue() &&
-                        angField.checkValue()
+                        angField.checkValue() &&
+                        prefireField.checkValue()
 
             }
 
@@ -905,8 +948,8 @@ Item
             }
         }
 
-        Shape {
-
+        Shape
+        {
             x: -4
             y: 100
             width: 180
@@ -950,7 +993,8 @@ Item
             }
         }
 
-        Text {
+        Text
+        {
             y: 105
             x: 142
             height: 17
@@ -1013,7 +1057,8 @@ Item
             }
         }
 
-        Text {
+        Text
+        {
             y: 107
             height: 17
             color: "#ffffff"
@@ -1030,7 +1075,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 105
             height: 17
             color: "#ffffff"
@@ -1047,7 +1093,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 185
             height: 17
             color: "#ffffff"
@@ -1064,7 +1111,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 185
             height: 17
             color: "#ffffff"
@@ -1081,7 +1129,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 182
             height: 17
             color: "#ffffff"
@@ -1098,7 +1147,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 182
             height: 17
             color: "#ffffff"
@@ -1115,7 +1165,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 259
             height: 17
             color: "#ffffff"
@@ -1132,7 +1183,8 @@ Item
             font.family: MFXUIS.Fonts.robotoRegular.name
         }
 
-        Text {
+        Text
+        {
             y: 263
             height: 17
             color: "#ffffff"
@@ -1214,156 +1266,156 @@ Item
             id: colorButtons
         }
 
-        Button
+        RowLayout
         {
-            id: colorButton1
-            x: 144
-            y: 268
-            width: 32
+            x: 4
+            y: 294
             height: 32
-            checkable: true
-            checked: colorType == addShotWidget.selColor
-            onClicked: addShotWidget.selColor = colorType
 
-            property string colorType: "red"
-
-            background: Rectangle
+            Button
             {
-                color: parent.colorType
-                opacity: parent.checked ? 0.6 : 0.3
-                radius: 2
+                id: colorButton1
+                Layout.fillHeight:true
+                Layout.preferredWidth: parent.height
+            
+                checkable: true
+                checked: colorType == addShotWidget.selColor
+                onClicked: addShotWidget.selColor = colorType
+
+                property string colorType: "red"
+
+                background: Rectangle
+                {
+                    color: parent.colorType
+                    opacity: parent.checked ? 0.6 : 0.3
+                    radius: 2
+                }
+
+                Image
+                {
+                    source: parent.checked ? "qrc:/checked" : ""
+                    anchors.centerIn: parent
+                }
+
+                ButtonGroup.group: colorButtons
             }
 
-            Image
+            Button
             {
-                source: parent.checked ? "qrc:/checked" : ""
-                anchors.centerIn: parent
+                id: colorButton2
+                Layout.fillHeight:true
+                Layout.preferredWidth: parent.height
+
+                checkable: true
+                checked: colorType == addShotWidget.selColor
+                onClicked: addShotWidget.selColor = colorType
+
+                property string colorType: "blue"
+
+                background: Rectangle
+                {
+                    color: parent.colorType
+                    opacity: parent.checked ? 0.6 : 0.3
+                    radius: 2
+                }
+
+                Image
+                {
+                    source: parent.checked ? "qrc:/checked" : ""
+                    anchors.centerIn: parent
+                }
+
+                ButtonGroup.group: colorButtons
             }
 
-            ButtonGroup.group: colorButtons
+            Button
+            {
+                id: colorButton3
+                Layout.fillHeight:true
+                Layout.preferredWidth: parent.height
+
+                checkable: true
+                checked: colorType == addShotWidget.selColor
+                onClicked: addShotWidget.selColor = colorType
+
+                property string colorType: "green"
+
+                background: Rectangle
+                {
+                    color: parent.colorType
+                    opacity: parent.checked ? 0.6 : 0.3
+                    radius: 2
+                }
+
+                Image
+                {
+                    source: parent.checked ? "qrc:/checked" : ""
+                    anchors.centerIn: parent
+                }
+
+                ButtonGroup.group: colorButtons
+            }
+
+            Button
+            {
+                id: colorButton4
+                Layout.fillHeight:true
+                Layout.preferredWidth: parent.height
+
+                checkable: true
+                checked: colorType == addShotWidget.selColor
+                onClicked: addShotWidget.selColor = colorType
+
+                property string colorType: "#FFD700"
+
+                background: Rectangle
+                {
+                    color: parent.colorType
+                    opacity: parent.checked ? 0.8 : 0.3
+                    radius: 2
+                }
+
+                Image
+                {
+                    source: parent.checked ? "qrc:/checked" : ""
+                    anchors.centerIn: parent
+                }
+
+                ButtonGroup.group: colorButtons
+            }
+
+            Button
+            {
+                id: colorButton5
+                Layout.fillHeight:true
+                Layout.preferredWidth: parent.height
+
+                checkable: true
+                checked: colorType == addShotWidget.selColor
+                onClicked: addShotWidget.selColor = colorType
+
+                property string colorType: "purple"
+
+                background: Rectangle
+                {
+                    color: parent.colorType
+                    opacity: parent.checked ? 0.6 : 0.3
+                    radius: 2
+                }
+
+                Image
+                {
+                    source: parent.checked ? "qrc:/checked" : ""
+                    anchors.centerIn: parent
+                }
+
+                ButtonGroup.group: colorButtons
+            }
         }
-
-        Button
-        {
-            id: colorButton2
-            x: 180
-            y: 268
-            width: 32
-            height: 32
-            checkable: true
-            checked: colorType == addShotWidget.selColor
-            onClicked: addShotWidget.selColor = colorType
-
-            property string colorType: "blue"
-
-            background: Rectangle
-            {
-                color: parent.colorType
-                opacity: parent.checked ? 0.6 : 0.3
-                radius: 2
-            }
-
-            Image
-            {
-                source: parent.checked ? "qrc:/checked" : ""
-                anchors.centerIn: parent
-            }
-
-            ButtonGroup.group: colorButtons
-        }
-
-        Button
-        {
-            id: colorButton3
-            x: 216
-            y: 268
-            width: 32
-            height: 32
-            checkable: true
-            checked: colorType == addShotWidget.selColor
-            onClicked: addShotWidget.selColor = colorType
-
-            property string colorType: "green"
-
-            background: Rectangle
-            {
-                color: parent.colorType
-                opacity: parent.checked ? 0.6 : 0.3
-                radius: 2
-            }
-
-            Image
-            {
-                source: parent.checked ? "qrc:/checked" : ""
-                anchors.centerIn: parent
-            }
-
-            ButtonGroup.group: colorButtons
-        }
-
-        Button
-        {
-            id: colorButton4
-            x: 252
-            y: 268
-            width: 32
-            height: 32
-            checkable: true
-            checked: colorType == addShotWidget.selColor
-            onClicked: addShotWidget.selColor = colorType
-
-            property string colorType: "#FFD700"
-
-            background: Rectangle
-            {
-                color: parent.colorType
-                opacity: parent.checked ? 0.8 : 0.3
-                radius: 2
-            }
-
-            Image
-            {
-                source: parent.checked ? "qrc:/checked" : ""
-                anchors.centerIn: parent
-            }
-
-            ButtonGroup.group: colorButtons
-        }
-
-        Button
-        {
-            id: colorButton5
-            x: 288
-            y: 268
-            width: 32
-            height: 32
-            checkable: true
-            checked: colorType == addShotWidget.selColor
-            onClicked: addShotWidget.selColor = colorType
-
-            property string colorType: "purple"
-
-            background: Rectangle
-            {
-                color: parent.colorType
-                opacity: parent.checked ? 0.6 : 0.3
-                radius: 2
-            }
-
-            Image
-            {
-                source: parent.checked ? "qrc:/checked" : ""
-                anchors.centerIn: parent
-            }
-
-            ButtonGroup.group: colorButtons
-        }
-
-
-
     }
 
-    states: [
+    states:
+    [
         State
         {
             name: "editMode"
@@ -1400,10 +1452,11 @@ Item
             var propNamesList = project.patchPropertiesNames(project.patchIndexForId(changedIdList[0]))
             var propValuesList = project.patchPropertiesValues(project.patchIndexForId(changedIdList[0]))
 
-            rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")];
-            rfChField.text = propValuesList[propNamesList.indexOf("RF ch")];
-            heightField.text = propValuesList[propNamesList.indexOf("height")];
-            angField.text = propValuesList[propNamesList.indexOf("angle")];
+            rfPosField.text = propValuesList[propNamesList.indexOf("RF pos")]
+            rfChField.text = propValuesList[propNamesList.indexOf("RF ch")]
+            heightField.text = propValuesList[propNamesList.indexOf("height")]
+            angField.text = propValuesList[propNamesList.indexOf("angle")]
+            prefireField.setTimeMs( propValuesList[propNamesList.indexOf("prefireTime")] )
 
             var ind = propNamesList.indexOf( "color type" )
             if( ind != -1 )

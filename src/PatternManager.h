@@ -35,8 +35,8 @@ public:
     PatternFilteringModel* patternsShotFiltered() const;
 
     Q_INVOKABLE /*гадский qml не понимает const*/ Pattern* patternByName(const QString& name) const;
-    Q_INVOKABLE void addShotPattern( const QString& displayName, qulonglong prefire, qulonglong time );
-    Q_INVOKABLE void editShotPattern( const QString& name, const QString& displayName, qulonglong prefire, qulonglong time );
+    Q_INVOKABLE void addShotPattern( const QString& displayName, qulonglong time );
+    Q_INVOKABLE void editShotPattern( const QString& name, const QString& displayName, qulonglong time );
     Q_INVOKABLE void deletePattern( const QString& name );
 
 private:

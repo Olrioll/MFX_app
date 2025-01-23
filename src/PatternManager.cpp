@@ -186,16 +186,16 @@ void PatternManager::addPattern( Pattern* pattern, PatternType::Type type, qulon
     m_CustomPatterns->addPattern( pattern );
 }
 
-void PatternManager::addShotPattern( const QString& displayName, qulonglong prefire, qulonglong time )
+void PatternManager::addShotPattern( const QString& displayName, qulonglong time )
 {
     ShotPattern* pattern = new ShotPattern();
     pattern->setShotTime( time );
     pattern->setDisplayName( displayName );
 
-    addPattern( pattern, PatternType::Shot, prefire, {} );
+    addPattern( pattern, PatternType::Shot, 0, {} );
 }
 
-void PatternManager::editShotPattern( const QString& name, const QString& displayName, qulonglong prefire, qulonglong time )
+void PatternManager::editShotPattern( const QString& name, const QString& displayName, qulonglong time )
 {
     Pattern* pattern = patternByName( name );
     if( !pattern )
@@ -203,7 +203,6 @@ void PatternManager::editShotPattern( const QString& name, const QString& displa
 
     QVariantMap properties = pattern->getProperties();
     properties["displayName"] = displayName;
-    properties["prefireDuration"] = prefire;
     properties["shotTime"] = time;
 
     pattern->setProperties( properties );

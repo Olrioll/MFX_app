@@ -12,7 +12,7 @@ Item
 {
     id: addShotPatternWidget
     width: 184
-    height: 304
+    height: 290
 
     property var currentInput
     property bool isEditMode: false
@@ -20,8 +20,8 @@ Item
 
     function markAllInputsInactive()
     {
-        prefireField.isActiveInput = false
         timeField.isActiveInput = false
+        displayNameField.isActiveInput = false
     }
 
     Rectangle
@@ -113,14 +113,18 @@ Item
                 }
             }
 
-            RowLayout
+            GridLayout
             {
                 Layout.fillWidth: true
+                Layout.leftMargin: 4
+                Layout.rightMargin: 4
+
+                columns: 2
 
                 Text
                 {
                     text: translationsManager.translationTrigger + qsTr("Name")
-                    color: "#FFFFFF"
+                    color: displayNameField.isActiveInput ? "#27AE60" : "#ffffff"
                     elide: Text.ElideMiddle
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -131,6 +135,8 @@ Item
                 TextField
                 {
                     id: displayNameField
+                    property bool isActiveInput: false
+                    property string lastSelectedText
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 22
@@ -145,72 +151,46 @@ Item
                         color: "#000000"
                         radius: 2
                     }
-                }
-            }
 
-            Rectangle
-            {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 42
-
-                radius: 2
-                color: "#222222"
-
-                GridLayout
-                {
-                    anchors.fill: parent
-                    anchors.margins: 4
-                    columns: 2
-
-                    Text
+                    onFocusChanged:
                     {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        color: prefireField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Prefire")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                    }
-
-                    Text
-                    {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        color: timeField.isActiveInput ? "#27AE60" : "#ffffff"
-                        text: translationsManager.translationTrigger + qsTr("Time")
-                        elide: Text.ElideMiddle
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        minimumPixelSize: 10
-                        font.family: MFXUIS.Fonts.robotoRegular.name
-                    }
-
-                    TimeInput
-                    {
-                        id: prefireField
-
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-
-                        onChangeActiveField:
+                        if( focus )
                         {
+                            selectAll()
+
+                            lastSelectedText = selectedText
+
                             markAllInputsInactive();
                             isActiveInput = true;
-                            addShotPatternWidget.currentInput = field;
+                            addShotPatternWidget.currentInput = this;
                         }
                     }
+                }
+
+                Text
+                {
+                    color: timeField.isActiveInput ? "#27AE60" : "#ffffff"
+                    text: translationsManager.translationTrigger + qsTr("Time")
+                    elide: Text.ElideMiddle
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    minimumPixelSize: 10
+                    font.family: MFXUIS.Fonts.robotoRegular.name
+                }
+
+                Rectangle
+                {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+
+                    radius: 2
+                    color: "#222222"
 
                     TimeInput
                     {
                         id: timeField
 
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        anchors.fill: parent
 
                         onChangeActiveField:
                         {
@@ -237,18 +217,21 @@ Item
             MfxButton
             {
                 Layout.fillWidth: true
+                Layout.leftMargin: 2
+                Layout.rightMargin: 2
+                Layout.bottomMargin: 2
 
                 id: acceptButton
                 text: translationsManager.translationTrigger + qsTr("Apply")
                 color: "#2F80ED"
-                enabled: prefireField.checkValue() && timeField.checkValue()
+                enabled: timeField.checkValue()
 
                 onClicked:
                 {
                     if( isEditMode )
-                        patternManager.editShotPattern( patternName, displayNameField.text, prefireField.getTimeMs(), timeField.getTimeMs() );
+                        patternManager.editShotPattern( patternName, displayNameField.text, timeField.getTimeMs() );
                     else
-                        patternManager.addShotPattern( displayNameField.text, prefireField.getTimeMs(), timeField.getTimeMs() );
+                        patternManager.addShotPattern( displayNameField.text, timeField.getTimeMs() );
 
                     applicationWindow.contentItem.focus = true
                     addShotPatternWidget.destroy()
@@ -281,7 +264,6 @@ Item
 
             patternName = pattern.name
             displayNameField.text = pattern.getProperties()["displayName"]
-            prefireField.setTimeMs( pattern.prefireDuration )
             timeField.setTimeMs( Number( pattern.getProperties()["shotTime"] ) )
         }
     }
