@@ -15,9 +15,13 @@ class ShotDevice : public Device
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, rfPosition, RfPosition, 0 ) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, height, Height, 0 ) //DMX
     QSM_WRITABLE_VAR_PROPERTY_WDEFAULT( int, angle, Angle, 0 ) //DMX
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT( qulonglong, prefireDuration, PrefireDuration, 0 )
 
 public:
     explicit ShotDevice( DeviceManager* mng, QObject* parent = nullptr );
+
+    qulonglong getPrefire() const override { return prefireDuration(); }
+    void setPrefire( qulonglong prefire ) override { setPrefireDuration( prefire ); }
 
     void copyToCueContent( CueContent& cueContent ) const override;
 

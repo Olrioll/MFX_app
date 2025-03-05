@@ -46,16 +46,18 @@ Item
             else if (deviceType == PatternType.Dimmer)
                 imageFile = "qrc:/device_dimmer"
 
-            patchIcons.push(Qt.createComponent("MainScreen/PatchIcon.qml")
-                              .createObject(backgroundImage,
-                                            {  imageFile: imageFile,
-                                                patchId: project.patchPropertyForIndex(i, "ID"),
-                                                checked: project.patchPropertyForIndex(i, "checked"),
-                                                posXRatio: project.patchPropertyForIndex(i, "posXRatio"),
-                                                posYRatio: project.patchPropertyForIndex(i, "posYRatio")}))
+            patchIcons.push( Qt.createComponent( "MainScreen/PatchIcon.qml" )
+                               .createObject( backgroundImage,
+                                    {  imageFile: imageFile,
+                                        patchId: project.patchPropertyForIndex( i, "ID" ),
+                                        checked: project.patchPropertyForIndex( i, "checked" ),
+                                        posXRatio: project.patchPropertyForIndex( i, "posXRatio" ),
+                                        posYRatio: project.patchPropertyForIndex( i, "posYRatio" ) } ) )
 
-            deviceManager.setDeviceProperty( deviceType, project.patchPropertyForIndex(i, "ID"), project.patchPropertyForIndex(i, "checked"),
-                    project.patchPropertyForIndex(i, "posXRatio"), project.patchPropertyForIndex(i, "posYRatio") );
+            deviceManager.setDeviceProperty( deviceType,
+                project.patchPropertyForIndex( i, "ID" ), project.patchPropertyForIndex( i, "checked" ),
+                project.patchPropertyForIndex( i, "posXRatio" ), project.patchPropertyForIndex( i, "posYRatio" ),
+                project.patchPropertyForIndex( i, "posYRatio" ) );
         }
     }
 

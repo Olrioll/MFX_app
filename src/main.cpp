@@ -97,7 +97,8 @@ int main(int argc, char** argv)
 
     QObject::connect(&project, &ProjectManager::addCue, &cueManager, &CueManager::onAddCue);
     QObject::connect(&project, &ProjectManager::deleteAllCue, &cueManager,&CueManager::onDeleteAllCue);
-    QObject::connect(&project, &ProjectManager::setActionProperty, &cueManager, &CueManager::onSetActionProperty);
+    QObject::connect(&project, &ProjectManager::setActionPosition, &cueManager, &CueManager::onSetActionPosition);
+    QObject::connect( &project, &ProjectManager::setActionPrefire, &cueManager, &CueManager::onSetActionPrefire );
     QObject::connect(&project, &ProjectManager::editPatch, &deviceManager, &DeviceManager::onEditPatch);
     //QObject::connect(&cueManager, &CueManager::runPattern, &deviceManager, &DeviceManager::onRunPattern);
     QObject::connect( &cueManager, &CueManager::runPatternSingly, &deviceManager, &DeviceManager::onRunPatternSingly );

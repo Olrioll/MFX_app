@@ -26,10 +26,10 @@ public:
     Q_INVOKABLE void setDeviceProperty( PatternType::Type type, int deviceId, bool checked, qreal posXRatio, qreal posYRatio );
     Q_INVOKABLE void runPreviewPattern( const QString& patternName );
     Q_INVOKABLE void finishChangeAngle( int deviceId, int angle );
-    Q_INVOKABLE qulonglong maxActionsDuration( const QList<int>& ids ) const;
-    Q_INVOKABLE qulonglong maxActionsPrefire( const QList<int>& ids ) const;
+    Q_INVOKABLE qulonglong maxActionsDuration( const QList<int>& pathIds ) const;
+    Q_INVOKABLE qulonglong maxActionsPrefire( const QList<int>& pathIds ) const;
     Q_INVOKABLE qulonglong actionDuration( const QString& actName, int deviceId ) const;
-    Q_INVOKABLE qulonglong actionPrefire( const QString& actName ) const;
+    Q_INVOKABLE qulonglong actionPrefire( const QString& actName, int deviceId ) const;
     Q_INVOKABLE QString getDurationStrByPattern( PatternType::Type type, const QString& patternName ) const;
     Q_INVOKABLE Device* getDeviceById( int id ) const;
 

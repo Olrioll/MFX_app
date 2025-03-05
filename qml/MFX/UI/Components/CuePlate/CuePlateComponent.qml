@@ -83,30 +83,25 @@ Component
             actions.forEach(function(currAction)
             {
                 //console.log("load action: ", currAction.actionName, currAction.actionPrefire, currAction.actionDuration)
-                let pattern = patternManager.patternByName(currAction.actionName)
+                let prefireDuration = currAction.actionPrefire !== undefined ? currAction.actionPrefire : deviceManager.actionPrefire( currAction.actionName, currAction.patchId )
 
-                if( pattern || currAction.actionPrefire !== undefined )
+                let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
+                                                                            displayedName: currAction.actionName + " - P" + currAction.patchId,
+                                                                            patchId: currAction.patchId,
+                                                                            position: currAction.position,
+                                                                            prefire: prefireDuration,
+                                                                            duration: currAction.actionDuration,
+                                                                            positionCoeff: currAction.positionCoeff
+                                                                        })
+                actionList.push(newActionMarker)
+
+                let newPrefireSpaceComponent = prefireSpaceComponent.createObject(cuePlate,
                 {
-                    let prefireDuration = currAction.actionPrefire !== undefined ? currAction.actionPrefire : pattern.prefireDuration
+                    position: currAction.position,
+                    prefire: prefireDuration
+                })
 
-                    let newActionMarker = actionMarkerComponent.createObject(cuePlate, {name: currAction.actionName,
-                                                                                displayedName: currAction.actionName + " - P" + currAction.patchId,
-                                                                                patchId: currAction.patchId,
-                                                                                position: currAction.position,
-                                                                                prefire: prefireDuration,
-                                                                                duration: currAction.actionDuration,
-                                                                                positionCoeff: currAction.positionCoeff
-                                                                            })
-                    actionList.push(newActionMarker)
-
-                    let newPrefireSpaceComponent = prefireSpaceComponent.createObject(cuePlate,
-                    {
-                        position: currAction.position,
-                        prefire: prefireDuration
-                    })
-
-                    prefiresList.push(newPrefireSpaceComponent)
-                }
+                prefiresList.push(newPrefireSpaceComponent)
             })
 
             updatePosition()
@@ -559,7 +554,7 @@ Component
                             currAction.duration = Math.round( newDuration / 10 ) * 10
 
                             project.onSetActionProperty( cuePlate.name, currAction.name, currAction.patchId, "actionDuration", currAction.duration )
-                            cueManager.onSetActionProperty( cuePlate.name, currAction.name, currAction.patchId, currAction.position )
+                            cueManager.onSetActionPosition( cuePlate.name, currAction.name, currAction.patchId, currAction.position )
                         }
 
                         cuePlate.updatePosition()
@@ -582,7 +577,7 @@ Component
                         }
 
                         project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
-                        cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
+                        cueManager.onSetActionPosition(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                     })
 
                     cuePlate.loadActions();
@@ -610,7 +605,7 @@ Component
                     newPosition = p;
 
                     project.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, "position", newPosition)
-                    cueManager.onSetActionProperty(cuePlate.name, currAction.name, currAction.patchId, newPosition)
+                    cueManager.onSetActionPosition(cuePlate.name, currAction.name, currAction.patchId, newPosition)
                     cuePlate.loadActions();
                 });
 

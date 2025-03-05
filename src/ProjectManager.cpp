@@ -31,6 +31,7 @@ ProjectManager::ProjectManager(SettingsManager &settngs, PatternManager* pattern
     , m_CloudManager( cloudManager )
 {
     connect( &m_ImportAudioTrackWatcher, &QFutureWatcher<QString>::finished, this, &ProjectManager::importAudioTrackFinished );
+    connect( this, &ProjectManager::setActionPrefire, this, &ProjectManager::onSetActionPrefire );
 
     QMutexLocker locker( &m_ProjectLocker );
 
@@ -162,20 +163,23 @@ bool ProjectManager::loadProjectFromFile( const QString& fileName )
             propertiesMap["propName"] = "RF mode";
             propertiesMap["propValue"] = patch->properties().value( "RF mode" ).toBool();
             properties.append( propertiesMap );
+            propertiesMap["propName"] = "prefireTime";
+            propertiesMap["propValue"] = patch->properties().value( "prefireTime" ).toULongLong();
+            properties.append( propertiesMap );
             emit editPatch( properties );
         }
 
         for(auto cue : getChild("Cues")->namedChildren())
         {
-            QString cueName = cue->properties().value("name").toString();
+            const QString cueName = cue->properties().value("name").toString();
             emit addCue(cue->properties());
 
             for(const auto action : cue->listedChildren())
             {
-                QString pattern = action->properties().value("actionName").toString();
-                quint64 deviceId = action->properties().value("patchId").toUInt();
-                quint64 position = action->properties().value("position").toUInt();
-                emit setActionProperty(cueName, pattern, deviceId, position);
+                const QString pattern = action->properties().value("actionName").toString();
+                const quint64 deviceId = action->properties().value("patchId").toUInt();
+                const quint64 position = action->properties().value("position").toUInt();
+                emit setActionPosition(cueName, pattern, deviceId, position);
             }
         }
 
@@ -217,7 +221,7 @@ void ProjectManager::reloadCurrentProject()
             QString pattern = action->properties().value("actionName").toString();
             quint64 deviceId = action->properties().value("patchId").toUInt();
             quint64 position = action->properties().value("position").toUInt();
-            emit setActionProperty(cueName, pattern, deviceId, position);
+            emit setActionPosition(cueName, pattern, deviceId, position);
         }
     }
 
@@ -669,6 +673,15 @@ void ProjectManager::onEditPatch(const QVariantList& properties)
                 patch->setProperty( "RF mode", p->property( "RF mode" ) );
 
             getChild("Patches")->replaceChild(p, patch);
+
+            //Device* device = m_DeviceManager->getDeviceById( patch->property( "ID" ).toInt() );
+            //device->setPrefire( patch->property( "prefireTime" ).toULongLong() );
+
+            const auto cues = getChild( "Cues" )->namedChildren();
+
+            for( auto it = cues.keyValueBegin(); it != cues.keyValueEnd(); ++it )
+                emit setActionPrefire( it->first, patch->property( "act" ).toString(), patch->property( "ID" ).toInt(), patch->property( "prefireTime" ).toULongLong() );
+
             emit patchListChanged();
             return;
         }
@@ -1001,9 +1014,7 @@ QVariantList ProjectManager::getCues() const
 {
     QVariantList cueList;
     for(auto & cue : getChild("Cues")->namedChildren())
-    {
         cueList.push_back(cue->properties());
-    }
 
     return cueList;
 }
@@ -1059,11 +1070,8 @@ qulonglong ProjectManager::cueActionPrefire( const QString& cueName, const QStri
             if( action->containsProperty( "actionPrefire" ) )
                 return action->property( "actionPrefire" ).toULongLong();
 
-            const auto pattern = m_PatternManager->patternByName( actName );
-            if( pattern )
-                return pattern->prefireDuration();
-
-            break;
+            int deviceId = action->property( "patchId" ).toInt();
+            return m_DeviceManager->actionPrefire( actName, deviceId );
         }
     }
 
@@ -1109,6 +1117,24 @@ void ProjectManager::onSetActionProperty( const QString& cueName, const QString&
     }
 }
 
+void ProjectManager::onSetActionPrefire( const QString& cueName, const QString& actionName, int patchId, qulonglong prefire )
+{
+    QMutexLocker locker( &m_ProjectLocker );
+
+    auto cue = getChild( "Cues" )->getChild( cueName );
+    if( !cue )
+        return;
+
+    for( auto& action : cue->listedChildren() )
+    {
+        if( action->property( "actionName" ).toString() == actionName && action->property( "patchId" ).toInt() == patchId )
+        {
+            action->setProperty( "actionPrefire", prefire );
+            break;
+        }
+    }
+}
+
 void ProjectManager::deleteCues(const QStringList& deletedCueNames)
 {
     QMutexLocker locker( &m_ProjectLocker );
@@ -1140,7 +1166,7 @@ void ProjectManager::copyCues(const QStringList& copyCueNames)
                 QString pattern = action->properties().value("actionName").toString();
                 quint64 deviceId = action->properties().value("patchId").toUInt();
                 quint64 position = action->properties().value("position").toUInt();
-                emit setActionProperty(newName, pattern, deviceId, position);
+                emit setActionPosition(newName, pattern, deviceId, position);
             }
         }
     }
@@ -1164,7 +1190,7 @@ void ProjectManager::changeAction(const QString& cueName, int deviceId, const QS
         {
             action->setProperty("actionName",pattern);
             quint64 position = action->properties().value("position").toUInt();
-            emit setActionProperty(cueName, pattern, deviceId, position);
+            emit setActionPosition(cueName, pattern, deviceId, position);
             emit updateCues(cueName);
             return;
         }
@@ -1386,8 +1412,8 @@ void ProjectManager::onMirror(const QString &cueName, QList<int> deviceId)
          quint64 position = l[i]->properties().value("position").toUInt();
          quint64 position2 = l[y]->properties().value("position").toUInt();
 
-         emit setActionProperty(cueName, actL, devL, position2);
-         emit setActionProperty(cueName, actF, devF, position);
+         emit setActionPosition(cueName, actL, devL, position2);
+         emit setActionPosition(cueName, actF, devF, position);
         }
         else
             break;;
@@ -1445,14 +1471,14 @@ void ProjectManager::onInsideOutside(const QString &cueName, QList<int> deviceId
          quint64 position =  pos[i];
          l[i+1]->setProperty("position",position);
          l[i]->setProperty("position",position);
-         emit setActionProperty(cueName, actL, devL, position);
-         emit setActionProperty(cueName, actF, devF, position);
+         emit setActionPosition(cueName, actL, devL, position);
+         emit setActionPosition(cueName, actF, devF, position);
         }
         else if(i<l.size())
         {
             quint64 position =  pos[i];
             l[i]->setProperty("position",position);
-            emit setActionProperty(cueName, l[i]->properties().value("actionName").toString(),
+            emit setActionPosition(cueName, l[i]->properties().value("actionName").toString(),
                                    l[i]->properties().value("patchId").toUInt(), position);
         }
         else
@@ -1506,8 +1532,8 @@ void ProjectManager::onRandom(const QString &cueName, QList<int> deviceId)
          quint64 position = l[i]->properties().value("position").toUInt();
          quint64 position2 = l[y]->properties().value("position").toUInt();
 
-         emit setActionProperty(cueName, actL, devL, position2);
-         emit setActionProperty(cueName, actF, devF, position);
+         emit setActionPosition(cueName, actL, devL, position2);
+         emit setActionPosition(cueName, actF, devF, position);
         }
         else 
             break;
@@ -1547,7 +1573,7 @@ void ProjectManager::updateCoeffByName(QString cueName){
 ////        qDebug()<<"coff "<<(1.f/size) * i;
 ////         action->setProperty("positionCoeff",cueActions(cueName).size() / * i);
 ////         ++i;
-////         emit setActionProperty(cueName, action->properties().value("actionName").toString(),
+////         emit setActionPosition(cueName, action->properties().value("actionName").toString(),
 ////                                action->properties().value("patchId").toUInt(),
 ////                                action->properties().value("position").toUInt());
 

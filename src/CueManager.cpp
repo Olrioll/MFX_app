@@ -167,7 +167,7 @@ void CueManager::recalculateCueStartAndDuration(const QString &cueName)
     cue->setDurationTime( cueStop - cueStart );
 }
 
-void CueManager::onSetActionProperty(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
+void CueManager::onSetActionPosition(const QString& cueName, const QString& pattern, int deviceId, quint64 newPosition)
 {
     auto* action = getAction(cueName, deviceId);
 
@@ -184,11 +184,20 @@ void CueManager::onSetActionProperty(const QString& cueName, const QString& patt
     recalculateCueStartAndDuration(cueName);
 }
 
+void CueManager::onSetActionPrefire( const QString& cueName, const QString& pattern, int deviceId, qulonglong prefire )
+{
+    auto* action = getAction( cueName, deviceId );
+    if( !action )
+        return;
+
+    action->setPrefireDuration( prefire );
+    recalculateCueStartAndDuration( cueName );
+}
+
 void CueManager::cueNameChangeRequest(const QUuid& id, const QString& name)
 {
-    if (auto* cue = cueById(id); cue != nullptr) {
+    if (auto* cue = cueById(id); cue != nullptr)
         cue->setName(name);
-    }
 }
 
 void CueManager::collapseCueOnPlayerRequest(const QString& name)

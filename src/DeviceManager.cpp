@@ -102,7 +102,8 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
     int minAng = MIN_SEQUENCE_ANGLE;
     int maxAng = MAX_SEQUENCE_ANGLE;
     int height = -1;
-    QString colorType = "";
+    QString colorType;
+    qulonglong prefireDuation = 0;
 
 //    bool isId = false;
     bool isAngle = false;
@@ -110,6 +111,7 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
     bool isMaxAng = false;
     bool isHeight = false;
     bool isColorType = false;
+    bool isPrefireDuation = false;
 
     //qDebug()<< "EditPatch"<<properties;
     for(const auto prop : properties)
@@ -165,11 +167,22 @@ void DeviceManager::onEditPatch(const QVariantList& properties)
                 isColorType = true;
             }
         }
+        else if( stringFirst == "prefireTime" )
+        {
+            if( !last.isNull() )
+            {
+                prefireDuation = last.toULongLong();
+                isPrefireDuation = true;
+            }
+        }
     }
 
     Device* device = getDeviceById( id );
     if( !device  )
         return;
+
+    if( isPrefireDuation )
+        device->setPrefire( prefireDuation );
 
     if( device->deviceType() == PatternType::Sequences )
     {
@@ -255,27 +268,27 @@ void DeviceManager::finishChangeAngle( int deviceId, int angle )
     device->finishChangeAngle( angle );
 }
 
-qulonglong DeviceManager::maxActionsDuration( const QList<int>& ids ) const
+qulonglong DeviceManager::maxActionsDuration( const QList<int>& pathIds ) const
 {
     qulonglong duration = 0;
 
-    for( auto id : ids )
+    for( int pathId : pathIds )
     {
-        QString act = m_ProjectManager->patchProperty( id, "act" ).toString();
-        duration = std::max( duration, actionDuration( act, id ) );
+        const QString act = m_ProjectManager->patchProperty( pathId, "act" ).toString();
+        duration = std::max( duration, actionDuration( act, pathId ) );
     }
 
     return duration;
 }
 
-qulonglong DeviceManager::maxActionsPrefire( const QList<int>& ids ) const
+qulonglong DeviceManager::maxActionsPrefire( const QList<int>& pathIds ) const
 {
     qulonglong prefire = 0;
 
-    for( auto id : ids )
+    for( int pathId : pathIds )
     {
-        QString act = m_ProjectManager->patchProperty( id, "act" ).toString();
-        prefire = std::max( prefire, actionPrefire( act ) );
+        const QString act = m_ProjectManager->patchProperty( pathId, "act" ).toString();
+        prefire = std::max( prefire, actionPrefire( act, pathId ) );
     }
 
     return prefire;
@@ -284,7 +297,7 @@ qulonglong DeviceManager::maxActionsPrefire( const QList<int>& ids ) const
 qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId ) const
 {
     const Pattern* pattern = m_patternManager->patternByName( actName );
-    Device* device = getDeviceById( deviceId );
+    const Device* device = getDeviceById( deviceId );
 
     if( pattern && device )
         return device->getDurationByPattern( *pattern );
@@ -292,9 +305,13 @@ qulonglong DeviceManager::actionDuration( const QString& actName, int deviceId )
     return 0;
 }
 
-qulonglong DeviceManager::actionPrefire( const QString& actName ) const
+qulonglong DeviceManager::actionPrefire( const QString& actName, int deviceId ) const
 {
-    const Pattern* pattern = m_patternManager->patternByName( actName );
+    const Device* device = getDeviceById( deviceId );
 
+    if( device && device->getPrefire() )
+        return device->getPrefire();
+
+    const Pattern* pattern = m_patternManager->patternByName( actName );
     return pattern ? pattern->prefireDuration() : 0;
 }

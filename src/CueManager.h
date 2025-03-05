@@ -49,7 +49,8 @@ public slots:
     void onDeleteAllCue();
     void onRecalculateCue();
     void onDeleteCue(const QString& cueName);
-    void onSetActionProperty( const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition );
+    void onSetActionPosition( const QString &cueName, const QString &pattern, int deviceId, quint64 newPosition );
+    void onSetActionPrefire( const QString& cueName, const QString& pattern, int deviceId, qulonglong prefire );
     void onPlaybackTimeChanged(quint64 time);
 
 signals:

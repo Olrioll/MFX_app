@@ -16,6 +16,7 @@ class Action : public QObject
     QSM_READONLY_CSTREF_PROPERTY(int, deviceId, DeviceId) //Идентификатор сопоставленного устройства
     //QSM_READONLY_CSTREF_PROPERTY(QUuid, deviceUuid, DeviceUuid) //Уникальный идентификатор сопоставленного устройства
     QSM_READONLY_VAR_PROPERTY(qulonglong, startTime, StartTime) //Время начала Action относительно стартовой позиции Cue
+    QSM_READONLY_VAR_PROPERTY_WDEFAULT( qulonglong, prefireDuration, PrefireDuration, 0 )
 
 public:
     explicit Action(QObject *parent = nullptr);

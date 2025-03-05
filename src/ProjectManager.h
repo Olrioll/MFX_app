@@ -199,11 +199,14 @@ public slots:
     QVariantList cueActions(const QString& cueName) const;
     qulonglong cueActionPrefire( const QString& cueName, const QString& actName ) const;
     qulonglong cueActionDuration( const QString& cueName, const QString& actName ) const;
-    void onSetActionProperty( const QString& cueName, const QString& actionName, int patchId, const QString& propertyName, const QVariant& value);
+    void onSetActionProperty( const QString& cueName, const QString& actionName, int patchId, const QString& propertyName, const QVariant& value );
+    void onSetActionPrefire( const QString& cueName, const QString& actionName, int patchId, qulonglong prefire );
+
 signals:
     void deleteAllCue();
     void reloadCues();
-    void setActionProperty(const QString &cueName, const QString &pattern, int deviceId, quint64 position);
+    void setActionPosition( const QString &cueName, const QString &pattern, int deviceId, quint64 position );
+    void setActionPrefire( const QString& cueName, const QString& actionName, int patchId, qulonglong prefire );
     void pasteCues(QStringList pastedCues);
     void updateCues(QString cueName);
     void reloadPattern();

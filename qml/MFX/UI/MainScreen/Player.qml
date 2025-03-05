@@ -1170,15 +1170,11 @@ Item
                                     {
                                         var actionNumber = project.cueActions(newCueName).length
                                         var actionCount = checkedIDs.length
+
                                         project.addActionToCue(newCueName, actName, currId, newPosition)
                                         project.onSetActionProperty(newCueName, actName, currId, "positionCoeff", actionNumber / actionCount)
-
-                                        let pattern = patternManager.patternByName( actName )
-                                        if( pattern )
-                                        {
-                                            project.onSetActionProperty( newCueName, actName, currId, "actionPrefire", pattern.prefireDuration )
-                                            project.onSetActionProperty( newCueName, actName, currId, "actionDuration", deviceManager.actionDuration( actName, currId ) )
-                                        }
+                                        project.onSetActionProperty( newCueName, actName, currId, "actionPrefire", deviceManager.actionPrefire( actName, currId ) )
+                                        project.onSetActionProperty( newCueName, actName, currId, "actionDuration", deviceManager.actionDuration( actName, currId ) )
                                     }
                                 })
 

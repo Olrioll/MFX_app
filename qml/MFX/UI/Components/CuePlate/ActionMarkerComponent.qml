@@ -29,7 +29,7 @@ Component
         onPositionChanged:
         {
             project.onSetActionProperty(cuePlate.name, name, patchId, "position", position)
-            cueManager.onSetActionProperty(cuePlate.name, name, patchId, position)
+            cueManager.onSetActionPosition(cuePlate.name, name, patchId, position)
         }
 
         function prefirePosition()

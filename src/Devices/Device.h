@@ -37,6 +37,9 @@ public:
     qulonglong getDurationByPattern( const Pattern& pattern ) const;
     void clearCalcDurations();
 
+    virtual qulonglong getPrefire() const { return 0; }
+    virtual void setPrefire( qulonglong prefire ) {}
+
     virtual void copyToCueContent( CueContent& cueContent ) const;
 
 protected:
